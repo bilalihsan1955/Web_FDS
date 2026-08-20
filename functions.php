@@ -38,6 +38,8 @@ Application::configure()
     ])
     ->boot();
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Register Sage Theme Files
@@ -50,7 +52,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters'])
+collect(['setup', 'filters', 'cpt-drones', 'hero-slider'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

@@ -1,5 +1,5 @@
 <!doctype html>
-<html @php(language_attributes()) class="scroll-smooth">
+<html <?php language_attributes(); ?> class="scroll-smooth">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -22,7 +22,7 @@
       ::-webkit-scrollbar-track { background: #f5f5f7; }
       ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
 
-      /* WP Admin Bar compensation &mdash; push our fixed navbar below the admin bar */
+      /* WP Admin Bar compensation */
       .admin-bar #site-header { top: 32px; }
       @media screen and (max-width: 782px) {
         .admin-bar #site-header { top: 46px; }
@@ -30,13 +30,87 @@
       }
     </style>
 
-    @php(do_action('get_header'))
-    @php(wp_head())
+    <?php do_action('get_header'); ?>
+    <?php wp_head(); ?>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
 
-  <body @php(body_class('bg-[#f5f5f7] text-[#1d1d1f] antialiased'))>
-    @php(wp_body_open())
+  <body <?php body_class('bg-[#f5f5f7] text-[#1d1d1f] antialiased'); ?>>
+    <?php wp_body_open(); ?>
+
+    @php
+      // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT
+      $tax_terms = get_terms([
+          'taxonomy'   => 'kategori_drone',
+          'hide_empty' => false,
+          'orderby'    => 'term_id',
+          'order'      => 'ASC',
+      ]);
+
+      if (empty($tax_terms) || is_wp_error($tax_terms)) {
+          $tax_terms = [
+              (object)['name' => 'Agrikultur', 'slug' => 'agrikultur', 'description' => 'Pertanian Presisi FERTO 5L – 50L'],
+              (object)['name' => 'Pemetaan & GIS', 'slug' => 'pemetaan-gis', 'description' => 'Survei Geospasial & Inspeksi Aset'],
+              (object)['name' => 'Kargo', 'slug' => 'kargo', 'description' => 'Distribusi Logistik Cepat 10 kg'],
+              (object)['name' => 'Reboisasi', 'slug' => 'reboisasi', 'description' => 'Restorasi Hutan & Penabur Biji'],
+          ];
+      }
+
+      $nav_drones = get_posts([
+          'post_type'      => 'drone',
+          'posts_per_page' => -1,
+          'post_status'    => 'publish',
+          'orderby'        => 'ID',
+          'order'          => 'ASC',
+      ]);
+
+      $drones_by_cat_slug = [];
+      foreach ($tax_terms as $t) {
+          $drones_by_cat_slug[$t->slug] = [
+              'term'   => $t,
+              'drones' => [],
+          ];
+      }
+
+      foreach ($nav_drones as $nd) {
+          $terms = get_the_terms($nd->ID, 'kategori_drone');
+          $cat_slug = '';
+          if (!empty($terms) && !is_wp_error($terms)) {
+              $cat_slug = $terms[0]->slug;
+          } else {
+              $meta_cat = get_post_meta($nd->ID, 'drone_kategori', true) ?: 'Agrikultur';
+              $cat_slug = sanitize_title($meta_cat);
+          }
+
+          if (!isset($drones_by_cat_slug[$cat_slug])) {
+              $drones_by_cat_slug[$cat_slug] = [
+                  'term'   => (object)['name' => (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : $meta_cat, 'slug' => $cat_slug, 'description' => ''],
+                  'drones' => [],
+              ];
+          }
+
+          $d_specs = get_post_meta($nd->ID, 'drone_specs_raw', true);
+          $spec_preview = '';
+          if ($d_specs) {
+              $lines = array_slice(array_filter(array_map('trim', explode("\n", $d_specs))), 0, 2);
+              $parts = [];
+              foreach ($lines as $l) {
+                  $sp = explode(':', $l, 2);
+                  if (count($sp) === 2) $parts[] = trim($sp[1]);
+              }
+              $spec_preview = implode(' · ', $parts);
+          }
+
+          $drones_by_cat_slug[$cat_slug]['drones'][] = [
+              'id'       => $nd->ID,
+              'name'     => html_entity_decode($nd->post_title, ENT_QUOTES, 'UTF-8'),
+              'slug'     => $nd->post_name,
+              'badge'    => html_entity_decode(get_post_meta($nd->ID, 'drone_badge', true) ?: 'Unggulan', ENT_QUOTES, 'UTF-8'),
+              'desc'     => html_entity_decode(get_post_meta($nd->ID, 'drone_tagline', true) ?: wp_trim_words(get_post_meta($nd->ID, 'drone_desc', true) ?: $nd->post_content, 12), ENT_QUOTES, 'UTF-8'),
+              'spec'     => html_entity_decode($spec_preview ?: 'Spesifikasi Lengkap', ENT_QUOTES, 'UTF-8'),
+          ];
+      }
+    @endphp
 
     <div id="app">
       <a class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-lg focus:shadow-lg" href="#main">
@@ -44,14 +118,14 @@
       </a>
 
       <!-- ============================================================ -->
-      <!-- NAVBAR &mdash; Apple-style glassmorphism, light, refined           -->
+      <!-- NAVBAR — Apple-style glassmorphism, light, refined           -->
       <!-- ============================================================ -->
       <header id="site-header" class="fixed top-0 inset-x-0 z-[9999] bg-white border-b border-black/[0.08]" style="transition: background 0.2s ease;">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
           <div class="flex items-center justify-between h-[52px]">
 
-            <!-- Logo: wordmark only, clean -->
-            <a href="{{ home_url('/') }}" class="flex items-center gap-2.5 group">
+            <!-- Logo -->
+            <a href="{{ home_url('/') }}" class="nav-direct-link flex items-center gap-2.5 group">
               <svg class="w-5 h-5 text-[#1d1d1f]" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
               </svg>
@@ -60,23 +134,31 @@
 
             <!-- Nav links -->
             <nav class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
-              <a href="{{ home_url('/#produk') }}" class="hover:text-[#1d1d1f] transition-colors duration-150">Produk</a>
+              <a href="{{ home_url('/') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Beranda</a>
+
+              <!-- Produk dropdown trigger -->
+              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2">
+                <span class="hover:text-[#1d1d1f] transition-colors duration-150">Produk</span>
+                <svg id="produk-chevron" class="w-3 h-3 text-[#86868b] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </div>
 
               <!-- Layanan dropdown trigger -->
-              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none">
+              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2">
                 <span class="hover:text-[#1d1d1f] transition-colors duration-150">Layanan</span>
                 <svg id="layanan-chevron" class="w-3 h-3 text-[#86868b] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
 
-              <a href="{{ home_url('/tentang-kami') }}" class="hover:text-[#1d1d1f] transition-colors duration-150">Tentang Kami</a>
-              <a href="{{ home_url('/blog') }}" class="hover:text-[#1d1d1f] transition-colors duration-150">Blog</a>
+              <a href="{{ home_url('/tentang-kami') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Tentang Kami</a>
+              <a href="{{ home_url('/blog') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Blog</a>
             </nav>
 
             <!-- CTA -->
             <div class="flex items-center gap-4">
-              <a href="{{ home_url('/#kontak') }}" class="hidden sm:inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
+              <a href="{{ home_url('/#kontak') }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
                 Hubungi Kami
               </a>
               <button id="mobile-menu-toggle" type="button" class="lg:hidden w-8 h-8 flex flex-col gap-1.5 items-center justify-center" aria-label="Menu">
@@ -90,291 +172,334 @@
         </div>
 
         <!-- ===================================================== -->
-        <!-- LAYANAN MEGA DROPDOWN &mdash; Apple style                    -->
+        <!-- UNIFIED MEGA MENU DRAWER — Apple-Style Editorial Layout  -->
         <!-- ===================================================== -->
-        <div id="layanan-dropdown"
-             class="absolute top-full inset-x-0 bg-white border-b border-black/[0.08] overflow-hidden"
-             style="opacity:0; transform:translateY(-6px); pointer-events:none; transition: opacity 0.2s ease, transform 0.2s ease;">
-          <div class="max-w-[1400px] mx-auto px-6 lg:px-8 py-8">
-            <div class="grid grid-cols-[240px_1fr] gap-0">
+        <div id="mega-menu-drawer"
+             class="absolute top-full inset-x-0 bg-white/95 backdrop-blur-2xl border-b border-black/[0.08] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] overflow-hidden"
+             style="opacity:0; transform:translateY(-6px); pointer-events:none; transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform;">
+          <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-10">
 
-              <!-- Left: Category list -->
-              <div class="border-r border-black/[0.06] pr-6 space-y-1">
+            <!-- 1. PANE PRODUK (100% Dinamis dari Taksonomi WordPress) -->
+            <div id="mega-pane-produk" class="mega-pane transition-opacity duration-150 opacity-100">
+              @php
+                $agri_cat = $drones_by_cat_slug['agrikultur'] ?? null;
+                $other_cats = [];
+                foreach ($drones_by_cat_slug as $k => $v) {
+                    if ($k !== 'agrikultur') {
+                        $other_cats[$k] = $v;
+                    }
+                }
+                if (!$agri_cat && !empty($drones_by_cat_slug)) {
+                    $first_key = array_key_first($drones_by_cat_slug);
+                    $agri_cat = $drones_by_cat_slug[$first_key];
+                    unset($other_cats[$first_key]);
+                }
 
-                <button data-cat="sprayer"
-                        class="layanan-cat-btn w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 bg-[#f5f5f7] text-[#1d1d1f]">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center flex-shrink-0" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                      <svg class="w-4 h-4 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                    </div>
-                    <span class="text-[13px] font-semibold">Drone Sprayer</span>
+                $agri_limit = 6;
+                $agri_drones = $agri_cat ? array_slice($agri_cat['drones'], 0, $agri_limit) : [];
+                $agri_remaining = $agri_cat ? max(0, count($agri_cat['drones']) - $agri_limit) : 0;
+              @endphp
+
+              <div class="grid grid-cols-12 gap-10">
+                
+                <!-- Column 1 & 2: Kategori Agrikultur (Col 6) -->
+                <div class="col-span-6 border-r border-black/[0.06] pr-10">
+                  <div class="mb-5">
+                    <p class="text-[12px] font-semibold text-[#86868b]">
+                      {!! !empty($agri_cat['term']->name) ? wp_specialchars_decode($agri_cat['term']->name) : 'UAV Agrikultur' !!} (Seri FERTO)
+                    </p>
                   </div>
-                  <svg class="w-3.5 h-3.5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
 
-                <button data-cat="pemetaan"
-                        class="layanan-cat-btn w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 text-[#515154] hover:bg-[#f5f5f7] hover:text-[#1d1d1f]">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#f5f5f7] flex items-center justify-center flex-shrink-0">
-                      <svg class="w-4 h-4 text-[#515154]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    </div>
-                    <span class="text-[13px] font-semibold">Drone Pemetaan</span>
-                  </div>
-                  <svg class="w-3.5 h-3.5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <button data-cat="inspeksi"
-                        class="layanan-cat-btn w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 text-[#515154] hover:bg-[#f5f5f7] hover:text-[#1d1d1f]">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#f5f5f7] flex items-center justify-center flex-shrink-0">
-                      <svg class="w-4 h-4 text-[#515154]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                    </div>
-                    <span class="text-[13px] font-semibold">Drone Inspeksi</span>
-                  </div>
-                  <svg class="w-3.5 h-3.5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <button data-cat="pesewaan"
-                        class="layanan-cat-btn w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 text-[#515154] hover:bg-[#f5f5f7] hover:text-[#1d1d1f]">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#f5f5f7] flex items-center justify-center flex-shrink-0">
-                      <svg class="w-4 h-4 text-[#515154]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                    </div>
-                    <span class="text-[13px] font-semibold">Pesewaan Drone</span>
-                  </div>
-                  <svg class="w-3.5 h-3.5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-                <button data-cat="kursus"
-                        class="layanan-cat-btn w-full flex items-center justify-between text-left px-3 py-2.5 rounded-xl transition-all duration-150 text-[#515154] hover:bg-[#f5f5f7] hover:text-[#1d1d1f]">
-                  <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#f5f5f7] flex items-center justify-center flex-shrink-0">
-                      <svg class="w-4 h-4 text-[#515154]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg>
-                    </div>
-                    <span class="text-[13px] font-semibold">Kursus & Sertifikasi</span>
-                  </div>
-                  <svg class="w-3.5 h-3.5 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </button>
-
-              </div>
-
-              <!-- Right: Sub-items per category -->
-              <div class="pl-8">
-
-                <!-- Drone Sprayer -->
-                <div id="cat-sprayer" class="layanan-panel">
-                  <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mb-5">Seri FERTO &mdash; Pilih kapasitas yang sesuai</p>
-                  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                    @foreach([
-                      ['FERTO 22L', 'Kapasitas terbesar. Untuk lahan skala enterprise.', '/ferto-22l'],
-                      ['FERTO 15L', 'Keseimbangan kapasitas dan portabilitas optimal.', '/ferto-15l'],
-                      ['FERTO 10L', 'Pilihan populer untuk lahan medium.', '/ferto-10l'],
-                      ['FERTO 5L', 'Ringan dan lincah untuk lahan berbukit.', '/ferto-5l'],
-                    ] as [$name, $desc, $link])
-                    <a href="{{ home_url($link) }}"
-                       class="group flex flex-col gap-2 p-4 rounded-2xl bg-[#f5f5f7] hover:bg-white transition-all duration-150" style="box-shadow:0 0 0 0 transparent; transition: box-shadow 0.15s, background 0.15s;" onmouseover="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-                      <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                        <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                  @if(!empty($agri_drones))
+                  <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+                    @foreach($agri_drones as $item)
+                    <a href="{{ home_url('/' . $item['slug']) }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        {!! $item['name'] !!}
                       </div>
-                      <div>
-                        <p class="text-[13px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors">{{ $name }}</p>
-                        <p class="text-[12px] text-[#86868b] leading-snug mt-0.5">{{ $desc }}</p>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                        {!! $item['spec'] ?: $item['desc'] !!}
                       </div>
                     </a>
                     @endforeach
+
+                    @if($agri_remaining > 0)
+                    <div class="col-span-2 pt-2 border-t border-black/[0.04]">
+                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[12px] font-semibold text-[#0066cc] hover:underline gap-1">
+                        + Lihat {{ $agri_remaining }} Drone Agrikultur lainnya di Beranda &rsaquo;
+                      </a>
+                    </div>
+                    @endif
                   </div>
+                  @else
+                  <p class="text-[13px] text-[#86868b]">Belum ada drone pada kategori ini.</p>
+                  @endif
                 </div>
 
-                <!-- Drone Pemetaan -->
-                <div id="cat-pemetaan" class="layanan-panel hidden">
-                  <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mb-5">Layanan pemetaan udara presisi tinggi</p>
-                  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach([
-                      ['Pemetaan Topografi', 'Model elevasi digital dan kontur lahan akurat.', '/#layanan'],
-                      ['Ortofoto Lahan', 'Foto udara terkoreksi geometri untuk GIS.', '/#layanan'],
-                      ['Pemetaan Perkebunan', 'Indeks NDVI dan analisis kesehatan tanaman.', '/#layanan'],
-                    ] as [$name, $desc, $link])
-                    <a href="{{ home_url($link) }}"
-                       class="group flex flex-col gap-2 p-4 rounded-2xl bg-[#f5f5f7] hover:bg-white transition-all duration-150" onmouseover="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-                      <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                        <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                <!-- Column 3: Kategori Lainnya Dinamis dari WP (Col 3) -->
+                <div class="col-span-3 border-r border-black/[0.06] pr-8 space-y-6">
+                  @forelse($other_cats as $cslug => $cdata)
+                    @if(!empty($cdata['drones']))
+                      @php
+                        $sub_limit = 3;
+                        $sub_drones = array_slice($cdata['drones'], 0, $sub_limit);
+                        $sub_remaining = max(0, count($cdata['drones']) - $sub_limit);
+                      @endphp
+                      <div class="{{ !$loop->first ? 'pt-4 border-t border-black/[0.06]' : '' }}">
+                        <p class="text-[12px] font-semibold text-[#86868b] mb-3">
+                          {!! wp_specialchars_decode($cdata['term']->name) !!}
+                        </p>
+                        
+                        <div class="space-y-3">
+                          @foreach($sub_drones as $item)
+                          <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                            <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                              {!! $item['name'] !!}
+                            </div>
+                            <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                              {!! $item['spec'] ?: $item['desc'] !!}
+                            </div>
+                          </a>
+                          @endforeach
+
+                          @if($sub_remaining > 0)
+                          <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-1">
+                            + Lihat {{ $sub_remaining }} Drone lainnya &rsaquo;
+                          </a>
+                          @endif
+                        </div>
                       </div>
-                      <div>
-                        <p class="text-[13px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors">{{ $name }}</p>
-                        <p class="text-[12px] text-[#86868b] leading-snug mt-0.5">{{ $desc }}</p>
-                      </div>
-                    </a>
-                    @endforeach
-                  </div>
+                    @endif
+                  @empty
+                    <p class="text-[13px] text-[#86868b]">Belum ada kategori lainnya.</p>
+                  @endforelse
                 </div>
 
-                <!-- Drone Inspeksi -->
-                <div id="cat-inspeksi" class="layanan-panel hidden">
-                  <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mb-5">Inspeksi infrastruktur tanpa risiko manusia</p>
-                  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach([
-                      ['Inspeksi Termal', 'Deteksi anomali panas pada kabel, panel, dan SUTT.', '/#layanan'],
-                      ['Inspeksi Visual', 'Pemeriksaan detail struktur gedung dan jembatan.', '/#layanan'],
-                      ['Inspeksi Tambang', 'Pemantauan progress galian dan stockpile material.', '/#layanan'],
-                    ] as [$name, $desc, $link])
-                    <a href="{{ home_url($link) }}"
-                       class="group flex flex-col gap-2 p-4 rounded-2xl bg-[#f5f5f7] hover:bg-white transition-all duration-150" onmouseover="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-                      <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                        <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                      </div>
+                <!-- Column 4: Ekosistem & Standar (Col 3) -->
+                <div class="col-span-3 flex flex-col justify-between">
+                  <div>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">Ekosistem &amp; Standar</p>
+                    
+                    <div class="space-y-4">
                       <div>
-                        <p class="text-[13px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors">{{ $name }}</p>
-                        <p class="text-[12px] text-[#86868b] leading-snug mt-0.5">{{ $desc }}</p>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">FDS Station GCS</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Software Ground Control Bahasa Indonesia</div>
                       </div>
-                    </a>
-                    @endforeach
-                  </div>
-                </div>
 
-                <!-- Pesewaan -->
-                <div id="cat-pesewaan" class="layanan-panel hidden">
-                  <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mb-5">Sewa unit per hari atau paket proyek</p>
-                  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach([
-                      ['Sewa Harian', 'Unit lengkap + baterai cadangan, tanpa pilot.', '/#kontak'],
-                      ['Sewa + Pilot', 'Operator bersertifikat FDS siap bertugas.', '/#kontak'],
-                      ['Paket Proyek', 'Solusi end-to-end untuk proyek skala besar.', '/#kontak'],
-                    ] as [$name, $desc, $link])
-                    <a href="{{ home_url($link) }}"
-                       class="group flex flex-col gap-2 p-4 rounded-2xl bg-[#f5f5f7] hover:bg-white transition-all duration-150" onmouseover="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-                      <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                        <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-                      </div>
                       <div>
-                        <p class="text-[13px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors">{{ $name }}</p>
-                        <p class="text-[12px] text-[#86868b] leading-snug mt-0.5">{{ $desc }}</p>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Sertifikasi TKDN + BMP</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Nilai kandungan lokal mencapai 60,74%</div>
                       </div>
-                    </a>
-                    @endforeach
-                  </div>
-                </div>
 
-                <!-- Kursus -->
-                <div id="cat-kursus" class="layanan-panel hidden">
-                  <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mb-5">Program pelatihan bersertifikat resmi FDS</p>
-                  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">
-                    @foreach([
-                      ['Pilot Pemula', 'Dasar penerbangan dan regulasi CASR Part 107.', '/#layanan'],
-                      ['Pilot Korporasi', 'Program intensif 5 hari untuk tenaga perusahaan.', '/#layanan'],
-                      ['Pilot Misi Lanjut', 'Pemetaan, inspeksi termal, dan misi kompleks.', '/#layanan'],
-                    ] as [$name, $desc, $link])
-                    <a href="{{ home_url($link) }}"
-                       class="group flex flex-col gap-2 p-4 rounded-2xl bg-[#f5f5f7] hover:bg-white transition-all duration-150" onmouseover="this.style.boxShadow='0 2px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
-                      <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center" style="box-shadow:0 1px 6px rgba(0,0,0,0.08)">
-                        <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 14l9-5-9-5-9 5 9 5zm0 0v6m0-6l6.16-3.422"/></svg>
-                      </div>
                       <div>
-                        <p class="text-[13px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors">{{ $name }}</p>
-                        <p class="text-[12px] text-[#86868b] leading-snug mt-0.5">{{ $desc }}</p>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Standar SNI 9199:2023</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Teruji standar mutu pertanian nasional</div>
                       </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-6 border-t border-black/[0.06]">
+                    <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                      Bandingkan Semua Spesifikasi
+                      <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
-                    @endforeach
                   </div>
                 </div>
 
               </div>
             </div>
+
+            <!-- 2. PANE LAYANAN (Editorial Multi-Column) -->
+            <div id="mega-pane-layanan" class="mega-pane transition-opacity duration-150 opacity-0 hidden">
+              <div class="grid grid-cols-12 gap-10">
+                
+                <!-- Column 1: Pelatihan & Operasional (Col 4) -->
+                <div class="col-span-4 border-r border-black/[0.06] pr-8">
+                  <p class="text-[12px] font-semibold text-[#86868b] mb-5">Pelatihan &amp; Operasional</p>
+                  
+                  <div class="space-y-4">
+                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Kursus &amp; Sertifikasi Pilot</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Sertifikasi resmi CASR Part 107 &amp; training lapangan intensif</div>
+                    </a>
+
+                    <a href="{{ home_url('/#kontak') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Sewa Armada Drone</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Unit sprayer &amp; spreader komersial siap pakai lengkap pilot</div>
+                    </a>
+
+                    <a href="{{ home_url('/#kontak') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">After-Sales &amp; Servis</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Garansi resmi &amp; ketersediaan suku cadang asli lokal Yogyakarta</div>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Column 2: Survei Geospasial & Analitik (Col 5) -->
+                <div class="col-span-5 border-r border-black/[0.06] pr-8">
+                  <p class="text-[12px] font-semibold text-[#86868b] mb-5">Survei &amp; Inspeksi Teknis</p>
+                  
+                  <div class="space-y-4">
+                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Pemetaan Aerial &amp; GIS Topografi</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Model 3D elevasi, ortofoto sub-sentimeter, &amp; data siap CAD/BIM</div>
+                    </a>
+
+                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Inspeksi Termal Transmisi &amp; Solar PV</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Pemeriksaan sensor inframerah untuk transmisi 150kV &amp; pipa migas</div>
+                    </a>
+
+                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Analisis Vegetasi &amp; NDVI</div>
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Deteksi dini kesehatan tanaman &amp; rekomendasi pemupukan presisi</div>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Column 3: Hubungi Spesialis Layanan (Col 3) -->
+                <div class="col-span-3 flex flex-col justify-between">
+                  <div>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">Dukungan Teknis</p>
+                    
+                    <div class="space-y-4">
+                      <div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Pilot Bersertifikat Resmi</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Instruktur berpengalaman di ratusan misi lapangan</div>
+                      </div>
+
+                      <div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Workshop Yogyakarta</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Pusat perakitan, riset terpadu, dan kalibrasi UAV</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pt-6 border-t border-black/[0.06]">
+                    <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                      Jadwalkan Demo &amp; Konsultasi
+                      <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
 
-        <!-- Mobile nav -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6">
-          <nav class="flex flex-col gap-5 text-[17px] font-medium text-[#1d1d1f]">
-            <a href="{{ home_url('/#produk') }}" class="mobile-nav-link py-1 border-b border-[#f5f5f7]">Produk</a>
+        <!-- Mobile nav — 100% Dinamis dari WordPress -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6 max-h-[85vh] overflow-y-auto">
+          <nav class="flex flex-col gap-4 text-[16px] font-medium text-[#1d1d1f]">
+            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Beranda</a>
+            
             <details class="border-b border-[#f5f5f7]">
-              <summary class="py-1 cursor-pointer list-none flex items-center justify-between">Layanan
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold">Produk Drone
                 <svg class="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="pl-3 pb-3 mt-2 flex flex-col gap-2 text-[15px] text-[#515154]">
-                <a href="{{ home_url('/#produk') }}" class="py-1">Drone Sprayer (FERTO Series)</a>
-                <a href="{{ home_url('/#layanan') }}" class="py-1">Drone Pemetaan</a>
-                <a href="{{ home_url('/#layanan') }}" class="py-1">Drone Inspeksi</a>
-                <a href="{{ home_url('/#kontak') }}" class="py-1">Pesewaan Drone</a>
-                <a href="{{ home_url('/#layanan') }}" class="py-1">Kursus & Sertifikasi</a>
+              <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
+                @foreach($drones_by_cat_slug as $cslug => $cdata)
+                  @if(!empty($cdata['drones']))
+                    <p class="text-[12px] font-semibold text-[#86868b] mt-2">{!! wp_specialchars_decode($cdata['term']->name) !!}</p>
+                    @foreach($cdata['drones'] as $d)
+                      <a href="{{ home_url('/' . $d['slug']) }}" class="mobile-nav-link py-1 flex items-center justify-between">
+                        <span>{!! wp_specialchars_decode($d['name']) !!}</span>
+                        @if($d['badge'])
+                        <span class="text-[10px] text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
+                        @endif
+                      </a>
+                    @endforeach
+                  @endif
+                @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1 border-b border-[#f5f5f7]">Tentang Kami</a>
-            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1 border-b border-[#f5f5f7]">Blog</a>
-            <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1 text-[#0066cc]">Hubungi Kami</a>
+
+            <details class="border-b border-[#f5f5f7]">
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold">Layanan
+                <svg class="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              </summary>
+              <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
+                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Pelatihan &amp; Sertifikasi Pilot</a>
+                <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1">Pesewaan Drone</a>
+                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Pemetaan Aerial &amp; GIS</a>
+                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Inspeksi Termal &amp; Industri</a>
+                <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1">After-Sales &amp; Maintenance</a>
+              </div>
+            </details>
+            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Tentang Kami</a>
+            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Blog</a>
+            <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1.5 text-[#0066cc] font-semibold">Hubungi Kami</a>
           </nav>
         </div>
       </header>
 
-      <!-- Dropdown overlay &mdash; blur page content behind mega menu -->
+      <!-- Dropdown overlay -->
       <div id="layanan-overlay"
            style="position:fixed; top:52px; left:0; right:0; bottom:0; z-index:9998;
                   background:rgba(0,0,0,0.25); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
-                  opacity:0; pointer-events:none; transition:opacity 0.2s ease;"
+                  opacity:0; pointer-events:none; transition:opacity 0.22s ease;"
            aria-hidden="true">
       </div>
 
-      <!-- ============================================================ -->
-      <!-- MAIN CONTENT                                                  -->
-      <!-- ============================================================ -->
+      <!-- MAIN CONTENT -->
       <main id="main">
         @yield('content')
       </main>
 
-      <!-- ============================================================ -->
-      <!-- FOOTER &mdash; Apple-style directory, light                        -->
-      <!-- ============================================================ -->
+      <!-- FOOTER -->
       <footer class="bg-[#f5f5f7] border-t border-black/[0.08] pt-14 pb-8">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
           <!-- Disclaimer -->
           <div class="border-b border-black/[0.08] pb-8 mb-10">
             <p class="text-[11px] text-[#86868b] leading-relaxed max-w-3xl">
-              Sertifikasi TKDN 44,85% diterbitkan oleh Kementerian Perindustrian Republik Indonesia untuk seri FERTO 10L dan 22L. Kapasitas penyemprotan 10 Ha/jam merupakan estimasi pada kondisi lapangan ideal. Spesifikasi dapat berubah tanpa pemberitahuan sebelumnya.
+              PT Karya Solusi Angkasa (Full Drone Solutions) &mdash; Advanced UAV Engineering, Manufacturing & AI Technology. Sertifikasi ISO 9001:2015, SNI 9199:2023, serta Sertifikasi Nilai TKDN + BMP mencapai 60,74% diterbitkan resmi oleh Kementerian Perindustrian Republik Indonesia. Spesifikasi dapat disesuaikan dengan kebutuhan misi kustom.
             </p>
           </div>
 
           <!-- Link columns -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-10 border-b border-black/[0.08]">
             <div>
-              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Produk</h4>
-              <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">FERTO 22L</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">FERTO 15L</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">FERTO 10L</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">FERTO 5L</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Granule Spreader</a></li>
+              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Produk Drone</h4>
+              <ul class="space-y-2 text-[12px] text-[#515154]">
+                @foreach($nav_drones as $d)
+                <li><a href="{{ home_url('/' . $d->post_name) }}" class="hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
+                @endforeach
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Layanan</h4>
               <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Pemetaan Aerial</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Inspeksi Termal</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Sewa Drone</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Pelatihan Pilot</a></li>
+                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Kursus &amp; Sertifikasi Pilot</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Pesewaan Drone</a></li>
+                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Pemetaan Aerial &amp; GIS</a></li>
+                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Inspeksi Termal &amp; Industri</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">After-Sales &amp; Servis</a></li>
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Perusahaan</h4>
               <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Tentang FDS</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Newsroom</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Pemerintah &amp; BUMN</a></li>
+                <li><a href="{{ home_url('/tentang-kami') }}" class="hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
+                <li><a href="{{ home_url('/blog') }}" class="hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
+                <li><a href="{{ home_url('/#solusi') }}" class="hover:text-[#1d1d1f] hover:underline">Solusi Multi-Industri &amp; AI</a></li>
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Dukungan</h4>
               <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Pusat Layanan</a></li>
-                <li><a href="#" class="hover:text-[#1d1d1f] hover:underline">Garansi &amp; Suku Cadang</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Garansi &amp; Suku Cadang Asli</a></li>
               </ul>
             </div>
           </div>
 
           <!-- Bottom bar -->
           <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#86868b]">
-            <span>Copyright &copy; {{ date('Y') }} Full Drone Solutions. Hak cipta dilindungi.</span>
+            <span>Copyright &copy; {{ date('Y') }} PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.</span>
             <div class="flex items-center gap-4">
               <a href="#" class="hover:text-[#1d1d1f] hover:underline">Kebijakan Privasi</a>
               <span class="h-3 w-px bg-black/10"></span>
@@ -388,6 +513,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // ── Mobile Menu Toggle ──────────────────────────────────
       const btn = document.getElementById('mobile-menu-toggle');
       const menu = document.getElementById('mobile-menu');
       const bar1 = document.getElementById('bar1');
@@ -421,78 +547,137 @@
             bar3.style.transform = '';
           });
         });
-        // ── Layanan Mega Dropdown ────────────────────────────────
-        const trigger    = document.getElementById('layanan-trigger');
-        const dropdown   = document.getElementById('layanan-dropdown');
-        const chevron    = document.getElementById('layanan-chevron');
-        let dropdownOpen = false;
+      }
 
-        const siteHeader = document.getElementById('site-header');
-        const overlay    = document.getElementById('layanan-overlay');
+      // ── Unified Flicker-Free Mega Menu Controller ───────────
+      const siteHeader = document.getElementById('site-header');
+      const drawer     = document.getElementById('mega-menu-drawer');
+      const overlay    = document.getElementById('layanan-overlay');
 
-        function openDropdown() {
-          dropdownOpen = true;
-          dropdown.style.opacity = '1';
-          dropdown.style.transform = 'translateY(0)';
-          dropdown.style.pointerEvents = 'auto';
-          chevron.style.transform = 'rotate(180deg)';
-          if (siteHeader) siteHeader.style.borderBottomColor = 'transparent';
-          // Tampilkan overlay blur
-          if (overlay) { overlay.style.opacity = '1'; overlay.style.pointerEvents = 'auto'; }
-        }
+      const produkTrigger = document.getElementById('produk-trigger');
+      const produkChevron = document.getElementById('produk-chevron');
+      const paneProduk    = document.getElementById('mega-pane-produk');
 
-        function closeDropdown() {
-          dropdownOpen = false;
-          dropdown.style.opacity = '0';
-          dropdown.style.transform = 'translateY(-6px)';
-          dropdown.style.pointerEvents = 'none';
-          chevron.style.transform = 'rotate(0deg)';
-          if (siteHeader) siteHeader.style.borderBottomColor = '';
-          // Sembunyikan overlay
-          if (overlay) { overlay.style.opacity = '0'; overlay.style.pointerEvents = 'none'; }
-        }
+      const layananTrigger = document.getElementById('layanan-trigger');
+      const layananChevron = document.getElementById('layanan-chevron');
+      const paneLayanan    = document.getElementById('mega-pane-layanan');
 
-        if (trigger && dropdown && siteHeader) {
-          // Buka saat hover pada trigger
-          trigger.addEventListener('mouseenter', () => openDropdown());
+      let currentMenu = null;
+      let closeTimer  = null;
 
-          // Tutup saat mouse keluar dari seluruh header (navbar + dropdown)
-          siteHeader.addEventListener('mouseleave', () => closeDropdown());
+      function openMegaMenu(type) {
+        cancelClose();
 
-          // Tutup juga saat Escape
-          document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeDropdown();
-          });
+        const isAlreadyOpen = (currentMenu !== null);
 
-          // Category switching
-          document.querySelectorAll('.layanan-cat-btn').forEach(btn => {
-            btn.addEventListener('mouseenter', () => {
-              const cat = btn.dataset.cat;
+        if (type === 'produk') {
+          if (produkChevron) produkChevron.style.transform = 'rotate(180deg)';
+          if (layananChevron) layananChevron.style.transform = 'rotate(0deg)';
 
-              // Update button styles
-              document.querySelectorAll('.layanan-cat-btn').forEach(b => {
-                b.classList.remove('bg-[#f5f5f7]', 'text-[#1d1d1f]');
-                b.classList.add('text-[#515154]');
-                const icon = b.querySelector('.w-8');
-                if (icon) { icon.style.background = '#f5f5f7'; icon.style.boxShadow = 'none'; }
-              });
-              btn.classList.add('bg-[#f5f5f7]', 'text-[#1d1d1f]');
-              btn.classList.remove('text-[#515154]');
-              const activeIcon = btn.querySelector('.w-8');
-              if (activeIcon) { activeIcon.style.background = 'white'; activeIcon.style.boxShadow = '0 1px 6px rgba(0,0,0,0.08)'; }
-
-              // Show correct panel
-              document.querySelectorAll('.layanan-panel').forEach(p => p.classList.add('hidden'));
-              const panel = document.getElementById('cat-' + cat);
-              if (panel) panel.classList.remove('hidden');
+          if (paneLayanan) {
+            paneLayanan.classList.add('hidden');
+            paneLayanan.style.opacity = '0';
+          }
+          if (paneProduk) {
+            paneProduk.classList.remove('hidden');
+            requestAnimationFrame(() => {
+              paneProduk.style.opacity = '1';
             });
-          });
+          }
+        } else if (type === 'layanan') {
+          if (layananChevron) layananChevron.style.transform = 'rotate(180deg)';
+          if (produkChevron) produkChevron.style.transform = 'rotate(0deg)';
+
+          if (paneProduk) {
+            paneProduk.classList.add('hidden');
+            paneProduk.style.opacity = '0';
+          }
+          if (paneLayanan) {
+            paneLayanan.classList.remove('hidden');
+            requestAnimationFrame(() => {
+              paneLayanan.style.opacity = '1';
+            });
+          }
+        }
+
+        currentMenu = type;
+
+        if (!isAlreadyOpen && drawer) {
+          drawer.style.opacity = '1';
+          drawer.style.transform = 'translateY(0)';
+          drawer.style.pointerEvents = 'auto';
+          if (siteHeader) siteHeader.style.borderBottomColor = 'transparent';
+          if (overlay) {
+            overlay.style.opacity = '1';
+            overlay.style.pointerEvents = 'auto';
+          }
         }
       }
+
+      function scheduleClose(delay = 200) {
+        if (closeTimer) clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          closeMegaMenu();
+        }, delay);
+      }
+
+      function cancelClose() {
+        if (closeTimer) {
+          clearTimeout(closeTimer);
+          closeTimer = null;
+        }
+      }
+
+      function closeMegaMenu() {
+        cancelClose();
+        if (drawer) {
+          drawer.style.opacity = '0';
+          drawer.style.transform = 'translateY(-6px)';
+          drawer.style.pointerEvents = 'none';
+        }
+        if (produkChevron) produkChevron.style.transform = 'rotate(0deg)';
+        if (layananChevron) layananChevron.style.transform = 'rotate(0deg)';
+        if (siteHeader) siteHeader.style.borderBottomColor = '';
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.style.pointerEvents = 'none';
+        }
+        currentMenu = null;
+      }
+
+      if (produkTrigger) {
+        produkTrigger.addEventListener('mouseenter', () => openMegaMenu('produk'));
+      }
+      if (layananTrigger) {
+        layananTrigger.addEventListener('mouseenter', () => openMegaMenu('layanan'));
+      }
+
+      if (drawer) {
+        drawer.addEventListener('mouseenter', cancelClose);
+        drawer.addEventListener('mouseleave', () => scheduleClose(200));
+      }
+
+      if (siteHeader) {
+        siteHeader.addEventListener('mouseenter', cancelClose);
+        siteHeader.addEventListener('mouseleave', () => scheduleClose(200));
+      }
+
+      if (overlay) {
+        overlay.addEventListener('mouseenter', () => closeMegaMenu());
+        overlay.addEventListener('click', () => closeMegaMenu());
+      }
+
+      document.querySelectorAll('.nav-direct-link').forEach(link => {
+        link.addEventListener('mouseenter', () => closeMegaMenu());
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMegaMenu();
+      });
     });
     </script>
 
-    @php(do_action('get_footer'))
-    @php(wp_footer())
+    <?php do_action('get_footer'); ?>
+    <?php wp_footer(); ?>
   </body>
 </html>
