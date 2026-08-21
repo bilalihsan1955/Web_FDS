@@ -807,7 +807,7 @@ add_action('init', function () {
             'sp_oto'    => 'Manual, Task Following, Semi-to-Fully Autonomous',
             'sp_gcs'    => 'FDS STATION Real-Time Monitoring & AI Analytics',
             'sp_sert'   => 'SNI 9199:2023 | ISO 9001:2015',
-            'uc1_t'     => 'Inspeksi transmisi listrik 150 kV', 'uc1_d' => '5x lebih cepat tanpa perlu pemadaman listrik dan tanpa risiko ketinggian.',
+            'uc1_t'     => 'Inspeksi transmisi listrik 150 kV', 'uc1_d' => 'Aman tanpa perlu pemadaman listrik dan bebas risiko bekerja di ketinggian.',
             'uc2_t'     => 'Inspeksi ladang energi surya (Solar PV)', 'uc2_d' => 'Deteksi dini hotspot dan sel rusak berbasis AI untuk cegah kehilangan energi.',
             'uc3_t'     => 'Inspeksi migas & cerobong suar (Flare)', 'uc3_d' => 'Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
             'uc4_t'     => 'Inspeksi struktur jembatan & infrastruktur', 'uc4_d' => 'Pemeriksaan keretakan mikro struktur beton dan baja.',

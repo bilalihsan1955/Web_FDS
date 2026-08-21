@@ -235,66 +235,127 @@
 
 
 {{-- ========================================================== --}}
-{{-- 3. SOLUSI / USE CASES &mdash; drone company bukan hanya tani   --}}
+{{-- 3. SOLUSI INDUSTRI — 100% Sesuai Data Resmi COMPRO FDS     --}}
 {{-- ========================================================== --}}
 <section id="solusi" class="bg-[#1d1d1f] py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <div class="mb-16">
-      <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Solusi Kami</p>
-      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[600px]">
-        Satu platform. Berbagai industri.
-      </h2>
-      <p class="mt-4 text-[18px] text-white/50 max-w-[520px] leading-relaxed">
-        FDS menyediakan ekosistem hardware, software, dan layanan operasional untuk berbagai kebutuhan industri.
+    <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div>
+        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Solusi Industri FDS</p>
+        <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
+          Satu platform. Berbagai industri strategis.
+        </h2>
+      </div>
+      <p class="text-[16px] text-white/50 max-w-[460px] leading-relaxed">
+        Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.
       </p>
     </div>
 
-    {{-- Solution grid: 3 cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    {{-- Solution grid: 4 Flagship Solutions matching compro.md --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-      {{-- Spraying / Agrikultur --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300">
-        <div class="h-[200px] overflow-hidden">
-        <img src="{{ fds_img('solusi_agri', 'https://picsum.photos/seed/fds-spraying/800/400') }}" alt="Aerial Spraying" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      {{-- 1. Pertanian & Perkebunan Presisi (Seri FERTO) --}}
+      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
+        <div>
+          <div class="h-[210px] overflow-hidden relative">
+            <img src="{{ fds_img('solusi_agri', 'https://picsum.photos/seed/fds-spraying-agriculture/800/500') }}" alt="Pertanian Presisi FERTO" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
+              Pertanian &amp; Perkebunan
+            </div>
+          </div>
+          <div class="p-7 pb-4">
+            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Penyemprotan &amp; Analisis NDVI</h3>
+            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
+              Penyemprotan &gt;50% lebih efisien bahan kimia dengan radar <em>terrain-following</em> kontur tanah untuk seri FERTO 5L&ndash;50L. Pemantauan kesehatan tanaman 10x lebih cepat (30&ndash;40 Ha/jam) dengan kamera multispektral NDVI.
+            </p>
+          </div>
         </div>
-        <div class="p-7">
-          <p class="text-[11px] font-semibold text-[#6e9fd4] tracking-wide mb-3">Agrikultur</p>
-          <h3 class="text-[20px] font-semibold text-white mb-2">Aerial Spraying</h3>
-          <p class="text-[14px] text-white/50 leading-relaxed mb-5">Penyemprotan pestisida dan pupuk cair presisi tinggi. Seri FERTO 5L&ndash;22L untuk semua skala lahan.</p>
-          <a href="#produk" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-            Lihat FERTO Series <span>&rsaquo;</span>
-          </a>
+        <div class="p-7 pt-0">
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+            <span class="text-[11px] font-medium text-white/40 font-mono">FERTO 5L &ndash; 50L</span>
+            <a href="#produk" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
+              Lihat Seri FERTO <span>&rsaquo;</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {{-- Pemetaan --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300">
-        <div class="h-[200px] overflow-hidden">
-          <img src="{{ fds_img('solusi_map', 'https://picsum.photos/seed/fds-mapping-gis/800/400') }}" alt="Aerial Mapping" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      {{-- 2. Survei Geospasial, Konstruksi & Tambang (DELTAV VTOL) --}}
+      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
+        <div>
+          <div class="h-[210px] overflow-hidden relative">
+            <img src="{{ fds_img('solusi_map', 'https://picsum.photos/seed/fds-vtol-mapping-survey/800/500') }}" alt="Survei Geospasial DELTAV" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
+              Survei Geospasial &amp; Tambang
+            </div>
+          </div>
+          <div class="p-7 pb-4">
+            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Pemetaan Udara &amp; Topografi 3D</h3>
+            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
+              Menghemat waktu survei 70&ndash;80% untuk area luas dengan Fixed-Wing Hybrid VTOL DELTAV (jangkauan 60 km). Menghasilkan ortomozaik sub-sentimeter, model 3D DSM/DTM, kalkulasi volume <em>cut &amp; fill</em> (akurasi &plusmn;2.35%), dan data siap CAD/BIM.
+            </p>
+          </div>
         </div>
-        <div class="p-7">
-          <p class="text-[11px] font-semibold text-[#6e9fd4] tracking-wide mb-3">Pemetaan & GIS</p>
-          <h3 class="text-[20px] font-semibold text-white mb-2">Aerial Mapping</h3>
-          <p class="text-[14px] text-white/50 leading-relaxed mb-5">Peta topografi akurasi sub-sentimeter untuk infrastruktur, planologi, kehutanan, dan pertambangan.</p>
-          <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-            Konsultasi Pemetaan <span>&rsaquo;</span>
-          </a>
+        <div class="p-7 pt-0">
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+            <span class="text-[11px] font-medium text-white/40 font-mono">DELTAV (60 km)</span>
+            <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
+              Konsultasi Pemetaan <span>&rsaquo;</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {{-- Inspeksi --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300">
-        <div class="h-[200px] overflow-hidden">
-          <img src="{{ fds_img('solusi_ins', 'https://picsum.photos/seed/fds-inspection-thermal/800/400') }}" alt="Inspeksi Termal" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+      {{-- 3. Inspeksi Industri & Infrastruktur (MULTIPURPOSE) --}}
+      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
+        <div>
+          <div class="h-[210px] overflow-hidden relative">
+            <img src="{{ fds_img('solusi_ins', 'https://picsum.photos/seed/fds-thermal-powerline-inspection/800/500') }}" alt="Inspeksi Industri &amp; Infrastruktur" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
+              Inspeksi Industri &amp; Aset
+            </div>
+          </div>
+          <div class="p-7 pb-4">
+            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Inspeksi Industri &amp; Infrastruktur</h3>
+            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
+              Inspeksi aset secara efisien dan aman tanpa <em>shutdown</em> operasional (<em>zero downtime</em>), serta bebas risiko bekerja di ketinggian. Didukung sensor optik <em>high-zoom</em>, kamera termal inframerah, dan analitik AI untuk deteksi dini anomali serta pemeliharaan preventif.
+            </p>
+          </div>
         </div>
-        <div class="p-7">
-          <p class="text-[11px] font-semibold text-[#6e9fd4] tracking-wide mb-3">Inspeksi Industri</p>
-          <h3 class="text-[20px] font-semibold text-white mb-2">Thermal Inspection</h3>
-          <p class="text-[14px] text-white/50 leading-relaxed mb-5">Deteksi anomali pada jaringan listrik, panel surya, tangki industri, dan struktur jembatan dengan kamera IR.</p>
-          <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-            Konsultasi Inspeksi <span>&rsaquo;</span>
-          </a>
+        <div class="p-7 pt-0">
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+            <span class="text-[11px] font-medium text-white/40 font-mono">MULTIPURPOSE UAV</span>
+            <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
+              Konsultasi Solusi Inspeksi <span>&rsaquo;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {{-- 4. Kargo Logistik & Restorasi Lingkungan (DELFRO & REBO) --}}
+      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
+        <div>
+          <div class="h-[210px] overflow-hidden relative">
+            <img src="{{ fds_img('solusi_kargo', 'https://picsum.photos/seed/fds-cargo-forestry-drone/800/500') }}" alt="Kargo DELFRO & REBO" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
+              Logistik Cepat &amp; Kehutanan
+            </div>
+          </div>
+          <div class="p-7 pb-4">
+            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Distribusi Kargo &amp; Sebar Biji (Seedball)</h3>
+            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
+              Distribusi kargo logistik cepat 3&ndash;10 kg ke area terisolir dengan DELFRO. Serta misi penaburan benih <em>seedball</em> otonom berkapasitas 20 kg dengan REBO untuk restorasi hutan dan reklamasi tambang 80% lebih cepat dibanding survei darat.
+            </p>
+          </div>
+        </div>
+        <div class="p-7 pt-0">
+          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+            <span class="text-[11px] font-medium text-white/40 font-mono">DELFRO &amp; REBO</span>
+            <a href="#produk" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
+              Pelajari Produk <span>&rsaquo;</span>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -640,8 +701,8 @@ function filterDrones(btn) {
           <p class="text-[15px] text-white/50 leading-relaxed">Peta topografi resolusi tinggi dengan akurasi sub-sentimeter untuk perencanaan lahan, kehutanan, dan infrastruktur.</p>
         </div>
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">Inspeksi Termal & Industri</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Deteksi dini kerusakan pada jaringan listrik, panel surya, kilang, dan jembatan menggunakan kamera IR beresolusi tinggi.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">Inspeksi Industri &amp; Infrastruktur</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">Pemeriksaan visual dan termal berbasis UAV untuk pemantauan fasilitas energi, kelistrikan, migas, dan infrastruktur kritis secara cepat dan aman tanpa menghentikan operasional.</p>
         </div>
         <div class="py-7">
           <h3 class="text-[17px] font-semibold text-white mb-1.5">Sewa Armada Drone</h3>

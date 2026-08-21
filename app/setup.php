@@ -161,3 +161,13 @@ add_action('widgets_init', function () {
         'id' => 'sidebar-footer',
     ] + $config);
 });
+
+/**
+ * Global helper fds_img untuk mengambil URL gambar kustom atau fallback
+ */
+if (!function_exists('fds_img')) {
+    function fds_img($key, $default = '') {
+        $val = get_option("fds_img_{$key}", '');
+        return !empty($val) ? $val : $default;
+    }
+}
