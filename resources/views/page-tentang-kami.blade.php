@@ -21,15 +21,15 @@
 <section class="pt-[52px] bg-[#1d1d1f] overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0">
 
-    <div class="max-w-[800px]">
+    <div class="max-w-[840px]">
       <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">
-        {!! $about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Pengalaman UAV Sejak 2012 &middot; Yogyakarta' !!}
+        {!! esc_html(wp_specialchars_decode($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Pengalaman UAV Sejak 2012 · Yogyakarta')) !!}
       </p>
       <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.02]">
-        {!! nl2br(e($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology.")) !!}
+        {!! nl2br(esc_html(wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology."))) !!}
       </h1>
-      <p class="mt-7 text-[18px] sm:text-[20px] text-white/60 max-w-[620px] leading-[1.6]">
-        {!! $about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.' !!}
+      <p class="mt-7 text-[18px] sm:text-[20px] text-white/60 max-w-[640px] leading-[1.6]">
+        {!! nl2br(esc_html(wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'))) !!}
       </p>
     </div>
 
@@ -87,10 +87,10 @@
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
           {!! $about['story_title'] ?? 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.' !!}
         </h2>
-        <div class="mt-8 rounded-2xl overflow-hidden shadow-sm">
+        <div class="mt-8">
           <img src="{{ !empty($about['story_img']) ? $about['story_img'] : fds_img('tk_story', 'https://picsum.photos/seed/fds-origin-story/800/600') }}"
-               alt="Workshop PT Karya Solusi Angkasa"
-               class="w-full h-auto object-contain">
+               alt="Perjalanan dan Sejarah PT Karya Solusi Angkasa (FDS)"
+               class="w-full h-auto block">
         </div>
       </div>
 
@@ -173,25 +173,25 @@
 
 
 {{-- ========================================================== --}}
-{{-- PARTNERSHIPS — White, editorial list                      --}}
+{{-- OUR ACTIVITY & KEMITRAAN — White, editorial list           --}}
 {{-- ========================================================== --}}
-<section id="mitra" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
+<section id="aktivitas" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
-      <div>
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-5">
-          {!! esc_html($about['mitra_badge'] ?? 'Kemitraan & Klien Strategis') !!}
+      <div class="lg:col-span-4 lg:sticky lg:top-28">
+        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
+          {!! esc_html($about['mitra_badge'] ?? 'Aktivitas Kami') !!}
         </p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-6">
-          {!! esc_html($about['mitra_title'] ?? 'Dipercaya oleh institusi negara, BUMN, dan korporasi terkemuka.') !!}
+          {!! esc_html($about['mitra_title'] ?? 'Aktivitas Kami') !!}
         </h2>
-        <p class="text-[18px] text-[#515154] leading-relaxed max-w-[460px]">
-          {!! esc_html($about['mitra_desc'] ?? 'FDS secara konsisten menjadi mitra strategis dalam program ketahanan pangan nasional, riset geospasial, dan otomatisasi industri skala besar.') !!}
+        <p class="text-[17px] text-[#515154] leading-relaxed">
+          {!! esc_html($about['mitra_desc'] ?? 'Riset mandiri, inovasi manufaktur lokal, serta kolaborasi strategis bersama institusi nasional dan mitra internasional.') !!}
         </p>
       </div>
 
-      <div class="divide-y divide-black/[0.06]">
+      <div class="lg:col-span-8 divide-y divide-black/[0.06]">
         @for($i = 1; $i <= 7; $i++)
           @php
             $m_cat  = $about["mitra_item{$i}_cat"] ?? '';
@@ -199,13 +199,15 @@
             $m_desc = $about["mitra_item{$i}_desc"] ?? '';
           @endphp
           @if(!empty($m_name))
-          <div class="py-7 grid grid-cols-12 gap-4 items-center">
-            <div class="col-span-12 sm:col-span-4">
-              <p class="text-[12px] font-medium text-[#86868b] tracking-normal">{!! esc_html($m_cat) !!}</p>
-              <h3 class="text-[17px] font-semibold text-[#1d1d1f] mt-0.5">{!! esc_html($m_name) !!}</h3>
+          <div class="py-8 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-start">
+            <div class="sm:col-span-5">
+              @if(!empty($m_cat))
+              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{!! esc_html($m_cat) !!}</p>
+              @endif
+              <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{!! esc_html($m_name) !!}</h3>
             </div>
-            <div class="col-span-12 sm:col-span-8">
-              <p class="text-[14px] text-[#515154] leading-relaxed">{!! esc_html($m_desc) !!}</p>
+            <div class="sm:col-span-7">
+              <p class="text-[15px] text-[#515154] leading-relaxed">{!! esc_html($m_desc) !!}</p>
             </div>
           </div>
           @endif
@@ -270,10 +272,21 @@
 
 
 {{-- ========================================================== --}}
-{{-- CTA & WORKSHOP — Clean Editorial Dark Split                --}}
+{{-- CTA & WORKSHOP — Clean Editorial Dark Split & Full Map     --}}
 {{-- ========================================================== --}}
-<section class="bg-[#1d1d1f] py-28 sm:py-36 border-t border-white/[0.08]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+@php
+  $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+  $c_entitas = $global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)');
+  $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+  $c_email   = $global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com');
+  $c_phone   = $global_c['phone'] ?? ($about['info_phone'] ?? '+62 8112 748 882');
+  $c_wa_link = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
+  $c_maps    = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+@endphp
+<section class="bg-[#1d1d1f] pt-28 sm:pt-36 pb-0 border-t border-white/[0.08] overflow-hidden flex flex-col justify-between">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full pb-20 sm:pb-28">
+    
+    {{-- 2-Column Split: Headline & Directory List --}}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
 
       {{-- Left: Massive Editorial Headline & Action Buttons (Col 7) --}}
@@ -315,37 +328,58 @@
           <div class="pb-7">
             <p class="text-[13px] font-semibold text-[#6e9fd4] mb-1">Entitas Resmi</p>
             <p class="text-[17px] font-medium text-white leading-snug">
-              {!! esc_html($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)') !!}
+              {!! esc_html($c_entitas) !!}
             </p>
           </div>
 
           <div class="py-7">
             <p class="text-[13px] font-semibold text-white/40 mb-1">Alamat Workshop</p>
-            <p class="text-[17px] font-medium text-white/90 leading-snug">
-              {!! esc_html($about['info_alamat'] ?? 'DI Yogyakarta, Indonesia') !!}
+            <p class="text-[16px] font-medium text-white/90 leading-relaxed">
+              {!! esc_html($c_alamat) !!}
             </p>
             <p class="text-[13px] text-white/50 mt-1">Fasilitas Riset, Desain Aerodinamis &amp; Manufaktur UAV</p>
           </div>
 
           <div class="py-7">
             <p class="text-[13px] font-semibold text-white/40 mb-1">Email Resmi</p>
-            <a href="mailto:{{ esc_attr($about['info_email'] ?? 'info@fulldronesolutions.com') }}" 
-               class="text-[17px] font-medium text-white hover:text-[#6e9fd4] transition-colors block">
-              {!! esc_html($about['info_email'] ?? 'info@fulldronesolutions.com') !!}
+            <a href="mailto:{{ esc_attr($c_email) }}" 
+               class="text-[16px] font-medium text-white hover:text-[#6e9fd4] transition-colors block">
+              {!! esc_html($c_email) !!}
             </a>
           </div>
 
           <div class="pt-7">
-            <p class="text-[13px] font-semibold text-white/40 mb-1">Layanan Cepat</p>
-            <p class="text-[15px] text-white/70 leading-relaxed">
-              {!! esc_html($about['info_layanan'] ?? 'Konsultasi Proyek & Pengadaan Korporasi') !!}
-            </p>
+            <p class="text-[13px] font-semibold text-white/40 mb-1">Kontak &amp; Layanan Cepat</p>
+            <div class="flex items-center gap-3 mt-1">
+              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $c_phone) }}" class="text-[16px] font-medium text-white hover:text-[#6e9fd4] transition-colors">
+                {!! esc_html($c_phone) !!}
+              </a>
+              <span class="text-white/20">&middot;</span>
+              <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener" class="text-[13px] font-medium text-[#25D366] hover:underline inline-flex items-center gap-1">
+                WhatsApp <span>&rsaquo;</span>
+              </a>
+            </div>
           </div>
 
         </div>
       </div>
 
     </div>
+
+  </div>
+
+  {{-- Full-width Map Media Block — exactly like drone detail hero image --}}
+  <div class="w-full overflow-hidden border-t border-white/[0.08] relative" style="height: 520px; max-height: 600px;">
+    <iframe 
+      src="{{ esc_url($c_maps) }}" 
+      width="100%" 
+      height="100%" 
+      style="border:0;" 
+      allowfullscreen="" 
+      loading="lazy" 
+      referrerpolicy="strict-origin-when-cross-origin"
+      title="Lokasi Full Drone Solutions Sleman Yogyakarta">
+    </iframe>
   </div>
 </section>
 

@@ -23,6 +23,25 @@ add_action('admin_menu', function () {
     );
 });
 
+// Auto-sync homepage contact details
+add_action('init', function () {
+    $current_phone = get_option('fds_kontak_phone');
+    if (empty($current_phone) || $current_phone === '+62 812-3456-7890') {
+        update_option('fds_kontak_phone', '+62 8112 748 882');
+        update_option('fds_kontak_email', 'marketing@fulldronesolutions.com');
+        update_option('fds_kontak_address', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+        update_option('fds_kontak_wa_link', 'https://wa.me/628112748882');
+        update_option('fds_kontak_wa_text', 'Chat via WhatsApp');
+        update_option('fds_kontak_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+    }
+
+    // Clean wa_text if it has phone number
+    $wa_text = get_option('fds_kontak_wa_text');
+    if ($wa_text === 'Chat via WhatsApp (+62 8112 748 882)') {
+        update_option('fds_kontak_wa_text', 'Chat via WhatsApp');
+    }
+});
+
 // 2. HELPER GET HOMEPAGE CONTENT
 function fds_get_homepage_content() {
     return [
@@ -114,11 +133,12 @@ function fds_get_homepage_content() {
         'kontak_badge'           => get_option('fds_kontak_badge', 'Enterprise Sales'),
         'kontak_title'           => get_option('fds_kontak_title', "Hubungi tim\nEnterprise FDS."),
         'kontak_desc'            => get_option('fds_kontak_desc', 'Dari konsultasi teknis, fleet management, hingga program sertifikasi — kami siap mendampingi operasional drone Anda.'),
-        'kontak_phone'           => get_option('fds_kontak_phone', '+62 812-3456-7890'),
-        'kontak_email'           => get_option('fds_kontak_email', 'sales@fulldronesolutions.co.id'),
-        'kontak_address'         => get_option('fds_kontak_address', 'Sleman, D.I. Yogyakarta'),
-        'kontak_wa_link'         => get_option('fds_kontak_wa_link', 'https://wa.me/6281234567890'),
+        'kontak_phone'           => get_option('fds_kontak_phone', '+62 8112 748 882'),
+        'kontak_email'           => get_option('fds_kontak_email', 'marketing@fulldronesolutions.com'),
+        'kontak_address'         => get_option('fds_kontak_address', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281'),
+        'kontak_wa_link'         => get_option('fds_kontak_wa_link', 'https://wa.me/628112748882'),
         'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Chat via WhatsApp'),
+        'kontak_maps'            => get_option('fds_kontak_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid'),
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Kirim pesan inquiry'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Pesan'),
         'kontak_form_note'       => get_option('fds_kontak_form_note', "Kami merespons dalam 1×24 jam kerja.\nData Anda tidak akan dibagikan ke pihak ketiga."),
@@ -159,7 +179,28 @@ function render_homepage_content_admin_page() {
             update_option($f, sanitize_textarea_field($_POST[$f] ?? ''));
         }
 
-        $message = 'Semua teks konten beranda berhasil disimpan!';
+        // Sinkronisasi otomatis ke Kontak Global
+        if (!empty($_POST['fds_kontak_phone'])) {
+            update_option('fds_global_phone', sanitize_text_field($_POST['fds_kontak_phone']));
+            update_option('fds_footer_phone', sanitize_text_field($_POST['fds_kontak_phone']));
+            update_option('fds_about_info_phone', sanitize_text_field($_POST['fds_kontak_phone']));
+        }
+        if (!empty($_POST['fds_kontak_email'])) {
+            update_option('fds_global_email', sanitize_email($_POST['fds_kontak_email']));
+            update_option('fds_footer_email', sanitize_email($_POST['fds_kontak_email']));
+            update_option('fds_about_info_email', sanitize_email($_POST['fds_kontak_email']));
+        }
+        if (!empty($_POST['fds_kontak_address'])) {
+            update_option('fds_global_address', sanitize_textarea_field($_POST['fds_kontak_address']));
+            update_option('fds_footer_address', sanitize_textarea_field($_POST['fds_kontak_address']));
+            update_option('fds_about_info_alamat', sanitize_textarea_field($_POST['fds_kontak_address']));
+        }
+        if (!empty($_POST['fds_kontak_wa_link'])) {
+            update_option('fds_global_wa_link', esc_url_raw($_POST['fds_kontak_wa_link']));
+            update_option('fds_footer_whatsapp', esc_url_raw($_POST['fds_kontak_wa_link']));
+        }
+
+        $message = 'Konten Beranda berhasil diperbarui dan disinkronkan!';
     }
 
     $c = fds_get_homepage_content();
@@ -429,16 +470,24 @@ function render_homepage_content_admin_page() {
                 <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                     7. Section Kontak &amp; Enterprise Sales
                 </h2>
+
+                <!-- NOTIFIKASI KONTAK TERPUSAT -->
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                        <div>
+                            <strong style="color: #166534; font-size: 13px; display: block; margin-bottom: 2px;">📍 Informasi Kontak &amp; Lokasi Terpusat</strong>
+                            <span style="color: #15803d; font-size: 12px;">Alamat Workshop, Telepon/WA, Email Resmi, Link WhatsApp, dan Google Maps dikelola secara terpusat di menu <strong>Kontak &amp; Sosmed</strong>.</span>
+                        </div>
+                        <a href="admin.php?page=fds-footer-settings" class="button button-secondary" style="font-size: 12px; font-weight: 600; white-space: nowrap;">
+                            ⚙️ Kelola Kontak &amp; Sosmed
+                        </a>
+                    </div>
+                </div>
+
                 <div style="display: grid; gap: 16px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Badge</label>
-                            <input type="text" name="fds_kontak_badge" value="<?php echo esc_attr($c['kontak_badge']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Telepon / WhatsApp</label>
-                            <input type="text" name="fds_kontak_phone" value="<?php echo esc_attr($c['kontak_phone']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Badge</label>
+                        <input type="text" name="fds_kontak_badge" value="<?php echo esc_attr($c['kontak_badge']); ?>" style="width: 100%; font-size: 13px;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Judul Utama</label>
@@ -448,25 +497,9 @@ function render_homepage_content_admin_page() {
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Deskripsi Kontak</label>
                         <textarea name="fds_kontak_desc" rows="2" style="width: 100%; font-size: 13px;"><?php echo esc_textarea($c['kontak_desc']); ?></textarea>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Email Sales</label>
-                            <input type="text" name="fds_kontak_email" value="<?php echo esc_attr($c['kontak_email']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Lokasi Workshop</label>
-                            <input type="text" name="fds_kontak_address" value="<?php echo esc_attr($c['kontak_address']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Link WhatsApp Direct</label>
-                            <input type="text" name="fds_kontak_wa_link" value="<?php echo esc_attr($c['kontak_wa_link']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol WhatsApp</label>
-                            <input type="text" name="fds_kontak_wa_text" value="<?php echo esc_attr($c['kontak_wa_text']); ?>" style="width: 100%; font-size: 13px;">
-                        </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol WhatsApp</label>
+                        <input type="text" name="fds_kontak_wa_text" value="<?php echo esc_attr($c['kontak_wa_text']); ?>" style="width: 100%; font-size: 13px;">
                     </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <div>
