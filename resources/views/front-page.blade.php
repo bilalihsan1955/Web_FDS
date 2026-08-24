@@ -2,30 +2,36 @@
 
 @section('content')
 
+@php
+  $hp = function_exists('App\fds_get_homepage_content') ? \App\fds_get_homepage_content() : [];
+@endphp
+
 {{-- ========================================================== --}}
-{{-- 1. HERO &mdash; Drone Solutions Company, bukan pertanian saja   --}}
+{{-- 1. HERO — Dinamis dari WP Admin Konten Beranda            --}}
 {{-- ========================================================== --}}
 <section id="overview" class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-20 pb-0 text-center">
 
+    @if(!empty($hp['hero_badge']))
     <p class="inline-block text-[13px] font-semibold text-[#0066cc] mb-5 tracking-wide">
-      TKDN 44,85% &middot; Produksi Indonesia
+      {!! esc_html($hp['hero_badge']) !!}
     </p>
+    @endif
 
     <h1 class="text-[44px] sm:text-[58px] lg:text-[72px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.05] max-w-[820px] mx-auto">
-      Solusi Drone Industrial<br>untuk Setiap Sektor.
+      {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Industrial\nuntuk Setiap Sektor.")) !!}
     </h1>
 
     <p class="mt-6 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[580px] mx-auto leading-[1.55]">
-      Dari pemetaan topografi hingga inspeksi infrastruktur&mdash;Full Drone Solutions menghadirkan teknologi udara berstandar industri, diproduksi lokal.
+      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Teknologi udara berstandar industri, diproduksi lokal.')) !!}
     </p>
 
     <div class="mt-8 flex items-center justify-center gap-4 flex-wrap">
-      <a href="#solusi" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0066cc]/20">
-        Jelajahi Solusi Kami
+      <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0066cc]/20">
+        {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
       </a>
-      <a href="#kontak" class="inline-flex items-center text-[#0066cc] text-[15px] font-medium hover:underline gap-1 group">
-        Konsultasi Enterprise
+      <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" class="inline-flex items-center text-[#0066cc] text-[15px] font-medium hover:underline gap-1 group">
+        {!! esc_html($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') !!}
         <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -187,8 +193,14 @@
 @if(!empty($mitra_with_logo))
 <section class="bg-white border-b border-black/[0.06] py-14 overflow-hidden">
   <div class="text-center mb-10">
-    <p class="text-[12px] font-semibold text-[#86868b] tracking-widest">
-      DIPERCAYA OLEH LEMBAGA NASIONAL &amp; INTERNASIONAL
+    @php
+      $mitra_title = $hp['mitra_heading'] ?? 'Dipercaya oleh Lembaga Nasional & Internasional';
+      if (mb_strtoupper($mitra_title) === $mitra_title && mb_strlen($mitra_title) > 5) {
+          $mitra_title = 'Dipercaya oleh Lembaga Nasional & Internasional';
+      }
+    @endphp
+    <p class="text-[13px] font-semibold text-[#86868b] tracking-wide">
+      {!! esc_html($mitra_title) !!}
     </p>
   </div>
 
@@ -235,131 +247,68 @@
 
 
 {{-- ========================================================== --}}
-{{-- 3. SOLUSI INDUSTRI — 100% Sesuai Data Resmi COMPRO FDS     --}}
+{{-- 3. SOLUSI INDUSTRI — 100% Dinamis dari WP Admin            --}}
 {{-- ========================================================== --}}
+@php
+  $solusi_data = function_exists('App\fds_get_solusi_data') ? \App\fds_get_solusi_data() : [
+    'badge' => 'Solusi Industri FDS',
+    'title' => 'Satu platform. Berbagai industri strategis.',
+    'desc'  => 'Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.',
+    'cards' => [],
+  ];
+@endphp
 <section id="solusi" class="bg-[#1d1d1f] py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Solusi Industri FDS</p>
+        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($solusi_data['badge']) !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
-          Satu platform. Berbagai industri strategis.
+          {!! esc_html($solusi_data['title']) !!}
         </h2>
       </div>
       <p class="text-[16px] text-white/50 max-w-[460px] leading-relaxed">
-        Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.
+        {!! nl2br(esc_html($solusi_data['desc'])) !!}
       </p>
     </div>
 
-    {{-- Solution grid: 4 Flagship Solutions matching compro.md --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    {{-- Dynamic Solution grid from WP Admin (Fixed 4 Columns on Desktop) --}}
+    @if(!empty($solusi_data['cards']))
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
 
-      {{-- 1. Pertanian & Perkebunan Presisi (Seri FERTO) --}}
+      @foreach($solusi_data['cards'] as $card)
       <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
         <div>
-          <div class="h-[210px] overflow-hidden relative">
-            <img src="{{ fds_img('solusi_agri', 'https://picsum.photos/seed/fds-spraying-agriculture/800/500') }}" alt="Pertanian Presisi FERTO" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
-              Pertanian &amp; Perkebunan
-            </div>
+          <div class="h-[210px] overflow-hidden relative bg-[#1e293b]">
+            <img src="{{ esc_url($card['image'] ?: 'https://picsum.photos/seed/fds-solution-' . $loop->index . '/800/500') }}" 
+                 alt="{{ esc_attr($card['title']) }}" 
+                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
           <div class="p-7 pb-4">
-            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Penyemprotan &amp; Analisis NDVI</h3>
+            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">{!! esc_html($card['title']) !!}</h3>
             <p class="text-[13px] text-white/60 leading-relaxed mb-4">
-              Penyemprotan &gt;50% lebih efisien bahan kimia dengan radar <em>terrain-following</em> kontur tanah untuk seri FERTO 5L&ndash;50L. Pemantauan kesehatan tanaman 10x lebih cepat (30&ndash;40 Ha/jam) dengan kamera multispektral NDVI.
+              {!! nl2br(esc_html($card['desc'])) !!}
             </p>
           </div>
         </div>
         <div class="p-7 pt-0">
           <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-medium text-white/40 font-mono">FERTO 5L &ndash; 50L</span>
-            <a href="#produk" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-              Lihat Seri FERTO <span>&rsaquo;</span>
+            @if(!empty($card['tag']))
+            <span class="text-[11px] font-medium text-white/40 font-mono">{!! esc_html($card['tag']) !!}</span>
+            @else
+            <span></span>
+            @endif
+            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
+              {!! esc_html($card['link_text'] ?: 'Pelajari Selengkapnya') !!} <span>&rsaquo;</span>
             </a>
           </div>
         </div>
       </div>
-
-      {{-- 2. Survei Geospasial, Konstruksi & Tambang (DELTAV VTOL) --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
-        <div>
-          <div class="h-[210px] overflow-hidden relative">
-            <img src="{{ fds_img('solusi_map', 'https://picsum.photos/seed/fds-vtol-mapping-survey/800/500') }}" alt="Survei Geospasial DELTAV" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
-              Survei Geospasial &amp; Tambang
-            </div>
-          </div>
-          <div class="p-7 pb-4">
-            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Pemetaan Udara &amp; Topografi 3D</h3>
-            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
-              Menghemat waktu survei 70&ndash;80% untuk area luas dengan Fixed-Wing Hybrid VTOL DELTAV (jangkauan 60 km). Menghasilkan ortomozaik sub-sentimeter, model 3D DSM/DTM, kalkulasi volume <em>cut &amp; fill</em> (akurasi &plusmn;2.35%), dan data siap CAD/BIM.
-            </p>
-          </div>
-        </div>
-        <div class="p-7 pt-0">
-          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-medium text-white/40 font-mono">DELTAV (60 km)</span>
-            <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-              Konsultasi Pemetaan <span>&rsaquo;</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {{-- 3. Inspeksi Industri & Infrastruktur (MULTIPURPOSE) --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
-        <div>
-          <div class="h-[210px] overflow-hidden relative">
-            <img src="{{ fds_img('solusi_ins', 'https://picsum.photos/seed/fds-thermal-powerline-inspection/800/500') }}" alt="Inspeksi Industri &amp; Infrastruktur" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
-              Inspeksi Industri &amp; Aset
-            </div>
-          </div>
-          <div class="p-7 pb-4">
-            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Inspeksi Industri &amp; Infrastruktur</h3>
-            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
-              Inspeksi aset secara efisien dan aman tanpa <em>shutdown</em> operasional (<em>zero downtime</em>), serta bebas risiko bekerja di ketinggian. Didukung sensor optik <em>high-zoom</em>, kamera termal inframerah, dan analitik AI untuk deteksi dini anomali serta pemeliharaan preventif.
-            </p>
-          </div>
-        </div>
-        <div class="p-7 pt-0">
-          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-medium text-white/40 font-mono">MULTIPURPOSE UAV</span>
-            <a href="#kontak" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-              Konsultasi Solusi Inspeksi <span>&rsaquo;</span>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      {{-- 4. Kargo Logistik & Restorasi Lingkungan (DELFRO & REBO) --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
-        <div>
-          <div class="h-[210px] overflow-hidden relative">
-            <img src="{{ fds_img('solusi_kargo', 'https://picsum.photos/seed/fds-cargo-forestry-drone/800/500') }}" alt="Kargo DELFRO & REBO" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-semibold text-[#6e9fd4]">
-              Logistik Cepat &amp; Kehutanan
-            </div>
-          </div>
-          <div class="p-7 pb-4">
-            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">Distribusi Kargo &amp; Sebar Biji (Seedball)</h3>
-            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
-              Distribusi kargo logistik cepat 3&ndash;10 kg ke area terisolir dengan DELFRO. Serta misi penaburan benih <em>seedball</em> otonom berkapasitas 20 kg dengan REBO untuk restorasi hutan dan reklamasi tambang 80% lebih cepat dibanding survei darat.
-            </p>
-          </div>
-        </div>
-        <div class="p-7 pt-0">
-          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-medium text-white/40 font-mono">DELFRO &amp; REBO</span>
-            <a href="#produk" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-              Pelajari Produk <span>&rsaquo;</span>
-            </a>
-          </div>
-        </div>
-      </div>
+      @endforeach
 
     </div>
+    @endif
+
   </div>
 </section>
 
@@ -371,16 +320,16 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     <div class="mb-16">
-      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">Mengapa FDS</p>
+      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['keunggulan_badge'] ?? 'Mengapa FDS') !!}</p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[620px]">
-        Keunggulan yang tidak bisa dikompromikan.
+        {!! esc_html($hp['keunggulan_title'] ?? 'Keunggulan yang tidak bisa dikompromikan.') !!}
       </h2>
     </div>
 
     {{-- Bento Grid --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
 
-      {{-- Large hero card &mdash; local manufacturing --}}
+      {{-- Large hero card — local manufacturing --}}
       <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] overflow-hidden relative min-h-[340px] group"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div class="absolute inset-0 z-0">
@@ -390,12 +339,12 @@
           <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/80 via-[#1d1d1f]/20 to-transparent"></div>
         </div>
         <div class="relative z-10 h-full flex flex-col justify-end p-8 sm:p-10">
-          <p class="text-[12px] font-bold text-white/50 tracking-wide mb-3">Rekayasa &amp; Manufaktur</p>
+          <p class="text-[12px] font-bold text-white/50 tracking-wide mb-3">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Rekayasa & Manufaktur') !!}</p>
           <h3 class="text-[28px] sm:text-[34px] font-semibold text-white tracking-[-0.02em] leading-[1.1] mb-2">
-            Desain Aerodinamis &amp;<br>Avionik In-House.
+            {!! nl2br(esc_html($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis &\nAvionik In-House.")) !!}
           </h3>
           <p class="text-[15px] text-white/70 max-w-[420px] leading-relaxed">
-            Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).
+            {!! nl2br(esc_html($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')) !!}
           </p>
         </div>
       </div>
@@ -403,10 +352,10 @@
       {{-- TKDN Card --}}
       <div class="lg:col-span-4 bg-[#0066cc] rounded-[2rem] p-8 flex flex-col justify-between min-h-[200px]"
            style="box-shadow: 0 2px 24px rgba(0,102,204,0.2);">
-        <p class="text-[12px] font-bold text-white/60 tracking-wide">Sertifikasi TKDN + BMP</p>
+        <p class="text-[12px] font-bold text-white/60 tracking-wide">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Sertifikasi TKDN + BMP') !!}</p>
         <div>
-          <p class="text-[54px] sm:text-[64px] font-semibold text-white tracking-[-0.04em] leading-none">60,74%</p>
-          <p class="text-[14px] text-white/70 mt-2">Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI.</p>
+          <p class="text-[54px] sm:text-[64px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
+          <p class="text-[14px] text-white/70 mt-2">{!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI.') !!}</p>
         </div>
       </div>
 
@@ -414,9 +363,9 @@
       <div class="lg:col-span-4 bg-[#1d1d1f] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.08);">
         <div>
-          <p class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Software</p>
-          <h3 class="text-[22px] font-semibold text-white tracking-[-0.02em] mb-2">FDS STATION<br>Ground Control GCS</h3>
-          <p class="text-[14px] text-white/50 leading-relaxed">Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.</p>
+          <p class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software') !!}</p>
+          <h3 class="text-[22px] font-semibold text-white tracking-[-0.02em] mb-2">{!! nl2br(esc_html($hp['keunggulan_card3_title'] ?? "FDS STATION\nGround Control GCS")) !!}</h3>
+          <p class="text-[14px] text-white/50 leading-relaxed">{!! esc_html($hp['keunggulan_card3_desc'] ?? 'Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.') !!}</p>
         </div>
       </div>
 
@@ -424,9 +373,9 @@
       <div class="lg:col-span-4 bg-[#f5f5f7] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div>
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">Standar &amp; Mutu</p>
-          <p class="text-[44px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">ISO &amp; SNI</p>
-          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.</p>
+          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card4_badge'] ?? 'Standar & Mutu') !!}</p>
+          <p class="text-[44px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
+          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">{!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}</p>
         </div>
       </div>
 
@@ -434,9 +383,9 @@
       <div class="lg:col-span-4 bg-[#f5f5f7] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div>
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">After-Sales</p>
-          <h3 class="text-[22px] font-semibold text-[#1d1d1f] tracking-[-0.02em] mb-2">Purna Jual &amp; Suku Cadang</h3>
-          <p class="text-[14px] text-[#515154] leading-relaxed">Pelatihan pilot berlisensi, servis berkala, dan spare parts siap kirim dari Yogyakarta.</p>
+          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card5_badge'] ?? 'After-Sales') !!}</p>
+          <h3 class="text-[22px] font-semibold text-[#1d1d1f] tracking-[-0.02em] mb-2">{!! esc_html($hp['keunggulan_card5_title'] ?? 'Purna Jual & Suku Cadang') !!}</h3>
+          <p class="text-[14px] text-[#515154] leading-relaxed">{!! esc_html($hp['keunggulan_card5_desc'] ?? 'Pelatihan pilot berlisensi, servis berkala, dan spare parts siap kirim dari Yogyakarta.') !!}</p>
         </div>
       </div>
 
@@ -444,9 +393,9 @@
       <div class="lg:col-span-4 sm:col-span-2 bg-[#e8f0fe] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.04);">
         <div>
-          <p class="text-[12px] font-bold text-[#0066cc] tracking-wide mb-4">Pengalaman Industri</p>
-          <p class="text-[54px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">2012</p>
-          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.</p>
+          <p class="text-[12px] font-bold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card6_badge'] ?? 'Pengalaman Industri') !!}</p>
+          <p class="text-[54px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
+          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">{!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}</p>
         </div>
       </div>
 
@@ -454,9 +403,9 @@
       <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] p-8 sm:p-10 min-h-[160px] flex flex-col sm:flex-row items-center gap-8"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div class="flex-1">
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-3">Cakupan Industri</p>
-          <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em]">Satu ekosistem. Banyak solusi.</h3>
-          <p class="text-[15px] text-[#515154] mt-2 leading-relaxed max-w-[420px]">Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.</p>
+          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-3">{!! esc_html($hp['keunggulan_card7_badge'] ?? 'Cakupan Industri') !!}</p>
+          <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em]">{!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}</h3>
+          <p class="text-[15px] text-[#515154] mt-2 leading-relaxed max-w-[420px]">{!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}</p>
         </div>
         <div class="grid grid-cols-3 gap-3 flex-shrink-0">
           @foreach(['Agri', 'Mapping', 'Inspeksi', 'Tambang', 'Hutan', 'BUMN'] as $sector)
@@ -472,19 +421,19 @@
 
 
 {{-- ========================================================== --}}
-{{-- 5. PRODUCT LINEUP — dengan filter kategori                --}}
+{{-- 5. PRODUCT LINEUP — Header Dinamis, List dari CPT Drone   --}}
 {{-- ========================================================== --}}
 <section id="produk" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">Lini Produk Drone</p>
+        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['produk_badge'] ?? 'Lini Produk Drone') !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
-          Teknologi UAV Rekayasa Indonesia.
+          {!! esc_html($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') !!}
         </h2>
         <p class="mt-4 text-[18px] text-[#515154] max-w-[540px] leading-relaxed">
-          TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.
+          {!! nl2br(esc_html($hp['produk_desc'] ?? 'TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.')) !!}
         </p>
       </div>
     </div>
@@ -563,12 +512,36 @@
       <button
         data-cat="{!! esc_attr(strip_tags($cat)) !!}"
         onclick="filterDrones(this)"
-        class="drone-tab px-5 py-2 rounded-full text-[13px] font-semibold border transition-all duration-150
-               {{ $loop->first ? 'bg-[#1d1d1f] text-white border-[#1d1d1f]' : 'bg-white text-[#515154] border-black/[0.12] hover:border-[#1d1d1f] hover:text-[#1d1d1f]' }}">
+        class="drone-tab {{ $loop->first ? 'active' : '' }}">
         {!! $cat !!}
       </button>
       @endforeach
     </div>
+
+    <style>
+      .drone-tab {
+        padding: 8px 20px;
+        border-radius: 9999px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.15s ease;
+        cursor: pointer;
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        background-color: #ffffff;
+        color: #515154;
+      }
+      .drone-tab:hover {
+        border-color: #1d1d1f;
+        color: #1d1d1f;
+      }
+      .drone-tab.active,
+      .drone-tab.active:hover,
+      .drone-tab.active:focus {
+        background-color: #1d1d1f !important;
+        color: #ffffff !important;
+        border-color: #1d1d1f !important;
+      }
+    </style>
 
     {{-- Product rows (Dinamis dari WordPress) --}}
     <div class="space-y-0 border-t border-black/[0.06]" id="drone-list">
@@ -624,20 +597,20 @@
     {{-- USP strip --}}
     <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
       <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">60,74%</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">Nilai TKDN + BMP</p>
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat1_num'] ?? '60,74%') !!}</p>
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat1_lbl'] ?? 'Nilai TKDN + BMP') !!}</p>
       </div>
       <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">ISO &amp; SNI</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">ISO 9001 &amp; SNI 9199:2023</p>
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat2_num'] ?? 'ISO & SNI') !!}</p>
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat2_lbl'] ?? 'ISO 9001 & SNI 9199:2023') !!}</p>
       </div>
       <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">100%</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">FDS STATION GCS</p>
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat3_num'] ?? '100%') !!}</p>
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat3_lbl'] ?? 'FDS STATION GCS') !!}</p>
       </div>
       <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">2012</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">Pengalaman Industri UAV</p>
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat4_num'] ?? '2012') !!}</p>
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat4_lbl'] ?? 'Pengalaman Industri UAV') !!}</p>
       </div>
     </div>
 
@@ -647,13 +620,10 @@
 <script>
 function filterDrones(btn) {
   const cat = (btn.dataset.cat || '').trim();
-  // Update tab styles
-  document.querySelectorAll('.drone-tab').forEach(t => {
-    t.classList.remove('bg-[#1d1d1f]','text-white','border-[#1d1d1f]');
-    t.classList.add('bg-white','text-[#515154]','border-black/[0.12]');
-  });
-  btn.classList.add('bg-[#1d1d1f]','text-white','border-[#1d1d1f]');
-  btn.classList.remove('bg-white','text-[#515154]','border-black/[0.12]');
+  
+  // Update active class
+  document.querySelectorAll('.drone-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
 
   // Filter rows
   const rows = document.querySelectorAll('.drone-row');
@@ -682,40 +652,41 @@ function filterDrones(btn) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
 
       <div class="lg:sticky lg:top-24">
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Layanan</p>
+        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['layanan_badge'] ?? 'Layanan') !!}</p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
-          Lebih dari sekadar hardware.
+          {!! esc_html($hp['layanan_title'] ?? 'Lebih dari sekadar hardware.') !!}
         </h2>
         <p class="text-[18px] text-white/50 leading-relaxed max-w-[380px] mb-8">
-          Kami menyediakan layanan operasional lengkap untuk memastikan investasi drone Anda memberikan hasil maksimal.
+          {!! nl2br(esc_html($hp['layanan_desc'] ?? 'Kami menyediakan layanan operasional lengkap untuk memastikan investasi drone Anda memberikan hasil maksimal.')) !!}
         </p>
-        <a href="#kontak"
+        <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
            class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150">
-          Diskusi Kebutuhan Anda
+          {!! esc_html($hp['layanan_cta_text'] ?? 'Diskusi Kebutuhan Anda') !!}
         </a>
       </div>
 
       <div class="divide-y divide-white/[0.08]">
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">Pemetaan Aerial & GIS</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Peta topografi resolusi tinggi dengan akurasi sub-sentimeter untuk perencanaan lahan, kehutanan, dan infrastruktur.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item1_title'] ?? 'Pemetaan Aerial & GIS') !!}</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item1_desc'] ?? 'Peta topografi resolusi tinggi dengan akurasi sub-sentimeter untuk perencanaan lahan, kehutanan, dan infrastruktur.')) !!}</p>
         </div>
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">Inspeksi Industri &amp; Infrastruktur</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Pemeriksaan visual dan termal berbasis UAV untuk pemantauan fasilitas energi, kelistrikan, migas, dan infrastruktur kritis secara cepat dan aman tanpa menghentikan operasional.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item2_title'] ?? 'Inspeksi Industri & Infrastruktur') !!}</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item2_desc'] ?? 'Pemeriksaan visual dan termal berbasis UAV untuk pemantauan fasilitas energi, kelistrikan, migas, dan infrastruktur kritis secara cepat dan aman tanpa menghentikan operasional.')) !!}</p>
         </div>
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">Sewa Armada Drone</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Armada FERTO siap pakai untuk proyek jangka pendek, pilot project, atau kebutuhan peak season tanpa investasi unit penuh.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item3_title'] ?? 'Sewa Armada Drone') !!}</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item3_desc'] ?? 'Armada FERTO siap pakai untuk proyek jangka pendek, pilot project, atau kebutuhan peak season tanpa investasi unit penuh.')) !!}</p>
         </div>
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">Pelatihan & Sertifikasi Pilot</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Program pelatihan pilot drone bersertifikat resmi untuk tim lapangan Anda. Kurikulum mencakup misi agrikultur, pemetaan, dan inspeksi.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item4_title'] ?? 'Pelatihan & Sertifikasi Pilot') !!}</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item4_desc'] ?? 'Program pelatihan pilot drone bersertifikat resmi untuk tim lapangan Anda. Kurikulum mencakup misi agrikultur, pemetaan, dan inspeksi.')) !!}</p>
         </div>
         <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">After-Sales & Maintenance</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">Layanan purna jual lokal dengan stok suku cadang, teknisi bersertifikat, dan garansi resmi di seluruh Indonesia.</p>
+          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item5_title'] ?? 'After-Sales & Maintenance') !!}</h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item5_desc'] ?? 'Layanan purna jual lokal dengan stok suku cadang, teknisi bersertifikat, dan garansi resmi di seluruh Indonesia.')) !!}</p>
         </div>
+      </div>
       </div>
 
     </div>
@@ -731,14 +702,14 @@ function filterDrones(btn) {
 
     <div class="flex items-end justify-between mb-14 flex-wrap gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">Newsroom</p>
+        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
-          Berita & Pembaruan Terkini.
+          {!! esc_html($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') !!}
         </h2>
       </div>
       <a href="{{ home_url('/blog') }}"
          class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0066cc] hover:underline flex-shrink-0">
-        Lihat semua artikel
+        {!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </a>
     </div>
@@ -799,7 +770,7 @@ function filterDrones(btn) {
 
 
 {{-- ========================================================== --}}
-{{-- 7. CONTACT &mdash; Premium split layout                        --}}
+{{-- 7. CONTACT — Premium split layout                         --}}
 {{-- ========================================================== --}}
 <section id="kontak" class="bg-[#f5f5f7] py-24 sm:py-32 border-t border-black/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
@@ -809,39 +780,39 @@ function filterDrones(btn) {
       {{-- Left panel: dark, info --}}
       <div class="bg-[#1d1d1f] rounded-[2rem] p-10 sm:p-14 flex flex-col justify-between min-h-[520px]">
         <div>
-          <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">Enterprise Sales</p>
+          <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">{!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}</p>
           <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
-            Hubungi tim<br>Enterprise FDS.
+            {!! nl2br(esc_html($hp['kontak_title'] ?? "Hubungi tim\nEnterprise FDS.")) !!}
           </h2>
           <p class="text-[17px] text-white/60 leading-relaxed max-w-[360px]">
-            Dari konsultasi teknis, fleet management, hingga program sertifikasi &mdash; kami siap mendampingi operasional drone Anda.
+            {!! nl2br(esc_html($hp['kontak_desc'] ?? 'Dari konsultasi teknis, fleet management, hingga program sertifikasi — kami siap mendampingi operasional drone Anda.')) !!}
           </p>
         </div>
 
         <div class="mt-12 space-y-6 border-t border-white/[0.08] pt-10">
           <div>
             <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Telepon / WhatsApp</p>
-            <a href="tel:+6281234567890" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">+62 812-3456-7890</a>
+            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $hp['kontak_phone'] ?? '+6281234567890') }}" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">{!! esc_html($hp['kontak_phone'] ?? '+62 812-3456-7890') !!}</a>
           </div>
           <div>
             <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Email</p>
-            <a href="mailto:sales@fulldronesolutions.co.id" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">sales@fulldronesolutions.co.id</a>
+            <a href="mailto:{{ esc_attr($hp['kontak_email'] ?? 'sales@fulldronesolutions.co.id') }}" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">{!! esc_html($hp['kontak_email'] ?? 'sales@fulldronesolutions.co.id') !!}</a>
           </div>
           <div>
             <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Lokasi Workshop</p>
-            <p class="text-[17px] font-semibold text-white">Sleman, D.I. Yogyakarta</p>
+            <p class="text-[17px] font-semibold text-white">{!! esc_html($hp['kontak_address'] ?? 'Sleman, D.I. Yogyakarta') !!}</p>
           </div>
-          <a href="https://wa.me/6281234567890" target="_blank" rel="noopener"
+          <a href="{{ esc_url($hp['kontak_wa_link'] ?? 'https://wa.me/6281234567890') }}" target="_blank" rel="noopener"
              class="inline-flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1db954] active:scale-[0.97] text-white font-semibold text-[14px] px-5 py-3 rounded-full transition-all duration-150">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            Chat via WhatsApp
+            {!! esc_html($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') !!}
           </a>
         </div>
       </div>
 
       {{-- Right panel: white, form --}}
       <div class="bg-white rounded-[2rem] p-10 sm:p-14" style="box-shadow: 0 4px 40px rgba(0,0,0,0.06);">
-        <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-8">Kirim pesan inquiry</h3>
+        <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-8">{!! esc_html($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') !!}</h3>
 
         <form class="space-y-7" onsubmit="event.preventDefault();">
 
@@ -886,10 +857,10 @@ function filterDrones(btn) {
           <div class="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-5">
             <button type="submit"
               class="bg-[#1d1d1f] hover:bg-black active:scale-[0.97] text-white font-semibold text-[15px] px-8 py-4 rounded-full transition-all duration-150 whitespace-nowrap">
-              Kirim Pesan
+              {!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Pesan') !!}
             </button>
             <p class="text-[12px] text-[#86868b] leading-relaxed">
-              Kami merespons dalam 1×24 jam kerja.<br>Data Anda tidak akan dibagikan ke pihak ketiga.
+              {!! nl2br(esc_html($hp['kontak_form_note'] ?? "Kami merespons dalam 1×24 jam kerja.\nData Anda tidak akan dibagikan ke pihak ketiga.")) !!}
             </p>
           </div>
 

@@ -124,12 +124,35 @@
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
           <div class="flex items-center justify-between h-[52px]">
 
-            <!-- Logo -->
+            <!-- Dynamic Logo & Brand -->
+            @php
+              $nb_brand = function_exists('App\fds_get_navbar_brand') ? \App\fds_get_navbar_brand() : [
+                'has_logo'     => false,
+                'logo_url'     => '',
+                'brand_text'   => 'Full Drone Solutions',
+                'display_mode' => 'both',
+                'logo_height'  => 28,
+              ];
+            @endphp
             <a href="{{ home_url('/') }}" class="nav-direct-link flex items-center gap-2.5 group">
-              <svg class="w-5 h-5 text-[#1d1d1f]" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
-              </svg>
-              <span class="text-[15px] font-semibold text-[#1d1d1f] tracking-tight">Full Drone Solutions</span>
+              @if($nb_brand['display_mode'] !== 'text_only')
+                @if($nb_brand['has_logo'])
+                  <img src="{{ esc_url($nb_brand['logo_url']) }}"
+                       alt="{{ esc_attr($nb_brand['brand_text']) }}"
+                       style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
+                       class="transition-transform duration-200 group-hover:scale-[1.03]">
+                @else
+                  <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
+                  </svg>
+                @endif
+              @endif
+
+              @if($nb_brand['display_mode'] !== 'logo_only' && !empty($nb_brand['brand_text']))
+                <span class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors tracking-tight">
+                  {!! esc_html($nb_brand['brand_text']) !!}
+                </span>
+              @endif
             </a>
 
             <!-- Nav links -->
@@ -183,122 +206,175 @@
             <div id="mega-pane-produk" class="mega-pane transition-opacity duration-150 opacity-100">
               @php
                 $agri_cat = $drones_by_cat_slug['agrikultur'] ?? null;
-                $other_cats = [];
-                foreach ($drones_by_cat_slug as $k => $v) {
-                    if ($k !== 'agrikultur') {
-                        $other_cats[$k] = $v;
-                    }
-                }
-                if (!$agri_cat && !empty($drones_by_cat_slug)) {
-                    $first_key = array_key_first($drones_by_cat_slug);
-                    $agri_cat = $drones_by_cat_slug[$first_key];
-                    unset($other_cats[$first_key]);
-                }
+                $pemetaan_cat = $drones_by_cat_slug['pemetaan-gis'] ?? ($drones_by_cat_slug['pemetaan'] ?? null);
+                $kargo_cat = $drones_by_cat_slug['kargo'] ?? ($drones_by_cat_slug['cargo'] ?? null);
+                $reboisasi_cat = $drones_by_cat_slug['reboisasi'] ?? null;
 
                 $agri_limit = 6;
                 $agri_drones = $agri_cat ? array_slice($agri_cat['drones'], 0, $agri_limit) : [];
                 $agri_remaining = $agri_cat ? max(0, count($agri_cat['drones']) - $agri_limit) : 0;
+
+                $pemetaan_limit = 2;
+                $pemetaan_drones = $pemetaan_cat ? array_slice($pemetaan_cat['drones'], 0, $pemetaan_limit) : [];
+                $pemetaan_remaining = $pemetaan_cat ? max(0, count($pemetaan_cat['drones']) - $pemetaan_limit) : 0;
+
+                $kargo_limit = 1;
+                $kargo_drones = $kargo_cat ? array_slice($kargo_cat['drones'], 0, $kargo_limit) : [];
+                $kargo_remaining = $kargo_cat ? max(0, count($kargo_cat['drones']) - $kargo_limit) : 0;
+
+                $rebo_limit = 1;
+                $rebo_drones = $reboisasi_cat ? array_slice($reboisasi_cat['drones'], 0, $rebo_limit) : [];
+                $rebo_remaining = $reboisasi_cat ? max(0, count($reboisasi_cat['drones']) - $rebo_limit) : 0;
               @endphp
 
               <div class="grid grid-cols-12 gap-10">
                 
-                <!-- Column 1 & 2: Kategori Agrikultur (Col 6) -->
+                <!-- Column 1 & 2: Agrikultur (Atas) + Pemetaan & GIS (Bawah) (Col 6) -->
                 <div class="col-span-6 border-r border-black/[0.06] pr-10">
-                  <div class="mb-5">
-                    <p class="text-[12px] font-semibold text-[#86868b]">
-                      {!! !empty($agri_cat['term']->name) ? wp_specialchars_decode($agri_cat['term']->name) : 'UAV Agrikultur' !!} (Seri FERTO)
-                    </p>
-                  </div>
-
-                  @if(!empty($agri_drones))
-                  <div class="grid grid-cols-2 gap-x-8 gap-y-4">
-                    @foreach($agri_drones as $item)
-                    <a href="{{ home_url('/' . $item['slug']) }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                        {!! $item['name'] !!}
-                      </div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">
-                        {!! $item['spec'] ?: $item['desc'] !!}
-                      </div>
-                    </a>
-                    @endforeach
-
-                    @if($agri_remaining > 0)
-                    <div class="col-span-2 pt-2 border-t border-black/[0.04]">
-                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[12px] font-semibold text-[#0066cc] hover:underline gap-1">
-                        + Lihat {{ $agri_remaining }} Drone Agrikultur lainnya di Beranda &rsaquo;
+                  
+                  <!-- Agrikultur (Atas) -->
+                  <div>
+                    <div class="mb-3 flex items-center justify-between">
+                      <p class="text-[12px] font-semibold text-[#86868b]">
+                        {!! !empty($agri_cat['term']->name) ? wp_specialchars_decode($agri_cat['term']->name) : 'UAV Agrikultur' !!} (Seri FERTO)
+                      </p>
+                      @if($agri_remaining > 0)
+                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0066cc] hover:underline">
+                        + Lihat {{ $agri_remaining }} lainnya &rsaquo;
                       </a>
+                      @endif
                     </div>
+
+                    @if(!empty($agri_drones))
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-3">
+                      @foreach($agri_drones as $item)
+                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
+                        </div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                          {!! $item['spec'] ?: $item['desc'] !!}
+                        </div>
+                      </a>
+                      @endforeach
+                    </div>
+                    @else
+                    <p class="text-[13px] text-[#86868b]">Belum ada drone pada kategori ini.</p>
                     @endif
                   </div>
-                  @else
-                  <p class="text-[13px] text-[#86868b]">Belum ada drone pada kategori ini.</p>
+
+                  <!-- Pemetaan & GIS (Bawah Kategori Agrikultur) -->
+                  @if(!empty($pemetaan_cat) && !empty($pemetaan_drones))
+                  <div class="pt-4 mt-4 border-t border-black/[0.06]">
+                    <div class="mb-3 flex items-center justify-between">
+                      <p class="text-[12px] font-semibold text-[#86868b]">
+                        {!! wp_specialchars_decode($pemetaan_cat['term']->name) !!}
+                      </p>
+                      @if($pemetaan_remaining > 0)
+                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0066cc] hover:underline">
+                        + Lihat {{ $pemetaan_remaining }} lainnya &rsaquo;
+                      </a>
+                      @endif
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-8 gap-y-3">
+                      @foreach($pemetaan_drones as $item)
+                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
+                        </div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                          {!! $item['spec'] ?: $item['desc'] !!}
+                        </div>
+                      </a>
+                      @endforeach
+                    </div>
+                  </div>
                   @endif
+
                 </div>
 
-                <!-- Column 3: Kategori Lainnya Dinamis dari WP (Col 3) -->
-                <div class="col-span-3 border-r border-black/[0.06] pr-8 space-y-6">
-                  @forelse($other_cats as $cslug => $cdata)
-                    @if(!empty($cdata['drones']))
-                      @php
-                        $sub_limit = 3;
-                        $sub_drones = array_slice($cdata['drones'], 0, $sub_limit);
-                        $sub_remaining = max(0, count($cdata['drones']) - $sub_limit);
-                      @endphp
-                      <div class="{{ !$loop->first ? 'pt-4 border-t border-black/[0.06]' : '' }}">
-                        <p class="text-[12px] font-semibold text-[#86868b] mb-3">
-                          {!! wp_specialchars_decode($cdata['term']->name) !!}
-                        </p>
-                        
-                        <div class="space-y-3">
-                          @foreach($sub_drones as $item)
-                          <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
-                            <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                              {!! $item['name'] !!}
-                            </div>
-                            <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
-                              {!! $item['spec'] ?: $item['desc'] !!}
-                            </div>
-                          </a>
-                          @endforeach
-
-                          @if($sub_remaining > 0)
-                          <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-1">
-                            + Lihat {{ $sub_remaining }} Drone lainnya &rsaquo;
-                          </a>
-                          @endif
+                <!-- Column 3: Kargo & Reboisasi (Di Tempatnya / Kolom Tengah Kanan) (Col 3) -->
+                <div class="col-span-3 border-r border-black/[0.06] pr-8 space-y-5">
+                  
+                  <!-- Kargo -->
+                  @if(!empty($kargo_cat) && !empty($kargo_drones))
+                  <div>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-2.5">
+                      {!! wp_specialchars_decode($kargo_cat['term']->name) !!}
+                    </p>
+                    <div class="space-y-2.5">
+                      @foreach($kargo_drones as $item)
+                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
                         </div>
-                      </div>
-                    @endif
-                  @empty
-                    <p class="text-[13px] text-[#86868b]">Belum ada kategori lainnya.</p>
-                  @endforelse
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                          {!! $item['spec'] ?: $item['desc'] !!}
+                        </div>
+                      </a>
+                      @endforeach
+                      @if($kargo_remaining > 0)
+                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-0.5">
+                        + Lihat {{ $kargo_remaining }} lainnya &rsaquo;
+                      </a>
+                      @endif
+                    </div>
+                  </div>
+                  @endif
+
+                  <!-- Reboisasi -->
+                  @if(!empty($reboisasi_cat) && !empty($rebo_drones))
+                  <div class="pt-4 border-t border-black/[0.06]">
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-2.5">
+                      {!! wp_specialchars_decode($reboisasi_cat['term']->name) !!}
+                    </p>
+                    <div class="space-y-2.5">
+                      @foreach($rebo_drones as $item)
+                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
+                        </div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                          {!! $item['spec'] ?: $item['desc'] !!}
+                        </div>
+                      </a>
+                      @endforeach
+                      @if($rebo_remaining > 0)
+                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-0.5">
+                        + Lihat {{ $rebo_remaining }} lainnya &rsaquo;
+                      </a>
+                      @endif
+                    </div>
+                  </div>
+                  @endif
+
                 </div>
 
                 <!-- Column 4: Ekosistem & Standar (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">Ekosistem &amp; Standar</p>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-4">Ekosistem &amp; Standar</p>
                     
-                    <div class="space-y-4">
+                    <div class="space-y-3.5">
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">FDS Station GCS</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Software Ground Control Bahasa Indonesia</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Software Ground Control Bahasa Indonesia</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Sertifikasi TKDN + BMP</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Nilai kandungan lokal mencapai 60,74%</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Nilai kandungan lokal mencapai 60,74%</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Standar SNI 9199:2023</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Teruji standar mutu pertanian nasional</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Teruji standar mutu pertanian nasional</div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="pt-6 border-t border-black/[0.06]">
+                  <div class="pt-5 border-t border-black/[0.06]">
                     <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
                       Bandingkan Semua Spesifikasi
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
