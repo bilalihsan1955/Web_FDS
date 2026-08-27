@@ -192,26 +192,24 @@
       </div>
 
       <div class="lg:col-span-8 divide-y divide-black/[0.06]">
-        @for($i = 1; $i <= 7; $i++)
-          @php
-            $m_cat  = $about["mitra_item{$i}_cat"] ?? '';
-            $m_name = $about["mitra_item{$i}_name"] ?? '';
-            $m_desc = $about["mitra_item{$i}_desc"] ?? '';
-          @endphp
-          @if(!empty($m_name))
+        @php
+          $about_activities = function_exists('App\fds_get_about_activities') ? \App\fds_get_about_activities() : [];
+        @endphp
+        @foreach($about_activities as $act)
+          @if(!empty($act['name']))
           <div class="py-8 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-start">
             <div class="sm:col-span-5">
-              @if(!empty($m_cat))
-              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{!! esc_html($m_cat) !!}</p>
+              @if(!empty($act['cat']))
+              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{!! esc_html($act['cat']) !!}</p>
               @endif
-              <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{!! esc_html($m_name) !!}</h3>
+              <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{!! esc_html($act['name']) !!}</h3>
             </div>
             <div class="sm:col-span-7">
-              <p class="text-[15px] text-[#515154] leading-relaxed">{!! esc_html($m_desc) !!}</p>
+              <p class="text-[15px] text-[#515154] leading-relaxed">{!! nl2br(esc_html($act['desc'])) !!}</p>
             </div>
           </div>
           @endif
-        @endfor
+        @endforeach
       </div>
 
     </div>

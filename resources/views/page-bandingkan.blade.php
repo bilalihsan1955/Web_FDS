@@ -8,6 +8,7 @@
       'slug'      => 'ferto-5l',
       'name'      => 'FERTO 5',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Kompak & Lincah',
       'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
       'color'     => '#0066cc',
@@ -37,6 +38,7 @@
       'slug'      => 'ferto-10l',
       'name'      => 'FERTO 10',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Terlaris',
       'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
       'color'     => '#0066cc',
@@ -66,6 +68,7 @@
       'slug'      => 'ferto-15l',
       'name'      => 'FERTO 15',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Profesional',
       'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
       'color'     => '#0066cc',
@@ -95,6 +98,7 @@
       'slug'      => 'ferto-22l',
       'name'      => 'FERTO 22',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Enterprise',
       'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
       'color'     => '#0066cc',
@@ -124,6 +128,7 @@
       'slug'      => 'ferto-30l',
       'name'      => 'FERTO 30',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Heavy Duty',
       'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
       'color'     => '#0066cc',
@@ -153,6 +158,7 @@
       'slug'      => 'ferto-50l',
       'name'      => 'FERTO 50',
       'kategori'  => 'Agrikultur',
+      'cat_slug'  => 'agrikultur',
       'badge'     => 'Ultra Capacity',
       'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
       'color'     => '#0066cc',
@@ -182,6 +188,7 @@
       'slug'      => 'deltav',
       'name'      => 'DELTAV',
       'kategori'  => 'Pemetaan & GIS',
+      'cat_slug'  => 'pemetaan-gis',
       'badge'     => 'Hybrid VTOL',
       'tagline'   => 'Platform UAV Pemetaan Fixed-Wing VTOL Hybrid — Jangkauan 60 km untuk akuisisi geospasial area luas.',
       'color'     => '#0066cc',
@@ -212,6 +219,7 @@
       'slug'      => 'multipurpose',
       'name'      => 'MULTIPURPOSE',
       'kategori'  => 'Pemetaan & Inspeksi',
+      'cat_slug'  => 'pemetaan-gis',
       'badge'     => 'Modular UAV',
       'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
       'color'     => '#0066cc',
@@ -240,7 +248,8 @@
     'delfro' => [
       'slug'      => 'delfro',
       'name'      => 'DELFRO',
-      'kategori'  => 'Cargo & Logistik',
+      'kategori'  => 'Kargo & Logistik',
+      'cat_slug'  => 'kargo',
       'badge'     => 'Logistics UAV',
       'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
       'color'     => '#0066cc',
@@ -270,6 +279,7 @@
       'slug'      => 'rebo',
       'name'      => 'REBO',
       'kategori'  => 'Reboisasi & Konservasi',
+      'cat_slug'  => 'reboisasi',
       'badge'     => 'Heavy-Duty Seedball',
       'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
       'color'     => '#0066cc',
@@ -313,18 +323,40 @@
     $post_id = $dp->ID;
 
     $c_terms = get_the_terms($post_id, 'kategori_drone');
-    $cat_name = (!empty($c_terms) && !is_wp_error($c_terms)) ? $c_terms[0]->name : (get_post_meta($post_id, 'drone_kategori', true) ?: 'Agrikultur');
+    if (!empty($c_terms) && !is_wp_error($c_terms)) {
+      $cat_name = $c_terms[0]->name;
+      $cat_slug = $c_terms[0]->slug;
+    } else {
+      $raw_cat = get_post_meta($post_id, 'drone_kategori', true);
+      $cat_name = $raw_cat ?: ($catalog[$slug]['kategori'] ?? 'Agrikultur');
+      $cat_slug = $catalog[$slug]['cat_slug'] ?? sanitize_title($cat_name);
+    }
 
     $thumb = get_the_post_thumbnail_url($post_id, 'full');
     $specs_img_db = get_post_meta($post_id, 'drone_specs_img', true);
 
-    $droneImgKey      = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
-    $droneImgFallback = 'https://picsum.photos/seed/' . $slug . '-hero/1600/700';
+    $droneImgKey = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
+    
+    // Real Transparent Drone Cutout Fallbacks
+    $cleanDroneCutouts = [
+      'ferto-5l'     => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
+      'ferto-10l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_141509_532-1.png'),
+      'ferto-15l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
+      'ferto-22l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_142215_455-1-1.png'),
+      'ferto-30l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
+      'ferto-50l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_141509_532-1.png'),
+      'deltav'       => home_url('/wp-content/uploads/2026/08/14.png'),
+      'multipurpose' => home_url('/wp-content/uploads/2026/08/IMG_20260820_142215_455-1-1.png'),
+      'delfro'       => home_url('/wp-content/uploads/2026/08/56-1.png'),
+      'rebo'         => home_url('/wp-content/uploads/2026/08/31.png'),
+    ];
+    $cleanDefault = $cleanDroneCutouts[$slug] ?? home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png');
 
     $item = $catalog[$slug] ?? [
       'slug'      => $slug,
       'name'      => get_the_title($post_id),
       'kategori'  => $cat_name,
+      'cat_slug'  => $cat_slug,
       'badge'     => get_post_meta($post_id, 'drone_badge', true) ?: 'Produk UAV',
       'tagline'   => get_post_meta($post_id, 'drone_tagline', true) ?: get_the_excerpt($post_id),
       'color'     => '#0066cc',
@@ -341,10 +373,12 @@
       'stat4_lbl' => get_post_meta($post_id, 'drone_stat4_lbl', true) ?: 'Purna Jual Resmi',
     ];
 
-    $item['name'] = get_the_title($post_id) ?: $item['name'];
-    $item['url']  = get_permalink($post_id);
-    $item['hero_img']  = $thumb ?: fds_img($droneImgKey, $droneImgFallback);
-    $item['specs_img'] = $specs_img_db ?: ($thumb ?: fds_img($droneImgKey, "https://picsum.photos/seed/{$slug}-specs/1400/1000"));
+    $item['name']      = get_the_title($post_id) ?: $item['name'];
+    $item['kategori']  = $cat_name;
+    $item['cat_slug']  = $cat_slug;
+    $item['url']       = get_permalink($post_id);
+    $item['hero_img']  = $thumb ?: fds_img($droneImgKey, $cleanDefault);
+    $item['specs_img'] = $specs_img_db ?: ($thumb ?: fds_img($droneImgKey, $cleanDefault));
 
     $c_badge = get_post_meta($post_id, 'drone_badge', true);
     if ($c_badge) $item['badge'] = $c_badge;
@@ -446,14 +480,36 @@
     $req_d2 = '';
   }
 
+  // 4. KATEGORI DRONE RESMI DARI WP ADMIN (TAKSONOMI 'kategori_drone')
+  $terms_db = get_terms([
+    'taxonomy'   => 'kategori_drone',
+    'hide_empty' => false,
+    'orderby'    => 'term_id',
+    'order'      => 'ASC',
+  ]);
+  $modal_categories = [];
+  if (!empty($terms_db) && !is_wp_error($terms_db)) {
+    foreach ($terms_db as $t) {
+      $modal_categories[$t->slug] = wp_specialchars_decode($t->name, ENT_QUOTES);
+    }
+  }
+  if (empty($modal_categories)) {
+    $modal_categories = [
+      'agrikultur'   => 'Agrikultur',
+      'pemetaan-gis' => 'Pemetaan & GIS',
+      'kargo'        => 'Kargo',
+      'reboisasi'    => 'Reboisasi',
+    ];
+  }
+
   $json_catalog = json_encode($catalog);
 @endphp
 
 <div id="compare-page" class="w-full bg-[#f5f5f7] font-sans selection:bg-[#0066cc]/20">
 
-  {{-- ── 1. HERO SECTION (100% KONSISTEN DENGAN BERANDA & HALAMAN LAINNYA) ── --}}
+  {{-- ── 1. HERO SECTION (WARNA ABU-ABU #f5f5f7 KHAS FDS) ── --}}
   <section id="compare-hero" class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 pb-8 sm:pb-12 text-center">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 pb-4 text-center">
 
       <p class="inline-block text-[13px] font-semibold text-[#0066cc] mb-4 tracking-wide">
         Komparasi Model UAV
@@ -463,38 +519,26 @@
         Bandingkan Model Drone.
       </h1>
 
-      <p class="mt-5 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[600px] mx-auto leading-[1.55]">
+      <p class="mt-5 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[640px] mx-auto leading-[1.55]">
         Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.
       </p>
 
     </div>
   </section>
 
-  {{-- ── 2. COMPACT STICKY BAR (MUNCUL OTOMATIS SAAT SCROLL DI TABEL SPEK) ──── --}}
-  <div id="compare-sticky-bar" class="sticky top-[52px] z-40 bg-white/95 backdrop-blur-2xl border-b border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.03)] py-3 transition-all duration-300 opacity-0 pointer-events-none -translate-y-2">
+  {{-- ── 2. VISUAL PRODUCT CARDS / EMPTY (+) PLACEHOLDERS (WARNA ABU-ABU #f5f5f7) ── --}}
+  <section id="product-cards-section" class="bg-[#f5f5f7] pt-8 pb-16 sm:pb-24">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <div class="grid grid-cols-2 gap-6 sm:gap-12 lg:gap-16">
-        
-        {{-- SLOT 1 COMPACT --}}
-        <div id="sticky-slot-1" class="flex items-center justify-center gap-3"></div>
-
-        {{-- SLOT 2 COMPACT --}}
-        <div id="sticky-slot-2" class="flex items-center justify-center gap-3 border-l border-black/[0.06]"></div>
-
-      </div>
-    </div>
-  </div>
-
-  {{-- ── 3. VISUAL PRODUCT CARDS / EMPTY (+) PLACEHOLDERS (WHITE) ── --}}
-  <section id="product-cards-section" class="bg-white pt-8 pb-16 sm:pb-20 border-b border-black/[0.06]">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <div class="grid grid-cols-2 gap-6 sm:gap-12 lg:gap-16 items-stretch">
+      <div class="relative grid grid-cols-2 items-stretch">
         
         {{-- SLOT 1 CONTAINER (Card or Plus Placeholder) --}}
-        <div id="slot-1-card-container" class="flex flex-col items-center text-center"></div>
+        <div id="slot-1-card-container" class="flex flex-col items-center text-center px-3 sm:px-8 lg:px-12"></div>
 
         {{-- SLOT 2 CONTAINER (Card or Plus Placeholder) --}}
-        <div id="slot-2-card-container" class="flex flex-col items-center text-center"></div>
+        <div id="slot-2-card-container" class="flex flex-col items-center text-center px-3 sm:px-8 lg:px-12"></div>
+
+        {{-- CENTER VERTICAL DIVIDER --}}
+        <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-black/[0.08] -translate-x-1/2 pointer-events-none"></div>
 
       </div>
     </div>
@@ -535,9 +579,9 @@
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+      <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 items-start">
         {{-- D1 FOR --}}
-        <div id="d1-for-box">
+        <div id="d1-for-box" class="md:pr-8 lg:pr-14">
           <h3 id="d1-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span>
             <span>Model 1</span>
@@ -546,38 +590,44 @@
         </div>
 
         {{-- D2 FOR --}}
-        <div id="d2-for-box">
+        <div id="d2-for-box" class="md:pl-8 lg:pl-14">
           <h3 id="d2-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span>
             <span>Model 2</span>
           </h3>
           <div id="d2-for-list" class="grid grid-cols-1 gap-3.5"></div>
         </div>
+
+        {{-- CENTER VERTICAL DIVIDER --}}
+        <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-white/[0.08] -translate-x-1/2 pointer-events-none"></div>
       </div>
 
     </div>
   </section>
 
   {{-- ── 6. SECTION STATS BAR (WHITE) ──────────────────────────── --}}
-  <section id="section-stats" class="bg-white py-16 border-b border-black/[0.06]">
+  <section id="section-stats" class="bg-white py-16 sm:py-20 border-b border-black/[0.06]">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 divide-y md:divide-y-0 md:divide-x divide-black/[0.06]">
+      <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 items-start">
         
         {{-- D1 STATS --}}
-        <div class="pt-6 md:pt-0">
-          <p id="d1-stats-header" class="text-[12px] font-bold text-[#86868b] uppercase tracking-wider mb-6 text-center">
-            Highlights Model 1
+        <div class="md:pr-10 lg:pr-16">
+          <p id="d1-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
+            Keunggulan Model 1
           </p>
           <div id="d1-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
         </div>
 
         {{-- D2 STATS --}}
-        <div class="pt-8 md:pt-0 md:pl-12">
-          <p id="d2-stats-header" class="text-[12px] font-bold text-[#86868b] uppercase tracking-wider mb-6 text-center">
-            Highlights Model 2
+        <div class="md:pl-10 lg:pl-16">
+          <p id="d2-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
+            Keunggulan Model 2
           </p>
           <div id="d2-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
         </div>
+
+        {{-- CENTER VERTICAL DIVIDER --}}
+        <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-black/[0.08] -translate-x-1/2 pointer-events-none"></div>
 
       </div>
     </div>
@@ -612,23 +662,24 @@
       {{-- Modal Header --}}
       <div class="p-6 pb-4 border-b border-black/[0.08] flex items-center justify-between bg-[#fbfbfd]">
         <div>
-          <p class="text-[12px] font-bold text-[#0066cc] uppercase tracking-wider mb-0.5">Katalog Produk</p>
+          <p class="text-[12px] font-semibold text-[#0066cc] mb-0.5">Katalog Produk</p>
           <h3 class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
             Pilih Model Drone (<span id="modal-slot-title">Sisi Kiri</span>)
           </h3>
         </div>
-        <button type="button" onclick="closePickerModal()" class="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#515154] hover:text-[#1d1d1f] transition-colors" aria-label="Tutup">
+        <button type="button" onclick="closePickerModal()" class="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#515154] hover:text-[#1d1d1f] transition-colors cursor-pointer" aria-label="Tutup">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      {{-- Modal Filter Tabs --}}
+      {{-- Modal Filter Tabs (Dinamis dari Taksonomi kategori_drone WP Admin) --}}
       <div class="px-6 py-3 border-b border-black/[0.06] bg-white flex flex-wrap gap-1.5">
-        <button type="button" onclick="filterModalCategory('all')" class="modal-cat-tab active px-3 py-1 rounded-full text-[12px] font-semibold bg-[#1d1d1f] text-white">Semua</button>
-        <button type="button" onclick="filterModalCategory('agrikultur')" class="modal-cat-tab px-3 py-1 rounded-full text-[12px] font-semibold bg-[#f5f5f7] text-[#515154] hover:text-[#1d1d1f]">Agrikultur (FERTO)</button>
-        <button type="button" onclick="filterModalCategory('pemetaan-gis')" class="modal-cat-tab px-3 py-1 rounded-full text-[12px] font-semibold bg-[#f5f5f7] text-[#515154] hover:text-[#1d1d1f]">Pemetaan (DELTAV)</button>
-        <button type="button" onclick="filterModalCategory('cargo-logistik')" class="modal-cat-tab px-3 py-1 rounded-full text-[12px] font-semibold bg-[#f5f5f7] text-[#515154] hover:text-[#1d1d1f]">Kargo (DELFRO)</button>
-        <button type="button" onclick="filterModalCategory('reboisasi-konservasi')" class="modal-cat-tab px-3 py-1 rounded-full text-[12px] font-semibold bg-[#f5f5f7] text-[#515154] hover:text-[#1d1d1f]">Reboisasi (REBO)</button>
+        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0066cc] text-white shadow-sm transition-colors cursor-pointer">Semua</button>
+        @foreach($modal_categories as $mSlug => $mName)
+        <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer">
+          {!! esc_html(wp_specialchars_decode($mName, ENT_QUOTES)) !!}
+        </button>
+        @endforeach
       </div>
 
       {{-- Modal Body: Drone Cards Grid --}}
@@ -636,23 +687,25 @@
         @foreach($catalog as $slugKey => $dItem)
         <div class="modal-drone-card group border border-black/[0.08] hover:border-[#0066cc] rounded-2xl p-4 bg-white hover:bg-[#fbfbfd] transition-all cursor-pointer flex items-center gap-4 relative"
              data-slug="{{ $slugKey }}"
-             data-cat="{{ sanitize_title($dItem['kategori']) }}"
+             data-cat-slug="{{ $dItem['cat_slug'] ?? sanitize_title($dItem['kategori']) }}"
              onclick="selectDroneForActiveSlot('{{ $slugKey }}')">
           <div class="w-20 h-20 bg-[#f5f5f7] rounded-xl flex items-center justify-center p-2 flex-shrink-0">
             <img src="{{ $dItem['specs_img'] ?: $dItem['hero_img'] }}" alt="{{ $dItem['name'] }}" class="max-w-full max-h-full object-contain">
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center gap-1.5 mb-1">
-              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0066cc]/10 text-[#0066cc]">
-                {{ $dItem['badge'] }}
+              @if(!empty($dItem['badge']))
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0066cc]/10 text-[#0066cc]">
+                {!! esc_html(wp_specialchars_decode($dItem['badge'], ENT_QUOTES)) !!}
               </span>
-              <span class="already-selected-badge hidden text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700"></span>
+              @endif
+              <span class="already-selected-badge hidden text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700"></span>
             </div>
             <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight mb-1 truncate">
               {!! esc_html(wp_specialchars_decode($dItem['name'], ENT_QUOTES)) !!}
             </h4>
             <p class="text-[12px] text-[#86868b] truncate">
-              {{ $dItem['kategori'] }}
+              {!! esc_html(wp_specialchars_decode($dItem['kategori'], ENT_QUOTES)) !!}
             </p>
           </div>
           <div class="w-8 h-8 rounded-full bg-[#f5f5f7] group-hover:bg-[#0066cc] group-hover:text-white flex items-center justify-center text-[#86868b] transition-colors flex-shrink-0">
@@ -728,20 +781,33 @@
     }
   };
 
-  window.filterModalCategory = function(catSlug) {
+  window.filterModalCategory = function(catSlug, btn) {
     document.querySelectorAll('.modal-cat-tab').forEach(b => {
-      b.classList.remove('bg-[#1d1d1f]', 'text-white');
-      b.classList.add('bg-[#f5f5f7]', 'text-[#515154]');
+      b.classList.remove('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+      b.classList.add('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
     });
-    event.currentTarget.classList.remove('bg-[#f5f5f7]', 'text-[#515154]');
-    event.currentTarget.classList.add('bg-[#1d1d1f]', 'text-white');
+    if (btn) {
+      btn.classList.remove('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
+      btn.classList.add('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+    }
 
     document.querySelectorAll('.modal-drone-card').forEach(card => {
-      const cardCat = card.getAttribute('data-cat') || '';
-      if (catSlug === 'all' || cardCat.includes(catSlug) || catSlug.includes(cardCat)) {
+      const cardCatSlug = (card.getAttribute('data-cat-slug') || '').toLowerCase();
+      
+      if (catSlug === 'all') {
         card.classList.remove('hidden');
       } else {
-        card.classList.add('hidden');
+        const isMatch = (cardCatSlug === catSlug) ||
+                        (catSlug === 'pemetaan-gis' && (cardCatSlug.includes('pemetaan') || cardCatSlug.includes('gis') || cardCatSlug.includes('inspeksi'))) ||
+                        (catSlug === 'kargo' && (cardCatSlug.includes('kargo') || cardCatSlug.includes('cargo') || cardCatSlug.includes('logistik'))) ||
+                        (catSlug === 'reboisasi' && (cardCatSlug.includes('reboisasi') || cardCatSlug.includes('konservasi'))) ||
+                        (catSlug === 'agrikultur' && cardCatSlug.includes('agrikultur'));
+
+        if (isMatch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
       }
     });
   };
@@ -789,58 +855,18 @@
     const d1 = CATALOG[d1Key] || null;
     const d2 = CATALOG[d2Key] || null;
 
-    // 1. UPDATE COMPACT STICKY BAR
-    renderStickyBar(d1, d2);
-
-    // 2. RENDER MAIN PRODUCT CARDS / PLUS PLACEHOLDERS
+    // 1. RENDER MAIN PRODUCT CARDS / PLUS PLACEHOLDERS
     renderSlotCard('slot-1-card-container', 1, d1);
     renderSlotCard('slot-2-card-container', 2, d2);
 
-    // 3. RENDER SPECS TABLE
+    // 2. RENDER SPECS TABLE
     renderSpecsTable(d1, d2);
 
-    // 4. RENDER USE-CASES
+    // 3. RENDER USE-CASES
     renderUseCases(d1, d2);
 
-    // 5. RENDER STATS BARS
+    // 4. RENDER STATS BARS
     renderStatsQuad(d1, d2);
-  }
-
-  function renderStickyBar(d1, d2) {
-    const s1 = document.getElementById('sticky-slot-1');
-    const s2 = document.getElementById('sticky-slot-2');
-
-    if (s1) {
-      if (d1) {
-        s1.innerHTML = `
-          <img src="${escapeHtml(d1.specs_img || d1.hero_img || '')}" alt="${escapeHtml(d1.name)}" class="w-8 h-8 object-contain">
-          <span class="text-[14px] font-bold text-[#1d1d1f] truncate">${escapeHtml(d1.name)}</span>
-          <button type="button" onclick="openPickerModal(1)" class="text-[12px] font-semibold text-[#0066cc] hover:underline">Ganti</button>
-        `;
-      } else {
-        s1.innerHTML = `
-          <button type="button" onclick="openPickerModal(1)" class="text-[13px] font-semibold text-[#0066cc] hover:underline flex items-center gap-1">
-            <span>+ Pilih Model Pertama</span>
-          </button>
-        `;
-      }
-    }
-
-    if (s2) {
-      if (d2) {
-        s2.innerHTML = `
-          <img src="${escapeHtml(d2.specs_img || d2.hero_img || '')}" alt="${escapeHtml(d2.name)}" class="w-8 h-8 object-contain">
-          <span class="text-[14px] font-bold text-[#1d1d1f] truncate">${escapeHtml(d2.name)}</span>
-          <button type="button" onclick="openPickerModal(2)" class="text-[12px] font-semibold text-[#0066cc] hover:underline">Ganti</button>
-        `;
-      } else {
-        s2.innerHTML = `
-          <button type="button" onclick="openPickerModal(2)" class="text-[13px] font-semibold text-[#0066cc] hover:underline flex items-center gap-1">
-            <span>+ Pilih Model Kedua</span>
-          </button>
-        `;
-      }
-    }
   }
 
   function renderSlotCard(containerId, slotNum, drone) {
@@ -848,11 +874,11 @@
     if (!container) return;
 
     if (!drone) {
-      // APPLE-STYLE PLUS PLACEHOLDER
+      // APPLE-STYLE PLUS PLACEHOLDER (LIGHT GRAY THEME)
       container.innerHTML = `
         <button type="button" onclick="openPickerModal(${slotNum})"
-                class="w-full min-h-[380px] rounded-3xl border-2 border-dashed border-black/15 hover:border-[#0066cc] bg-[#f5f5f7]/60 hover:bg-white transition-all duration-200 flex flex-col items-center justify-center p-8 text-center group cursor-pointer shadow-sm">
-          <div class="w-16 h-16 rounded-full bg-white group-hover:bg-[#0066cc] text-[#1d1d1f] group-hover:text-white border border-black/10 group-hover:border-[#0066cc] flex items-center justify-center transition-all duration-200 shadow-sm mb-4">
+                class="w-full min-h-[380px] rounded-3xl border-2 border-dashed border-black/15 hover:border-[#0066cc] bg-white hover:bg-[#fbfbfd] transition-all duration-200 flex flex-col items-center justify-center p-8 text-center group cursor-pointer shadow-sm">
+          <div class="w-16 h-16 rounded-full bg-[#f5f5f7] group-hover:bg-[#0066cc] text-[#1d1d1f] group-hover:text-white border border-black/10 group-hover:border-[#0066cc] flex items-center justify-center transition-all duration-200 shadow-sm mb-4">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
           </div>
           <span class="text-[18px] font-bold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors mb-1.5">
@@ -864,13 +890,13 @@
         </button>
       `;
     } else {
-      // POPULATED APPLE PRODUCT CARD (SEAMLESS INTEGRATED PICKER)
+      // POPULATED APPLE PRODUCT CARD (LIGHT GRAY THEME)
       container.innerHTML = `
         <div class="w-full flex flex-col items-center text-center">
-          <div class="w-full h-52 sm:h-72 flex items-center justify-center mb-6 relative">
+          <div class="w-full h-56 sm:h-76 flex items-center justify-center mb-6 relative">
             <img src="${escapeHtml(drone.specs_img || drone.hero_img || '')}" 
                  alt="${escapeHtml(drone.name)}" 
-                 class="max-w-full max-h-full object-contain select-none drop-shadow-xl transition-all duration-300">
+                 class="max-w-full max-h-full object-contain select-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.1)] transition-all duration-300">
           </div>
           
           <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-1.5">
@@ -882,12 +908,12 @@
           </h2>
 
           <div class="mb-4 flex items-center gap-3">
-            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] hover:underline">
+            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] hover:underline cursor-pointer">
               <span>Ganti model</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <span class="text-black/20">|</span>
-            <button type="button" onclick="clearSlot(${slotNum})" class="text-[13px] text-[#86868b] hover:text-red-600 transition-colors">
+            <button type="button" onclick="clearSlot(${slotNum})" class="text-[13px] text-[#86868b] hover:text-red-600 transition-colors cursor-pointer">
               Hapus
             </button>
           </div>
@@ -897,10 +923,10 @@
           </p>
 
           <div class="flex flex-wrap gap-2.5 justify-center">
-            <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all">
+            <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
               Minta Penawaran
             </a>
-            <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-[#f5f5f7] hover:bg-[#ebebed] text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all">
+            <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all border border-black/10 shadow-sm">
               Detail Produk
             </a>
           </div>
@@ -985,19 +1011,20 @@
       const val2 = d2 ? (specsMap2[specTitle] || '—') : `<button type="button" onclick="openPickerModal(2)" class="text-[#0066cc] text-[13px] font-semibold hover:underline">+ Pilih Drone</button>`;
 
       html += `
-        <div class="py-6 transition-colors hover:bg-black/[0.01]">
-          <div class="text-center mb-3">
-            <span class="text-[12px] font-semibold text-[#515154] tracking-wide bg-[#f5f5f7] px-3.5 py-1 rounded-full">
+        <div class="py-7 transition-colors hover:bg-black/[0.01]">
+          <div class="text-center mb-3.5">
+            <span class="inline-block text-[13px] font-medium text-[#515154] bg-[#f5f5f7] px-4 py-1 rounded-full border border-black/[0.04]">
               ${escapeHtml(specTitle)}
             </span>
           </div>
-          <div class="grid grid-cols-2 gap-6 sm:gap-12 lg:gap-16 items-center">
-            <div class="text-center text-[15px] sm:text-[16px] font-medium text-[#1d1d1f] leading-relaxed px-2">
+          <div class="relative grid grid-cols-2 items-center">
+            <div class="text-center text-[15px] sm:text-[16px] font-medium text-[#1d1d1f] leading-relaxed px-4 sm:px-8">
               ${val1}
             </div>
-            <div class="text-center text-[15px] sm:text-[16px] font-medium text-[#1d1d1f] leading-relaxed px-2 border-l border-black/[0.06]">
+            <div class="text-center text-[15px] sm:text-[16px] font-medium text-[#1d1d1f] leading-relaxed px-4 sm:px-8">
               ${val2}
             </div>
+            <div class="absolute inset-y-0 left-1/2 w-px bg-black/[0.08] -translate-x-1/2 pointer-events-none"></div>
           </div>
         </div>
       `;
@@ -1050,58 +1077,58 @@
     const d1Header = document.getElementById('d1-stats-header');
     const d1Row = document.getElementById('d1-stats-row');
     if (d1) {
-      if (d1Header) d1Header.textContent = `Highlights: ${d1.name}`;
+      if (d1Header) d1Header.textContent = `Keunggulan: ${d1.name}`;
       if (d1Row) {
         d1Row.innerHTML = `
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'SNI')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d1.stat1_lbl || 'SNI 9199:2023')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'SNI 9199:2023')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '60,74%')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d1.stat2_lbl || 'TKDN + BMP')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'TKDN + BMP')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || '100%')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d1.stat3_lbl || 'FDS STATION')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'FDS STATION')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat4_num || 'Garansi')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d1.stat4_lbl || 'Purna Jual Resmi')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat4_lbl || 'Purna Jual Resmi')}</p>
           </div>
         `;
       }
     } else {
-      if (d1Header) d1Header.textContent = 'Highlights Model 1';
+      if (d1Header) d1Header.textContent = 'Keunggulan Model 1';
       if (d1Row) d1Row.innerHTML = '<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">Belum ada model dipilih</div>';
     }
 
     const d2Header = document.getElementById('d2-stats-header');
     const d2Row = document.getElementById('d2-stats-row');
     if (d2) {
-      if (d2Header) d2Header.textContent = `Highlights: ${d2.name}`;
+      if (d2Header) d2Header.textContent = `Keunggulan: ${d2.name}`;
       if (d2Row) {
         d2Row.innerHTML = `
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'SNI')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d2.stat1_lbl || 'SNI 9199:2023')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'SNI 9199:2023')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '60,74%')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d2.stat2_lbl || 'TKDN + BMP')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'TKDN + BMP')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || '100%')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d2.stat3_lbl || 'FDS STATION')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'FDS STATION')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat4_num || 'Garansi')}</p>
-            <p class="text-[11px] font-semibold text-[#86868b] tracking-wide mt-1">${escapeHtml(d2.stat4_lbl || 'Purna Jual Resmi')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat4_lbl || 'Purna Jual Resmi')}</p>
           </div>
         `;
       }
     } else {
-      if (d2Header) d2Header.textContent = 'Highlights Model 2';
+      if (d2Header) d2Header.textContent = 'Keunggulan Model 2';
       if (d2Row) d2Row.innerHTML = '<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">Belum ada model dipilih</div>';
     }
   }
@@ -1121,23 +1148,6 @@
     const modal = document.getElementById('drone-picker-modal');
     if (e.target === modal) {
       closePickerModal();
-    }
-  });
-
-  // Scroll listener for compact sticky bar
-  window.addEventListener('scroll', function() {
-    const stickyBar = document.getElementById('compare-sticky-bar');
-    if (!stickyBar) return;
-    const cardsSection = document.getElementById('product-cards-section');
-    if (cardsSection) {
-      const rect = cardsSection.getBoundingClientRect();
-      if (rect.bottom < 100) {
-        stickyBar.classList.remove('opacity-0', 'pointer-events-none', '-translate-y-2');
-        stickyBar.classList.add('opacity-100', 'translate-y-0');
-      } else {
-        stickyBar.classList.add('opacity-0', 'pointer-events-none', '-translate-y-2');
-        stickyBar.classList.remove('opacity-100', 'translate-y-0');
-      }
     }
   });
 

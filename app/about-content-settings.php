@@ -89,6 +89,65 @@ add_action('init', function () {
     }
 });
 
+// Default Aktivitas & Kemitraan Items
+function fds_get_default_about_activities() {
+    return [
+        [
+            'cat'  => 'Riset & Manufaktur',
+            'name' => 'Produksi dan Manufaktur',
+            'desc' => 'Proses produksi dan Riset Development seluruhnya dilakukan di Workshop Full Drone Solutions dengan Tenaga kerja yang diserap dari putra putri daerah pilihan asal Yogyakarta dan Sekitarnya.',
+        ],
+        [
+            'cat'  => 'Program PRISMA 2024',
+            'name' => 'Kolaborasi Bappenas - Pemerintah Australia',
+            'desc' => 'Pada tahun 2024, Full Drone Solutions (FDS) dipercaya menjadi mitra strategis dalam program PRISMA untuk berkontribusi pada pengembangan sektor Teknologi Informasi dan Komunikasi, khususnya dalam mengenalkan dan mengimplementasikan teknologi Drone Sprayer kepada petani untuk meningkatkan efisiensi, produktivitas, serta meningkatkan kesejahteraan petani.',
+        ],
+        [
+            'cat'  => 'Ketahanan Pangan & Inflasi',
+            'name' => 'Kolaborasi Full Drone Solutions (FDS) dengan Bank Indonesia',
+            'desc' => 'Kolaborasi strategis antara Full Drone Solutions (FDS) dengan Bank Indonesia (BI) menghadirkan inovasi berupa teknologi drone pertanian yang bertujuan memperkuat ketahanan pangan sekaligus mengurangi inflasi.',
+        ],
+        [
+            'cat'  => 'Konservasi & Reboisasi',
+            'name' => 'Kolaborasi Full Drone Solutions (FDS) – UGM - Mitra dari Swiss',
+            'desc' => 'Full Drone Solutions (FDS) menjalin kolaborasi strategis bersama Universitas Gadjah Mada (UGM) dan mitra internasional dari Swiss dalam proyek pengembangan teknologi reboisasi dan penghijauan untuk kawasan mangrove dan hutan hujan tropis.',
+        ],
+    ];
+}
+
+function fds_get_about_activities() {
+    $saved = get_option('fds_about_activity_items', null);
+    if ($saved !== null && is_array($saved) && !empty($saved)) {
+        return array_map(function($item) {
+            return [
+                'cat'  => wp_specialchars_decode($item['cat'] ?? '', ENT_QUOTES),
+                'name' => wp_specialchars_decode($item['name'] ?? '', ENT_QUOTES),
+                'desc' => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
+            ];
+        }, $saved);
+    }
+    
+    // Fallback legacy options
+    $legacy = [];
+    for ($i = 1; $i <= 10; $i++) {
+        $cat  = get_option("fds_about_mitra_item{$i}_cat", '');
+        $name = get_option("fds_about_mitra_item{$i}_name", '');
+        $desc = get_option("fds_about_mitra_item{$i}_desc", '');
+        if (!empty($name)) {
+            $legacy[] = [
+                'cat'  => wp_specialchars_decode($cat, ENT_QUOTES),
+                'name' => wp_specialchars_decode($name, ENT_QUOTES),
+                'desc' => wp_specialchars_decode($desc, ENT_QUOTES),
+            ];
+        }
+    }
+    if (!empty($legacy)) {
+        return $legacy;
+    }
+
+    return fds_get_default_about_activities();
+}
+
 // 2. HELPER GET ABOUT CONTENT
 function fds_get_about_content() {
     $data = [
@@ -266,6 +325,26 @@ function render_about_content_admin_page() {
                     update_option($k, sanitize_textarea_field(wp_unslash($_POST[$k])));
                 }
             }
+        }
+
+        // Simpan Dynamic Repeater Aktivitas & Kemitraan
+        if (isset($_POST['fds_about_activity_name']) && is_array($_POST['fds_about_activity_name'])) {
+            $activity_items = [];
+            $names = $_POST['fds_about_activity_name'];
+            $cats  = $_POST['fds_about_activity_cat'] ?? [];
+            $descs = $_POST['fds_about_activity_desc'] ?? [];
+
+            foreach ($names as $idx => $name) {
+                $name_clean = sanitize_text_field($name);
+                if (empty($name_clean)) continue;
+
+                $activity_items[] = [
+                    'cat'  => sanitize_text_field($cats[$idx] ?? ''),
+                    'name' => $name_clean,
+                    'desc' => sanitize_textarea_field($descs[$idx] ?? ''),
+                ];
+            }
+            update_option('fds_about_activity_items', $activity_items);
         }
 
         // Sinkronisasi otomatis ke Kontak Global
@@ -583,26 +662,57 @@ function render_about_content_admin_page() {
           </div>
 
           <div class="fds-card">
-            <h2>📋 Daftar Aktivitas &amp; Kolaborasi</h2>
-            
-            <?php for ($i = 1; $i <= 7; $i++): ?>
-              <div style="background: #f9f9fb; border: 1px solid #e5e5ea; border-radius: 8px; padding: 16px; margin-bottom: 16px;">
-                <div class="fds-grid-3">
-                  <div class="fds-field">
-                    <label>Kategori (Mitra <?php echo $i; ?>)</label>
-                    <input type="text" name="fds_about_mitra_item<?php echo $i; ?>_cat" value="<?php echo esc_attr($data["mitra_item{$i}_cat"]); ?>">
-                  </div>
-                  <div class="fds-field">
-                    <label>Nama Mitra / Institusi</label>
-                    <input type="text" name="fds_about_mitra_item<?php echo $i; ?>_name" value="<?php echo esc_attr($data["mitra_item{$i}_name"]); ?>">
-                  </div>
-                  <div class="fds-field">
-                    <label>Deskripsi Proyek / Kerjasama</label>
-                    <textarea name="fds_about_mitra_item<?php echo $i; ?>_desc" rows="2"><?php echo esc_textarea($data["mitra_item{$i}_desc"]); ?></textarea>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f0f0f2; padding-bottom: 12px;">
+              <div>
+                <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">📋 Daftar Aktivitas &amp; Kolaborasi</h2>
+                <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">
+                  Tambah, edit, urutkan (▲/▼), atau hapus item aktivitas kemitraan yang tampil di halaman Tentang Kami.
+                </p>
+              </div>
+              <button type="button" class="button button-primary" onclick="fdsAddActivityItem()" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 4px 16px; border-radius: 6px;">
+                ➕ Tambah Aktivitas Baru
+              </button>
+            </div>
+
+            <div id="fds-activity-repeater-container" style="display: flex; flex-direction: column; gap: 14px;">
+              <?php
+                $activities = \App\fds_get_about_activities();
+                foreach ($activities as $idx => $act):
+              ?>
+              <div class="fds-activity-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                  <span style="font-size: 13px; font-weight: 700; color: #0066cc;">Aktivitas #<span class="activity-number"><?php echo $idx + 1; ?></span></span>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="button button-small" onclick="fdsMoveActivity(this, -1)" title="Pindah ke atas">▲</button>
+                    <button type="button" class="button button-small" onclick="fdsMoveActivity(this, 1)" title="Pindah ke bawah">▼</button>
+                    <button type="button" class="button button-small button-link-delete" onclick="fdsDeleteActivity(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>
                   </div>
                 </div>
+
+                <div class="fds-grid-2" style="margin-bottom: 12px;">
+                  <div class="fds-field" style="margin-bottom: 0;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">Kategori / Program</label>
+                    <input type="text" name="fds_about_activity_cat[]" value="<?php echo esc_attr($act['cat']); ?>" placeholder="Contoh: Program PRISMA 2024 / Riset & Manufaktur">
+                  </div>
+                  <div class="fds-field" style="margin-bottom: 0;">
+                    <label style="font-size: 12px; font-weight: 700; color: #475569;">Nama Mitra / Kerjasama</label>
+                    <input type="text" name="fds_about_activity_name[]" value="<?php echo esc_attr($act['name']); ?>" required placeholder="Contoh: Kolaborasi Bappenas - Pemerintah Australia">
+                  </div>
+                </div>
+
+                <div class="fds-field" style="margin-bottom: 0; margin-top: 10px;">
+                  <label style="font-size: 12px; font-weight: 700; color: #475569;">Deskripsi Proyek / Kerjasama</label>
+                  <textarea name="fds_about_activity_desc[]" rows="3" placeholder="Tuliskan detail kolaborasi, peran FDS, dan dampak proyek..."><?php echo esc_textarea($act['desc']); ?></textarea>
+                </div>
               </div>
-            <?php endfor; ?>
+              <?php endforeach; ?>
+            </div>
+
+            <div style="margin-top: 18px; text-align: center;">
+              <button type="button" class="button button-secondary" onclick="fdsAddActivityItem()" style="padding: 6px 20px; font-weight: 600; border-radius: 6px;">
+                ➕ Tambah Item Aktivitas Baru
+              </button>
+            </div>
           </div>
         </div>
 
@@ -794,6 +904,71 @@ function render_about_content_admin_page() {
           $('#' + inputId).val('');
           $('#' + previewId).attr('src', defaultUrl);
         });
+
+        // Dynamic Repeater untuk Aktivitas & Kemitraan
+        window.fdsAddActivityItem = function() {
+          var count = $('#fds-activity-repeater-container .fds-activity-row').length + 1;
+          var html = '<div class="fds-activity-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
+            '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
+              '<span style="font-size: 13px; font-weight: 700; color: #0066cc;">Aktivitas #<span class="activity-number">' + count + '</span></span>' +
+              '<div style="display: flex; gap: 6px;">' +
+                '<button type="button" class="button button-small" onclick="fdsMoveActivity(this, -1)" title="Pindah ke atas">▲</button>' +
+                '<button type="button" class="button button-small" onclick="fdsMoveActivity(this, 1)" title="Pindah ke bawah">▼</button>' +
+                '<button type="button" class="button button-small button-link-delete" onclick="fdsDeleteActivity(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="fds-grid-2" style="margin-bottom: 12px;">' +
+              '<div class="fds-field" style="margin-bottom: 0;">' +
+                '<label style="font-size: 12px; font-weight: 700; color: #475569;">Kategori / Program</label>' +
+                '<input type="text" name="fds_about_activity_cat[]" value="" placeholder="Contoh: Program PRISMA 2024 / Riset & Manufaktur">' +
+              '</div>' +
+              '<div class="fds-field" style="margin-bottom: 0;">' +
+                '<label style="font-size: 12px; font-weight: 700; color: #475569;">Nama Mitra / Kerjasama</label>' +
+                '<input type="text" name="fds_about_activity_name[]" value="" required placeholder="Contoh: Kolaborasi Bappenas - Pemerintah Australia">' +
+              '</div>' +
+            '</div>' +
+            '<div class="fds-field" style="margin-bottom: 0; margin-top: 10px;">' +
+              '<label style="font-size: 12px; font-weight: 700; color: #475569;">Deskripsi Proyek / Kerjasama</label>' +
+              '<textarea name="fds_about_activity_desc[]" rows="3" placeholder="Tuliskan detail kolaborasi, peran FDS, dan dampak proyek..."></textarea>' +
+            '</div>' +
+          '</div>';
+          $('#fds-activity-repeater-container').append(html);
+          fdsRenumberActivity();
+        };
+
+        window.fdsDeleteActivity = function(btn) {
+          if ($('#fds-activity-repeater-container .fds-activity-row').length <= 1) {
+            alert('Minimal harus ada 1 item aktivitas.');
+            return;
+          }
+          if (confirm('Yakin ingin menghapus item aktivitas ini?')) {
+            $(btn).closest('.fds-activity-row').remove();
+            fdsRenumberActivity();
+          }
+        };
+
+        window.fdsMoveActivity = function(btn, direction) {
+          var row = $(btn).closest('.fds-activity-row');
+          if (direction === -1) {
+            var prev = row.prev('.fds-activity-row');
+            if (prev.length) {
+              row.insertBefore(prev);
+              fdsRenumberActivity();
+            }
+          } else if (direction === 1) {
+            var next = row.next('.fds-activity-row');
+            if (next.length) {
+              row.insertAfter(next);
+              fdsRenumberActivity();
+            }
+          }
+        };
+
+        window.fdsRenumberActivity = function() {
+          $('#fds-activity-repeater-container .fds-activity-row').each(function(idx) {
+            $(this).find('.activity-number').text(idx + 1);
+          });
+        };
       });
     </script>
     <?php

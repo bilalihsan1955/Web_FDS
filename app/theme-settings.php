@@ -109,6 +109,157 @@ function fds_get_navbar_brand() {
     ];
 }
 
+// 4b. OTOMATIS TAMPILKAN ICON TAB BROWSER / FAVICON DI HEAD
+add_action('wp_head', function () {
+    $brand = fds_get_navbar_brand();
+    if (!empty($brand['favicon_url'])) {
+        $f_url = esc_url($brand['favicon_url']);
+        echo '<link rel="icon" type="image/png" href="' . $f_url . '">' . "\n";
+        echo '<link rel="shortcut icon" href="' . $f_url . '">' . "\n";
+        echo '<link rel="apple-touch-icon" href="' . $f_url . '">' . "\n";
+    }
+}, 1);
+
+add_action('admin_head', function () {
+    $brand = fds_get_navbar_brand();
+    if (!empty($brand['favicon_url'])) {
+        echo '<link rel="icon" type="image/png" href="' . esc_url($brand['favicon_url']) . '">' . "\n";
+    }
+});
+
+// 4c. PENGATURAN NAMA TAB BROWSER & DOCUMENT TITLE SETIAP HALAMAN
+add_filter('document_title_parts', function ($title_parts) {
+    $brand_text = get_option('fds_navbar_brand_text', null);
+    if (empty($brand_text) || $brand_text === 'FDS') {
+        $brand_text = 'Full Drone Solutions';
+    }
+
+    // 1. HALAMAN UTAMA / BERANDA (HOME)
+    if (is_front_page()) {
+        $custom_home_title = get_option('fds_home_tab_title', '');
+        if (!empty($custom_home_title)) {
+            return ['title' => $custom_home_title];
+        }
+        $site_tagline = get_option('fds_site_tagline', '');
+        if (empty($site_tagline)) {
+            $site_tagline = get_bloginfo('description') ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia';
+        }
+        return [
+            'title'   => $brand_text,
+            'tagline' => $site_tagline,
+        ];
+    }
+
+    // 2. HALAMAN TENTANG KAMI
+    if (is_page('tentang-kami') || is_page('about') || is_page('about-us')) {
+        $custom_page_title = get_post_meta(get_the_ID(), '_fds_custom_tab_title', true);
+        if (!empty($custom_page_title)) {
+            return ['title' => $custom_page_title];
+        }
+        $about_title = get_option('fds_about_tab_title', '');
+        if (!empty($about_title)) {
+            return ['title' => $about_title];
+        }
+        return [
+            'title' => 'Tentang Kami',
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 3. HALAMAN PERBANDINGAN MODEL DRONE
+    if (is_page('bandingkan')) {
+        $custom_page_title = get_post_meta(get_the_ID(), '_fds_custom_tab_title', true);
+        if (!empty($custom_page_title)) {
+            return ['title' => $custom_page_title];
+        }
+        $compare_title = get_option('fds_compare_tab_title', '');
+        if (!empty($compare_title)) {
+            return ['title' => $compare_title];
+        }
+        return [
+            'title' => 'Bandingkan Model UAV & Spesifikasi Teknis',
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 4. BLOG / ARTIKEL
+    if (is_home() || is_page('blog')) {
+        $custom_page_title = is_page('blog') ? get_post_meta(get_the_ID(), '_fds_custom_tab_title', true) : '';
+        if (!empty($custom_page_title)) {
+            return ['title' => $custom_page_title];
+        }
+        $blog_title = get_option('fds_blog_tab_title', '');
+        if (!empty($blog_title)) {
+            return ['title' => $blog_title];
+        }
+        return [
+            'title' => 'Blog & Artikel Edukasi Drone',
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 5. DETAIL DRONE (CPT DRONE)
+    if (is_singular('drone')) {
+        $post_id = get_the_ID();
+        $custom_drone_title = get_post_meta($post_id, '_fds_custom_tab_title', true);
+        if (!empty($custom_drone_title)) {
+            return ['title' => $custom_drone_title];
+        }
+
+        $drone_name = get_the_title($post_id);
+        $badge = get_post_meta($post_id, 'drone_badge', true);
+        $badge_str = !empty($badge) ? ' (' . $badge . ')' : '';
+        $custom_suffix = get_option('fds_drone_tab_suffix', '');
+        if (!empty($custom_suffix)) {
+            return ['title' => $drone_name . $badge_str . ' ' . $custom_suffix];
+        }
+        return [
+            'title' => $drone_name . $badge_str,
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 6. HALAMAN TUNGGAL LAINNYA (SINGLE POST / PAGE)
+    if (is_singular()) {
+        $post_id = get_the_ID();
+        $custom_tab_title = get_post_meta($post_id, '_fds_custom_tab_title', true);
+        if (!empty($custom_tab_title)) {
+            return ['title' => $custom_tab_title];
+        }
+
+        return [
+            'title' => get_the_title($post_id),
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 7. ARSIP KATEGORI DRONE
+    if (is_tax('kategori_drone')) {
+        $term = get_queried_object();
+        return [
+            'title' => 'Kategori Drone ' . ($term ? $term->name : ''),
+            'site'  => $brand_text,
+        ];
+    }
+
+    if (is_404()) {
+        return [
+            'title' => 'Halaman Tidak Ditemukan (404)',
+            'site'  => $brand_text,
+        ];
+    }
+
+    if (isset($title_parts['site'])) {
+        $title_parts['site'] = $brand_text;
+    }
+
+    return $title_parts;
+}, 30);
+
+add_filter('document_title_separator', function ($sep) {
+    return get_option('fds_tab_title_separator', '–');
+});
+
 // 5. TAMPILAN HALAMAN PENGATURAN WP ADMIN
 function render_navbar_settings_admin_page() {
     if (!current_user_can('manage_options')) {
@@ -117,17 +268,39 @@ function render_navbar_settings_admin_page() {
 
     $message = '';
     if (isset($_POST['fds_navbar_save']) && check_admin_referer('fds_navbar_nonce_action', 'fds_navbar_nonce')) {
-        $logo_url     = esc_url_raw($_POST['fds_navbar_logo_url'] ?? '');
-        $brand_text   = sanitize_text_field($_POST['fds_navbar_brand_text'] ?? '');
-        $display_mode = sanitize_text_field($_POST['fds_navbar_display_mode'] ?? 'both');
-        $logo_height  = max(16, min(60, (int) ($_POST['fds_navbar_logo_height'] ?? 28)));
-        $favicon_url  = esc_url_raw($_POST['fds_site_favicon_url'] ?? '');
+        $logo_url          = esc_url_raw($_POST['fds_navbar_logo_url'] ?? '');
+        $brand_text        = sanitize_text_field($_POST['fds_navbar_brand_text'] ?? '');
+        $display_mode      = sanitize_text_field($_POST['fds_navbar_display_mode'] ?? 'both');
+        $logo_height       = max(16, min(60, (int) ($_POST['fds_navbar_logo_height'] ?? 28)));
+        $favicon_url       = esc_url_raw($_POST['fds_site_favicon_url'] ?? '');
+        $home_tab_title    = sanitize_text_field($_POST['fds_home_tab_title'] ?? '');
+        $about_tab_title   = sanitize_text_field($_POST['fds_about_tab_title'] ?? '');
+        $compare_tab_title = sanitize_text_field($_POST['fds_compare_tab_title'] ?? '');
+        $blog_tab_title    = sanitize_text_field($_POST['fds_blog_tab_title'] ?? '');
+        $drone_tab_suffix  = sanitize_text_field($_POST['fds_drone_tab_suffix'] ?? '');
+        $site_tagline      = sanitize_text_field($_POST['fds_site_tagline'] ?? '');
+        $title_separator   = sanitize_text_field($_POST['fds_tab_title_separator'] ?? '–');
 
         update_option('fds_navbar_logo_url', $logo_url);
         update_option('fds_navbar_brand_text', $brand_text);
         update_option('fds_navbar_display_mode', $display_mode);
         update_option('fds_navbar_logo_height', $logo_height);
         update_option('fds_site_favicon_url', $favicon_url);
+        update_option('fds_home_tab_title', $home_tab_title);
+        update_option('fds_about_tab_title', $about_tab_title);
+        update_option('fds_compare_tab_title', $compare_tab_title);
+        update_option('fds_blog_tab_title', $blog_tab_title);
+        update_option('fds_drone_tab_suffix', $drone_tab_suffix);
+        update_option('fds_site_tagline', $site_tagline);
+        update_option('fds_tab_title_separator', $title_separator);
+
+        // Sinkronkan ke Core WordPress blogname & blogdescription
+        if (!empty($brand_text)) {
+            update_option('blogname', $brand_text);
+        }
+        if (!empty($site_tagline)) {
+            update_option('blogdescription', $site_tagline);
+        }
 
         // Jika favicon diisi, cari attachment ID untuk sinkronisasi ke core site_icon
         if (!empty($favicon_url)) {
@@ -135,12 +308,21 @@ function render_navbar_settings_admin_page() {
             if ($attachment_id) {
                 update_option('site_icon', $attachment_id);
             }
+        } else {
+            delete_option('site_icon');
         }
 
-        $message = 'Pengaturan Logo, Navbar &amp; Favicon berhasil disimpan!';
+        $message = 'Pengaturan Logo, Navbar, Icon Tab &amp; Nama Tab Semua Halaman berhasil disimpan!';
     }
 
-    $brand_data = fds_get_navbar_brand();
+    $brand_data        = fds_get_navbar_brand();
+    $home_tab_title    = get_option('fds_home_tab_title', '');
+    $about_tab_title   = get_option('fds_about_tab_title', '');
+    $compare_tab_title = get_option('fds_compare_tab_title', '');
+    $blog_tab_title    = get_option('fds_blog_tab_title', '');
+    $drone_tab_suffix  = get_option('fds_drone_tab_suffix', '');
+    $site_tagline      = get_option('fds_site_tagline', get_bloginfo('description') ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia');
+    $title_separator   = get_option('fds_tab_title_separator', '–');
     ?>
     <div class="wrap" style="max-width: 900px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
@@ -149,8 +331,8 @@ function render_navbar_settings_admin_page() {
                     <span class="dashicons dashicons-art" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
-                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pengaturan Logo, Brand &amp; Favicon Navbar</h1>
-                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola logo gambar, favicon tab browser, dan teks brand yang tampil di pojok kiri atas header website.</p>
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pengaturan Logo, Navbar &amp; Nama Tab Browser</h1>
+                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola logo gambar, ikon tab (favicon), teks brand, dan kustomisasi judul tab browser untuk Beranda, Tentang Kami, Perbandingan, Blog, dan Detail Drone.</p>
                 </div>
             </div>
 
@@ -189,7 +371,7 @@ function render_navbar_settings_admin_page() {
 
                         <!-- Dummy Navigation Elements -->
                         <div style="display: flex; align-items: center; gap: 20px; color: #64748b; font-size: 13px; font-weight: 500;">
-                            <span>Beranda</span>
+                            <span style="color: #0066cc; font-weight: 600;">Beranda</span>
                             <span>Produk</span>
                             <span>Layanan</span>
                             <span>Tentang Kami</span>
@@ -248,12 +430,156 @@ function render_navbar_settings_admin_page() {
                                placeholder="https://domain.com/.../favicon.png">
 
                         <button type="button" id="fds_upload_favicon_btn" class="button" style="padding: 6px 14px; font-size: 13px; font-weight: 600;">
-                            Pilih Favicon
+                            Pilih / Unggah Icon Tab
+                        </button>
+                        
+                        <button type="button" id="fds_remove_favicon_btn" class="button" style="padding: 6px 14px; font-size: 13px; color: #dc2626; border-color: #fecaca;">
+                            Hapus
                         </button>
                     </div>
                 </div>
 
-                <!-- 4. TEKS BRAND / NAMA PERUSAHAAN -->
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 4. PENGATURAN NAMA TAB BROWSER (TITLE TAG UNTUK SEMUA HALAMAN) -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
+                    <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                        <span>🌐</span> Pengaturan Nama Tab Browser (Title Tag)
+                    </h2>
+                    <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Kustomisasi teks judul yang tampil pada tab browser saat pengunjung membuka halaman-halaman utama website Anda.</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 18px;">
+                        
+                        <!-- 1. Nama Tab Halaman Beranda -->
+                        <div>
+                            <label for="fds_home_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                🏠 Nama Tab Halaman Beranda / Home:
+                            </label>
+                            <input type="text" 
+                                   id="fds_home_tab_title" 
+                                   name="fds_home_tab_title" 
+                                   value="<?php echo esc_attr($home_tab_title); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: Full Drone Solutions – Solusi Drone Industri, Agrikultur &amp; Pemetaan Indonesia">
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">
+                                Jika kosong, otomatis menggunakan <code>[Nama Brand] – [Tagline]</code>.
+                            </p>
+                        </div>
+
+                        <!-- 2. Nama Tab Halaman Tentang Kami -->
+                        <div>
+                            <label for="fds_about_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                🏢 Nama Tab Halaman Tentang Kami:
+                            </label>
+                            <input type="text" 
+                                   id="fds_about_tab_title" 
+                                   name="fds_about_tab_title" 
+                                   value="<?php echo esc_attr($about_tab_title); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: Tentang Kami – PT Karya Solusi Angkasa (Full Drone Solutions)">
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">
+                                Jika kosong, otomatis menggunakan <code>Tentang Kami – [Nama Brand]</code>.
+                            </p>
+                        </div>
+
+                        <!-- 3. Nama Tab Halaman Perbandingan -->
+                        <div>
+                            <label for="fds_compare_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                ⚖️ Nama Tab Halaman Perbandingan Drone (/bandingkan):
+                            </label>
+                            <input type="text" 
+                                   id="fds_compare_tab_title" 
+                                   name="fds_compare_tab_title" 
+                                   value="<?php echo esc_attr($compare_tab_title); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: Bandingkan Model UAV &amp; Spesifikasi Teknis – Full Drone Solutions">
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">
+                                Jika kosong, otomatis menggunakan <code>Bandingkan Model UAV &amp; Spesifikasi Teknis – [Nama Brand]</code>.
+                            </p>
+                        </div>
+
+                        <!-- 4. Nama Tab Halaman Blog -->
+                        <div>
+                            <label for="fds_blog_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                📰 Nama Tab Halaman Blog / Berita (/blog):
+                            </label>
+                            <input type="text" 
+                                   id="fds_blog_tab_title" 
+                                   name="fds_blog_tab_title" 
+                                   value="<?php echo esc_attr($blog_tab_title); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: Blog &amp; Berita Edukasi Drone – Full Drone Solutions">
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">
+                                Jika kosong, otomatis menggunakan <code>Blog &amp; Berita Terkini – [Nama Brand]</code>.
+                            </p>
+                        </div>
+
+                        <!-- 5. Akhiran Tab Detail Produk Drone -->
+                        <div>
+                            <label for="fds_drone_tab_suffix" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                🚁 Akhiran / Format Judul Tab Detail Produk Drone (Opsional):
+                            </label>
+                            <input type="text" 
+                                   id="fds_drone_tab_suffix" 
+                                   name="fds_drone_tab_suffix" 
+                                   value="<?php echo esc_attr($drone_tab_suffix); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: – Drone Industri &amp; Pertanian Indonesia | Full Drone Solutions">
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">
+                                Jika kosong, otomatis menggunakan <code>[Nama Drone] ([Badge]) – [Nama Brand]</code>.
+                            </p>
+                        </div>
+
+                        <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 4px 0;">
+
+                        <!-- Tagline Website -->
+                        <div>
+                            <label for="fds_site_tagline" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                                Tagline / Slogan Perusahaan:
+                            </label>
+                            <input type="text" 
+                                   id="fds_site_tagline" 
+                                   name="fds_site_tagline" 
+                                   value="<?php echo esc_attr($site_tagline); ?>" 
+                                   style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                                   placeholder="Contoh: Solusi Drone Industri, Agrikultur &amp; Pemetaan Indonesia">
+                        </div>
+
+                        <!-- Simbol Pemisah Tab -->
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 6px;">
+                                Simbol Pemisah Judul Tab:
+                            </label>
+                            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                    <input type="radio" name="fds_tab_title_separator" value="–" <?php checked($title_separator, '–'); ?>>
+                                    <span>– (En-dash)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                    <input type="radio" name="fds_tab_title_separator" value="|" <?php checked($title_separator, '|'); ?>>
+                                    <span>| (Pipe)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                    <input type="radio" name="fds_tab_title_separator" value="•" <?php checked($title_separator, '•'); ?>>
+                                    <span>• (Bullet)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
+                                    <input type="radio" name="fds_tab_title_separator" value="-" <?php checked($title_separator, '-'); ?>>
+                                    <span>- (Hyphen)</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="background: #eff6ff; border-left: 3px solid #3b82f6; padding: 10px 14px; border-radius: 4px; font-size: 12px; color: #1e40af;">
+                            💡 <strong>Kustomisasi Spesifik Tiap Halaman:</strong> Anda juga tetap dapat mengedit nama tab khusus untuk masing-masing Halaman/Post/Drone secara individual langsung di layar edit halaman (kotak <em>"Pengaturan Nama Tab Browser (SEO Title)"</em> di bawah editor).
+                        </div>
+
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 5. TEKS BRAND / NAMA PERUSAHAAN -->
                 <div>
                     <label for="fds_navbar_brand_text" style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
                         Teks Brand / Nama Perusahaan di Navbar
@@ -268,7 +594,7 @@ function render_navbar_settings_admin_page() {
                            placeholder="Contoh: Full Drone Solutions">
                 </div>
 
-                <!-- 5. MODE TAMPILAN -->
+                <!-- 6. MODE TAMPILAN -->
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
                         Mode Tampilan Navbar
@@ -289,7 +615,7 @@ function render_navbar_settings_admin_page() {
                     </div>
                 </div>
 
-                <!-- 6. TINGGI LOGO (PX) -->
+                <!-- 7. TINGGI LOGO (PX) -->
                 <div>
                     <label for="fds_navbar_logo_height" style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
                         Tinggi Logo Navbar (Pixel)
@@ -311,7 +637,7 @@ function render_navbar_settings_admin_page() {
                 <!-- TOMBOL SIMPAN -->
                 <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
                     <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
-                        💾 Simpan Perubahan Logo, Navbar &amp; Favicon
+                        💾 Simpan Perubahan Logo, Navbar &amp; Nama Tab
                     </button>
                 </div>
 
@@ -376,12 +702,12 @@ function render_navbar_settings_admin_page() {
             }).open();
         });
 
-        // WP Media Uploader for Favicon
+        // WP Media Uploader for Favicon / Icon Tab
         $('#fds_upload_favicon_btn').on('click', function(e) {
             e.preventDefault();
             var customUploader = wp.media({
-                title: 'Pilih atau Unggah Favicon / Site Icon',
-                button: { text: 'Gunakan Favicon Ini' },
+                title: 'Pilih atau Unggah Icon Tab Browser (Favicon)',
+                button: { text: 'Gunakan Icon Tab Ini' },
                 multiple: false
             }).on('select', function() {
                 var attachment = customUploader.state().get('selection').first().toJSON();
@@ -396,7 +722,73 @@ function render_navbar_settings_admin_page() {
             $('#fds_navbar_logo_url').val('');
             updateLivePreview();
         });
+
+        // Remove Favicon Button
+        $('#fds_remove_favicon_btn').on('click', function(e) {
+            e.preventDefault();
+            $('#fds_site_favicon_url').val('');
+            $('#fds_favicon_preview').replaceWith('<div id="fds_favicon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">Icon</div>');
+        });
     });
     </script>
     <?php
 }
+
+// 6. METABOX DI SETIAP HALAMAN / POST / DRONE UNTUK CUSTOM TAB TITLE
+add_action('add_meta_boxes', function () {
+    $screens = ['page', 'post', 'drone'];
+    foreach ($screens as $screen) {
+        add_meta_box(
+            'fds_tab_title_meta_box',
+            '🌐 Pengaturan Nama Tab Browser (SEO Title)',
+            __NAMESPACE__ . '\\render_tab_title_meta_box',
+            $screen,
+            'normal',
+            'high'
+        );
+    }
+});
+
+function render_tab_title_meta_box($post) {
+    wp_nonce_field('fds_tab_title_meta_nonce_action', 'fds_tab_title_meta_nonce');
+    $current_custom_title = get_post_meta($post->ID, '_fds_custom_tab_title', true);
+    $brand_text = get_option('fds_navbar_brand_text', null) ?: (get_bloginfo('name') ?: 'Full Drone Solutions');
+    $default_preview = get_the_title($post->ID) . ' – ' . $brand_text;
+    ?>
+    <div style="padding: 10px 0;">
+        <label for="fds_custom_tab_title" style="display: block; font-size: 13px; font-weight: 600; color: #1e293b; margin-bottom: 6px;">
+            Kustomisasi Nama Tab Browser (Opsional):
+        </label>
+        <input type="text" 
+               id="fds_custom_tab_title" 
+               name="fds_custom_tab_title" 
+               value="<?php echo esc_attr($current_custom_title); ?>" 
+               style="width: 100%; font-size: 14px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+               placeholder="Contoh: <?php echo esc_attr($default_preview); ?>">
+        <p style="margin: 6px 0 0; color: #64748b; font-size: 12px;">
+            Kosongkan jika ingin menggunakan format otomatis default: <code>[Judul Halaman] – <?php echo esc_html($brand_text); ?></code>.
+        </p>
+    </div>
+    <?php
+}
+
+add_action('save_post', function ($post_id) {
+    if (!isset($_POST['fds_tab_title_meta_nonce']) || !check_admin_referer('fds_tab_title_meta_nonce_action', 'fds_tab_title_meta_nonce')) {
+        return;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    if (isset($_POST['fds_custom_tab_title'])) {
+        $custom_title = sanitize_text_field($_POST['fds_custom_tab_title']);
+        if (!empty($custom_title)) {
+            update_post_meta($post_id, '_fds_custom_tab_title', $custom_title);
+        } else {
+            delete_post_meta($post_id, '_fds_custom_tab_title');
+        }
+    }
+});

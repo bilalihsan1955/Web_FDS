@@ -164,28 +164,44 @@
               @endif
             </a>
 
-            <!-- Nav links -->
+            <!-- Nav links with Dynamic Active State -->
+            @php
+              $is_active_home    = is_front_page() && !is_home();
+              $is_active_produk  = is_singular('drone') || is_page('bandingkan') || is_tax('kategori_drone');
+              $is_active_layanan = is_page('layanan') || is_singular('layanan');
+              $is_active_about   = is_page('tentang-kami') || is_page('about') || is_page('about-us');
+              $is_active_blog    = is_home() || is_page('blog') || (is_single() && get_post_type() === 'post') || is_category() || is_tag();
+            @endphp
             <nav class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
-              <a href="{{ home_url('/') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Beranda</a>
+              <a href="{{ home_url('/') }}" 
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_home ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                Beranda
+              </a>
 
               <!-- Produk dropdown trigger -->
-              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2">
-                <span class="hover:text-[#1d1d1f] transition-colors duration-150">Produk</span>
-                <svg id="produk-chevron" class="w-3 h-3 text-[#86868b] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_produk ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : '' }}">
+                <span class="{{ $is_active_produk ? 'text-[#0066cc] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Produk</span>
+                <svg id="produk-chevron" class="w-3 h-3 {{ $is_active_produk ? 'text-[#0066cc]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
 
               <!-- Layanan dropdown trigger -->
-              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2">
-                <span class="hover:text-[#1d1d1f] transition-colors duration-150">Layanan</span>
-                <svg id="layanan-chevron" class="w-3 h-3 text-[#86868b] transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_layanan ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : '' }}">
+                <span class="{{ $is_active_layanan ? 'text-[#0066cc] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Layanan</span>
+                <svg id="layanan-chevron" class="w-3 h-3 {{ $is_active_layanan ? 'text-[#0066cc]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
 
-              <a href="{{ home_url('/tentang-kami') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Tentang Kami</a>
-              <a href="{{ home_url('/blog') }}" class="nav-direct-link hover:text-[#1d1d1f] transition-colors duration-150 py-2">Blog</a>
+              <a href="{{ home_url('/tentang-kami') }}" 
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_about ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                Tentang Kami
+              </a>
+              <a href="{{ home_url('/blog') }}" 
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_blog ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                Blog
+              </a>
             </nav>
 
             <!-- CTA -->
@@ -496,18 +512,21 @@
         <!-- Mobile nav — 100% Dinamis dari WordPress -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6 max-h-[85vh] overflow-y-auto">
           <nav class="flex flex-col gap-4 text-[16px] font-medium text-[#1d1d1f]">
-            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Beranda</a>
+            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0066cc] font-semibold' : '' }}">Beranda</a>
             
-            <details class="border-b border-[#f5f5f7]">
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold">Produk Drone
-                <svg class="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <details class="border-b border-[#f5f5f7]" {{ $is_active_produk ? 'open' : '' }}>
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0066cc]' : '' }}">Produk Drone
+                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0066cc]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
                 @foreach($drones_by_cat_slug as $cslug => $cdata)
                   @if(!empty($cdata['drones']))
                     <p class="text-[12px] font-semibold text-[#86868b] mt-2">{!! wp_specialchars_decode($cdata['term']->name) !!}</p>
                     @foreach($cdata['drones'] as $d)
-                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1 flex items-center justify-between">
+                      @php
+                        $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
+                      @endphp
+                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1 flex items-center justify-between {{ $is_this_drone ? 'text-[#0066cc] font-semibold' : '' }}">
                         <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
                         <span class="text-[10px] text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
@@ -516,16 +535,16 @@
                     @endforeach
                   @endif
                 @endforeach
-                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0066cc] font-semibold flex items-center justify-between">
+                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0066cc] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0066cc]/10 px-2.5 rounded-lg' : '' }}">
                   <span>Bandingkan Semua Model</span>
                   <span class="text-xs">&rsaquo;</span>
                 </a>
               </div>
             </details>
 
-            <details class="border-b border-[#f5f5f7]">
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold">Layanan
-                <svg class="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            <details class="border-b border-[#f5f5f7]" {{ $is_active_layanan ? 'open' : '' }}>
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0066cc]' : '' }}">Layanan
+                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0066cc]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
                 @foreach($all_layanan as $lItem)
@@ -535,8 +554,8 @@
                 @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Tentang Kami</a>
-            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Blog</a>
+            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0066cc] font-semibold' : '' }}">Tentang Kami</a>
+            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0066cc] font-semibold' : '' }}">Blog</a>
             <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1.5 text-[#0066cc] font-semibold">Hubungi Kami</a>
           </nav>
         </div>
