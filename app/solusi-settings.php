@@ -9,18 +9,7 @@ namespace App;
  * Mengelola judul, deskripsi, dan kartu solusi industri beranda secara dinamis.
  */
 
-// 1. DAFTARKAN MENU DI WP ADMIN
-add_action('admin_menu', function () {
-    add_menu_page(
-        'Solusi Industri Beranda',
-        'Solusi Industri',
-        'manage_options',
-        'fds-solusi-settings',
-        __NAMESPACE__ . '\\render_solusi_settings_admin_page',
-        'dashicons-grid-view',
-        28
-    );
-});
+// Solusi Industri functions and helpers
 
 // 2. ENQUEUE WP MEDIA UPLOADER
 add_action('admin_enqueue_scripts', function ($hook) {
@@ -80,11 +69,48 @@ function fds_get_solusi_data() {
         $cards = $saved_cards;
     }
 
+    $normalized_cards = [];
+    if (is_array($cards)) {
+        foreach ($cards as $c) {
+            $tag = $c['tag'] ?? '';
+            if (strpos($tag, 'Warning</b>') !== false) {
+                $tag = '';
+            }
+            $normalized_cards[] = [
+                'image'     => $c['image'] ?? '',
+                'title'     => $c['title'] ?? '',
+                'desc'      => $c['desc'] ?? '',
+                'tag'       => $tag,
+                'link_text' => $c['link_text'] ?? 'Pelajari Selengkapnya',
+                'link_url'  => $c['link_url'] ?? '#kontak',
+            ];
+        }
+    }
+
+    // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
+    $fds_deep_decode = function($str) {
+        if (!is_string($str)) return $str;
+        $prev = '';
+        while ($prev !== $str) {
+            $prev = $str;
+            $str = wp_specialchars_decode($str, ENT_QUOTES);
+        }
+        return $str;
+    };
+
+    foreach ($normalized_cards as &$nc) {
+        foreach ($nc as $key => &$val) {
+            $val = $fds_deep_decode($val);
+        }
+        unset($val);
+    }
+    unset($nc);
+
     return [
-        'badge' => $badge,
-        'title' => $title,
-        'desc'  => $desc,
-        'cards' => $cards,
+        'badge' => $fds_deep_decode($badge),
+        'title' => $fds_deep_decode($title),
+        'desc'  => $fds_deep_decode($desc),
+        'cards' => $normalized_cards,
     ];
 }
 

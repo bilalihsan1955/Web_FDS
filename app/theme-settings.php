@@ -6,7 +6,8 @@ namespace App;
  * =========================================================================
  * FDS NAVBAR & LOGO MANAGER (PT KARYA SOLUSI ANGKASA)
  * =========================================================================
- * Mengelola logo dan teks brand pada navbar secara dinamis melalui WP Admin.
+ * Mengelola logo, teks brand, favicon, dan pengaturan visual navbar secara
+ * dinamis melalui WP Admin. Menghilangkan ketergantungan pada Appearance -> Customize.
  */
 
 // 1. DAFTARKAN MENU PENGATURAN LOGO & NAVBAR DI WP ADMIN
@@ -22,14 +23,48 @@ add_action('admin_menu', function () {
     );
 });
 
-// 2. ENQUEUE WP MEDIA UPLOADER
+// 2. HAPUS APPEARANCE -> CUSTOMIZE DARI ADMIN MENU & ADMIN BAR KARENA SUDAH TERSEDIA DI MENU KHUSUS
+add_action('admin_menu', function () {
+    remove_submenu_page('themes.php', 'customize.php');
+    if (isset($_SERVER['REQUEST_URI'])) {
+        remove_submenu_page('themes.php', 'customize.php?return=' . urlencode(wp_unslash($_SERVER['REQUEST_URI'])));
+    }
+
+    global $submenu;
+    if (isset($submenu['themes.php'])) {
+        foreach ($submenu['themes.php'] as $key => $item) {
+            if (isset($item[2]) && strpos($item[2], 'customize') !== false) {
+                unset($submenu['themes.php'][$key]);
+            }
+            if (isset($item[1]) && $item[1] === 'customize') {
+                unset($submenu['themes.php'][$key]);
+            }
+        }
+    }
+}, 9999);
+
+add_action('admin_head', function () {
+    echo '<style>#menu-appearance a[href*="customize.php"], #wp-admin-bar-customize { display: none !important; }</style>';
+});
+
+add_action('admin_bar_menu', function ($wp_admin_bar) {
+    $wp_admin_bar->remove_node('customize');
+}, 9999);
+
+// Jika admin membuka customize.php secara langsung, arahkan ke Konten Beranda
+add_action('load-customize.php', function () {
+    wp_safe_redirect(admin_url('admin.php?page=fds-homepage-content'));
+    exit;
+});
+
+// 3. ENQUEUE WP MEDIA UPLOADER
 add_action('admin_enqueue_scripts', function ($hook) {
     if ($hook === 'toplevel_page_fds-navbar-settings') {
         wp_enqueue_media();
     }
 });
 
-// 3. HELPER UNTUK MENGAMBIL DATA LOGO & BRAND NAVBAR DI FRONTEND
+// 4. HELPER UNTUK MENGAMBIL DATA LOGO & BRAND NAVBAR DI FRONTEND
 function fds_get_navbar_brand() {
     $custom_logo_id = get_theme_mod('custom_logo');
     $custom_logo_url = '';
@@ -56,16 +91,25 @@ function fds_get_navbar_brand() {
         $logo_height = 28;
     }
 
+    $favicon_url = get_option('fds_site_favicon_url', '');
+    if (empty($favicon_url)) {
+        $site_icon_id = get_option('site_icon');
+        if ($site_icon_id) {
+            $favicon_url = wp_get_attachment_image_url($site_icon_id, 'full') ?: '';
+        }
+    }
+
     return [
         'has_logo'     => !empty($logo_url),
         'logo_url'     => $logo_url,
         'brand_text'   => $brand_text,
         'display_mode' => $display_mode,
         'logo_height'  => $logo_height,
+        'favicon_url'  => $favicon_url,
     ];
 }
 
-// 4. TAMPILAN HALAMAN PENGATURAN WP ADMIN
+// 5. TAMPILAN HALAMAN PENGATURAN WP ADMIN
 function render_navbar_settings_admin_page() {
     if (!current_user_can('manage_options')) {
         return;
@@ -77,13 +121,23 @@ function render_navbar_settings_admin_page() {
         $brand_text   = sanitize_text_field($_POST['fds_navbar_brand_text'] ?? '');
         $display_mode = sanitize_text_field($_POST['fds_navbar_display_mode'] ?? 'both');
         $logo_height  = max(16, min(60, (int) ($_POST['fds_navbar_logo_height'] ?? 28)));
+        $favicon_url  = esc_url_raw($_POST['fds_site_favicon_url'] ?? '');
 
         update_option('fds_navbar_logo_url', $logo_url);
         update_option('fds_navbar_brand_text', $brand_text);
         update_option('fds_navbar_display_mode', $display_mode);
         update_option('fds_navbar_logo_height', $logo_height);
+        update_option('fds_site_favicon_url', $favicon_url);
 
-        $message = 'Pengaturan Logo & Navbar berhasil disimpan!';
+        // Jika favicon diisi, cari attachment ID untuk sinkronisasi ke core site_icon
+        if (!empty($favicon_url)) {
+            $attachment_id = attachment_url_to_postid($favicon_url);
+            if ($attachment_id) {
+                update_option('site_icon', $attachment_id);
+            }
+        }
+
+        $message = 'Pengaturan Logo, Navbar &amp; Favicon berhasil disimpan!';
     }
 
     $brand_data = fds_get_navbar_brand();
@@ -95,14 +149,14 @@ function render_navbar_settings_admin_page() {
                     <span class="dashicons dashicons-art" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
-                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pengaturan Logo &amp; Teks Navbar</h1>
-                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola logo gambar dan teks brand yang tampil di pojok kiri atas navbar header website.</p>
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pengaturan Logo, Brand &amp; Favicon Navbar</h1>
+                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola logo gambar, favicon tab browser, dan teks brand yang tampil di pojok kiri atas header website.</p>
                 </div>
             </div>
 
             <?php if (!empty($message)): ?>
                 <div style="background: #f0fdf4; border-left: 4px solid #22c55e; color: #166534; padding: 14px 18px; border-radius: 6px; margin: 20px 0 10px; font-size: 14px; font-weight: 500;">
-                    ✓ <?php echo esc_html($message); ?>
+                    ✓ <?php echo $message; ?>
                 </div>
             <?php endif; ?>
         </div>
@@ -138,7 +192,8 @@ function render_navbar_settings_admin_page() {
                             <span>Beranda</span>
                             <span>Produk</span>
                             <span>Layanan</span>
-                            <span style="background: #0066cc; color: #fff; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: 600;">Hubungi Kami</span>
+                            <span>Tentang Kami</span>
+                            <span>Blog</span>
                         </div>
                     </div>
                 </div>
@@ -171,7 +226,34 @@ function render_navbar_settings_admin_page() {
                     </div>
                 </div>
 
-                <!-- 3. TEKS BRAND / NAMA PERUSAHAAN -->
+                <!-- 3. UPLOAD FAVICON (SITE ICON) -->
+                <div>
+                    <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
+                        Favicon / Site Icon (Ikon Tab Browser)
+                    </label>
+                    <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">Ikon kecil yang tampil di tab browser pengunjung (Rekomendasi: PNG 512×512 piksel).</p>
+
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <?php if (!empty($brand_data['favicon_url'])): ?>
+                            <img id="fds_favicon_preview" src="<?php echo esc_url($brand_data['favicon_url']); ?>" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 2px;">
+                        <?php else: ?>
+                            <div id="fds_favicon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">Icon</div>
+                        <?php endif; ?>
+
+                        <input type="text" 
+                               id="fds_site_favicon_url" 
+                               name="fds_site_favicon_url" 
+                               value="<?php echo esc_url($brand_data['favicon_url']); ?>" 
+                               style="flex: 1; font-size: 13px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                               placeholder="https://domain.com/.../favicon.png">
+
+                        <button type="button" id="fds_upload_favicon_btn" class="button" style="padding: 6px 14px; font-size: 13px; font-weight: 600;">
+                            Pilih Favicon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. TEKS BRAND / NAMA PERUSAHAAN -->
                 <div>
                     <label for="fds_navbar_brand_text" style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
                         Teks Brand / Nama Perusahaan di Navbar
@@ -186,7 +268,7 @@ function render_navbar_settings_admin_page() {
                            placeholder="Contoh: Full Drone Solutions">
                 </div>
 
-                <!-- 4. MODE TAMPILAN -->
+                <!-- 5. MODE TAMPILAN -->
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">
                         Mode Tampilan Navbar
@@ -207,7 +289,7 @@ function render_navbar_settings_admin_page() {
                     </div>
                 </div>
 
-                <!-- 5. TINGGI LOGO (PX) -->
+                <!-- 6. TINGGI LOGO (PX) -->
                 <div>
                     <label for="fds_navbar_logo_height" style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
                         Tinggi Logo Navbar (Pixel)
@@ -229,7 +311,7 @@ function render_navbar_settings_admin_page() {
                 <!-- TOMBOL SIMPAN -->
                 <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
                     <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
-                        Simpan Perubahan Logo &amp; Navbar
+                        💾 Simpan Perubahan Logo, Navbar &amp; Favicon
                     </button>
                 </div>
 
@@ -250,60 +332,70 @@ function render_navbar_settings_admin_page() {
             let previewFallback = $('#fds-preview-fallback-icon');
             let previewText = $('#fds-preview-brand-text');
 
-            // Handle Logo Image vs Fallback Icon
             if (displayMode === 'text_only') {
                 previewImg.hide();
                 previewFallback.hide();
-            } else {
-                if (logoUrl !== '') {
-                    previewImg.attr('src', logoUrl).css({
-                        'height': logoHeight + 'px',
-                        'display': 'block'
-                    });
+                previewText.show().text(brandText || 'Full Drone Solutions');
+            } else if (displayMode === 'logo_only') {
+                previewText.hide();
+                if (logoUrl) {
+                    previewImg.attr('src', logoUrl).css('height', logoHeight + 'px').show();
                     previewFallback.hide();
                 } else {
                     previewImg.hide();
                     previewFallback.show();
                 }
-            }
-
-            // Handle Brand Text
-            if (displayMode === 'logo_only') {
-                previewText.hide();
             } else {
-                previewText.text(brandText !== '' ? brandText : 'Full Drone Solutions').show();
+                // both
+                if (logoUrl) {
+                    previewImg.attr('src', logoUrl).css('height', logoHeight + 'px').show();
+                    previewFallback.hide();
+                } else {
+                    previewImg.hide();
+                    previewFallback.show();
+                }
+                previewText.show().text(brandText || 'Full Drone Solutions');
             }
         }
 
-        // Upload Logo Button via WP Media Library
+        // Trigger updates on input change
+        $('#fds_navbar_brand_text, #fds_navbar_logo_height').on('input', updateLivePreview);
+        $('input[name="fds_navbar_display_mode"]').on('change', updateLivePreview);
+
+        // WP Media Uploader for Logo
         $('#fds_upload_logo_btn').on('click', function(e) {
             e.preventDefault();
-            let mediaUploader = wp.media({
-                title: 'Pilih / Unggah Logo Navbar',
+            var customUploader = wp.media({
+                title: 'Pilih atau Unggah Logo Navbar',
                 button: { text: 'Gunakan Logo Ini' },
                 multiple: false
-            });
-
-            mediaUploader.on('select', function() {
-                let attachment = mediaUploader.state().get('selection').first().toJSON();
+            }).on('select', function() {
+                var attachment = customUploader.state().get('selection').first().toJSON();
                 $('#fds_navbar_logo_url').val(attachment.url);
                 updateLivePreview();
-            });
+            }).open();
+        });
 
-            mediaUploader.open();
+        // WP Media Uploader for Favicon
+        $('#fds_upload_favicon_btn').on('click', function(e) {
+            e.preventDefault();
+            var customUploader = wp.media({
+                title: 'Pilih atau Unggah Favicon / Site Icon',
+                button: { text: 'Gunakan Favicon Ini' },
+                multiple: false
+            }).on('select', function() {
+                var attachment = customUploader.state().get('selection').first().toJSON();
+                $('#fds_site_favicon_url').val(attachment.url);
+                $('#fds_favicon_preview').replaceWith('<img id="fds_favicon_preview" src="' + attachment.url + '" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 2px;">');
+            }).open();
         });
 
         // Remove Logo Button
-        $('#fds_remove_logo_btn').on('click', function() {
+        $('#fds_remove_logo_btn').on('click', function(e) {
+            e.preventDefault();
             $('#fds_navbar_logo_url').val('');
             updateLivePreview();
         });
-
-        // Live Inputs Trigger
-        $('#fds_navbar_logo_url, #fds_navbar_brand_text, #fds_navbar_logo_height').on('input change', updateLivePreview);
-        $('input[name="fds_navbar_display_mode"]').on('change', updateLivePreview);
-
-        updateLivePreview();
     });
     </script>
     <?php

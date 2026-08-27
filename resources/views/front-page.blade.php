@@ -49,14 +49,14 @@
         <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
           <img
             src="{{ $slide['url'] }}"
-            alt="{{ $slide['alt'] ?: 'Full Drone Solutions' }}"
+            alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
             class="w-full h-full object-cover"
             loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
           >
           @if(!empty($slide['title']))
           <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 sm:p-10 text-left">
             <p class="text-white text-[16px] sm:text-[20px] font-semibold tracking-[-0.01em] drop-shadow-md">
-              {{ $slide['title'] }}
+              {!! esc_html(wp_specialchars_decode($slide['title'], ENT_QUOTES)) !!}
             </p>
           </div>
           @endif
@@ -218,9 +218,9 @@
         @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10">
           <img src="{{ $logo }}"
-               alt="{{ esc_attr($mitra->post_title) }}"
+               alt="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}"
                class="h-24 w-auto object-contain"
-               title="{{ $mitra->post_title }}">
+               title="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}">
         </div>
       @endforeach
       @foreach($mitra_with_logo as $mitra)
@@ -281,7 +281,7 @@
         <div>
           <div class="h-[210px] overflow-hidden relative bg-[#1e293b]">
             <img src="{{ esc_url($card['image'] ?: 'https://picsum.photos/seed/fds-solution-' . $loop->index . '/800/500') }}" 
-                 alt="{{ esc_attr($card['title']) }}" 
+                 alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
           <div class="p-7 pb-4">
@@ -333,7 +333,7 @@
       <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] overflow-hidden relative min-h-[340px] group"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div class="absolute inset-0 z-0">
-          <img src="{{ fds_img('keunggulan', 'https://picsum.photos/seed/fds-workshop-factory/1200/600') }}"
+          <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://picsum.photos/seed/fds-workshop-factory/1200/600') }}"
                alt="Pabrik &amp; Workshop FDS"
                class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700">
           <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/80 via-[#1d1d1f]/20 to-transparent"></div>
@@ -490,6 +490,8 @@
               }
 
               $products[] = [
+                  'id'    => $d->ID,
+                  'url'   => get_permalink($d->ID),
                   'slug'  => $d->post_name,
                   'name'  => html_entity_decode($d->post_title, ENT_QUOTES, 'UTF-8'),
                   'cat'   => html_entity_decode($d_cat, ENT_QUOTES, 'UTF-8'),
@@ -549,7 +551,7 @@
       @foreach($products as $p)
       <div class="drone-row border-b border-black/[0.06]" data-cat="{!! esc_attr($p['cat']) !!}">
         <div class="grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#f5f5f7] rounded-2xl px-4 -mx-4 transition-colors duration-150 cursor-pointer"
-             onclick="location.href='{{ home_url('/' . $p['slug']) }}'">
+             onclick="location.href='{{ $p['url'] }}'">
 
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
@@ -575,7 +577,7 @@
           {{-- Specs + CTA --}}
           <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
             <p class="hidden lg:block text-[13px] text-[#86868b]">{!! $p['specs'] !!}</p>
-            <a href="{{ home_url('/' . $p['slug']) }}"
+            <a href="{{ $p['url'] }}"
                class="text-[13px] font-semibold text-[#0066cc] hover:underline whitespace-nowrap"
                onclick="event.stopPropagation()">
               Detail &rsaquo;
@@ -646,6 +648,9 @@ function filterDrones(btn) {
 {{-- ========================================================== --}}
 {{-- 5. LAYANAN ENTERPRISE                                     --}}
 {{-- ========================================================== --}}
+@php
+  $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
+@endphp
 <section id="layanan" class="bg-[#1d1d1f] py-24 sm:py-32 border-t border-white/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
@@ -660,34 +665,32 @@ function filterDrones(btn) {
           {!! nl2br(esc_html($hp['layanan_desc'] ?? 'Kami menyediakan layanan operasional lengkap untuk memastikan investasi drone Anda memberikan hasil maksimal.')) !!}
         </p>
         <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150">
+           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
           {!! esc_html($hp['layanan_cta_text'] ?? 'Diskusi Kebutuhan Anda') !!}
         </a>
       </div>
 
       <div class="divide-y divide-white/[0.08]">
-        <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item1_title'] ?? 'Pemetaan Aerial & GIS') !!}</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item1_desc'] ?? 'Peta topografi resolusi tinggi dengan akurasi sub-sentimeter untuk perencanaan lahan, kehutanan, dan infrastruktur.')) !!}</p>
+        @foreach($layanan_items as $lItem)
+        <div class="py-7 group">
+          <h3 class="text-[17px] font-semibold text-white mb-1.5 flex items-center justify-between">
+            <span>{!! esc_html(wp_specialchars_decode($lItem['title'])) !!}</span>
+            @if(!empty($lItem['url']) && $lItem['url'] !== '#')
+            <a href="{{ esc_url($lItem['url']) }}" class="text-[12px] font-medium text-[#6e9fd4] group-hover:text-white transition-colors inline-flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
+              Lihat Detail &rsaquo;
+            </a>
+            @endif
+          </h3>
+          <p class="text-[15px] text-white/50 leading-relaxed">
+            {!! nl2br(esc_html(wp_specialchars_decode($lItem['desc']))) !!}
+          </p>
         </div>
-        <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item2_title'] ?? 'Inspeksi Industri & Infrastruktur') !!}</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item2_desc'] ?? 'Pemeriksaan visual dan termal berbasis UAV untuk pemantauan fasilitas energi, kelistrikan, migas, dan infrastruktur kritis secara cepat dan aman tanpa menghentikan operasional.')) !!}</p>
-        </div>
-        <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item3_title'] ?? 'Sewa Armada Drone') !!}</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item3_desc'] ?? 'Armada FERTO siap pakai untuk proyek jangka pendek, pilot project, atau kebutuhan peak season tanpa investasi unit penuh.')) !!}</p>
-        </div>
-        <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item4_title'] ?? 'Pelatihan & Sertifikasi Pilot') !!}</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item4_desc'] ?? 'Program pelatihan pilot drone bersertifikat resmi untuk tim lapangan Anda. Kurikulum mencakup misi agrikultur, pemetaan, dan inspeksi.')) !!}</p>
-        </div>
-        <div class="py-7">
-          <h3 class="text-[17px] font-semibold text-white mb-1.5">{!! esc_html($hp['layanan_item5_title'] ?? 'After-Sales & Maintenance') !!}</h3>
-          <p class="text-[15px] text-white/50 leading-relaxed">{!! nl2br(esc_html($hp['layanan_item5_desc'] ?? 'Layanan purna jual lokal dengan stok suku cadang, teknisi bersertifikat, dan garansi resmi di seluruh Indonesia.')) !!}</p>
-        </div>
+        @endforeach
       </div>
-      </div>
+
+    </div>
+  </div>
+</section>
 
     </div>
   </div>
@@ -744,10 +747,10 @@ function filterDrones(btn) {
                 {{ get_the_date('d M Y', $post->ID) }}
               </p>
               <h3 class="text-[16px] font-semibold text-[#1d1d1f] leading-[1.4] mb-3 group-hover:text-[#0066cc] transition-colors line-clamp-2">
-                <a href="{{ get_permalink($post->ID) }}">{{ get_the_title($post->ID) }}</a>
+                <a href="{{ get_permalink($post->ID) }}">{!! esc_html(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) !!}</a>
               </h3>
               <p class="text-[14px] text-[#515154] leading-relaxed line-clamp-2 mb-5">
-                {{ get_the_excerpt($post->ID) }}
+                {!! esc_html(wp_specialchars_decode(get_the_excerpt($post->ID), ENT_QUOTES)) !!}
               </p>
               <a href="{{ get_permalink($post->ID) }}"
                  class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] hover:underline">

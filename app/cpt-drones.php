@@ -132,10 +132,11 @@ add_action('init', function () {
     }
 });
 
-// Unregister taxonomy category & post_tag dari object drone
+// Unregister taxonomy category, post_tag, dan kategori-drone lama dari object drone
 add_action('init', function () {
     unregister_taxonomy_for_object_type('category', 'drone');
     unregister_taxonomy_for_object_type('post_tag', 'drone');
+    unregister_taxonomy_for_object_type('kategori-drone', 'drone');
 }, 99);
 
 // Hapus menu 'Kategori' bawaan dari menu Produk Drone dan Pos, SISAKAN 'Kategori Drone'
@@ -163,6 +164,42 @@ add_filter('enter_title_here', function ($title, $post) {
     }
     return $title;
 }, 10, 2);
+
+// Auto-insert page 'bandingkan' if not exists
+add_action('init', function () {
+    if (!get_page_by_path('bandingkan')) {
+        wp_insert_post([
+            'post_title'     => 'Bandingkan Model Drone',
+            'post_name'      => 'bandingkan',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'ping_status'    => 'closed',
+        ]);
+    }
+});
+
+// Auto-route / redirect root slug /{slug} or legacy page to drone single if slug matches a drone post
+add_action('template_redirect', function () {
+    global $wp;
+    $slug = trim($wp->request, '/');
+    if ($slug === 'bandingkan-drone' || $slug === 'compare') {
+        wp_safe_redirect(home_url('/bandingkan'), 301);
+        exit;
+    }
+    if (!empty($slug) && $slug !== 'bandingkan') {
+        $drone_posts = get_posts([
+            'post_type'      => 'drone',
+            'name'           => $slug,
+            'posts_per_page' => 1,
+            'post_status'    => 'publish',
+        ]);
+        if (!empty($drone_posts) && (is_404() || is_page())) {
+            wp_safe_redirect(get_permalink($drone_posts[0]->ID), 301);
+            exit;
+        }
+    }
+});
 
 // =========================================================================
 // 3. KOLOM ADMIN CUSTOM DI DAFTAR PRODUK DRONE
@@ -250,6 +287,14 @@ add_action('manage_drone_posts_custom_column', function ($column, $post_id) {
 // 4. FORM TEXTFIELD MURNI DRONE (FDS DRONE DATA FORM)
 // =========================================================================
 
+// Enqueue WordPress Media Uploader untuk halaman Tambah / Edit Drone
+add_action('admin_enqueue_scripts', function ($hook) {
+    global $post_type;
+    if ($post_type === 'drone') {
+        wp_enqueue_media();
+    }
+});
+
 add_action('add_meta_boxes', function () {
     add_meta_box(
         'fds_drone_fields_panel',
@@ -271,6 +316,7 @@ function render_drone_pure_form_metabox($post) {
     $desc               = get_post_meta($post->ID, 'drone_desc', true) ?: $post->post_content;
     $brosur_url         = get_post_meta($post->ID, 'drone_brosur_url', true);
     $video_url          = get_post_meta($post->ID, 'drone_video_url', true);
+    $specs_img_url      = get_post_meta($post->ID, 'drone_specs_img', true);
 
     // 4 Key Stats Bar
     $stat1_num          = get_post_meta($post->ID, 'drone_stat1_num', true) ?: 'SNI';
@@ -341,24 +387,14 @@ function render_drone_pure_form_metabox($post) {
     <!-- 1. INFORMASI UTAMA & RINGKASAN PRODUK -->
     <div class="fds-section-card">
         <div class="fds-section-title">📌 1. Informasi Utama Produk Drone</div>
-        
-        <div class="fds-row-2">
-            <div class="fds-field">
-                <label for="drone_kategori">Kategori Utama Drone</label>
-                <select id="drone_kategori" name="drone_kategori">
-                    <option value="Agrikultur" <?php selected($kategori, 'Agrikultur'); ?>>🌾 Agrikultur (Drone Pertanian Seri FERTO)</option>
-                    <option value="Pemetaan & GIS" <?php selected($kategori, 'Pemetaan & GIS'); ?>>🗺️ Pemetaan & GIS (Fixed-Wing VTOL & Inspeksi)</option>
-                    <option value="Kargo" <?php selected($kategori, 'Kargo'); ?>>📦 Kargo (Drone Logistik & Pengiriman Cepat)</option>
-                    <option value="Reboisasi" <?php selected($kategori, 'Reboisasi'); ?>>🌲 Reboisasi (Drone Penabur Seedball Hutan)</option>
-                </select>
-                <span class="fds-subtext">Menentukan filter tab lini produk di Beranda dan pengelompokan menu navigasi.</span>
-            </div>
-            
-            <div class="fds-field">
-                <label for="drone_badge">Badge / Label Tipe</label>
-                <input type="text" id="drone_badge" name="drone_badge" value="<?php echo esc_attr($badge); ?>" placeholder="Contoh: Terlaris / Enterprise / Hybrid VTOL / Modular UAV">
-                <span class="fds-subtext">Label badge kecil berwarna biru di atas judul drone.</span>
-            </div>
+        <p style="font-size: 12px; color: #64748b; margin: 0 0 16px 0;">
+            <em>Tip: Untuk memilih kategori drone (Agrikultur, Kargo, Pemetaan &amp; GIS, Reboisasi), cukup centang checklist pada kotak <strong>"Kategori Drone"</strong> di bilah kanan (sidebar).</em>
+        </p>
+
+        <div class="fds-field">
+            <label for="drone_badge">Badge / Label Tipe</label>
+            <input type="text" id="drone_badge" name="drone_badge" value="<?php echo esc_attr($badge); ?>" placeholder="Contoh: Terlaris / Enterprise / Hybrid VTOL / Modular UAV">
+            <span class="fds-subtext">Label badge kecil berwarna biru di atas judul drone.</span>
         </div>
 
         <div class="fds-field">
@@ -418,6 +454,32 @@ function render_drone_pure_form_metabox($post) {
     <div class="fds-section-card">
         <div class="fds-section-title">⚙️ 3. Spesifikasi Teknis Terstruktur (Tabel Specs)</div>
         
+        <!-- Foto Spesifikasi Drone (PNG Transparan / Spek) -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 18px;">
+            <label style="font-size: 13px; font-weight: 700; color: #0f172a; display: block; margin-bottom: 4px;">
+                📐 Foto Spesifikasi Produk (PNG Transparan / Detail Spek)
+            </label>
+            <span class="fds-subtext" style="margin-bottom: 12px;">Foto drone (format PNG transparan dianjurkan) yang tampil di samping kiri tabel spesifikasi teknis.</span>
+            
+            <div style="display: flex; gap: 16px; align-items: center;">
+                <div style="width: 140px; height: 100px; border-radius: 6px; overflow: hidden; background: #ffffff; display: flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1; flex-shrink: 0;">
+                    <img id="fds_specs_img_preview" src="<?php echo esc_url($specs_img_url ?: 'https://placehold.co/400x300/f8fafc/94a3b8?text=Foto+Spesifikasi+(PNG)'); ?>" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                </div>
+                <div style="flex: 1;">
+                    <input type="hidden" id="fds_specs_img_url" name="drone_specs_img" value="<?php echo esc_attr($specs_img_url); ?>">
+                    <div style="display: flex; gap: 8px; margin-bottom: 6px;">
+                        <button type="button" id="fds_upload_specs_btn" class="button button-secondary" style="font-size: 12px; font-weight: 600; height: 32px;">
+                            📷 Pilih / Upload Foto Spek
+                        </button>
+                        <button type="button" id="fds_remove_specs_btn" class="button button-link" style="color: #dc2626; font-size: 12px;">
+                            Hapus Gambar
+                        </button>
+                    </div>
+                    <span class="fds-subtext">Jika dikosongkan, halaman akan otomatis menggunakan Featured Image atau ilustrasi standar drone.</span>
+                </div>
+            </div>
+        </div>
+
         <div class="fds-row-2">
             <div class="fds-field">
                 <label>Kapasitas Muatan / Tangki</label>
@@ -512,6 +574,30 @@ function render_drone_pure_form_metabox($post) {
             </div>
         </div>
     </div>
+
+    <script>
+    jQuery(document).ready(function($) {
+        // Media Uploader untuk Foto Spesifikasi Drone (PNG)
+        $('#fds_upload_specs_btn').on('click', function(e) {
+            e.preventDefault();
+            var specsUploader = wp.media({
+                title: 'Pilih atau Unggah Foto Spesifikasi Drone (PNG Transparan)',
+                button: { text: 'Gunakan Foto Ini' },
+                multiple: false
+            }).on('select', function() {
+                var attachment = specsUploader.state().get('selection').first().toJSON();
+                $('#fds_specs_img_url').val(attachment.url);
+                $('#fds_specs_img_preview').attr('src', attachment.url);
+            }).open();
+        });
+
+        $('#fds_remove_specs_btn').on('click', function(e) {
+            e.preventDefault();
+            $('#fds_specs_img_url').val('');
+            $('#fds_specs_img_preview').attr('src', 'https://placehold.co/400x300/f8fafc/94a3b8?text=Foto+Spesifikasi+(PNG)');
+        });
+    });
+    </script>
     <?php
 }
 
@@ -530,6 +616,11 @@ add_action('save_post_drone', function ($post_id) {
     if (!current_user_can('edit_post', $post_id)) return;
 
     $is_saving = true;
+
+    // Simpan Foto Spesifikasi Drone
+    if (isset($_POST['drone_specs_img'])) {
+        update_post_meta($post_id, 'drone_specs_img', sanitize_text_field($_POST['drone_specs_img']));
+    }
 
     $text_fields = [
         'drone_kategori', 'drone_badge', 'drone_tagline', 'drone_brosur_url', 'drone_video_url',
@@ -600,10 +691,10 @@ add_action('save_post_drone', function ($post_id) {
     }
     update_post_meta($post_id, 'drone_for', implode("\n", $uc_arr));
 
-    // Sinkronisasi kategori terpilih ke taksonomi 'kategori_drone'
-    if (!empty($_POST['drone_kategori'])) {
-        $cat_name = sanitize_text_field($_POST['drone_kategori']);
-        wp_set_object_terms($post_id, $cat_name, 'kategori_drone', false);
+    // Sinkronisasi kategori dari taksonomi checklist sidebar ke post meta 'drone_kategori'
+    $terms = wp_get_post_terms($post_id, 'kategori_drone');
+    if (!empty($terms) && !is_wp_error($terms)) {
+        update_post_meta($post_id, 'drone_kategori', $terms[0]->name);
     }
 
     $is_saving = false;

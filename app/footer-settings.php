@@ -33,7 +33,7 @@ function fds_get_global_contact() {
     $wa_link      = get_option('fds_global_wa_link', get_option('fds_kontak_wa_link', 'https://wa.me/628112748882'));
     $maps_url     = get_option('fds_global_maps_url', get_option('fds_kontak_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid'));
 
-    return [
+    $data = [
         // KONTAK TERPUSAT
         'company_name' => $company_name,
         'address'      => $address,
@@ -67,6 +67,17 @@ function fds_get_global_contact() {
         'privacy_url'  => get_option('fds_footer_privacy_url', '#'),
         'terms_url'    => get_option('fds_footer_terms_url', '#'),
     ];
+
+    // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
+    return array_map(function($v) {
+        if (!is_string($v)) return $v;
+        $prev = '';
+        while ($prev !== $v) {
+            $prev = $v;
+            $v = wp_specialchars_decode($v, ENT_QUOTES);
+        }
+        return $v;
+    }, $data);
 }
 
 // Backward-compatible alias

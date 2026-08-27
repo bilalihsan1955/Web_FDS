@@ -70,20 +70,28 @@ add_action('init', function () {
         update_option('fds_about_info_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
     }
 
-    // Decode any double-encoded entities in Hero fields
-    $current_hero_title = get_option('fds_about_hero_title');
-    if ($current_hero_title && strpos($current_hero_title, '&amp;') !== false) {
-        update_option('fds_about_hero_title', html_entity_decode($current_hero_title, ENT_QUOTES, 'UTF-8'));
-    }
-    $current_hero_sub = get_option('fds_about_hero_sub');
-    if ($current_hero_sub && (strpos($current_hero_sub, '&amp;') !== false || strpos($current_hero_sub, '&middot;') !== false)) {
-        update_option('fds_about_hero_sub', html_entity_decode($current_hero_sub, ENT_QUOTES, 'UTF-8'));
+    // Auto-clean raw HTML classes from text fields
+    $cleanup_keys = [
+        'fds_about_hero_title', 'fds_about_hero_desc',
+        'fds_about_story_title', 'fds_about_story_p1', 'fds_about_story_p2', 'fds_about_story_p3', 'fds_about_story_p4',
+        'fds_about_spektrum_title', 'fds_about_spektrum1_desc', 'fds_about_spektrum2_desc', 'fds_about_spektrum3_desc',
+        'fds_about_mitra_title', 'fds_about_mitra_desc',
+        'fds_about_certs_title', 'fds_about_cta_title', 'fds_about_cta_desc',
+    ];
+    foreach ($cleanup_keys as $k) {
+        $val = get_option($k);
+        if ($val && (strpos($val, 'class="') !== false || strpos($val, 'style="') !== false)) {
+            $cleaned = preg_replace('/\s*(class|style)="[^"]*"/', '', $val);
+            $cleaned = preg_replace('/<strong\s*>/', '<strong>', $cleaned);
+            $cleaned = preg_replace('/<em\s*>/', '<em>', $cleaned);
+            update_option($k, $cleaned);
+        }
     }
 });
 
 // 2. HELPER GET ABOUT CONTENT
 function fds_get_about_content() {
-    return [
+    $data = [
         // HERO
         'hero_sub'        => get_option('fds_about_hero_sub', 'PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Pengalaman UAV Sejak 2012 &middot; Yogyakarta'),
         'hero_title'      => get_option('fds_about_hero_title', "Advanced UAV Engineering,\nManufacturing & AI Technology."),
@@ -189,6 +197,17 @@ function fds_get_about_content() {
         'info_layanan'    => get_option('fds_about_info_layanan', 'Konsultasi Proyek & Pengadaan Korporasi'),
         'info_maps'       => get_option('fds_about_info_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid'),
     ];
+
+    // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
+    return array_map(function($v) {
+        if (!is_string($v)) return $v;
+        $prev = '';
+        while ($prev !== $v) {
+            $prev = $v;
+            $v = wp_specialchars_decode($v, ENT_QUOTES);
+        }
+        return $v;
+    }, $data);
 }
 
 // 3. RENDER ADMIN PAGE

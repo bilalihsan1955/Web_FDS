@@ -30,6 +30,14 @@
       }
     </style>
 
+    @php
+      $nb_brand_head = function_exists('App\fds_get_navbar_brand') ? \App\fds_get_navbar_brand() : [];
+    @endphp
+    @if(!empty($nb_brand_head['favicon_url']))
+    <link rel="icon" href="{{ esc_url($nb_brand_head['favicon_url']) }}">
+    <link rel="apple-touch-icon" href="{{ esc_url($nb_brand_head['favicon_url']) }}">
+    @endif
+
     <?php do_action('get_header'); ?>
     <?php wp_head(); ?>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -103,6 +111,7 @@
 
           $drones_by_cat_slug[$cat_slug]['drones'][] = [
               'id'       => $nd->ID,
+              'url'      => get_permalink($nd->ID),
               'name'     => html_entity_decode($nd->post_title, ENT_QUOTES, 'UTF-8'),
               'slug'     => $nd->post_name,
               'badge'    => html_entity_decode(get_post_meta($nd->ID, 'drone_badge', true) ?: 'Unggulan', ENT_QUOTES, 'UTF-8'),
@@ -248,7 +257,7 @@
                     @if(!empty($agri_drones))
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($agri_drones as $item)
-                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -279,7 +288,7 @@
 
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($pemetaan_drones as $item)
-                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -331,7 +340,7 @@
                     </p>
                     <div class="space-y-2.5">
                       @foreach($rebo_drones as $item)
-                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -375,8 +384,8 @@
                   </div>
 
                   <div class="pt-5 border-t border-black/[0.06]">
-                    <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
-                      Bandingkan Semua Spesifikasi
+                    <a href="{{ home_url('/bandingkan') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                      Bandingkan Semua Model Drone
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                   </div>
@@ -385,7 +394,30 @@
               </div>
             </div>
 
-            <!-- 2. PANE LAYANAN (Editorial Multi-Column) -->
+            <!-- 2. PANE LAYANAN (Editorial Multi-Column — 100% Dinamis dari WP Admin) -->
+            @php
+              $all_layanan = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
+              $layanan_grp1 = [];
+              $layanan_grp2 = [];
+              
+              foreach ($all_layanan as $l) {
+                if (($l['group'] ?? '') === 'Survei & Inspeksi Teknis') {
+                  $layanan_grp2[] = $l;
+                } else {
+                  $layanan_grp1[] = $l;
+                }
+              }
+
+              if (empty($layanan_grp1) && !empty($layanan_grp2)) {
+                $half = ceil(count($layanan_grp2) / 2);
+                $layanan_grp1 = array_slice($layanan_grp2, 0, $half);
+                $layanan_grp2 = array_slice($layanan_grp2, $half);
+              } elseif (empty($layanan_grp2) && !empty($layanan_grp1)) {
+                $half = ceil(count($layanan_grp1) / 2);
+                $layanan_grp2 = array_slice($layanan_grp1, $half);
+                $layanan_grp1 = array_slice($layanan_grp1, 0, $half);
+              }
+            @endphp
             <div id="mega-pane-layanan" class="mega-pane transition-opacity duration-150 opacity-0 hidden">
               <div class="grid grid-cols-12 gap-10">
                 
@@ -394,20 +426,18 @@
                   <p class="text-[12px] font-semibold text-[#86868b] mb-5">Pelatihan &amp; Operasional</p>
                   
                   <div class="space-y-4">
-                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Kursus &amp; Sertifikasi Pilot</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Sertifikasi resmi CASR Part 107 &amp; training lapangan intensif</div>
+                    @foreach($layanan_grp1 as $lItem)
+                    <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
+                      </div>
+                      @if(!empty($lItem['desc']))
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug line-clamp-2">
+                        {!! esc_html(wp_specialchars_decode($lItem['desc'])) !!}
+                      </div>
+                      @endif
                     </a>
-
-                    <a href="{{ home_url('/#kontak') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Sewa Armada Drone</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Unit sprayer &amp; spreader komersial siap pakai lengkap pilot</div>
-                    </a>
-
-                    <a href="{{ home_url('/#kontak') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">After-Sales &amp; Servis</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Garansi resmi &amp; ketersediaan suku cadang asli lokal Yogyakarta</div>
-                    </a>
+                    @endforeach
                   </div>
                 </div>
 
@@ -416,20 +446,18 @@
                   <p class="text-[12px] font-semibold text-[#86868b] mb-5">Survei &amp; Inspeksi Teknis</p>
                   
                   <div class="space-y-4">
-                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Pemetaan Aerial &amp; GIS Topografi</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Model 3D elevasi, ortofoto sub-sentimeter, &amp; data siap CAD/BIM</div>
+                    @foreach($layanan_grp2 as $lItem)
+                    <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
+                      </div>
+                      @if(!empty($lItem['desc']))
+                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug line-clamp-2">
+                        {!! esc_html(wp_specialchars_decode($lItem['desc'])) !!}
+                      </div>
+                      @endif
                     </a>
-
-                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Inspeksi Termal Transmisi &amp; Solar PV</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Pemeriksaan sensor inframerah untuk transmisi 150kV &amp; pipa migas</div>
-                    </a>
-
-                    <a href="{{ home_url('/#layanan') }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">Analisis Vegetasi &amp; NDVI</div>
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Deteksi dini kesehatan tanaman &amp; rekomendasi pemupukan presisi</div>
-                    </a>
+                    @endforeach
                   </div>
                 </div>
 
@@ -479,7 +507,7 @@
                   @if(!empty($cdata['drones']))
                     <p class="text-[12px] font-semibold text-[#86868b] mt-2">{!! wp_specialchars_decode($cdata['term']->name) !!}</p>
                     @foreach($cdata['drones'] as $d)
-                      <a href="{{ home_url('/' . $d['slug']) }}" class="mobile-nav-link py-1 flex items-center justify-between">
+                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1 flex items-center justify-between">
                         <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
                         <span class="text-[10px] text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
@@ -488,6 +516,10 @@
                     @endforeach
                   @endif
                 @endforeach
+                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0066cc] font-semibold flex items-center justify-between">
+                  <span>Bandingkan Semua Model</span>
+                  <span class="text-xs">&rsaquo;</span>
+                </a>
               </div>
             </details>
 
@@ -496,11 +528,11 @@
                 <svg class="w-4 h-4 text-[#86868b]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
-                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Pelatihan &amp; Sertifikasi Pilot</a>
-                <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1">Pesewaan Drone</a>
-                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Pemetaan Aerial &amp; GIS</a>
-                <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link py-1">Inspeksi Termal &amp; Industri</a>
-                <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1">After-Sales &amp; Maintenance</a>
+                @foreach($all_layanan as $lItem)
+                  <a href="{{ esc_url($lItem['url']) }}" class="mobile-nav-link py-1">
+                    {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
+                  </a>
+                @endforeach
               </div>
             </details>
             <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7]">Tentang Kami</a>

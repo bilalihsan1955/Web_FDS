@@ -9,18 +9,7 @@ namespace App;
  * Mengelola upload & pengaturan gambar slider hero di halaman depan (Home).
  */
 
-// 1. DAFTARKAN MENU DI WP ADMIN
-add_action('admin_menu', function () {
-    add_menu_page(
-        'Hero Slider Homepage',
-        'Hero Slider',
-        'manage_options',
-        'fds-hero-slider',
-        __NAMESPACE__ . '\\render_hero_slider_admin_page',
-        'dashicons-images-alt2',
-        26
-    );
-});
+// Hero slider functions and helpers
 
 // 2. ENQUEUE WP MEDIA UPLOADER UNTUK ADMIN SLIDER
 add_action('admin_enqueue_scripts', function ($hook) {
