@@ -518,32 +518,31 @@
         </div>
       </div>
 
-      {{-- Hero image — Ketinggian proporsional seperti sebelumnya --}}
-      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none" style="max-height: 540px;">
+      {{-- Hero image — Ketinggian impresif di layar lebar (L ke atas) --}}
+      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[340px] sm:max-h-[460px] lg:max-h-[600px] xl:max-h-[680px]">
         @php
           $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
         @endphp
         <img src="{{ $heroSrc }}"
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — FDS"
-             class="w-full h-auto object-cover object-center block"
-             style="max-height: 540px;">
+             class="w-full h-auto object-cover object-center block max-h-[340px] sm:max-h-[460px] lg:max-h-[600px] xl:max-h-[680px]">
       </div>
     </section>
 
     {{-- ── SPECS ─────────────────────────────────────────────────── --}}
     @if(!empty($drone['specs']) || !empty($drone['desc']))
-    <section class="bg-white pt-16 sm:pt-20 pb-16 sm:pb-20 border-t border-black/[0.06] relative z-10 overflow-visible">
+    <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 border-t border-black/[0.06] relative z-10 overflow-visible">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative overflow-visible">
         @php
           $specs_img_meta = $get_meta('drone_specs_img');
           $specs_img = $specs_img_meta ?: ($featuredImg ?: fds_img($droneImgKey, "https://picsum.photos/seed/{$slug}-specs/1400/1000"));
         @endphp
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-stretch relative overflow-visible">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start relative overflow-visible">
           
-          {{-- Left Column: Relative container where image is positioned absolute overlapping into black section below --}}
-          <div class="lg:col-span-6 relative flex flex-col min-h-[320px]">
+          {{-- Left Column: Header, Desc, & Big Transparent Product Image (Col 6) --}}
+          <div class="lg:col-span-6 flex flex-col relative overflow-visible">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide">Spesifikasi</p>
@@ -554,28 +553,28 @@
               <h2 class="text-[32px] sm:text-[40px] lg:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-5">
                 Direkayasa untuk<br>performa nyata.
               </h2>
-              <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed max-w-xl lg:max-w-[480px] mb-6">
+              <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed max-w-xl mb-4">
                 {!! wp_specialchars_decode($drone['desc'] ?: "Setiap spesifikasi {$drone['name']} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.") !!}
               </p>
             </div>
 
-            {{-- Giant Transparent PNG Drone: Anchored cleanly right below description text --}}
+            {{-- Big Transparent Specs Drone Image: Ditengah di mobile/tablet, selaras di desktop --}}
             @if($specs_img)
-            <div class="relative w-full h-0 select-none">
-              <div class="mt-4 lg:mt-0 lg:absolute lg:top-2 xl:top-3 lg:-left-3 xl:-left-6 w-full lg:w-[125%] xl:w-[130%] max-w-[560px] lg:max-w-[660px] pointer-events-none z-20">
+            <div class="mt-4 sm:mt-6 w-full select-none lg:h-0 lg:relative flex justify-center lg:block">
+              <div class="relative lg:absolute lg:top-0 lg:left-0 lg:-ml-2 xl:-ml-4 w-full max-w-[540px] lg:max-w-[620px] pointer-events-none z-20 flex justify-center lg:block mx-auto lg:mx-0">
                 <img src="{{ $specs_img }}" 
                      alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} Spesifikasi" 
-                     class="w-full h-auto object-contain object-left select-none drop-shadow-none lg:drop-shadow-[0_20px_35px_rgba(255,255,255,0.22)]">
+                     class="w-full h-auto object-contain object-center lg:object-left select-none drop-shadow-[0_20px_45px_rgba(255,255,255,0.35)] lg:drop-shadow-[0_30px_60px_rgba(255,255,255,0.42)]">
               </div>
             </div>
             @endif
           </div>
 
-          {{-- Right Column: Specifications Table (More compact width) --}}
-          <div class="lg:col-span-6 lg:pt-[44px] divide-y divide-black/[0.06] relative z-10">
+          {{-- Right Column: Specifications Table (Col 6) --}}
+          <div class="lg:col-span-6 divide-y divide-black/[0.06] pt-2 lg:pt-8 relative z-10">
             @if(!empty($drone['specs']))
               @foreach($drone['specs'] as [$label, $value])
-              <div class="py-4 sm:py-5 first:pt-0 first:pb-5 grid grid-cols-2 gap-4 sm:gap-6 items-baseline">
+              <div class="py-4 sm:py-5 first:pt-0 grid grid-cols-2 gap-4 sm:gap-6 items-baseline">
                 <p class="text-[13px] sm:text-[14px] font-medium text-[#86868b] leading-tight">{!! wp_specialchars_decode($label) !!}</p>
                 <p class="text-[15px] sm:text-[16px] font-semibold text-[#1d1d1f] leading-tight">{!! wp_specialchars_decode($value) !!}</p>
               </div>
