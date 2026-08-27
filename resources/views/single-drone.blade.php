@@ -477,10 +477,11 @@
   <div class="bg-white pt-[52px]">
 
     {{-- ── HERO — Dark split layout ────────────────────────────── --}}
-    <section class="bg-[#1d1d1f] min-h-[90vh] flex flex-col">
+    {{-- ── HERO — Dark split layout ────────────────────────────── --}}
+    <section class="bg-[#1d1d1f] flex flex-col justify-between overflow-hidden">
 
       {{-- Top: text block --}}
-      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 w-full">
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
         {{-- Badge chips --}}
         <div class="flex flex-wrap items-start gap-3 mb-8">
           <span class="inline-flex items-center text-[12px] font-semibold text-white/40 tracking-wide border border-white/[0.12] rounded-full px-3.5 py-1">
@@ -505,7 +506,7 @@
         @endif
 
         {{-- CTAs --}}
-        <div class="flex flex-wrap items-center gap-4 pb-16">
+        <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10">
           <a href="{{ home_url('/#kontak') }}"
              class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md">
             Minta Penawaran
@@ -517,16 +518,16 @@
         </div>
       </div>
 
-      {{-- Hero image — prioritaskan Featured Image, fallback ke Customizer / default --}}
-      <div class="w-full overflow-hidden" style="max-height:620px;">
+      {{-- Hero image — Ketinggian proporsional seperti sebelumnya --}}
+      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none" style="max-height: 540px;">
         @php
           $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
         @endphp
         <img src="{{ $heroSrc }}"
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — FDS"
-             class="w-full object-cover object-center"
-             style="max-height:620px;">
+             class="w-full h-auto object-cover object-center block"
+             style="max-height: 540px;">
       </div>
     </section>
 
