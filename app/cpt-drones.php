@@ -482,8 +482,8 @@ function render_drone_pure_form_metabox($post) {
 
         <div class="fds-row-2">
             <div class="fds-field">
-                <label>Kapasitas Muatan / Tangki</label>
-                <input type="text" name="drone_spec_kapasitas" value="<?php echo esc_attr($spec_kapasitas); ?>" placeholder="Contoh: 10 Liter / Bentang Sayap 2.000 mm / Muatan 10 kg">
+                <label>Payload (Kapasitas Muatan / Tangki / Sensor)</label>
+                <input type="text" name="drone_spec_kapasitas" value="<?php echo esc_attr($spec_kapasitas); ?>" placeholder="Contoh: 10 Liter / 1 – 2 kg (LiDAR & RGB) / Muatan 10 kg">
             </div>
             <div class="fds-field">
                 <label>Durasi Terbang (Endurance)</label>
@@ -669,7 +669,7 @@ add_action('save_post_drone', function ($post_id) {
     $sp_sert = sanitize_text_field($_POST['drone_spec_sertifikasi'] ?? '');
 
     $specs_arr = [];
-    if ($sp_kap)  $specs_arr[] = "Kapasitas Tangki / Payload: $sp_kap";
+    if ($sp_kap)  $specs_arr[] = "Payload: $sp_kap";
     if ($sp_dur)  $specs_arr[] = "Durasi Terbang: $sp_dur";
     if ($sp_bat)  $specs_arr[] = "Sistem Daya (Baterai): $sp_bat";
     if ($sp_prod) $specs_arr[] = "Produktivitas / Jangkauan: $sp_prod";
@@ -839,7 +839,7 @@ add_action('init', function () {
             'content'   => 'FERTO 50 adalah platform UAV agrikultur dengan muatan tertinggi di lini FDS. Membawa tangki berkapasitas 50 Liter dengan sistem propulsi bertenaga raksasa dan kecepatan jelajah hingga 6 m/s, drone ini diciptakan untuk menjawab tantangan operasional perkebunan agrikultur terbesar di Indonesia dengan efisiensi maksimal.',
             'stat1_n'   => 'SNI', 'stat1_l' => 'SNI 9199:2023',
             'stat2_n'   => '60,74%', 'stat2_l' => 'TKDN + BMP',
-            'stat3_n'   => '50 Liter', 'stat3_l' => 'Kapasitas Tangki',
+            'stat3_n'   => '50 Liter', 'stat3_l' => 'Payload Maksimum',
             'stat4_n'   => 'Garansi', 'stat4_l' => 'Purna Jual Resmi',
             'sp_kap'    => '50 Liter',
             'sp_dur'    => '20 – 30 menit',
@@ -885,11 +885,11 @@ add_action('init', function () {
             'badge'     => 'Modular UAV',
             'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
             'content'   => 'MULTIPURPOSE dirancang sebagai platform UAV modular yang fleksibel untuk berbagai misi kustom. Mampu mengangkut payload hingga 5 kg dengan integrasi berbagai sensor canggih seperti kamera termal inframerah, optik zoom 20x, hingga sensor LiDAR. Sangat andal untuk inspeksi aset kritikal seperti jaringan transmisi listrik 150 kV, ladang panel surya, tangki minyak & gas, serta infrastruktur jembatan dan gedung tinggi tanpa risiko keselamatan kerja.',
-            'stat1_n'   => '5 kg', 'stat1_l' => 'Kapasitas Payload',
+            'stat1_n'   => '5 kg', 'stat1_l' => 'Payload Maksimum',
             'stat2_n'   => '30 min', 'stat2_l' => 'Durasi Terbang Maks',
             'stat3_n'   => 'Termal/AI', 'stat3_l' => 'Sensor Kompatibel',
             'stat4_n'   => '150 kV', 'stat4_l' => 'Inspeksi Aset Kritikal',
-            'sp_kap'    => 'Payload Kapasitas: 5 kg',
+            'sp_kap'    => '5 kg (Sensor Termal, LiDAR, Optical Zoom)',
             'sp_dur'    => '15 – 30 menit',
             'sp_bat'    => '8.000 mAh',
             'sp_prod'   => 'Inspeksi Jalur Transmisi & Area Industri',
@@ -909,11 +909,11 @@ add_action('init', function () {
             'badge'     => 'Logistics UAV',
             'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
             'content'   => 'DELFRO adalah drone kargo otonom yang dikembangkan khusus untuk distribusi logistik ringan yang cepat, efisien, dan aman. Dengan kapasitas angkut 3 hingga 10 kg dan kompartemen kargo berukuran 20 x 20 x 30 cm, DELFRO menjadi solusi mutakhir untuk pengiriman sampel medis, pasokan darurat kebencanaan, suku cadang penting, dan logistik ekspres ke wilayah kepulauan atau daerah terisolir yang sulit dijangkau transportasi darat.',
-            'stat1_n'   => '10 kg', 'stat1_l' => 'Kapasitas Payload',
+            'stat1_n'   => '10 kg', 'stat1_l' => 'Payload Maksimum',
             'stat2_n'   => '15 kg', 'stat2_l' => 'MTOW Maksimum',
             'stat3_n'   => '18"', 'stat3_l' => 'Carbon Propeller',
             'stat4_n'   => 'Auto', 'stat4_l' => 'Waypoint Route',
-            'sp_kap'    => 'Payload: 3 – 10 kg | Kotak: 20 x 20 x 30 cm',
+            'sp_kap'    => '3 – 10 kg (Kotak Logistik 20 x 20 x 30 cm)',
             'sp_dur'    => '10 – 15 menit',
             'sp_bat'    => 'LiPo High Density Cargo Battery',
             'sp_prod'   => 'Pengiriman Logistik Antar Titik Waypoint',
@@ -937,7 +937,7 @@ add_action('init', function () {
             'stat2_n'   => '22.000mAh', 'stat2_l' => 'Baterai Daya Tinggi',
             'stat3_n'   => 'Otonom', 'stat3_l' => 'Dispenser Presisi',
             'stat4_n'   => 'Riset', 'stat4_l' => 'UGM & Mitra Swiss',
-            'sp_kap'    => 'Kapasitas Payload Biji: 20 kg',
+            'sp_kap'    => '20 kg (Dispenser Seedball Presisi)',
             'sp_dur'    => '15 – 20 menit',
             'sp_bat'    => '22.000 mAh Heavy-Duty Battery',
             'sp_prod'   => 'Auto Seedball Dispensing Grid',
@@ -967,6 +967,7 @@ add_action('init', function () {
                 'post_name'    => $slug,
                 'post_title'   => $data['title'],
                 'post_content' => $data['content'],
+                'post_excerpt' => $data['tagline'],
                 'post_status'  => 'publish',
             ]);
         }
@@ -1005,7 +1006,7 @@ add_action('init', function () {
             update_post_meta($post_id, 'drone_spec_sertifikasi', $data['sp_sert']);
 
             // Structured Raw Specs string
-            $raw_specs = "Kapasitas Tangki / Payload: {$data['sp_kap']}\n"
+            $raw_specs = "Payload: {$data['sp_kap']}\n"
                        . "Durasi Terbang: {$data['sp_dur']}\n"
                        . "Sistem Daya (Baterai): {$data['sp_bat']}\n"
                        . "Produktivitas / Jangkauan: {$data['sp_prod']}\n"

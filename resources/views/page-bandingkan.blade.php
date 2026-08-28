@@ -13,7 +13,7 @@
       'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '5 Liter'],
+        ['Payload', '5 Liter'],
         ['Durasi Terbang', '10 – 15 menit'],
         ['Sistem Daya (Baterai)', '8.000 mAh'],
         ['Produktivitas Semprot', '1 Ha / jam'],
@@ -43,7 +43,7 @@
       'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '10 Liter'],
+        ['Payload', '10 Liter'],
         ['Durasi Terbang', '12 – 15 menit'],
         ['Sistem Daya (Baterai)', '16.000 mAh'],
         ['Produktivitas Semprot', '1 – 1,5 Ha / jam'],
@@ -73,7 +73,7 @@
       'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '17 Liter (15 – 17 Liter)'],
+        ['Payload', '17 Liter (15 – 17 Liter)'],
         ['Durasi Terbang', '15 – 25 menit'],
         ['Sistem Daya (Baterai)', '16.000 mAh'],
         ['Produktivitas Semprot', '8 Ha / jam'],
@@ -82,7 +82,7 @@
         ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
         ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
       ],
-      'desc'      => 'FERTO 15 menghadirkan kapasitas tangki 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
+      'desc'      => 'FERTO 15 menghadirkan payload 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
       'for'       => [
         'Perkebunan tebu & jagung skala komersial — Menyemprot cepat 8 Ha/jam dengan cakupan merata.',
         'Kontraktor jasa perlindungan tanaman — Durasi terbang hingga 25 menit untuk ritme kerja lapangan yang padat.',
@@ -103,7 +103,7 @@
       'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '22 Liter'],
+        ['Payload', '22 Liter'],
         ['Durasi Terbang', '20 – 25 menit'],
         ['Sistem Daya (Baterai)', '22.000 mAh'],
         ['Produktivitas Semprot', '8,5 Ha / jam'],
@@ -133,7 +133,7 @@
       'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '30 Liter'],
+        ['Payload', '30 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
         ['Sistem Daya (Baterai)', '28.000 mAh'],
         ['Produktivitas Semprot', '15 Ha / jam'],
@@ -142,7 +142,7 @@
         ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
         ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
       ],
-      'desc'      => 'FERTO 30 menghadirkan lompatan kapasitas tangki 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
+      'desc'      => 'FERTO 30 menghadirkan lompatan payload 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
       'for'       => [
         'Mega perkebunan sawit & tebu — Produktivitas 15 Ha/jam mempercepat target penyemprotan harian.',
         'Aplikasi pupuk & pestisida volume tinggi — Tangki 30L meminimalkan frekuensi pendaratan untuk isi ulang.',
@@ -163,7 +163,7 @@
       'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '50 Liter'],
+        ['Payload', '50 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
         ['Sistem Daya (Baterai)', '28.000 mAh'],
         ['Produktivitas Semprot', '15 Ha / jam'],
@@ -181,7 +181,7 @@
       ],
       'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
       'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Kapasitas Tangki',
+      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Payload Maksimum',
       'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
     ],
     'deltav' => [
@@ -196,7 +196,7 @@
         ['Bentang Sayap (Wingspan)', '2.000 mm'],
         ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
         ['Berat Lepas Landas (MTOW)', '10 kg (10.000 g)'],
-        ['Kapasitas Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
+        ['Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
         ['Durasi Terbang', '60 – 120 menit'],
         ['Kecepatan Jelajah', '15 – 22 m/s'],
         ['Jangkauan Misi (Range)', 'Hingga 60 km'],
@@ -224,7 +224,7 @@
       'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload', '5 kg'],
+        ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
         ['Durasi Terbang', '15 – 30 menit'],
         ['Sistem Daya (Baterai)', '8.000 mAh'],
         ['Sensor Kompatibel', 'Kamera Termal IR, 20x Optical Zoom, LiDAR, Multispektral'],
@@ -240,7 +240,7 @@
         'Inspeksi migas & cerobong suar (Flare Stacks) — Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
         'Inspeksi struktur jembatan & konstruksi — Pemeriksaan keretakan mikro struktur beton dan baja.'
       ],
-      'stat1_num' => '5 kg', 'stat1_lbl' => 'Kapasitas Payload',
+      'stat1_num' => '5 kg', 'stat1_lbl' => 'Payload Maksimum',
       'stat2_num' => '30 min', 'stat2_lbl' => 'Durasi Terbang Maks',
       'stat3_num' => 'Termal/AI', 'stat3_lbl' => 'Sensor Kompatibel',
       'stat4_num' => '150 kV', 'stat4_lbl' => 'Inspeksi Aset Kritikal',
@@ -254,7 +254,7 @@
       'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload', '3 – 10 kg'],
+        ['Payload', '3 – 10 kg (Kotak Logistik)'],
         ['Berat Lepas Landas (MTOW)', '15 kg'],
         ['Dimensi Kotak Payload', '20 x 20 x 30 cm'],
         ['Kecepatan Jelajah / Maks', '2 – 6 m/s'],
@@ -270,7 +270,7 @@
         'Ekspedisi & kurir last-mile — Alternatif logistik ramah lingkungan untuk melintasi sungai, bukit, atau selat.',
         'Manajemen rute otomatis — Pemantauan status kargo dan rute penerbangan real-time via FDS STATION.'
       ],
-      'stat1_num' => '10 kg', 'stat1_lbl' => 'Kapasitas Payload',
+      'stat1_num' => '10 kg', 'stat1_lbl' => 'Payload Maksimum',
       'stat2_num' => '15 kg', 'stat2_lbl' => 'MTOW Maksimum',
       'stat3_num' => '18"', 'stat3_lbl' => 'Carbon Propeller',
       'stat4_num' => 'Auto', 'stat4_lbl' => 'Waypoint Route',
@@ -284,7 +284,7 @@
       'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload Biji', '20 kg'],
+        ['Payload', '20 kg (Dispenser Seedball)'],
         ['Durasi Terbang', '15 – 20 menit'],
         ['Sistem Daya (Baterai)', '22.000 mAh'],
         ['Mode Misi', 'Otonom Penuh (Auto Seedball Dispensing Grid)'],
@@ -409,7 +409,7 @@
 
     if (empty($item['specs'])) {
       $spec_fields = [
-        'Kapasitas Tangki / Payload' => get_post_meta($post_id, 'drone_spec_kapasitas', true) ?: get_post_meta($post_id, 'drone_kapasitas', true),
+        'Payload'                    => get_post_meta($post_id, 'drone_spec_kapasitas', true) ?: get_post_meta($post_id, 'drone_kapasitas', true),
         'Durasi Terbang'             => get_post_meta($post_id, 'drone_spec_durasi', true),
         'Sistem Daya (Baterai)'      => get_post_meta($post_id, 'drone_spec_baterai', true) ?: get_post_meta($post_id, 'drone_baterai', true),
         'Produktivitas / Jangkauan'  => get_post_meta($post_id, 'drone_spec_produktivitas', true) ?: get_post_meta($post_id, 'drone_cakupan', true),
@@ -471,13 +471,21 @@
     $catalog[$slug] = $item;
   }
 
-  // 3. PARAMETER URL
+  // 3. PARAMETER URL & VALIDASI KATEGORI SAMA
   $req_d1 = isset($_GET['d1']) && isset($catalog[$_GET['d1']]) ? $_GET['d1'] : '';
   $req_d2 = isset($_GET['d2']) && isset($catalog[$_GET['d2']]) ? $_GET['d2'] : '';
 
-  // Prevent identical drone comparison
-  if (!empty($req_d1) && !empty($req_d2) && $req_d1 === $req_d2) {
-    $req_d2 = '';
+  // Pastikan drone tidak identik dan berasal dari kategori yang sama
+  if (!empty($req_d1) && !empty($req_d2)) {
+    if ($req_d1 === $req_d2) {
+      $req_d2 = '';
+    } else {
+      $c1 = strtolower($catalog[$req_d1]['cat_slug'] ?? $catalog[$req_d1]['kategori']);
+      $c2 = strtolower($catalog[$req_d2]['cat_slug'] ?? $catalog[$req_d2]['kategori']);
+      if ($c1 !== $c2) {
+        $req_d2 = '';
+      }
+    }
   }
 
   // 4. KATEGORI DRONE RESMI DARI WP ADMIN (TAKSONOMI 'kategori_drone')
@@ -490,7 +498,7 @@
   $modal_categories = [];
   if (!empty($terms_db) && !is_wp_error($terms_db)) {
     foreach ($terms_db as $t) {
-      $modal_categories[$t->slug] = wp_specialchars_decode($t->name, ENT_QUOTES);
+      $modal_categories[$t->slug] = $t->name;
     }
   }
   if (empty($modal_categories)) {
@@ -502,7 +510,24 @@
     ];
   }
 
-  $json_catalog = json_encode($catalog);
+  // 5. DEEP DECODE SEMUA STRING AGAR BEBAS DARI KARAKTER ENTITAS HTML MENTAH
+  $fds_deep_decode = function($val) use (&$fds_deep_decode) {
+    if (is_array($val)) {
+      return array_map($fds_deep_decode, $val);
+    }
+    if (!is_string($val)) return $val;
+    $prev = '';
+    while ($prev !== $val) {
+      $prev = $val;
+      $val = wp_specialchars_decode($val, ENT_QUOTES);
+      $val = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    return $val;
+  };
+  $catalog = $fds_deep_decode($catalog);
+  $modal_categories = $fds_deep_decode($modal_categories);
+
+  $json_catalog = json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 @endphp
 
 <div id="compare-page" class="w-full bg-[#f5f5f7] font-sans selection:bg-[#0066cc]/20">
@@ -662,10 +687,16 @@
       {{-- Modal Header --}}
       <div class="p-6 pb-4 border-b border-black/[0.08] flex items-center justify-between bg-[#fbfbfd]">
         <div>
-          <p class="text-[12px] font-semibold text-[#0066cc] mb-0.5">Katalog Produk</p>
-          <h3 class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
-            Pilih Model Drone (<span id="modal-slot-title">Sisi Kiri</span>)
+          <div class="flex items-center gap-2 mb-0.5">
+            <p class="text-[12px] font-semibold text-[#0066cc]">Katalog Produk</p>
+            <span id="modal-category-badge" class="hidden text-[11px] font-medium text-[#0066cc] bg-[#0066cc]/10 px-2.5 py-0.5 rounded-full"></span>
+          </div>
+          <h3 id="modal-heading-text" class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
+            Pilih Model Drone
           </h3>
+          <p id="modal-subheading-text" class="text-[13px] text-[#86868b] mt-0.5">
+            Pilih produk drone yang ingin dibandingkan.
+          </p>
         </div>
         <button type="button" onclick="closePickerModal()" class="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#515154] hover:text-[#1d1d1f] transition-colors cursor-pointer" aria-label="Tutup">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -673,10 +704,10 @@
       </div>
 
       {{-- Modal Filter Tabs (Dinamis dari Taksonomi kategori_drone WP Admin) --}}
-      <div class="px-6 py-3 border-b border-black/[0.06] bg-white flex flex-wrap gap-1.5">
-        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0066cc] text-white shadow-sm transition-colors cursor-pointer">Semua</button>
+      <div id="modal-cat-tabs-container" class="px-6 py-3 border-b border-black/[0.06] bg-white flex flex-wrap gap-1.5">
+        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0066cc] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">Semua</button>
         @foreach($modal_categories as $mSlug => $mName)
-        <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer">
+        <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer" data-tab-cat="{{ $mSlug }}">
           {!! esc_html(wp_specialchars_decode($mName, ENT_QUOTES)) !!}
         </button>
         @endforeach
@@ -699,7 +730,6 @@
                 {!! esc_html(wp_specialchars_decode($dItem['badge'], ENT_QUOTES)) !!}
               </span>
               @endif
-              <span class="already-selected-badge hidden text-[10px] font-semibold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700"></span>
             </div>
             <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight mb-1 truncate">
               {!! esc_html(wp_specialchars_decode($dItem['name'], ENT_QUOTES)) !!}
@@ -720,41 +750,75 @@
 
 </div>
 
-{{-- ── 9. JAVASCRIPT COMPARISON ENGINE WITH CUSTOM APPLE MODAL ── --}}
+{{-- ── 9. JAVASCRIPT COMPARISON ENGINE WITH SAME-CATEGORY RESTRICTION ── --}}
 <script>
 (function() {
   const CATALOG = {!! $json_catalog !!};
   let activePickingSlot = 1;
+  let activeCatFilter = 'all';
   let d1Key = "{{ $req_d1 }}";
   let d2Key = "{{ $req_d2 }}";
 
+  function normalizeCategory(slugOrName) {
+    if (!slugOrName) return '';
+    const s = String(slugOrName).toLowerCase().trim();
+    if (s.includes('agrikultur') || s.includes('pertanian') || s.includes('ferto')) return 'agrikultur';
+    if (s.includes('pemetaan') || s.includes('gis') || s.includes('inspeksi') || s.includes('survey')) return 'pemetaan-gis';
+    if (s.includes('kargo') || s.includes('cargo') || s.includes('logistik')) return 'kargo';
+    if (s.includes('reboisasi') || s.includes('konservasi') || s.includes('kehutanan')) return 'reboisasi';
+    return s.replace(/[^a-z0-9]/g, '-');
+  }
+
   window.openPickerModal = function(slot) {
     activePickingSlot = slot;
-    const titleEl = document.getElementById('modal-slot-title');
-    if (titleEl) titleEl.textContent = `Sisi ${slot === 1 ? 'Kiri' : 'Kanan'}`;
-
     const otherSlug = (slot === 1) ? d2Key : d1Key;
+    const otherDrone = CATALOG[otherSlug] || null;
 
-    // Update modal cards: disable/mark the drone selected in the other slot
-    document.querySelectorAll('.modal-drone-card').forEach(card => {
-      const cardSlug = card.getAttribute('data-slug');
-      const alreadyBadge = card.querySelector('.already-selected-badge');
+    const catBadge = document.getElementById('modal-category-badge');
+    const subHeading = document.getElementById('modal-subheading-text');
+    const tabsContainer = document.getElementById('modal-cat-tabs-container');
+
+    if (otherDrone) {
+      // Kategori dikunci ke kategori drone pembanding
+      const lockedCat = normalizeCategory(otherDrone.cat_slug || otherDrone.kategori);
+      const catName = otherDrone.kategori || 'Kategori yang Sama';
       
-      if (otherSlug && cardSlug === otherSlug) {
-        card.classList.add('opacity-40', 'pointer-events-none', 'bg-[#f5f5f7]');
-        card.classList.remove('hover:border-[#0066cc]', 'cursor-pointer');
-        if (alreadyBadge) {
-          alreadyBadge.textContent = `Sedang Dipilih (${slot === 1 ? 'Sisi Kanan' : 'Sisi Kiri'})`;
-          alreadyBadge.classList.remove('hidden');
-        }
-      } else {
-        card.classList.remove('opacity-40', 'pointer-events-none', 'bg-[#f5f5f7]');
-        card.classList.add('hover:border-[#0066cc]', 'cursor-pointer');
-        if (alreadyBadge) {
-          alreadyBadge.classList.add('hidden');
-        }
+      if (catBadge) {
+        catBadge.textContent = `Kategori: ${catName}`;
+        catBadge.classList.remove('hidden');
       }
-    });
+      if (subHeading) {
+        subHeading.textContent = `Menampilkan model dalam kategori ${catName} untuk perbandingan yang relevan.`;
+      }
+      if (tabsContainer) {
+        tabsContainer.classList.add('hidden'); // Sembunyikan tab filter karena kategori sudah dikunci
+      }
+      activeCatFilter = lockedCat;
+      applyDroneModalFiltering(otherSlug, lockedCat);
+    } else {
+      // Bebas memilih kategori apa saja untuk model pertama
+      if (catBadge) {
+        catBadge.classList.add('hidden');
+      }
+      if (subHeading) {
+        subHeading.textContent = 'Pilih produk drone yang ingin dibandingkan.';
+      }
+      if (tabsContainer) {
+        tabsContainer.classList.remove('hidden');
+      }
+      activeCatFilter = 'all';
+      // Reset tab button states
+      document.querySelectorAll('.modal-cat-tab').forEach(b => {
+        if (b.getAttribute('data-tab-cat') === 'all') {
+          b.classList.remove('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
+          b.classList.add('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+        } else {
+          b.classList.remove('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+          b.classList.add('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
+        }
+      });
+      applyDroneModalFiltering(null, null);
+    }
 
     const modal = document.getElementById('drone-picker-modal');
     const dialog = document.getElementById('drone-picker-dialog');
@@ -767,6 +831,57 @@
       }, 10);
     }
   };
+
+  function applyDroneModalFiltering(otherSlug, lockedCategory) {
+    let visibleCount = 0;
+    const grid = document.getElementById('modal-drones-grid');
+    const existingEmptyNotice = document.getElementById('modal-empty-drones-notice');
+    if (existingEmptyNotice) existingEmptyNotice.remove();
+
+    document.querySelectorAll('.modal-drone-card').forEach(card => {
+      const cardSlug = card.getAttribute('data-slug');
+      const cardCatSlug = normalizeCategory(card.getAttribute('data-cat-slug') || '');
+      
+      // 1. Sembunyikan drone yang sudah dipilih di slot lain
+      if (otherSlug && cardSlug === otherSlug) {
+        card.classList.add('hidden');
+        return;
+      }
+
+      // 2. Jika kategori terkunci (slot lain sudah terisi), WAJIB kategori yang sama
+      if (lockedCategory) {
+        if (cardCatSlug === lockedCategory) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+        return;
+      }
+
+      // 3. Jika belum terkunci, filter berdasarkan tab kategori aktif
+      if (activeCatFilter === 'all' || cardCatSlug === activeCatFilter) {
+        card.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (visibleCount === 0 && grid) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.id = 'modal-empty-drones-notice';
+      emptyDiv.className = 'col-span-1 sm:col-span-2 py-12 text-center text-[#86868b]';
+      emptyDiv.innerHTML = `
+        <div class="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#86868b]">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <p class="text-[15px] font-semibold text-[#1d1d1f] mb-1">Tidak Ada Drone Lain dalam Kategori Ini</p>
+        <p class="text-[13px] text-[#86868b] max-w-sm mx-auto">Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.</p>
+      `;
+      grid.appendChild(emptyDiv);
+    }
+  }
 
   window.closePickerModal = function() {
     const modal = document.getElementById('drone-picker-modal');
@@ -782,6 +897,7 @@
   };
 
   window.filterModalCategory = function(catSlug, btn) {
+    activeCatFilter = catSlug;
     document.querySelectorAll('.modal-cat-tab').forEach(b => {
       b.classList.remove('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
       b.classList.add('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
@@ -791,37 +907,29 @@
       btn.classList.add('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
     }
 
-    document.querySelectorAll('.modal-drone-card').forEach(card => {
-      const cardCatSlug = (card.getAttribute('data-cat-slug') || '').toLowerCase();
-      
-      if (catSlug === 'all') {
-        card.classList.remove('hidden');
-      } else {
-        const isMatch = (cardCatSlug === catSlug) ||
-                        (catSlug === 'pemetaan-gis' && (cardCatSlug.includes('pemetaan') || cardCatSlug.includes('gis') || cardCatSlug.includes('inspeksi'))) ||
-                        (catSlug === 'kargo' && (cardCatSlug.includes('kargo') || cardCatSlug.includes('cargo') || cardCatSlug.includes('logistik'))) ||
-                        (catSlug === 'reboisasi' && (cardCatSlug.includes('reboisasi') || cardCatSlug.includes('konservasi'))) ||
-                        (catSlug === 'agrikultur' && cardCatSlug.includes('agrikultur'));
-
-        if (isMatch) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
-      }
-    });
+    const otherSlug = (activePickingSlot === 1) ? d2Key : d1Key;
+    const otherDrone = CATALOG[otherSlug] || null;
+    applyDroneModalFiltering(otherSlug, otherDrone ? normalizeCategory(otherDrone.cat_slug || otherDrone.kategori) : null);
   };
 
   window.selectDroneForActiveSlot = function(slug) {
-    if (!CATALOG[slug]) return;
+    const selectedDrone = CATALOG[slug];
+    if (!selectedDrone) return;
 
-    if (activePickingSlot === 1 && slug === d2Key) {
-      alert('Model ini sudah dipilih pada sisi kanan. Silakan pilih model drone yang berbeda.');
-      return;
-    }
-    if (activePickingSlot === 2 && slug === d1Key) {
-      alert('Model ini sudah dipilih pada sisi kiri. Silakan pilih model drone yang berbeda.');
-      return;
+    const otherSlug = (activePickingSlot === 1) ? d2Key : d1Key;
+    const otherDrone = CATALOG[otherSlug] || null;
+
+    if (otherDrone) {
+      const cat1 = normalizeCategory(selectedDrone.cat_slug || selectedDrone.kategori);
+      const cat2 = normalizeCategory(otherDrone.cat_slug || otherDrone.kategori);
+      if (cat1 !== cat2) {
+        alert(`Perbandingan hanya dapat dilakukan untuk model drone dalam kategori yang sama (${otherDrone.kategori}).`);
+        return;
+      }
+      if (slug === otherSlug) {
+        alert('Model ini sudah dipilih. Silakan pilih model drone yang berbeda.');
+        return;
+      }
     }
 
     if (activePickingSlot === 1) {
@@ -874,20 +982,32 @@
     if (!container) return;
 
     if (!drone) {
-      // APPLE-STYLE PLUS PLACEHOLDER (LIGHT GRAY THEME)
+      // NATURAL SEAMLESS APPLE-STYLE PLACEHOLDER (FLAT, CLEAN, NO GLOW, NO CARD BOX)
       container.innerHTML = `
-        <button type="button" onclick="openPickerModal(${slotNum})"
-                class="w-full min-h-[380px] rounded-3xl border-2 border-dashed border-black/15 hover:border-[#0066cc] bg-white hover:bg-[#fbfbfd] transition-all duration-200 flex flex-col items-center justify-center p-8 text-center group cursor-pointer shadow-sm">
-          <div class="w-16 h-16 rounded-full bg-[#f5f5f7] group-hover:bg-[#0066cc] text-[#1d1d1f] group-hover:text-white border border-black/10 group-hover:border-[#0066cc] flex items-center justify-center transition-all duration-200 shadow-sm mb-4">
-            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+        <div class="w-full flex flex-col items-center text-center">
+          <div class="w-full h-56 sm:h-76 flex flex-col items-center justify-center mb-6">
+            <button type="button" onclick="openPickerModal(${slotNum})"
+                    class="group flex flex-col items-center justify-center cursor-pointer transition-colors duration-150">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/[0.05] group-hover:bg-black/[0.1] text-[#1d1d1f] flex items-center justify-center transition-colors mb-4">
+                <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              </div>
+              <span class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors mb-1">
+                Pilih Model Drone
+              </span>
+              <span class="text-[13px] text-[#86868b] max-w-xs leading-relaxed">
+                Klik untuk memilih produk yang ingin dibandingkan
+              </span>
+            </button>
           </div>
-          <span class="text-[18px] font-bold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors mb-1.5">
-            Pilih Model ${slotNum === 1 ? 'Pertama' : 'Kedua'}
-          </span>
-          <span class="text-[13px] text-[#86868b] max-w-xs leading-relaxed">
-            Klik di sini untuk memilih produk drone FDS yang ingin Anda bandingkan.
-          </span>
-        </button>
+
+          <div class="min-h-[140px] flex items-center justify-center">
+            <button type="button" onclick="openPickerModal(${slotNum})"
+                    class="inline-flex items-center gap-1.5 bg-black/[0.06] hover:bg-black/[0.1] text-[#1d1d1f] font-semibold text-[13px] sm:text-[14px] px-5 py-2.5 rounded-full transition-colors cursor-pointer">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              <span>Pilih Model</span>
+            </button>
+          </div>
+        </div>
       `;
     } else {
       // POPULATED APPLE PRODUCT CARD (LIGHT GRAY THEME)
@@ -952,24 +1072,36 @@
       return;
     }
 
+    function normalizeSpecLabel(key) {
+      const k = (key || '').trim();
+      if (k === 'Kapasitas Tangki' || k === 'Kapasitas Tangki / Payload' || k === 'Kapasitas Payload' || k === 'Kapasitas Payload Biji' || k.toLowerCase().startsWith('kapasitas tangki') || k.toLowerCase().startsWith('kapasitas payload')) {
+        return 'Payload';
+      }
+      return k;
+    }
+
     const specsMap1 = {};
     if (d1 && d1.specs) {
       d1.specs.forEach(item => {
-        if (Array.isArray(item) && item.length === 2) specsMap1[item[0].trim()] = item[1];
+        if (Array.isArray(item) && item.length === 2) {
+          const normKey = normalizeSpecLabel(item[0]);
+          specsMap1[normKey] = item[1];
+        }
       });
     }
 
     const specsMap2 = {};
     if (d2 && d2.specs) {
       d2.specs.forEach(item => {
-        if (Array.isArray(item) && item.length === 2) specsMap2[item[0].trim()] = item[1];
+        if (Array.isArray(item) && item.length === 2) {
+          const normKey = normalizeSpecLabel(item[0]);
+          specsMap2[normKey] = item[1];
+        }
       });
     }
 
     const standardKeys = [
-      'Kapasitas Tangki',
-      'Kapasitas Tangki / Payload',
-      'Kapasitas Payload',
+      'Payload',
       'Bentang Sayap (Wingspan)',
       'Konfigurasi Motor',
       'Berat Lepas Landas (MTOW)',
@@ -984,15 +1116,19 @@
       'Sensor Kompatibel',
       'Mode Penerbangan',
       'Mode Misi',
+      'Mode Pengoperasian',
       'Sistem Otonomi & Navigasi',
       'Sistem Kendali & Misi',
       'Ground Control Station',
       'Ground Control Software',
       'Software Pengendali',
+      'Software Perencanaan Misi',
       'Sertifikasi & Standar',
       'Material Rangka',
       'Rangka & Proteksi',
+      'Sistem Proteksi',
       'Ukuran Propeller',
+      'Dimensi Kotak Payload',
       'Sistem Dispenser',
       'Kolaborasi Riset',
       'Aplikasi Utama'
@@ -1007,8 +1143,16 @@
 
     let html = '';
     allKeysSet.forEach(specTitle => {
-      const val1 = d1 ? (specsMap1[specTitle] || '—') : `<button type="button" onclick="openPickerModal(1)" class="text-[#0066cc] text-[13px] font-semibold hover:underline">+ Pilih Drone</button>`;
-      const val2 = d2 ? (specsMap2[specTitle] || '—') : `<button type="button" onclick="openPickerModal(2)" class="text-[#0066cc] text-[13px] font-semibold hover:underline">+ Pilih Drone</button>`;
+      const rawVal1 = d1 ? (specsMap1[specTitle] !== undefined ? specsMap1[specTitle] : '—') : null;
+      const rawVal2 = d2 ? (specsMap2[specTitle] !== undefined ? specsMap2[specTitle] : '—') : null;
+
+      const val1 = rawVal1 !== null 
+        ? escapeHtml(rawVal1) 
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[#0066cc] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
+
+      const val2 = rawVal2 !== null 
+        ? escapeHtml(rawVal2) 
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[#0066cc] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
 
       html += `
         <div class="py-7 transition-colors hover:bg-black/[0.01]">
@@ -1050,7 +1194,7 @@
       }
     } else {
       if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-white/20"></span> <span>Model Pertama Belum Dipilih</span>`;
-      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-[#6e9fd4] hover:underline font-semibold">+ Pilih Drone Pertama</button></div>`;
+      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-[#6e9fd4] hover:underline font-semibold cursor-pointer">+ Pilih Drone Pertama</button></div>`;
     }
 
     const d2Title = document.getElementById('d2-for-title');
@@ -1069,7 +1213,7 @@
       }
     } else {
       if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-white/20"></span> <span>Model Kedua Belum Dipilih</span>`;
-      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-[#6e9fd4] hover:underline font-semibold">+ Pilih Drone Kedua</button></div>`;
+      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-[#6e9fd4] hover:underline font-semibold cursor-pointer">+ Pilih Drone Kedua</button></div>`;
     }
   }
 
@@ -1077,7 +1221,7 @@
     const d1Header = document.getElementById('d1-stats-header');
     const d1Row = document.getElementById('d1-stats-row');
     if (d1) {
-      if (d1Header) d1Header.textContent = `Keunggulan: ${d1.name}`;
+      if (d1Header) d1Header.textContent = `Keunggulan: ${cleanText(d1.name)}`;
       if (d1Row) {
         d1Row.innerHTML = `
           <div>
@@ -1106,7 +1250,7 @@
     const d2Header = document.getElementById('d2-stats-header');
     const d2Row = document.getElementById('d2-stats-row');
     if (d2) {
-      if (d2Header) d2Header.textContent = `Keunggulan: ${d2.name}`;
+      if (d2Header) d2Header.textContent = `Keunggulan: ${cleanText(d2.name)}`;
       if (d2Row) {
         d2Row.innerHTML = `
           <div>
@@ -1133,9 +1277,29 @@
     }
   }
 
+  function cleanText(str) {
+    if (str === null || str === undefined) return '';
+    let txt = String(str);
+    if (!txt.includes('&')) return txt;
+    try {
+      const doc = new DOMParser().parseFromString(txt, 'text/html');
+      return doc.body.textContent || txt;
+    } catch(e) {
+      return txt.replace(/&amp;/g, '&')
+                .replace(/&#038;/g, '&')
+                .replace(/&#8211;/g, '–')
+                .replace(/&#8212;/g, '—')
+                .replace(/&mdash;/g, '—')
+                .replace(/&ndash;/g, '–')
+                .replace(/&#039;/g, "'")
+                .replace(/&quot;/g, '"');
+    }
+  }
+
   function escapeHtml(str) {
-    if (!str) return '';
-    return str.toString()
+    if (str === null || str === undefined) return '';
+    const clean = cleanText(str);
+    return clean
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')

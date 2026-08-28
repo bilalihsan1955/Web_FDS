@@ -20,7 +20,7 @@
       'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '5 Liter'],
+        ['Payload', '5 Liter'],
         ['Durasi Terbang', '10 – 15 menit'],
         ['Sistem Daya (Baterai)', '8.000 mAh'],
         ['Produktivitas Semprot', '1 Ha / jam'],
@@ -48,7 +48,7 @@
       'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '10 Liter'],
+        ['Payload', '10 Liter'],
         ['Durasi Terbang', '12 – 15 menit'],
         ['Sistem Daya (Baterai)', '16.000 mAh'],
         ['Produktivitas Semprot', '1 – 1,5 Ha / jam'],
@@ -76,7 +76,7 @@
       'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '17 Liter (15 – 17 Liter)'],
+        ['Payload', '17 Liter (15 – 17 Liter)'],
         ['Durasi Terbang', '15 – 25 menit'],
         ['Sistem Daya (Baterai)', '16.000 mAh'],
         ['Produktivitas Semprot', '8 Ha / jam'],
@@ -85,7 +85,7 @@
         ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
         ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
       ],
-      'desc'      => 'FERTO 15 menghadirkan kapasitas tangki 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
+      'desc'      => 'FERTO 15 menghadirkan payload 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
       'for'       => [
         'Perkebunan tebu & jagung skala komersial — Menyemprot cepat 8 Ha/jam dengan cakupan merata.',
         'Kontraktor jasa perlindungan tanaman — Durasi terbang hingga 25 menit untuk ritme kerja lapangan yang padat.',
@@ -104,7 +104,7 @@
       'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '22 Liter'],
+        ['Payload', '22 Liter'],
         ['Durasi Terbang', '20 – 25 menit'],
         ['Sistem Daya (Baterai)', '22.000 mAh'],
         ['Produktivitas Semprot', '8,5 Ha / jam'],
@@ -132,7 +132,7 @@
       'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '30 Liter'],
+        ['Payload', '30 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
         ['Sistem Daya (Baterai)', '28.000 mAh'],
         ['Produktivitas Semprot', '15 Ha / jam'],
@@ -141,7 +141,7 @@
         ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
         ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
       ],
-      'desc'      => 'FERTO 30 menghadirkan lompatan kapasitas tangki 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
+      'desc'      => 'FERTO 30 menghadirkan lompatan payload 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
       'for'       => [
         'Mega perkebunan sawit & tebu — Produktivitas 15 Ha/jam mempercepat target penyemprotan harian.',
         'Aplikasi pupuk & pestisida volume tinggi — Tangki 30L meminimalkan frekuensi pendaratan untuk isi ulang.',
@@ -160,7 +160,7 @@
       'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Tangki', '50 Liter'],
+        ['Payload', '50 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
         ['Sistem Daya (Baterai)', '28.000 mAh'],
         ['Produktivitas Semprot', '15 Ha / jam'],
@@ -178,7 +178,7 @@
       ],
       'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
       'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Kapasitas Tangki',
+      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Payload Maksimum',
       'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
     ],
     'deltav' => [
@@ -191,7 +191,7 @@
         ['Bentang Sayap (Wingspan)', '2.000 mm'],
         ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
         ['Berat Lepas Landas (MTOW)', '10 kg (10.000 g)'],
-        ['Kapasitas Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
+        ['Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
         ['Durasi Terbang', '60 – 120 menit'],
         ['Kecepatan Jelajah', '15 – 22 m/s'],
         ['Jangkauan Misi (Range)', 'Hingga 60 km'],
@@ -217,7 +217,7 @@
       'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload', '5 kg'],
+        ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
         ['Durasi Terbang', '15 – 30 menit'],
         ['Sistem Daya (Baterai)', '8.000 mAh'],
         ['Sensor Kompatibel', 'Kamera Termal IR, 20x Optical Zoom, LiDAR, Multispektral'],
@@ -233,7 +233,7 @@
         'Inspeksi migas & cerobong suar (Flare Stacks) — Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
         'Inspeksi struktur jembatan & konstruksi — Pemeriksaan keretakan mikro struktur beton dan baja.'
       ],
-      'stat1_num' => '5 kg', 'stat1_lbl' => 'Kapasitas Payload',
+      'stat1_num' => '5 kg', 'stat1_lbl' => 'Payload Maksimum',
       'stat2_num' => '30 min', 'stat2_lbl' => 'Durasi Terbang Maks',
       'stat3_num' => 'Termal/AI', 'stat3_lbl' => 'Sensor Kompatibel',
       'stat4_num' => '150 kV', 'stat4_lbl' => 'Inspeksi Aset Kritikal',
@@ -245,7 +245,7 @@
       'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload', '3 – 10 kg'],
+        ['Payload', '3 – 10 kg (Kotak Logistik)'],
         ['Berat Lepas Landas (MTOW)', '15 kg'],
         ['Dimensi Kotak Payload', '20 x 20 x 30 cm'],
         ['Kecepatan Jelajah / Maks', '2 – 6 m/s'],
@@ -261,7 +261,7 @@
         'Ekspedisi & kurir last-mile — Alternatif logistik ramah lingkungan untuk melintasi sungai, bukit, atau selat.',
         'Manajemen rute otomatis — Pemantauan status kargo dan rute penerbangan real-time via FDS STATION.'
       ],
-      'stat1_num' => '10 kg', 'stat1_lbl' => 'Kapasitas Payload',
+      'stat1_num' => '10 kg', 'stat1_lbl' => 'Payload Maksimum',
       'stat2_num' => '15 kg', 'stat2_lbl' => 'MTOW Maksimum',
       'stat3_num' => '18"', 'stat3_lbl' => 'Carbon Propeller',
       'stat4_num' => 'Auto', 'stat4_lbl' => 'Waypoint Route',
@@ -273,7 +273,7 @@
       'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
       'color'     => '#0066cc',
       'specs'     => [
-        ['Kapasitas Payload Biji', '20 kg'],
+        ['Payload', '20 kg (Dispenser Seedball)'],
         ['Durasi Terbang', '15 – 20 menit'],
         ['Sistem Daya (Baterai)', '22.000 mAh'],
         ['Mode Misi', 'Otonom Penuh (Auto Seedball Dispensing Grid)'],
@@ -387,7 +387,7 @@
   // Fallback to structured spec fields if specs empty
   if (empty($drone['specs'])) {
       $spec_fields = [
-          'Kapasitas Tangki / Payload' => $get_meta('drone_spec_kapasitas') ?: $get_meta('drone_kapasitas'),
+          'Payload'                    => $get_meta('drone_spec_kapasitas') ?: $get_meta('drone_kapasitas'),
           'Durasi Terbang'             => $get_meta('drone_spec_durasi'),
           'Sistem Daya (Baterai)'      => $get_meta('drone_spec_baterai') ?: $get_meta('drone_baterai'),
           'Produktivitas / Jangkauan'  => $get_meta('drone_spec_produktivitas') ?: $get_meta('drone_cakupan'),
@@ -461,6 +461,43 @@
   };
   if ($drone) {
       $drone = $fds_deep_decode($drone);
+
+      // Normalisasi semua label spesifikasi agar selalu menjadi 'Payload'
+      if (!empty($drone['specs']) && is_array($drone['specs'])) {
+          foreach ($drone['specs'] as &$spItem) {
+              if (is_array($spItem) && count($spItem) >= 2) {
+                  $spLabel = trim((string)$spItem[0]);
+                  if (
+                      $spLabel === 'Kapasitas Tangki' || 
+                      $spLabel === 'Kapasitas Tangki / Payload' || 
+                      $spLabel === 'Kapasitas Payload' || 
+                      $spLabel === 'Kapasitas Payload Biji' || 
+                      stripos($spLabel, 'kapasitas tangki') === 0 || 
+                      stripos($spLabel, 'kapasitas payload') === 0
+                  ) {
+                      $spItem[0] = 'Payload';
+                  }
+              }
+          }
+          unset($spItem);
+      }
+
+      // Normalisasi label statistik bawah jika ada yang bertuliskan Kapasitas Tangki / Kapasitas Payload
+      for ($sIdx = 1; $sIdx <= 4; $sIdx++) {
+          $stKey = "stat{$sIdx}_lbl";
+          if (!empty($drone[$stKey])) {
+              $stVal = trim((string)$drone[$stKey]);
+              if (
+                  $stVal === 'Kapasitas Tangki' || 
+                  $stVal === 'Kapasitas Tangki / Payload' || 
+                  $stVal === 'Kapasitas Payload' || 
+                  stripos($stVal, 'kapasitas tangki') === 0 || 
+                  stripos($stVal, 'kapasitas payload') === 0
+              ) {
+                  $drone[$stKey] = 'Payload';
+              }
+          }
+      }
   }
 @endphp
 
@@ -518,15 +555,15 @@
         </div>
       </div>
 
-      {{-- Hero image — Ketinggian impresif di layar lebar (L ke atas) --}}
-      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[340px] sm:max-h-[460px] lg:max-h-[600px] xl:max-h-[680px]">
+      {{-- Hero image — Laptop 1024px (lg: 260px), Laptop L 1440px (xl: 400px), 4K (2xl: 680px) --}}
+      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
         @php
           $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
         @endphp
         <img src="{{ $heroSrc }}"
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — FDS"
-             class="w-full h-auto object-cover object-center block max-h-[340px] sm:max-h-[460px] lg:max-h-[600px] xl:max-h-[680px]">
+             class="w-full h-auto object-cover object-center block max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
       </div>
     </section>
 
@@ -574,8 +611,21 @@
           <div class="lg:col-span-6 divide-y divide-black/[0.06] pt-2 lg:pt-8 relative z-10">
             @if(!empty($drone['specs']))
               @foreach($drone['specs'] as [$label, $value])
+              @php
+                $lblClean = trim(wp_specialchars_decode((string)$label));
+                if (
+                  $lblClean === 'Kapasitas Tangki' || 
+                  $lblClean === 'Kapasitas Tangki / Payload' || 
+                  $lblClean === 'Kapasitas Payload' || 
+                  $lblClean === 'Kapasitas Payload Biji' || 
+                  stripos($lblClean, 'kapasitas tangki') === 0 || 
+                  stripos($lblClean, 'kapasitas payload') === 0
+                ) {
+                  $lblClean = 'Payload';
+                }
+              @endphp
               <div class="py-4 sm:py-5 first:pt-0 grid grid-cols-2 gap-4 sm:gap-6 items-baseline">
-                <p class="text-[13px] sm:text-[14px] font-medium text-[#86868b] leading-tight">{!! wp_specialchars_decode($label) !!}</p>
+                <p class="text-[13px] sm:text-[14px] font-medium text-[#86868b] leading-tight">{!! $lblClean !!}</p>
                 <p class="text-[15px] sm:text-[16px] font-semibold text-[#1d1d1f] leading-tight">{!! wp_specialchars_decode($value) !!}</p>
               </div>
               @endforeach

@@ -104,7 +104,11 @@
               $parts = [];
               foreach ($lines as $l) {
                   $sp = explode(':', $l, 2);
-                  if (count($sp) === 2) $parts[] = trim($sp[1]);
+                  if (count($sp) === 2) {
+                      $valClean = trim($sp[1]);
+                      $valClean = preg_replace('/^(Kapasitas\s+Tangki|Kapasitas\s+Payload\s+Biji|Kapasitas\s+Payload|Payload\s+Kapasitas|Payload):\s*/i', '', $valClean);
+                      $parts[] = $valClean;
+                  }
               }
               $spec_preview = implode(' · ', $parts);
           }
