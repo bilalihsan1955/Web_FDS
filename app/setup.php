@@ -175,9 +175,14 @@ add_action('widgets_init', function () {
 /**
  * Global helper fds_img untuk mengambil URL gambar kustom atau fallback
  */
-if (!function_exists('fds_img')) {
+if (!function_exists('App\fds_img')) {
     function fds_img($key, $default = '') {
         $val = get_option("fds_img_{$key}", '');
         return !empty($val) ? $val : $default;
+    }
+}
+if (!function_exists('fds_img')) {
+    function fds_img($key, $default = '') {
+        return \App\fds_img($key, $default);
     }
 }
