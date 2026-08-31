@@ -562,7 +562,9 @@
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
         @endphp
         <img src="{{ $heroSrc }}"
-             alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — FDS"
+             alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
+             loading="eager"
+             fetchpriority="high"
              class="w-full h-auto object-cover object-center block max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
       </div>
     </section>
@@ -600,7 +602,9 @@
             <div class="mt-4 sm:mt-6 w-full select-none lg:h-0 lg:relative flex justify-center lg:block">
               <div class="relative lg:absolute lg:top-0 lg:left-0 lg:-ml-2 xl:-ml-4 w-full max-w-[540px] lg:max-w-[620px] pointer-events-none z-20 flex justify-center lg:block mx-auto lg:mx-0">
                 <img src="{{ $specs_img }}" 
-                     alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} Spesifikasi" 
+                     alt="Spesifikasi Teknis {!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Full Drone Solutions" 
+                     loading="lazy"
+                     decoding="async"
                      class="w-full h-auto object-contain object-center lg:object-left select-none drop-shadow-[0_20px_45px_rgba(255,255,255,0.35)] lg:drop-shadow-[0_30px_60px_rgba(255,255,255,0.42)]">
               </div>
             </div>

@@ -38,6 +38,15 @@
     <link rel="apple-touch-icon" href="{{ esc_url($nb_brand_head['favicon_url']) }}">
     @endif
 
+    @php
+      if (function_exists('App\fds_render_seo_meta_tags')) {
+        \App\fds_render_seo_meta_tags();
+      }
+      if (function_exists('App\fds_render_schema_jsonld')) {
+        \App\fds_render_schema_jsonld();
+      }
+    @endphp
+
     <?php do_action('get_header'); ?>
     <?php wp_head(); ?>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
