@@ -36,7 +36,7 @@
     {{-- Hero image --}}
     <div class="mt-16 rounded-t-[2rem] overflow-hidden" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
       <img
-        src="{{ !empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://picsum.photos/seed/fds-team-workshop-2026/1920/800') }}"
+        src="{{ !empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80') }}"
         alt="Tim & Workshop PT Karya Solusi Angkasa (FDS)"
         class="w-full h-[320px] sm:h-[480px] lg:h-[560px] object-cover"
       >
@@ -88,7 +88,7 @@
           {!! $about['story_title'] ?? 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.' !!}
         </h2>
         <div class="mt-8">
-          <img src="{{ !empty($about['story_img']) ? $about['story_img'] : fds_img('tk_story', 'https://picsum.photos/seed/fds-origin-story/800/600') }}"
+          <img src="{{ !empty($about['story_img']) ? $about['story_img'] : fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}"
                alt="Perjalanan dan Sejarah PT Karya Solusi Angkasa (FDS)"
                class="w-full h-auto block">
         </div>

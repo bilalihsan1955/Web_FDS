@@ -6,6 +6,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Add "… Continued" to the excerpt.
  *

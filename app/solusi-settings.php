@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS SOLUSI INDUSTRI MANAGER FOR HOMEPAGE
@@ -22,7 +26,7 @@ add_action('admin_enqueue_scripts', function ($hook) {
 function fds_get_default_solusi_cards() {
     return [
         [
-            'image'     => 'https://picsum.photos/seed/fds-spraying-agriculture/800/500',
+            'image'     => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80',
             'title'     => 'Penyemprotan & Analisis NDVI',
             'desc'      => 'Penyemprotan >50% lebih efisien bahan kimia dengan radar terrain-following kontur tanah untuk seri FERTO 5L–50L. Pemantauan kesehatan tanaman 10x lebih cepat (30–40 Ha/jam) dengan kamera multispektral NDVI.',
             'tag'       => 'FERTO 5L – 50L',
@@ -30,7 +34,7 @@ function fds_get_default_solusi_cards() {
             'link_url'  => '#produk',
         ],
         [
-            'image'     => 'https://picsum.photos/seed/fds-vtol-mapping-survey/800/500',
+            'image'     => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
             'title'     => 'Pemetaan Udara & Topografi 3D',
             'desc'      => 'Menghemat waktu survei 70–80% untuk area luas dengan Fixed-Wing Hybrid VTOL DELTAV (jangkauan 60 km). Menghasilkan ortomozaik sub-sentimeter, model 3D DSM/DTM, kalkulasi volume cut & fill (akurasi ±2.35%), dan data siap CAD/BIM.',
             'tag'       => 'DELTAV (60 km)',
@@ -38,7 +42,7 @@ function fds_get_default_solusi_cards() {
             'link_url'  => '#kontak',
         ],
         [
-            'image'     => 'https://picsum.photos/seed/fds-thermal-powerline-inspection/800/500',
+            'image'     => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&q=80',
             'title'     => 'Inspeksi Industri & Infrastruktur',
             'desc'      => 'Inspeksi aset secara efisien dan aman tanpa shutdown operasional (zero downtime), serta bebas risiko bekerja di ketinggian. Didukung sensor optik high-zoom, kamera termal inframerah, dan analitik AI untuk deteksi dini anomali serta pemeliharaan preventif.',
             'tag'       => 'MULTIPURPOSE UAV',
@@ -46,7 +50,7 @@ function fds_get_default_solusi_cards() {
             'link_url'  => '#kontak',
         ],
         [
-            'image'     => 'https://picsum.photos/seed/fds-cargo-forestry-drone/800/500',
+            'image'     => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80',
             'title'     => 'Distribusi Kargo & Sebar Biji (Seedball)',
             'desc'      => 'Distribusi kargo logistik cepat 3–10 kg ke area terisolir dengan DELFRO. Serta misi penaburan benih seedball otonom berkapasitas 20 kg dengan REBO untuk restorasi hutan dan reklamasi tambang 80% lebih cepat dibanding survei darat.',
             'tag'       => 'DELFRO & REBO',
@@ -155,7 +159,7 @@ function render_solusi_settings_admin_page() {
 
     $solusi_data = fds_get_solusi_data();
     ?>
-    <div class="wrap" style="max-width: 1050px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
                 <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">

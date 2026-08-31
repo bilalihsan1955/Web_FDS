@@ -306,7 +306,7 @@
 
   $drone = $drones[$slug] ?? null;
   $droneImgKey      = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
-  $droneImgFallback = 'https://picsum.photos/seed/' . $slug . '-hero/1600/700';
+  $droneImgFallback = 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1600&q=80';
 
   // --- DYNAMIC POST META RESOLUTION (FOR BOTH EXISTING & NEW DRONES) ---
   $get_meta = function($key) use ($preview_id, $post_id) {
@@ -575,7 +575,7 @@
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative overflow-visible">
         @php
           $specs_img_meta = $get_meta('drone_specs_img');
-          $specs_img = $specs_img_meta ?: ($featuredImg ?: fds_img($droneImgKey, "https://picsum.photos/seed/{$slug}-specs/1400/1000"));
+          $specs_img = $specs_img_meta ?: ($featuredImg ?: fds_img($droneImgKey, "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1400&q=80"));
         @endphp
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start relative overflow-visible">

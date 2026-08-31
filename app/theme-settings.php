@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS NAVBAR & LOGO MANAGER (PT KARYA SOLUSI ANGKASA)
@@ -324,7 +328,7 @@ function render_navbar_settings_admin_page() {
     $site_tagline      = get_option('fds_site_tagline', get_bloginfo('description') ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia');
     $title_separator   = get_option('fds_tab_title_separator', '–');
     ?>
-    <div class="wrap" style="max-width: 900px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
                 <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">

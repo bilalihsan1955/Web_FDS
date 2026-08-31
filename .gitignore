@@ -2,6 +2,7 @@
 /vendor
 /public/*
 !/public/.gitkeep
+public/hot
 .env
 npm-debug.log
 .agents/

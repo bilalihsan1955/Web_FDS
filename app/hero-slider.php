@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS HERO SLIDER MANAGER FOR HOMEPAGE
@@ -40,17 +44,17 @@ function fds_get_hero_slides() {
     if (empty($valid_slides)) {
         $valid_slides = [
             [
-                'url'   => 'https://picsum.photos/seed/fds-drone-industrial-hero/1920/900',
+                'url'   => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80',
                 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor',
                 'alt'   => 'Full Drone Solutions Industrial Drone',
             ],
             [
-                'url'   => 'https://picsum.photos/seed/fds-drone-spraying-agriculture/1920/900',
+                'url'   => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80',
                 'title' => 'Teknologi Presisi Pertanian & Perkebunan',
                 'alt'   => 'Drone Pertanian FERTO FDS',
             ],
             [
-                'url'   => 'https://picsum.photos/seed/fds-drone-mapping-gis/1920/900',
+                'url'   => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80',
                 'title' => 'Pemetaan Topografi & Akuisisi Data Geospasial',
                 'alt'   => 'Drone Pemetaan DELTAV VTOL',
             ],
@@ -94,7 +98,7 @@ function render_hero_slider_admin_page() {
 
     $current_slides = get_option('fds_hero_slides', []);
     ?>
-    <div class="wrap" style="max-width: 1000px; margin-top: 20px;">
+    <div class="wrap" style="max-width: 100%; margin-top: 20px; box-sizing: border-box;">
         <h1 style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px;">
             <span class="dashicons dashicons-images-alt2" style="font-size: 32px; width: 32px; height: 32px; color: #0066cc;"></span>
             Pengaturan Hero Slider Homepage

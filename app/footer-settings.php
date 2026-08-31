@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS GLOBAL CONTACT & SOCIAL MEDIA MANAGER (PT KARYA SOLUSI ANGKASA)
@@ -154,7 +158,7 @@ function render_global_contact_admin_page() {
 
     $c = fds_get_global_contact();
     ?>
-    <div class="wrap" style="max-width: 980px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
 
         <!-- HEADER CARD -->
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">

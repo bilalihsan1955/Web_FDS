@@ -280,7 +280,7 @@
       <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
         <div>
           <div class="h-[210px] overflow-hidden relative bg-[#1e293b]">
-            <img src="{{ esc_url($card['image'] ?: 'https://picsum.photos/seed/fds-solution-' . $loop->index . '/800/500') }}" 
+            <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
           </div>
@@ -293,13 +293,10 @@
         </div>
         <div class="p-7 pt-0">
           <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
-            @if(!empty($card['tag']))
-            <span class="text-[11px] font-medium text-white/40 font-mono">{!! esc_html($card['tag']) !!}</span>
-            @else
-            <span></span>
-            @endif
-            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[13px] font-semibold text-[#6e9fd4] hover:underline inline-flex items-center gap-1">
-              {!! esc_html($card['link_text'] ?: 'Pelajari Selengkapnya') !!} <span>&rsaquo;</span>
+            <span class="text-[11px] font-bold text-[#6e9fd4] tracking-wide uppercase">{!! esc_html($card['tag'] ?? 'FDS DRONE') !!}</span>
+            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[13px] font-semibold text-white hover:text-[#6e9fd4] inline-flex items-center gap-1 transition-colors">
+              <span>{!! esc_html($card['link_text'] ?: 'Pelajari') !!}</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
           </div>
         </div>
@@ -314,26 +311,29 @@
 
 
 {{-- ========================================================== --}}
-{{-- 4. KEUNGGULAN &mdash; Bento Grid FDS Company Strengths         --}}
+{{-- 4. KEUNGGULAN — Bento grid light                           --}}
 {{-- ========================================================== --}}
-<section id="keunggulan" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
+<section class="bg-white py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <div class="mb-16">
-      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['keunggulan_badge'] ?? 'Mengapa FDS') !!}</p>
-      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[620px]">
-        {!! esc_html($hp['keunggulan_title'] ?? 'Keunggulan yang tidak bisa dikompromikan.') !!}
+    {{-- Section header --}}
+    <div class="mb-14">
+      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
+        {!! esc_html($hp['keunggulan_badge'] ?? 'Mengapa Memilih FDS') !!}
+      </p>
+      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[680px]">
+        {!! $hp['keunggulan_title'] ?? 'Keunggulan teknologi UAV buatan dalam negeri.' !!}
       </h2>
     </div>
 
-    {{-- Bento Grid --}}
+    {{-- Bento Grid (7 Cards) --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
 
       {{-- Large hero card — local manufacturing --}}
       <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] overflow-hidden relative min-h-[340px] group"
            style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
         <div class="absolute inset-0 z-0">
-          <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://picsum.photos/seed/fds-workshop-factory/1200/600') }}"
+          <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80') }}"
                alt="Pabrik &amp; Workshop FDS"
                class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700">
           <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/80 via-[#1d1d1f]/20 to-transparent"></div>

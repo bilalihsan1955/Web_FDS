@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS ABOUT CONTENT MANAGER (PT KARYA SOLUSI ANGKASA)
@@ -24,8 +28,12 @@ add_action('admin_menu', function () {
     );
 });
 
-// Auto-sync / migrate 'Aktivitas Kami' & Contact content
+// Auto-sync / migrate 'Aktivitas Kami' & Contact content (Run once)
 add_action('init', function () {
+    if (get_option('fds_cleanup_about_done_v1')) {
+        return;
+    }
+
     $current_title = get_option('fds_about_mitra_title');
     if (empty($current_title) || $current_title === 'Dipercaya oleh institusi negara, BUMN, dan korporasi terkemuka.' || $current_title === 'Kemitraan & Klien Strategis' || $current_title === 'Our Activity') {
         update_option('fds_about_mitra_badge', 'Aktivitas Kami');
@@ -87,6 +95,8 @@ add_action('init', function () {
             update_option($k, $cleaned);
         }
     }
+
+    update_option('fds_cleanup_about_done_v1', 1);
 });
 
 // Default Aktivitas & Kemitraan Items
@@ -394,7 +404,7 @@ function render_about_content_admin_page() {
 
       <!-- STYLES -->
       <style>
-        .fds-about-admin-wrap { max-width: 1200px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .fds-about-admin-wrap { width: 100%; max-width: 100%; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .fds-tabs-nav { display: flex; gap: 8px; border-bottom: 1px solid #d2d2d7; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
         .fds-tab-btn { background: none; border: none; padding: 10px 18px; font-size: 14px; font-weight: 600; color: #6e6e73; border-radius: 8px 8px 0 0; cursor: pointer; transition: all .15s; border-bottom: 2px solid transparent; }
         .fds-tab-btn:hover { color: #1d1d1f; background: #f5f5f7; }
@@ -462,11 +472,11 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Gambar Hero (Workshop / Tim FDS)</label>
               <div class="fds-img-preview-box">
-                <img id="preview_hero_img" class="fds-img-preview" src="<?php echo esc_url($data['hero_img'] ?: fds_img('tk_hero', 'https://picsum.photos/seed/fds-team-workshop-2026/1920/800')); ?>">
+                <img id="preview_hero_img" class="fds-img-preview" src="<?php echo esc_url($data['hero_img'] ?: fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80')); ?>">
                 <div>
                   <input type="hidden" name="fds_about_hero_img" id="input_hero_img" value="<?php echo esc_attr($data['hero_img']); ?>">
                   <button type="button" class="button fds-upload-btn" data-input="input_hero_img" data-preview="preview_hero_img">Pilih / Ganti Gambar</button>
-                  <button type="button" class="button fds-clear-btn" data-input="input_hero_img" data-preview="preview_hero_img" data-default="<?php echo esc_url(fds_img('tk_hero', 'https://picsum.photos/seed/fds-team-workshop-2026/1920/800')); ?>" style="margin-left: 6px;">Reset</button>
+                  <button type="button" class="button fds-clear-btn" data-input="input_hero_img" data-preview="preview_hero_img" data-default="<?php echo esc_url(fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80')); ?>" style="margin-left: 6px;">Reset</button>
                 </div>
               </div>
             </div>
@@ -542,11 +552,11 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Gambar Cerita Kami (Workshop FDS)</label>
               <div class="fds-img-preview-box">
-                <img id="preview_story_img" class="fds-img-preview" src="<?php echo esc_url($data['story_img'] ?: fds_img('tk_story', 'https://picsum.photos/seed/fds-origin-story/800/600')); ?>">
+                <img id="preview_story_img" class="fds-img-preview" src="<?php echo esc_url($data['story_img'] ?: fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80')); ?>">
                 <div>
                   <input type="hidden" name="fds_about_story_img" id="input_story_img" value="<?php echo esc_attr($data['story_img']); ?>">
                   <button type="button" class="button fds-upload-btn" data-input="input_story_img" data-preview="preview_story_img">Pilih / Ganti Gambar</button>
-                  <button type="button" class="button fds-clear-btn" data-input="input_story_img" data-preview="preview_story_img" data-default="<?php echo esc_url(fds_img('tk_story', 'https://picsum.photos/seed/fds-origin-story/800/600')); ?>" style="margin-left: 6px;">Reset</button>
+                  <button type="button" class="button fds-clear-btn" data-input="input_story_img" data-preview="preview_story_img" data-default="<?php echo esc_url(fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80')); ?>" style="margin-left: 6px;">Reset</button>
                 </div>
               </div>
             </div>

@@ -2,6 +2,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * =========================================================================
  * FDS HOMEPAGE CONTENT MANAGER (PT KARYA SOLUSI ANGKASA)
@@ -37,8 +41,12 @@ add_action('admin_enqueue_scripts', function ($hook) {
     }
 });
 
-// 3. AUTO-CLEANUP & INITIALIZATION
+// 3. AUTO-CLEANUP & INITIALIZATION (Run once)
 add_action('init', function () {
+    if (get_option('fds_cleanup_hp_done_v1')) {
+        return;
+    }
+
     // Clean raw HTML Tailwind classes from options
     $cleanup_keys = [
         'fds_hero_title', 'fds_hero_desc',
@@ -72,6 +80,8 @@ add_action('init', function () {
             update_option('fds_solusi_cards', $raw_cards);
         }
     }
+
+    update_option('fds_cleanup_hp_done_v1', 1);
 });
 
 // 4. HELPER DATA KONTEN BERANDA
@@ -188,7 +198,7 @@ function fds_get_homepage_content() {
         'keunggulan_card1_badge' => get_option('fds_keunggulan_card1_badge', 'Rekayasa & Manufaktur'),
         'keunggulan_card1_title' => get_option('fds_keunggulan_card1_title', "Desain Aerodinamis &\nAvionik In-House."),
         'keunggulan_card1_desc'  => get_option('fds_keunggulan_card1_desc', 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).'),
-        'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', 'https://picsum.photos/seed/fds-workshop-factory/1200/600')),
+        'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80')),
 
         'keunggulan_card2_badge' => get_option('fds_keunggulan_card2_badge', 'Sertifikasi TKDN + BMP'),
         'keunggulan_card2_stat'  => get_option('fds_keunggulan_card2_stat', '60,74%'),
@@ -346,8 +356,8 @@ function render_homepage_content_admin_page() {
     $raw_slides = function_exists('App\fds_get_hero_slides') ? fds_get_hero_slides() : (get_option('fds_hero_slides', []));
     if (empty($raw_slides)) {
         $raw_slides = [
-            ['url' => 'https://picsum.photos/seed/fds-drone-industrial-hero/1920/900', 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor', 'alt' => 'Full Drone Solutions'],
-            ['url' => 'https://picsum.photos/seed/fds-drone-spraying-agriculture/1920/900', 'title' => 'Teknologi Presisi Pertanian & Perkebunan', 'alt' => 'Drone Pertanian'],
+            ['url' => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80', 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor', 'alt' => 'Full Drone Solutions'],
+            ['url' => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80', 'title' => 'Teknologi Presisi Pertanian & Perkebunan', 'alt' => 'Drone Pertanian'],
         ];
     }
     $slides = [];
@@ -383,7 +393,7 @@ function render_homepage_content_admin_page() {
         }
     }
     ?>
-    <div class="wrap" style="max-width: 1050px; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+    <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
                 <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">
@@ -991,7 +1001,7 @@ function render_homepage_content_admin_page() {
 
         $('#btn-remove-bento-card1').on('click', function(e) {
             e.preventDefault();
-            var defaultImg = 'https://picsum.photos/seed/fds-workshop-factory/1200/600';
+            var defaultImg = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80';
             $('#fds_keunggulan_card1_img').val(defaultImg);
             $('#bento-card1-preview').attr('src', defaultImg);
         });

@@ -12,6 +12,10 @@
 
 namespace App;
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 // 1. Nonaktifkan Block/Gutenberg Editor untuk Mitra (Gunakan Form Simpel)
 add_filter('use_block_editor_for_post_type', function ($use_block_editor, $post_type) {
     if ($post_type === 'mitra') {

@@ -30,8 +30,7 @@ function fds_ensure_view_cache_dir() {
         }
     }
 }
-add_action('after_setup_theme', __NAMESPACE__ . '\\fds_ensure_view_cache_dir', 1);
-add_action('init', __NAMESPACE__ . '\\fds_ensure_view_cache_dir', 1);
+
 
 /**
  * Run full auto-setup on theme activation or on initial load if not yet initialized
@@ -186,4 +185,4 @@ add_action('init', function () {
     if (!get_option('fds_theme_auto_setup_done_v1')) {
         fds_run_theme_auto_provision();
     }
-}, 5);
+}, 20);

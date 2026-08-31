@@ -1,5 +1,11 @@
 <?php
 
+namespace App;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Custom Post Type & Taxonomy System: Drone & Kategori Drone
  * Theme: FDS Theme (PT Karya Solusi Angkasa)
@@ -14,8 +20,6 @@
  * 3. Tampilan Edit WP Admin Premium: Full Textfield Form (Bebas dari Editor Post Berita)
  * 4. Auto-Seeder & Sinkronisasi Data compro.md
  */
-
-namespace App;
 
 // =========================================================================
 // 1. NONAKTIFKAN BLOCK/GUTENBERG EDITOR UNTUK DRONE (Gunakan Form Textfield Murni)
