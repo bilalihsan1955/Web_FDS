@@ -265,6 +265,7 @@ function fds_get_about_content() {
         'info_phone'      => get_option('fds_about_info_phone', '+62 8112 748 882'),
         'info_layanan'    => get_option('fds_about_info_layanan', 'Konsultasi Proyek & Pengadaan Korporasi'),
         'info_maps'       => get_option('fds_about_info_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid'),
+        'show_map_about'  => (bool) get_option('fds_show_map_about', 1),
     ];
 
     // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
@@ -336,6 +337,9 @@ function render_about_content_admin_page() {
                 }
             }
         }
+
+        // Simpan Tampilan Google Maps Tentang Kami
+        update_option('fds_show_map_about', isset($_POST['fds_show_map_about']) ? 1 : 0);
 
         // Simpan Dynamic Repeater Aktivitas & Kemitraan
         if (isset($_POST['fds_about_activity_name']) && is_array($_POST['fds_about_activity_name'])) {
@@ -851,6 +855,15 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Judul Box Direktori Workshop</label>
               <input type="text" name="fds_about_info_title" value="<?php echo esc_attr($data['info_title']); ?>">
+            </div>
+
+            <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 14px;">
+              <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                <input type="checkbox" name="fds_show_map_about" value="1" <?php checked($data['show_map_about'], true); ?>>
+                Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Tentang Kami
+              </label>
+              <span style="display: block; font-size: 12px; color: #64748b; margin-top: 4px; margin-left: 24px;">URL peta diambil dari menu terpusat <strong>Kontak &amp; Sosmed</strong>.</span>
             </div>
           </div>
         </div>

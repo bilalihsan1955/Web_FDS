@@ -277,9 +277,9 @@
   $c_entitas = $global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)');
   $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
   $c_email   = $global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com');
-  $c_phone   = $global_c['phone'] ?? ($about['info_phone'] ?? '+62 8112 748 882');
-  $c_wa_link = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
-  $c_maps    = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+  $c_wa_link      = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
+  $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+  $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));
 @endphp
 <section class="bg-[#1d1d1f] pt-28 sm:pt-36 pb-0 border-t border-white/[0.08] overflow-hidden flex flex-col justify-between">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full pb-20 sm:pb-28">
@@ -366,6 +366,7 @@
 
   </div>
 
+  @if($show_map_about && !empty($c_maps))
   {{-- Full-width Map Media Block — exactly like drone detail hero image --}}
   <div class="w-full overflow-hidden border-t border-white/[0.08] relative" style="height: 520px; max-height: 600px;">
     <iframe 
@@ -379,6 +380,7 @@
       title="Lokasi Full Drone Solutions Sleman Yogyakarta">
     </iframe>
   </div>
+  @endif
 </section>
 
 @endsection

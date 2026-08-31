@@ -39,12 +39,14 @@ function fds_get_global_contact() {
 
     $data = [
         // KONTAK TERPUSAT
-        'company_name' => $company_name,
-        'address'      => $address,
-        'phone'        => $phone,
-        'email'        => $email,
-        'wa_link'      => $wa_link,
-        'maps_url'     => $maps_url,
+        'company_name'   => $company_name,
+        'address'        => $address,
+        'phone'          => $phone,
+        'email'          => $email,
+        'wa_link'        => $wa_link,
+        'maps_url'       => $maps_url,
+        'show_map_home'  => (bool) get_option('fds_show_map_home', 1),
+        'show_map_about' => (bool) get_option('fds_show_map_about', 1),
 
         // SOSIAL MEDIA (URL & TOGGLE AKTIF)
         'instagram'        => get_option('fds_sosmed_instagram_url', get_option('fds_footer_instagram', 'https://instagram.com/fulldronesolutions')),
@@ -111,6 +113,8 @@ function render_global_contact_admin_page() {
         update_option('fds_global_email', $email);
         update_option('fds_global_wa_link', $wa_link);
         update_option('fds_global_maps_url', $maps_url);
+        update_option('fds_show_map_home', isset($_POST['fds_show_map_home']) ? 1 : 0);
+        update_option('fds_show_map_about', isset($_POST['fds_show_map_about']) ? 1 : 0);
 
         // Sinkronisasi otomatis ke opsi lama agar seluruh bagian sinkron
         update_option('fds_footer_company_name', $company_name);
@@ -221,9 +225,21 @@ function render_global_contact_admin_page() {
                     <input type="text" name="fds_global_wa_link" value="<?php echo esc_attr($c['wa_link']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px;">
                 </div>
 
-                <div>
+                <div style="margin-bottom: 18px;">
                     <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">URL Google Maps Embed (Iframe)</label>
                     <input type="text" name="fds_global_maps_url" value="<?php echo esc_attr($c['maps_url']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                </div>
+
+                <div style="padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; gap: 10px;">
+                    <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                        <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
+                        Tampilkan Google Maps di Halaman Beranda (Home)
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                        <input type="checkbox" name="fds_show_map_about" value="1" <?php checked($c['show_map_about'], true); ?>>
+                        Tampilkan Google Maps di Halaman Tentang Kami (About Us)
+                    </label>
                 </div>
             </div>
 

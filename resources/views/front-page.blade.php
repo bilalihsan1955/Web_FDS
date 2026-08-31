@@ -777,11 +777,12 @@ function filterDrones(btn) {
 {{-- ========================================================== --}}
 @php
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
-  $c_phone   = $global_c['phone'] ?? ($hp['kontak_phone'] ?? '+62 8112 748 882');
-  $c_email   = $global_c['email'] ?? ($hp['kontak_email'] ?? 'marketing@fulldronesolutions.com');
-  $c_address = $global_c['address'] ?? ($hp['kontak_address'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
-  $c_wa_link = $global_c['wa_link'] ?? ($hp['kontak_wa_link'] ?? 'https://wa.me/628112748882');
-  $c_maps    = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+  $c_phone       = $global_c['phone'] ?? ($hp['kontak_phone'] ?? '+62 8112 748 882');
+  $c_email       = $global_c['email'] ?? ($hp['kontak_email'] ?? 'marketing@fulldronesolutions.com');
+  $c_address     = $global_c['address'] ?? ($hp['kontak_address'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+  $c_wa_link     = $global_c['wa_link'] ?? ($hp['kontak_wa_link'] ?? 'https://wa.me/628112748882');
+  $c_maps        = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
+  $show_map_home = isset($global_c['show_map_home']) ? (bool) $global_c['show_map_home'] : (isset($hp['show_map_home']) ? (bool) $hp['show_map_home'] : (bool) get_option('fds_show_map_home', 1));
 @endphp
 <section id="kontak" class="bg-[#f5f5f7] pt-24 sm:pt-32 pb-0 border-t border-black/[0.06] overflow-hidden flex flex-col justify-between">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full pb-16 sm:pb-24">
@@ -881,6 +882,7 @@ function filterDrones(btn) {
     </div>
   </div>
 
+  @if($show_map_home && !empty($c_maps))
   {{-- Full-width Map Media Block — exactly like drone detail hero image --}}
   <div class="w-full overflow-hidden border-t border-black/[0.08] relative" style="height: 520px; max-height: 600px;">
     <iframe 
@@ -894,6 +896,7 @@ function filterDrones(btn) {
       title="Lokasi Full Drone Solutions Sleman Yogyakarta">
     </iframe>
   </div>
+  @endif
 </section>
 
 @endsection

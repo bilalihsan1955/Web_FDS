@@ -9,7 +9,6 @@ if (! process.env.APP_URL) {
 }
 
 export default defineConfig({
-  base: '/app/themes/sage/public/build/',
   plugins: [
     tailwindcss(),
     laravel({

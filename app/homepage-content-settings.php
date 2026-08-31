@@ -244,6 +244,7 @@ function fds_get_homepage_content() {
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Kirim pesan inquiry'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Pesan'),
         'kontak_form_note'       => get_option('fds_kontak_form_note', "Kami merespons dalam 1×24 jam kerja.\nData Anda tidak akan dibagikan ke pihak ketiga."),
+        'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
     ];
 
     // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
@@ -299,6 +300,9 @@ function render_homepage_content_admin_page() {
         foreach ($fields_textarea as $f) {
             update_option($f, sanitize_textarea_field($_POST[$f] ?? ''));
         }
+
+        // Simpan Tampilan Google Maps Beranda
+        update_option('fds_show_map_home', isset($_POST['fds_show_map_home']) ? 1 : 0);
 
         // 2. Simpan Slide Hero
         if (isset($_POST['fds_slide_url']) && is_array($_POST['fds_slide_url'])) {
@@ -885,6 +889,15 @@ function render_homepage_content_admin_page() {
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Catatan Disclaimer Bawah Form</label>
                         <textarea name="fds_kontak_form_note" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['kontak_form_note']); ?></textarea>
+                    </div>
+
+                    <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px;">
+                        <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                            <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
+                            Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Beranda
+                        </label>
+                        <span style="display: block; font-size: 12px; color: #64748b; margin-top: 4px; margin-left: 24px;">URL peta diambil dari menu terpusat <strong>Kontak &amp; Sosmed</strong>.</span>
                     </div>
                 </div>
             </div>
