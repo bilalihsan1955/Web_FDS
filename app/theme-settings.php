@@ -103,14 +103,22 @@ function fds_get_navbar_brand() {
         }
     }
 
+    $drone_icon_url = get_option('fds_navbar_drone_icon_url', '');
+
     return [
-        'has_logo'     => !empty($logo_url),
-        'logo_url'     => $logo_url,
-        'brand_text'   => $brand_text,
-        'display_mode' => $display_mode,
-        'logo_height'  => $logo_height,
-        'favicon_url'  => $favicon_url,
+        'has_logo'       => !empty($logo_url),
+        'logo_url'       => $logo_url,
+        'brand_text'     => $brand_text,
+        'display_mode'   => $display_mode,
+        'logo_height'    => $logo_height,
+        'favicon_url'    => $favicon_url,
+        'drone_icon_url' => $drone_icon_url,
     ];
+}
+
+// 4a. HELPER STANDALONE ICON DRONE NAVBAR
+function fds_get_navbar_drone_icon() {
+    return get_option('fds_navbar_drone_icon_url', '');
 }
 
 // 4b. OTOMATIS TAMPILKAN ICON TAB BROWSER / FAVICON DI HEAD
@@ -277,6 +285,7 @@ function render_navbar_settings_admin_page() {
         $display_mode      = sanitize_text_field($_POST['fds_navbar_display_mode'] ?? 'both');
         $logo_height       = max(16, min(60, (int) ($_POST['fds_navbar_logo_height'] ?? 28)));
         $favicon_url       = esc_url_raw($_POST['fds_site_favicon_url'] ?? '');
+        $drone_icon_url    = esc_url_raw($_POST['fds_navbar_drone_icon_url'] ?? '');
         $home_tab_title    = sanitize_text_field($_POST['fds_home_tab_title'] ?? '');
         $about_tab_title   = sanitize_text_field($_POST['fds_about_tab_title'] ?? '');
         $compare_tab_title = sanitize_text_field($_POST['fds_compare_tab_title'] ?? '');
@@ -290,6 +299,7 @@ function render_navbar_settings_admin_page() {
         update_option('fds_navbar_display_mode', $display_mode);
         update_option('fds_navbar_logo_height', $logo_height);
         update_option('fds_site_favicon_url', $favicon_url);
+        update_option('fds_navbar_drone_icon_url', $drone_icon_url);
         update_option('fds_home_tab_title', $home_tab_title);
         update_option('fds_about_tab_title', $about_tab_title);
         update_option('fds_compare_tab_title', $compare_tab_title);
@@ -439,6 +449,39 @@ function render_navbar_settings_admin_page() {
                         
                         <button type="button" id="fds_remove_favicon_btn" class="button" style="padding: 6px 14px; font-size: 13px; color: #dc2626; border-color: #fecaca;">
                             Hapus
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3b. UPLOAD DRONE ICON NAVBAR (1 UNTUK SEMUA) -->
+                <div>
+                    <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
+                        🚁 Icon Drone Navbar (1 untuk Semua Produk Drone)
+                    </label>
+                    <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">
+                        Unggah 1 icon drone yang akan digunakan secara seragam di navbar (Mega Menu dropdown produk, mobile menu, dan menu drone) untuk menggantikan icon drone bawaan. Rekomendasi: format <strong>SVG</strong> atau <strong>PNG transparan</strong> (ukuran 32×32 atau 64×64 piksel).
+                    </p>
+
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                        <?php if (!empty($brand_data['drone_icon_url'])): ?>
+                            <img id="fds_drone_icon_preview" src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 4px;">
+                        <?php else: ?>
+                            <div id="fds_drone_icon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 18px;">🚁</div>
+                        <?php endif; ?>
+
+                        <input type="text" 
+                               id="fds_navbar_drone_icon_url" 
+                               name="fds_navbar_drone_icon_url" 
+                               value="<?php echo esc_url($brand_data['drone_icon_url']); ?>" 
+                               style="flex: 1; font-size: 13px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
+                               placeholder="https://domain.com/.../drone-icon.svg">
+
+                        <button type="button" id="fds_upload_drone_icon_btn" class="button" style="padding: 6px 14px; font-size: 13px; font-weight: 600;">
+                            Pilih / Unggah Icon Drone
+                        </button>
+                        
+                        <button type="button" id="fds_remove_drone_icon_btn" class="button" style="padding: 6px 14px; font-size: 13px; color: #dc2626; border-color: #fecaca;">
+                            Hapus / Reset
                         </button>
                     </div>
                 </div>
@@ -720,6 +763,20 @@ function render_navbar_settings_admin_page() {
             }).open();
         });
 
+        // WP Media Uploader for Drone Icon Navbar
+        $('#fds_upload_drone_icon_btn').on('click', function(e) {
+            e.preventDefault();
+            var customUploader = wp.media({
+                title: 'Pilih atau Unggah Icon Drone Navbar',
+                button: { text: 'Gunakan Icon Drone Ini' },
+                multiple: false
+            }).on('select', function() {
+                var attachment = customUploader.state().get('selection').first().toJSON();
+                $('#fds_navbar_drone_icon_url').val(attachment.url);
+                $('#fds_drone_icon_preview').replaceWith('<img id="fds_drone_icon_preview" src="' + attachment.url + '" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 4px;">');
+            }).open();
+        });
+
         // Remove Logo Button
         $('#fds_remove_logo_btn').on('click', function(e) {
             e.preventDefault();
@@ -732,6 +789,13 @@ function render_navbar_settings_admin_page() {
             e.preventDefault();
             $('#fds_site_favicon_url').val('');
             $('#fds_favicon_preview').replaceWith('<div id="fds_favicon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">Icon</div>');
+        });
+
+        // Remove Drone Icon Button
+        $('#fds_remove_drone_icon_btn').on('click', function(e) {
+            e.preventDefault();
+            $('#fds_navbar_drone_icon_url').val('');
+            $('#fds_drone_icon_preview').replaceWith('<div id="fds_drone_icon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 18px;">🚁</div>');
         });
     });
     </script>
