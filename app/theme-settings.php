@@ -368,13 +368,18 @@ function render_navbar_settings_admin_page() {
                         Live Preview Navbar
                     </label>
                     <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.03);">
-                        <div id="fds-preview-brand-container" style="display: flex; align-items: center; gap: 10px;">
+                        <div id="fds-preview-brand-container" style="display: flex; align-items: center; gap: 10px; max-height: 48px;">
                             <img id="fds-preview-logo-img" 
                                  src="<?php echo esc_url($brand_data['logo_url']); ?>" 
                                  alt="Logo Preview" 
-                                 style="height: <?php echo esc_attr($brand_data['logo_height']); ?>px; width: auto; object-fit: contain; <?php echo empty($brand_data['logo_url']) ? 'display:none;' : ''; ?>">
+                                 style="height: <?php echo (int) $brand_data['logo_height']; ?>px !important; max-height: <?php echo (int) $brand_data['logo_height']; ?>px !important; width: auto !important; max-width: 220px !important; object-fit: contain !important; <?php echo empty($brand_data['logo_url']) ? 'display:none;' : 'display:block;'; ?>">
                             
-                            <svg id="fds-preview-fallback-icon" class="w-5 h-5 text-[#1d1d1f]" style="width: 20px; height: 20px; color: #1d1d1f; <?php echo !empty($brand_data['logo_url']) ? 'display:none;' : ''; ?>" viewBox="0 0 20 20" fill="currentColor">
+                            <img id="fds-preview-drone-icon-img" 
+                                 src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" 
+                                 alt="Drone Icon Preview" 
+                                 style="height: 24px !important; width: 24px !important; max-height: 24px !important; max-width: 24px !important; object-fit: contain !important; flex-shrink: 0; <?php echo (!empty($brand_data['drone_icon_url']) && empty($brand_data['logo_url'])) ? 'display:block;' : 'display:none;'; ?>">
+
+                            <svg id="fds-preview-fallback-icon" class="w-5 h-5 text-[#1d1d1f]" style="width: 20px; height: 20px; color: #1d1d1f; <?php echo (!empty($brand_data['logo_url']) || !empty($brand_data['drone_icon_url'])) ? 'display:none;' : ''; ?>" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
                             </svg>
                             
@@ -430,11 +435,13 @@ function render_navbar_settings_admin_page() {
                     <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">Ikon kecil yang tampil di tab browser pengunjung (Rekomendasi: PNG 512×512 piksel).</p>
 
                     <div style="display: flex; align-items: center; gap: 16px;">
-                        <?php if (!empty($brand_data['favicon_url'])): ?>
-                            <img id="fds_favicon_preview" src="<?php echo esc_url($brand_data['favicon_url']); ?>" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 2px;">
-                        <?php else: ?>
-                            <div id="fds_favicon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">Icon</div>
-                        <?php endif; ?>
+                        <div id="fds_favicon_wrapper" style="width: 42px; height: 42px; min-width: 42px; max-width: 42px; max-height: 42px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 3px; box-sizing: border-box; flex-shrink: 0;">
+                            <?php if (!empty($brand_data['favicon_url'])): ?>
+                                <img id="fds_favicon_preview" src="<?php echo esc_url($brand_data['favicon_url']); ?>" style="width: 100% !important; height: 100% !important; max-width: 36px !important; max-height: 36px !important; object-fit: contain !important; display: block !important;">
+                            <?php else: ?>
+                                <div id="fds_favicon_preview" style="font-size: 10px; color: #94a3b8; font-weight: 600;">Icon</div>
+                            <?php endif; ?>
+                        </div>
 
                         <input type="text" 
                                id="fds_site_favicon_url" 
@@ -463,11 +470,13 @@ function render_navbar_settings_admin_page() {
                     </p>
 
                     <div style="display: flex; align-items: center; gap: 16px;">
-                        <?php if (!empty($brand_data['drone_icon_url'])): ?>
-                            <img id="fds_drone_icon_preview" src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 4px;">
-                        <?php else: ?>
-                            <div id="fds_drone_icon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 18px;">🚁</div>
-                        <?php endif; ?>
+                        <div id="fds_drone_icon_wrapper" style="width: 42px; height: 42px; min-width: 42px; max-width: 42px; max-height: 42px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box; flex-shrink: 0;">
+                            <?php if (!empty($brand_data['drone_icon_url'])): ?>
+                                <img id="fds_drone_icon_preview" src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" style="width: 100% !important; height: 100% !important; max-width: 34px !important; max-height: 34px !important; object-fit: contain !important; display: block !important;">
+                            <?php else: ?>
+                                <div id="fds_drone_icon_preview" style="font-size: 18px;">🚁</div>
+                            <?php endif; ?>
+                        </div>
 
                         <input type="text" 
                                id="fds_navbar_drone_icon_url" 
@@ -697,34 +706,63 @@ function render_navbar_settings_admin_page() {
         // Live Preview Updater
         function updateLivePreview() {
             let logoUrl = $('#fds_navbar_logo_url').val().trim();
+            let droneIconUrl = $('#fds_navbar_drone_icon_url').val().trim();
             let brandText = $('#fds_navbar_brand_text').val().trim();
             let displayMode = $('input[name="fds_navbar_display_mode"]:checked').val();
             let logoHeight = parseInt($('#fds_navbar_logo_height').val()) || 28;
 
             let previewImg = $('#fds-preview-logo-img');
+            let previewDroneIcon = $('#fds-preview-drone-icon-img');
             let previewFallback = $('#fds-preview-fallback-icon');
             let previewText = $('#fds-preview-brand-text');
 
             if (displayMode === 'text_only') {
                 previewImg.hide();
+                previewDroneIcon.hide();
                 previewFallback.hide();
                 previewText.show().text(brandText || 'Full Drone Solutions');
             } else if (displayMode === 'logo_only') {
                 previewText.hide();
                 if (logoUrl) {
-                    previewImg.attr('src', logoUrl).css('height', logoHeight + 'px').show();
+                    previewImg.attr('src', logoUrl).css({
+                        'height': logoHeight + 'px',
+                        'max-height': logoHeight + 'px',
+                        'width': 'auto',
+                        'max-width': '220px',
+                        'object-fit': 'contain',
+                        'display': 'block'
+                    }).show();
+                    previewDroneIcon.hide();
+                    previewFallback.hide();
+                } else if (droneIconUrl) {
+                    previewImg.hide();
+                    previewDroneIcon.attr('src', droneIconUrl).show();
                     previewFallback.hide();
                 } else {
                     previewImg.hide();
+                    previewDroneIcon.hide();
                     previewFallback.show();
                 }
             } else {
                 // both
                 if (logoUrl) {
-                    previewImg.attr('src', logoUrl).css('height', logoHeight + 'px').show();
+                    previewImg.attr('src', logoUrl).css({
+                        'height': logoHeight + 'px',
+                        'max-height': logoHeight + 'px',
+                        'width': 'auto',
+                        'max-width': '220px',
+                        'object-fit': 'contain',
+                        'display': 'block'
+                    }).show();
+                    previewDroneIcon.hide();
+                    previewFallback.hide();
+                } else if (droneIconUrl) {
+                    previewImg.hide();
+                    previewDroneIcon.attr('src', droneIconUrl).show();
                     previewFallback.hide();
                 } else {
                     previewImg.hide();
+                    previewDroneIcon.hide();
                     previewFallback.show();
                 }
                 previewText.show().text(brandText || 'Full Drone Solutions');
@@ -732,7 +770,7 @@ function render_navbar_settings_admin_page() {
         }
 
         // Trigger updates on input change
-        $('#fds_navbar_brand_text, #fds_navbar_logo_height').on('input', updateLivePreview);
+        $('#fds_navbar_brand_text, #fds_navbar_logo_height, #fds_navbar_drone_icon_url').on('input', updateLivePreview);
         $('input[name="fds_navbar_display_mode"]').on('change', updateLivePreview);
 
         // WP Media Uploader for Logo
@@ -759,7 +797,7 @@ function render_navbar_settings_admin_page() {
             }).on('select', function() {
                 var attachment = customUploader.state().get('selection').first().toJSON();
                 $('#fds_site_favicon_url').val(attachment.url);
-                $('#fds_favicon_preview').replaceWith('<img id="fds_favicon_preview" src="' + attachment.url + '" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 2px;">');
+                $('#fds_favicon_wrapper').html('<img id="fds_favicon_preview" src="' + attachment.url + '" style="width: 100% !important; height: 100% !important; max-width: 36px !important; max-height: 36px !important; object-fit: contain !important; display: block !important;">');
             }).open();
         });
 
@@ -773,7 +811,8 @@ function render_navbar_settings_admin_page() {
             }).on('select', function() {
                 var attachment = customUploader.state().get('selection').first().toJSON();
                 $('#fds_navbar_drone_icon_url').val(attachment.url);
-                $('#fds_drone_icon_preview').replaceWith('<img id="fds_drone_icon_preview" src="' + attachment.url + '" style="width: 36px; height: 36px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; padding: 4px;">');
+                $('#fds_drone_icon_wrapper').html('<img id="fds_drone_icon_preview" src="' + attachment.url + '" style="width: 100% !important; height: 100% !important; max-width: 34px !important; max-height: 34px !important; object-fit: contain !important; display: block !important;">');
+                updateLivePreview();
             }).open();
         });
 
@@ -788,14 +827,15 @@ function render_navbar_settings_admin_page() {
         $('#fds_remove_favicon_btn').on('click', function(e) {
             e.preventDefault();
             $('#fds_site_favicon_url').val('');
-            $('#fds_favicon_preview').replaceWith('<div id="fds_favicon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #94a3b8;">Icon</div>');
+            $('#fds_favicon_wrapper').html('<div id="fds_favicon_preview" style="font-size: 10px; color: #94a3b8; font-weight: 600;">Icon</div>');
         });
 
         // Remove Drone Icon Button
         $('#fds_remove_drone_icon_btn').on('click', function(e) {
             e.preventDefault();
             $('#fds_navbar_drone_icon_url').val('');
-            $('#fds_drone_icon_preview').replaceWith('<div id="fds_drone_icon_preview" style="width: 36px; height: 36px; border-radius: 6px; border: 1px solid #cbd5e1; background: #f8fafc; display: flex; align-items: center; justify-content: center; font-size: 18px;">🚁</div>');
+            $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview" style="font-size: 18px;">🚁</div>');
+            updateLivePreview();
         });
     });
     </script>

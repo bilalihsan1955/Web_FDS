@@ -163,13 +163,13 @@
                 @if($nb_brand['has_logo'])
                   <img src="{{ esc_url($nb_brand['logo_url']) }}"
                        alt="{{ esc_attr($nb_brand['brand_text']) }}"
-                       style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
-                       class="transition-transform duration-200 group-hover:scale-[1.03]">
+                       style="height: {{ (int) $nb_brand['logo_height'] }}px !important; max-height: {{ (int) $nb_brand['logo_height'] }}px !important; width: auto !important; max-width: 220px !important; object-fit: contain !important;"
+                       class="transition-transform duration-200 group-hover:scale-[1.03] block flex-shrink-0">
                 @elseif(!empty($drone_icon))
                   <img src="{{ esc_url($drone_icon) }}"
                        alt="{{ esc_attr($nb_brand['brand_text']) }}"
-                       style="height: 24px; width: 24px; object-fit: contain;"
-                       class="transition-transform duration-200 group-hover:scale-[1.08] flex-shrink-0">
+                       style="height: 24px !important; width: 24px !important; min-width: 24px !important; max-height: 24px !important; max-width: 24px !important; object-fit: contain !important;"
+                       class="transition-transform duration-200 group-hover:scale-[1.08] block flex-shrink-0">
                 @else
                   <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
@@ -296,7 +296,7 @@
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="flex items-center gap-2">
                           @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" class="w-4 h-4 object-contain flex-shrink-0 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
                           @else
                             <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
@@ -344,7 +344,7 @@
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="flex items-center gap-2">
                           @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" class="w-4 h-4 object-contain flex-shrink-0 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
                           @else
                             <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
@@ -387,7 +387,7 @@
                       <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
                         <div class="flex items-center gap-2">
                           @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" class="w-4 h-4 object-contain flex-shrink-0 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
                           @else
                             <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
@@ -430,7 +430,7 @@
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
                         <div class="flex items-center gap-2">
                           @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" class="w-4 h-4 object-contain flex-shrink-0 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
+                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
                           @else
                             <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
@@ -617,7 +617,7 @@
                       <a href="{{ $d['url'] }}" class="mobile-nav-link py-1.5 flex items-center justify-between {{ $is_this_drone ? 'text-[#0066cc] font-semibold' : '' }}">
                         <span class="flex items-center gap-2">
                           @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" class="w-3.5 h-3.5 object-contain flex-shrink-0">
+                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 block">
                           @else
                             <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                               <circle cx="12" cy="12" r="3"/>
