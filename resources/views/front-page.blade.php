@@ -257,12 +257,12 @@
     'cards' => [],
   ];
 @endphp
-<section id="solusi" class="bg-[#1d1d1f] py-24 sm:py-32">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-
-    <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<section id="solusi" class="bg-[#1d1d1f] py-24 sm:py-32 overflow-hidden">
+  {{-- Header inside 1400px Container --}}
+  <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($solusi_data['badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
           {!! esc_html($solusi_data['title']) !!}
         </h2>
@@ -271,30 +271,48 @@
         {!! nl2br(esc_html($solusi_data['desc'])) !!}
       </p>
     </div>
+  </div>
 
-    {{-- Dynamic Solution grid from WP Admin (Fixed 4 Columns on Desktop) --}}
-    @if(!empty($solusi_data['cards']))
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+  {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, No Padding Cut-off) --}}
+  @if(!empty($solusi_data['cards']))
+  <div class="w-full">
+    <div id="solusi-carousel-track"
+         class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
 
       @foreach($solusi_data['cards'] as $card)
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between">
+      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white/[0.06] rounded-[1.5rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between select-none">
         <div>
-          <div class="h-[210px] overflow-hidden relative bg-[#1e293b]">
+          {{-- Image Box --}}
+          <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#1e293b]">
             <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/70 via-transparent to-transparent pointer-events-none"></div>
+            @if(!empty($card['tag']))
+              <div class="absolute top-3.5 left-3.5 z-10">
+                <span class="text-[10px] font-bold text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 uppercase tracking-wider">
+                  {!! esc_html($card['tag']) !!}
+                </span>
+              </div>
+            @endif
           </div>
-          <div class="p-7 pb-4">
-            <h3 class="text-[19px] font-semibold text-white mb-2 leading-snug">{!! esc_html($card['title']) !!}</h3>
-            <p class="text-[13px] text-white/60 leading-relaxed mb-4">
+
+          {{-- Body --}}
+          <div class="p-5 sm:p-6 pb-3">
+            <h3 class="text-[17px] sm:text-[19px] font-semibold text-white mb-2 leading-snug group-hover:text-[#6e9fd4] transition-colors">
+              {!! esc_html($card['title']) !!}
+            </h3>
+            <p class="text-[13px] sm:text-[13.5px] text-white/70 leading-relaxed">
               {!! nl2br(esc_html($card['desc'])) !!}
             </p>
           </div>
         </div>
-        <div class="p-7 pt-0">
-          <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+
+        {{-- Footer Link --}}
+        <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
+          <div class="pt-3.5 border-t border-white/[0.08] flex items-center justify-between">
             <span class="text-[11px] font-bold text-[#6e9fd4] tracking-wide uppercase">{!! esc_html($card['tag'] ?? 'FDS DRONE') !!}</span>
-            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[13px] font-semibold text-white hover:text-[#6e9fd4] inline-flex items-center gap-1 transition-colors">
+            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-[#6e9fd4] inline-flex items-center gap-1.5 transition-colors group-hover:translate-x-0.5 duration-200">
               <span>{!! esc_html($card['link_text'] ?: 'Pelajari') !!}</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
@@ -304,10 +322,113 @@
       @endforeach
 
     </div>
-    @endif
-
   </div>
+
+  {{-- Bottom Right Circular Arrow Buttons (Flush to 1400px Right Padding) --}}
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button id="solusi-prev-btn" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
+              class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/10">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="solusi-next-btn" onclick="scrollSolusiCarousel(1)" aria-label="Berikutnya"
+              class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/10">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+  @endif
 </section>
+
+<style>
+  .solusi-track-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    scroll-padding-left: 1.5rem;
+    scroll-padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .solusi-track-padding {
+      padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+    }
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+function alignSolusiTrack() {
+  const headerContainer = document.getElementById('solusi-header-container');
+  const track = document.getElementById('solusi-carousel-track');
+  if (!headerContainer || !track) return;
+
+  const rect = headerContainer.getBoundingClientRect();
+  const cs = window.getComputedStyle(headerContainer);
+  const padLeft = parseFloat(cs.paddingLeft) || 24;
+  const padRight = parseFloat(cs.paddingRight) || 24;
+
+  const exactLeft = Math.max(24, Math.round(rect.left + padLeft));
+  const exactRight = Math.max(24, Math.round(window.innerWidth - rect.right + padRight));
+
+  track.style.paddingLeft = exactLeft + 'px';
+  track.style.paddingRight = exactRight + 'px';
+  track.style.scrollPaddingLeft = exactLeft + 'px';
+  track.style.scrollPaddingRight = exactRight + 'px';
+}
+
+function scrollSolusiCarousel(direction) {
+  const track = document.getElementById('solusi-carousel-track');
+  if (!track) return;
+  const card = track.querySelector('.solusi-carousel-card');
+  const scrollAmount = card ? (card.offsetWidth + 24) : 440;
+  track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+function updateSolusiCarouselControls() {
+  const track = document.getElementById('solusi-carousel-track');
+  const prevBtn = document.getElementById('solusi-prev-btn');
+  const nextBtn = document.getElementById('solusi-next-btn');
+  if (!track) return;
+
+  const canScroll = track.scrollWidth > (track.clientWidth + 5);
+  if (!canScroll) {
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    return;
+  }
+
+  const isAtStart = track.scrollLeft <= 8;
+  const isAtEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 12;
+
+  if (prevBtn) prevBtn.disabled = isAtStart;
+  if (nextBtn) nextBtn.disabled = isAtEnd;
+}
+
+window.addEventListener('resize', function() {
+  alignSolusiTrack();
+  updateSolusiCarouselControls();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  alignSolusiTrack();
+  const track = document.getElementById('solusi-carousel-track');
+  if (track) {
+    track.addEventListener('scroll', updateSolusiCarouselControls, { passive: true });
+    setTimeout(function() {
+      alignSolusiTrack();
+      updateSolusiCarouselControls();
+    }, 100);
+  }
+});
+</script>
 
 
 {{-- ========================================================== --}}
@@ -547,6 +668,9 @@
 
     {{-- Product rows (Dinamis dari WordPress) --}}
     <div class="space-y-0 border-t border-black/[0.06]" id="drone-list">
+      @php
+        $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
+      @endphp
 
       @foreach($products as $p)
       <div class="drone-row border-b border-black/[0.06]" data-cat="{!! esc_attr($p['cat']) !!}">
@@ -555,8 +679,12 @@
 
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
-            <div class="w-10 h-10 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
-              <svg class="w-5 h-5 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+            <div class="w-11 h-11 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
+              @if(!empty($global_drone_icon))
+                <img src="{{ esc_url($global_drone_icon) }}" alt="Drone Icon" style="width: 26px !important; height: 26px !important; min-width: 26px !important; max-width: 26px !important; max-height: 26px !important; object-fit: contain !important;" class="block">
+              @else
+                <svg class="w-6 h-6 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              @endif
             </div>
           </div>
 
@@ -692,21 +820,25 @@ function filterDrones(btn) {
   </div>
 </section>
 
-    </div>
-  </div>
-</section>
-
 
 {{-- ========================================================== --}}
-{{-- 6. BLOG / NEWSROOM                                        --}}
+{{-- 6. BLOG / NEWSROOM — Carousel 7 Berita Terbaru             --}}
 {{-- ========================================================== --}}
-<section id="blog" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-
-    <div class="flex items-end justify-between mb-14 flex-wrap gap-6">
+@php
+  $recent_posts = get_posts([
+    'numberposts' => 7,
+    'post_status'  => 'publish',
+    'orderby'      => 'date',
+    'order'        => 'DESC',
+  ]);
+@endphp
+<section id="blog" class="bg-white py-24 sm:py-32 border-t border-black/[0.06] overflow-hidden">
+  {{-- Header inside 1400px Container --}}
+  <div id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
-        <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
+        <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[640px]">
           {!! esc_html($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') !!}
         </h2>
       </div>
@@ -716,23 +848,24 @@ function filterDrones(btn) {
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </a>
     </div>
+  </div>
 
-    @php
-      $recent_posts = get_posts([
-        'numberposts' => 3,
-        'post_status'  => 'publish',
-        'orderby'      => 'date',
-        'order'        => 'DESC',
-      ]);
-    @endphp
+  {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, Aligns to 1400px Left Padding) --}}
+  @if(!empty($recent_posts))
+  <div class="w-full">
+    <div id="news-carousel-track"
+         class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full news-track-padding">
 
-    @if($recent_posts)
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @foreach($recent_posts as $post)
-          @php setup_postdata($post); @endphp
-          <article class="bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300">
-
-            <div class="aspect-[16/9] overflow-hidden bg-[#e8e8ed]">
+      @foreach($recent_posts as $post)
+        @php
+          setup_postdata($post);
+          $categories = get_the_category($post->ID);
+          $cat_name = !empty($categories) ? $categories[0]->name : 'Berita';
+        @endphp
+        <div class="news-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:bg-[#ececee] transition-all duration-300 flex flex-col justify-between select-none">
+          <div>
+            {{-- Image Box (Clean without covering tags) --}}
+            <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
               @if(has_post_thumbnail($post->ID))
                 {!! get_the_post_thumbnail($post->ID, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) !!}
               @else
@@ -742,34 +875,145 @@ function filterDrones(btn) {
               @endif
             </div>
 
-            <div class="p-6">
-              <p class="text-[11px] font-bold tracking-wide text-[#86868b] mb-3">
-                {{ get_the_date('d M Y', $post->ID) }}
-              </p>
-              <h3 class="text-[16px] font-semibold text-[#1d1d1f] leading-[1.4] mb-3 group-hover:text-[#0066cc] transition-colors line-clamp-2">
+            {{-- Editorial Body --}}
+            <div class="p-6 sm:p-7 pb-4">
+              {{-- Category & Date Inline Meta --}}
+              <div class="flex items-center gap-2 text-[12px] mb-2.5">
+                <span class="font-semibold text-[#0066cc]">{!! esc_html($cat_name) !!}</span>
+                <span class="text-[#cbd5e1]">&bull;</span>
+                <span class="text-[#86868b]">{{ get_the_date('d M Y', $post->ID) }}</span>
+              </div>
+
+              {{-- Article Title --}}
+              <h3 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] mb-2.5 leading-snug group-hover:text-[#0066cc] transition-colors line-clamp-2 min-h-[46px]">
                 <a href="{{ get_permalink($post->ID) }}">{!! esc_html(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) !!}</a>
               </h3>
-              <p class="text-[14px] text-[#515154] leading-relaxed line-clamp-2 mb-5">
+
+              {{-- Article Excerpt --}}
+              <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
                 {!! esc_html(wp_specialchars_decode(get_the_excerpt($post->ID), ENT_QUOTES)) !!}
               </p>
-              <a href="{{ get_permalink($post->ID) }}"
-                 class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] hover:underline">
-                Baca selengkapnya <span>&rsaquo;</span>
-              </a>
             </div>
+          </div>
 
-          </article>
-        @endforeach
-      </div>
+          {{-- Clean Editorial Read More Action (No Divider Bar) --}}
+          <div class="px-6 sm:px-7 pb-6 pt-0">
+            <a href="{{ get_permalink($post->ID) }}" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] group-hover:text-[#0055b3] transition-colors">
+              <span>Baca selengkapnya</span>
+              <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
+            </a>
+          </div>
+        </div>
+      @endforeach
       @php wp_reset_postdata(); @endphp
-    @else
-      <div class="bg-[#f5f5f7] rounded-[1.5rem] p-12 text-center">
-        <p class="text-[17px] text-[#515154]">Belum ada artikel yang diterbitkan.</p>
-      </div>
-    @endif
 
+    </div>
   </div>
+
+  {{-- Bottom Controls (Arrow Buttons Flush to 1400px Right Padding) --}}
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button id="news-prev-btn" onclick="scrollNewsCarousel(-1)" aria-label="Sebelumnya"
+              class="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/10 active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-black/[0.08]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="news-next-btn" onclick="scrollNewsCarousel(1)" aria-label="Berikutnya"
+              class="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/10 active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-black/[0.08]">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+  @else
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="bg-[#f5f5f7] rounded-[1.5rem] p-12 text-center">
+      <p class="text-[17px] text-[#515154]">Belum ada artikel yang diterbitkan.</p>
+    </div>
+  </div>
+  @endif
 </section>
+
+<style>
+  .news-track-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    scroll-padding-left: 1.5rem;
+    scroll-padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .news-track-padding {
+      padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+    }
+  }
+</style>
+
+<script>
+function alignNewsTrack() {
+  const headerContainer = document.getElementById('news-header-container');
+  const track = document.getElementById('news-carousel-track');
+  if (!headerContainer || !track) return;
+
+  const rect = headerContainer.getBoundingClientRect();
+  const cs = window.getComputedStyle(headerContainer);
+  const padLeft = parseFloat(cs.paddingLeft) || 24;
+  const padRight = parseFloat(cs.paddingRight) || 24;
+
+  const exactLeft = Math.max(24, Math.round(rect.left + padLeft));
+  const exactRight = Math.max(24, Math.round(window.innerWidth - rect.right + padRight));
+
+  track.style.paddingLeft = exactLeft + 'px';
+  track.style.paddingRight = exactRight + 'px';
+  track.style.scrollPaddingLeft = exactLeft + 'px';
+  track.style.scrollPaddingRight = exactRight + 'px';
+}
+
+function scrollNewsCarousel(direction) {
+  const track = document.getElementById('news-carousel-track');
+  if (!track) return;
+  const card = track.querySelector('.news-carousel-card');
+  const scrollAmount = card ? (card.offsetWidth + 24) : 360;
+  track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+function updateNewsCarouselControls() {
+  const track = document.getElementById('news-carousel-track');
+  const prevBtn = document.getElementById('news-prev-btn');
+  const nextBtn = document.getElementById('news-next-btn');
+  if (!track) return;
+
+  const canScroll = track.scrollWidth > (track.clientWidth + 5);
+  if (!canScroll) {
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    return;
+  }
+
+  const isAtStart = track.scrollLeft <= 8;
+  const isAtEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 12;
+
+  if (prevBtn) prevBtn.disabled = isAtStart;
+  if (nextBtn) nextBtn.disabled = isAtEnd;
+}
+
+window.addEventListener('resize', function() {
+  alignNewsTrack();
+  updateNewsCarouselControls();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  alignNewsTrack();
+  const track = document.getElementById('news-carousel-track');
+  if (track) {
+    track.addEventListener('scroll', updateNewsCarouselControls, { passive: true });
+    setTimeout(function() {
+      alignNewsTrack();
+      updateNewsCarouselControls();
+    }, 100);
+  }
+});
+</script>
 
 
 {{-- ========================================================== --}}
@@ -784,96 +1028,134 @@ function filterDrones(btn) {
   $c_maps        = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_home = isset($global_c['show_map_home']) ? (bool) $global_c['show_map_home'] : (isset($hp['show_map_home']) ? (bool) $hp['show_map_home'] : (bool) get_option('fds_show_map_home', 1));
 @endphp
-<section id="kontak" class="bg-[#f5f5f7] pt-24 sm:pt-32 pb-0 border-t border-black/[0.06] overflow-hidden flex flex-col justify-between">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full pb-16 sm:pb-24">
+<section id="kontak" class="bg-[#f5f5f7] py-12 sm:py-16 border-t border-black/[0.06] overflow-hidden">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
+    <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left panel: dark, info --}}
-      <div class="bg-[#1d1d1f] rounded-[2rem] p-10 sm:p-14 flex flex-col justify-between min-h-[520px]">
+      {{-- Left Side: Dark Architectural Panel (5 cols) --}}
+      <div class="lg:col-span-5 bg-[#161618] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+        {{-- Top Header Section --}}
         <div>
-          <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">{!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}</p>
-          <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
-            {!! nl2br(esc_html($hp['kontak_title'] ?? "Hubungi tim\nEnterprise FDS.")) !!}
+          <div class="mb-2">
+            <span class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide">
+              {!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}
+            </span>
+          </div>
+
+          <h2 class="text-[24px] sm:text-[28px] lg:text-[30px] font-semibold tracking-tight text-white leading-tight mb-2">
+            {!! nl2br(esc_html($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")) !!}
           </h2>
-          <p class="text-[17px] text-white/60 leading-relaxed max-w-[360px]">
-            {!! nl2br(esc_html($hp['kontak_desc'] ?? 'Dari konsultasi teknis, fleet management, hingga program sertifikasi — kami siap mendampingi operasional drone Anda.')) !!}
+          <p class="text-[13px] sm:text-[13.5px] text-white/60 leading-relaxed max-w-[420px]">
+            {!! nl2br(esc_html($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')) !!}
           </p>
         </div>
 
-        <div class="mt-12 space-y-6 border-t border-white/[0.08] pt-10">
+        {{-- Direct Contact Information (Pinned to Bottom with Adaptive Space) --}}
+        <div class="mt-8 pt-2 space-y-4">
+          {{-- WhatsApp Channel --}}
           <div>
-            <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Telepon / WhatsApp</p>
-            <a href="tel:{{ preg_replace('/[^0-9+]/', '', $c_phone) }}" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">{!! esc_html($c_phone) !!}</a>
+            <p class="text-[11px] font-medium text-white/40 mb-1">Telepon / WhatsApp</p>
+            <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
+               class="text-[15.5px] sm:text-[16.5px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">
+              {!! esc_html($c_phone) !!}
+            </a>
           </div>
+
+          {{-- Email Channel --}}
           <div>
-            <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Email</p>
-            <a href="mailto:{{ esc_attr($c_email) }}" class="text-[17px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">{!! esc_html($c_email) !!}</a>
+            <p class="text-[11px] font-medium text-white/40 mb-1">Email Bisnis</p>
+            <a href="mailto:{{ esc_attr($c_email) }}"
+               class="text-[14px] sm:text-[15px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">
+              {!! esc_html($c_email) !!}
+            </a>
           </div>
+
+          {{-- Workshop Location --}}
           <div>
-            <p class="text-[11px] font-semibold tracking-wide text-white/40 mb-1.5">Lokasi Workshop</p>
-            <p class="text-[15px] font-medium text-white/90 leading-relaxed">{!! esc_html($c_address) !!}</p>
+            <p class="text-[11px] font-medium text-white/40 mb-1">Lokasi Workshop &amp; Testing Center</p>
+            <p class="text-[12.5px] sm:text-[13px] text-white/70 leading-relaxed max-w-[400px]">
+              {!! esc_html($c_address) !!}
+            </p>
           </div>
-          <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
-             class="inline-flex items-center gap-2.5 bg-[#25D366] hover:bg-[#1db954] active:scale-[0.97] text-white font-semibold text-[14px] px-5 py-3 rounded-full transition-all duration-150 shadow-md">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-            {!! esc_html($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') !!}
-          </a>
+
+          {{-- WhatsApp Action Button --}}
+          <div class="pt-2">
+            <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.97] text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-full transition-all duration-150 shadow-sm">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              <span>{!! esc_html($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') !!}</span>
+            </a>
+          </div>
         </div>
       </div>
 
-      {{-- Right panel: white, form --}}
-      <div class="bg-white rounded-[2rem] p-10 sm:p-14" style="box-shadow: 0 4px 40px rgba(0,0,0,0.06);">
-        <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-8">{!! esc_html($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') !!}</h3>
+      {{-- Right Side: Streamlined Inquiry Form (7 cols) --}}
+      <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-white flex flex-col justify-between">
+        {{-- Form Header --}}
+        <div class="mb-4 sm:mb-5">
+          <h3 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
+            {!! esc_html($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') !!}
+          </h3>
+          <p class="text-[12.5px] text-[#64748b]">Silakan lengkapi detail kontak dan kebutuhan operasional drone Anda:</p>
+        </div>
 
-        <form class="space-y-7" onsubmit="event.preventDefault();">
+        {{-- Form Body (Flex-1 to fill space evenly and balance with left panel) --}}
+        <form id="fds-inquiry-form" class="flex-1 flex flex-col justify-between space-y-3.5" onsubmit="fdsSubmitInquiry(event)">
+          @php wp_nonce_field('fds_inquiry_nonce', 'fds_inquiry_nonce_val'); @endphp
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Nama Depan</label>
-              <input type="text" placeholder="Ahmad"
-                class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200">
+          <div class="space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
+                <input type="text" name="first_name" required placeholder="Ahmad"
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
+                <input type="text" name="last_name" required placeholder="Fauzi"
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
             </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
+                <input type="text" name="company" required placeholder="PT. Contoh Indonesia"
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
+                <input type="email" name="email" required placeholder="nama@perusahaan.co.id"
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+            </div>
+
             <div>
-              <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Nama Belakang</label>
-              <input type="text" placeholder="Fauzi"
-                class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200">
+              <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
+              <input type="tel" name="phone" required placeholder="+62 812-XXXX-XXXX"
+                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+            </div>
+
+            <div>
+              <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Anda <span class="text-red-500">*</span></label>
+              <textarea name="message" rows="3" required placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
+                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Perusahaan / Instansi</label>
-              <input type="text" placeholder="PT. Contoh Indonesia"
-                class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200">
-            </div>
-            <div>
-              <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Email Bisnis</label>
-              <input type="email" placeholder="nama@perusahaan.co.id"
-                class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200">
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Nomor Telepon / WhatsApp</label>
-            <input type="tel" placeholder="+62 812-XXXX-XXXX"
-              class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200">
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-[#86868b] tracking-wide mb-2">Kebutuhan Anda</label>
-            <textarea rows="3" placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
-              class="w-full border-0 border-b-2 border-[#e8e8ed] focus:border-[#0066cc] bg-transparent py-2.5 text-[16px] text-[#1d1d1f] placeholder-[#c7c7cc] outline-none transition-colors duration-200 resize-none"></textarea>
-          </div>
-
-          <div class="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-5">
-            <button type="submit"
-              class="bg-[#1d1d1f] hover:bg-black active:scale-[0.97] text-white font-semibold text-[15px] px-8 py-4 rounded-full transition-all duration-150 whitespace-nowrap">
-              {!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Pesan') !!}
+          {{-- Submit Row (Docked to bottom, without divider line) --}}
+          <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <button type="submit" id="fds-inquiry-btn"
+              class="bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-[0.97] text-white font-medium text-[13.5px] px-6 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-sm inline-flex items-center gap-1.5 cursor-pointer">
+              <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Pesan') !!}</span>
+              <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
             </button>
-            <p class="text-[12px] text-[#86868b] leading-relaxed">
-              {!! nl2br(esc_html($hp['kontak_form_note'] ?? "Kami merespons dalam 1×24 jam kerja.\nData Anda tidak akan dibagikan ke pihak ketiga.")) !!}
-            </p>
+            <div class="flex items-center gap-1.5 text-[11.5px] text-[#86868b] whitespace-nowrap">
+              <svg class="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span>{!! esc_html(trim(preg_replace('/\s+/', ' ', str_replace(['Data Anda tidak akan dibagikan ke pihak ketiga.', 'Data Anda tidak akan dibagikan ke pihak ketiga'], '', $hp['kontak_form_note'] ?? 'Kami merespons dalam 1×24 jam kerja. Data terjamin aman.')))) !!}</span>
+            </div>
           </div>
 
         </form>
@@ -883,8 +1165,7 @@ function filterDrones(btn) {
   </div>
 
   @if($show_map_home && !empty($c_maps))
-  {{-- Full-width Map Media Block — exactly like drone detail hero image --}}
-  <div class="w-full overflow-hidden border-t border-black/[0.08] relative" style="height: 520px; max-height: 600px;">
+  <div class="w-full overflow-hidden border-t border-black/[0.08] relative mt-12" style="height: 320px;">
     <iframe 
       src="{{ esc_url($c_maps) }}" 
       width="100%" 
@@ -898,6 +1179,122 @@ function filterDrones(btn) {
   </div>
   @endif
 </section>
+
+{{-- Floating Bottom-Right Toast / Snackbar Notification --}}
+<div id="fds-snackbar" class="fixed bottom-6 right-6 z-[99999] max-w-[400px] w-[calc(100%-3rem)] transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none">
+  <div id="fds-snackbar-card" class="rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5">
+    <div id="fds-snackbar-icon" class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"></div>
+    <div class="flex-1 min-w-0">
+      <p id="fds-snackbar-title" class="text-[13.5px] font-bold text-white leading-tight mb-0.5"></p>
+      <p id="fds-snackbar-desc" class="text-[12.5px] text-white/90 leading-snug"></p>
+    </div>
+    <button type="button" onclick="fdsCloseSnackbar()" class="text-white/70 hover:text-white hover:bg-white/15 p-1 rounded-lg transition-colors flex-shrink-0 cursor-pointer" aria-label="Tutup Notifikasi">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+var fdsSnackbarTimer = null;
+
+function fdsShowSnackbar(isSuccess, title, message) {
+  var bar = document.getElementById('fds-snackbar');
+  var card = document.getElementById('fds-snackbar-card');
+  var icon = document.getElementById('fds-snackbar-icon');
+  var titleEl = document.getElementById('fds-snackbar-title');
+  var descEl = document.getElementById('fds-snackbar-desc');
+  if (!bar) return;
+
+  if (isSuccess) {
+    card.className = 'bg-[#059669] border border-[#047857] rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5 text-white';
+    icon.className = 'w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5';
+    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+  } else {
+    card.className = 'bg-[#dc2626] border border-[#b91c1c] rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5 text-white';
+    icon.className = 'w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5';
+    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+  }
+
+  titleEl.textContent = title;
+  descEl.textContent = message;
+
+  bar.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+  bar.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto');
+
+  clearTimeout(fdsSnackbarTimer);
+  fdsSnackbarTimer = setTimeout(function() {
+    fdsCloseSnackbar();
+  }, 5000);
+}
+
+function fdsCloseSnackbar() {
+  var bar = document.getElementById('fds-snackbar');
+  if (!bar) return;
+  bar.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto');
+  bar.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+}
+
+function fdsSubmitInquiry(e) {
+  e.preventDefault();
+  var form = document.getElementById('fds-inquiry-form');
+  var btn = document.getElementById('fds-inquiry-btn');
+  var btnText = document.getElementById('fds-inquiry-btn-text');
+  
+  if (!form || !btn) return;
+
+  // Validasi Semua Field Wajib di Frontend
+  var firstName = (form.querySelector('[name="first_name"]') || {}).value || '';
+  var lastName  = (form.querySelector('[name="last_name"]') || {}).value || '';
+  var company   = (form.querySelector('[name="company"]') || {}).value || '';
+  var email     = (form.querySelector('[name="email"]') || {}).value || '';
+  var phone     = (form.querySelector('[name="phone"]') || {}).value || '';
+  var message   = (form.querySelector('[name="message"]') || {}).value || '';
+
+  if (!firstName.trim() || !lastName.trim() || !company.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+    fdsShowSnackbar(false, 'Formulir Belum Lengkap', 'Semua kolom formulir wajib diisi sebelum mengirim pesan.');
+    return;
+  }
+
+  // Validasi format email dasar
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email.trim())) {
+    fdsShowSnackbar(false, 'Format Email Tidak Valid', 'Silakan masukkan alamat email yang benar (contoh: nama@perusahaan.com).');
+    return;
+  }
+  
+  var formData = new FormData(form);
+  formData.append('action', 'fds_submit_inquiry');
+  formData.append('nonce', document.getElementById('fds_inquiry_nonce_val').value);
+
+  btn.disabled = true;
+  btn.classList.add('opacity-70', 'cursor-not-allowed');
+  btnText.textContent = 'Mengirim Pesan...';
+
+  fetch('{{ admin_url("admin-ajax.php") }}', {
+    method: 'POST',
+    body: formData
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    btn.disabled = false;
+    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+    btnText.textContent = '{!! esc_js($hp["kontak_form_btn_text"] ?? "Kirim Pesan") !!}';
+
+    if (data.success) {
+      fdsShowSnackbar(true, 'Pesan Berhasil Terkirim', data.data.message || 'Pesan Anda telah berhasil disimpan di sistem kami.');
+      form.reset();
+    } else {
+      fdsShowSnackbar(false, 'Gagal Mengirim Pesan', data.data.message || 'Terjadi kesalahan. Silakan periksa kembali formulir Anda.');
+    }
+  })
+  .catch(function(err) {
+    btn.disabled = false;
+    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+    btnText.textContent = '{!! esc_js($hp["kontak_form_btn_text"] ?? "Kirim Pesan") !!}';
+    fdsShowSnackbar(false, 'Gangguan Jaringan', 'Gagal terhubung ke server. Silakan coba lagi atau hubungi kami via WhatsApp.');
+  });
+}
+</script>
 
 @endsection
 

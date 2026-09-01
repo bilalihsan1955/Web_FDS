@@ -4,10 +4,17 @@
       
       <!-- Brand Logo -->
       <a href="{{ home_url('/') }}" class="flex items-center gap-3 group">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:border-blue-400 group-hover:bg-blue-500/20 transition-all">
-          <svg class="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-          </svg>
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:border-blue-400 group-hover:bg-blue-500/20 transition-all">
+          @php
+            $hdr_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
+          @endphp
+          @if(!empty($hdr_drone_icon))
+            <img src="{{ esc_url($hdr_drone_icon) }}" alt="Drone Icon" style="width: 26px !important; height: 26px !important; min-width: 26px !important; max-width: 26px !important; max-height: 26px !important; object-fit: contain !important;" class="block">
+          @else
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+          @endif
         </div>
         <div class="flex flex-col">
           <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 uppercase group-hover:text-blue-400 transition-colors">

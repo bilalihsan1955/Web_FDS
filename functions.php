@@ -52,7 +52,7 @@ Application::configure()
 |
 */
 
-collect(['setup', 'filters', 'helpers', 'auto-setup', 'seo', 'preview-handler', 'cpt-drones', 'cpt-mitra', 'hero-slider', 'theme-settings', 'footer-settings', 'solusi-settings', 'homepage-content-settings', 'about-content-settings'])
+collect(['setup', 'filters', 'helpers', 'auto-setup', 'seo', 'preview-handler', 'cpt-drones', 'cpt-mitra', 'hero-slider', 'theme-settings', 'footer-settings', 'solusi-settings', 'homepage-content-settings', 'about-content-settings', 'inquiry-handler'])
     ->each(function ($file) {
         if (! locate_template($file = "app/{$file}.php", true, true)) {
             wp_die(

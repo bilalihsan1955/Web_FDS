@@ -13,11 +13,21 @@ if (!defined('ABSPATH')) {
  * Mengelola judul, deskripsi, dan kartu solusi industri beranda secara dinamis.
  */
 
-// Solusi Industri functions and helpers
+// 1. DAFTARKAN MENU DI WP ADMIN
+add_action('admin_menu', function () {
+    add_submenu_page(
+        'fds-homepage-content',
+        'Solusi Industri',
+        'Solusi Industri',
+        'manage_options',
+        'fds-solusi-settings',
+        __NAMESPACE__ . '\\render_solusi_settings_admin_page'
+    );
+});
 
 // 2. ENQUEUE WP MEDIA UPLOADER
 add_action('admin_enqueue_scripts', function ($hook) {
-    if ($hook === 'toplevel_page_fds-solusi-settings') {
+    if (strpos($hook, 'fds-solusi-settings') !== false) {
         wp_enqueue_media();
     }
 });
@@ -57,8 +67,32 @@ function fds_get_default_solusi_cards() {
             'link_text' => 'Pelajari Produk',
             'link_url'  => '#produk',
         ],
+        [
+            'image'     => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+            'title'     => 'Pemantauan Karhutla & Tanggap Bencana',
+            'desc'      => 'Patroli otonom jangkauan jauh dengan sensor termal inframerah dan transmisi video real-time untuk deteksi dini titik api karhutla, monitoring banjir, serta asesmen cepat pasca-bencana alam.',
+            'tag'       => 'SURVEILLANCE UAV',
+            'link_text' => 'Pelajari Solusi',
+            'link_url'  => '#kontak',
+        ],
     ];
 }
+
+// Auto-sync 5th card to database if fewer than 5 cards exist
+add_action('init', function () {
+    $cards = get_option('fds_solusi_cards', null);
+    if ($cards !== null && is_array($cards) && count($cards) < 5) {
+        $cards[] = [
+            'image'     => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+            'title'     => 'Pemantauan Karhutla & Tanggap Bencana',
+            'desc'      => 'Patroli otonom jangkauan jauh dengan sensor termal inframerah dan transmisi video real-time untuk deteksi dini titik api karhutla, monitoring banjir, serta asesmen cepat pasca-bencana alam.',
+            'tag'       => 'SURVEILLANCE UAV',
+            'link_text' => 'Pelajari Solusi',
+            'link_url'  => '#kontak',
+        ];
+        update_option('fds_solusi_cards', $cards);
+    }
+});
 
 // 4. HELPER DATA FRONTEND
 function fds_get_solusi_data() {

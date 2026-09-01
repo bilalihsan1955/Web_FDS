@@ -137,7 +137,14 @@
       {{-- Rotary Wing --}}
       <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 hover:bg-white/[0.09] transition-colors">
         <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          @php
+            $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
+          @endphp
+          @if(!empty($global_drone_icon))
+            <div style="width: 20px; height: 20px; background-color: #6e9fd4; -webkit-mask: url('{{ esc_url($global_drone_icon) }}') no-repeat center / contain; mask: url('{{ esc_url($global_drone_icon) }}') no-repeat center / contain; display: inline-block;" aria-label="Rotary Wing"></div>
+          @else
+            <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+          @endif
         </div>
         <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') !!}</h3>
         <p class="text-[15px] text-white/60 leading-relaxed">
@@ -277,6 +284,7 @@
   $c_entitas = $global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)');
   $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
   $c_email   = $global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com');
+  $c_phone   = $global_c['phone'] ?? '+62 8112 748 882';
   $c_wa_link      = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
   $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));

@@ -147,29 +147,23 @@
           <div class="flex items-center justify-between h-[52px]">
 
             <!-- Dynamic Logo & Brand -->
+            <!-- Dynamic Logo & Brand -->
             @php
               $nb_brand = function_exists('App\fds_get_navbar_brand') ? \App\fds_get_navbar_brand() : [
-                'has_logo'       => false,
-                'logo_url'       => '',
-                'brand_text'     => 'Full Drone Solutions',
-                'display_mode'   => 'both',
-                'logo_height'    => 28,
-                'drone_icon_url' => '',
+                'has_logo'     => false,
+                'logo_url'     => '',
+                'brand_text'   => 'Full Drone Solutions',
+                'display_mode' => 'both',
+                'logo_height'  => 28,
               ];
-              $drone_icon = $nb_brand['drone_icon_url'] ?? (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
             @endphp
             <a href="{{ home_url('/') }}" class="nav-direct-link flex items-center gap-2.5 group">
               @if($nb_brand['display_mode'] !== 'text_only')
                 @if($nb_brand['has_logo'])
                   <img src="{{ esc_url($nb_brand['logo_url']) }}"
                        alt="{{ esc_attr($nb_brand['brand_text']) }}"
-                       style="height: {{ (int) $nb_brand['logo_height'] }}px !important; max-height: {{ (int) $nb_brand['logo_height'] }}px !important; width: auto !important; max-width: 220px !important; object-fit: contain !important;"
-                       class="transition-transform duration-200 group-hover:scale-[1.03] block flex-shrink-0">
-                @elseif(!empty($drone_icon))
-                  <img src="{{ esc_url($drone_icon) }}"
-                       alt="{{ esc_attr($nb_brand['brand_text']) }}"
-                       style="height: 24px !important; width: 24px !important; min-width: 24px !important; max-height: 24px !important; max-width: 24px !important; object-fit: contain !important;"
-                       class="transition-transform duration-200 group-hover:scale-[1.08] block flex-shrink-0">
+                       style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
+                       class="transition-transform duration-200 group-hover:scale-[1.03]">
                 @else
                   <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
@@ -294,27 +288,10 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($agri_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="flex items-center gap-2">
-                          @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
-                          @else
-                            <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="3"/>
-                              <path d="M10 10l-3.5 -3.5"/>
-                              <path d="M14 10l3.5 -3.5"/>
-                              <path d="M10 14l-3.5 3.5"/>
-                              <path d="M14 14l3.5 3.5"/>
-                              <circle cx="5" cy="5" r="2.5"/>
-                              <circle cx="19" cy="5" r="2.5"/>
-                              <circle cx="5" cy="19" r="2.5"/>
-                              <circle cx="19" cy="19" r="2.5"/>
-                            </svg>
-                          @endif
-                          <span class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                            {!! $item['name'] !!}
-                          </span>
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug pl-6">
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
                           {!! $item['spec'] ?: $item['desc'] !!}
                         </div>
                       </a>
@@ -342,27 +319,10 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($pemetaan_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="flex items-center gap-2">
-                          @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
-                          @else
-                            <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="3"/>
-                              <path d="M10 10l-3.5 -3.5"/>
-                              <path d="M14 10l3.5 -3.5"/>
-                              <path d="M10 14l-3.5 3.5"/>
-                              <path d="M14 14l3.5 3.5"/>
-                              <circle cx="5" cy="5" r="2.5"/>
-                              <circle cx="19" cy="5" r="2.5"/>
-                              <circle cx="5" cy="19" r="2.5"/>
-                              <circle cx="19" cy="19" r="2.5"/>
-                            </svg>
-                          @endif
-                          <span class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                            {!! $item['name'] !!}
-                          </span>
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug pl-6">
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
                           {!! $item['spec'] ?: $item['desc'] !!}
                         </div>
                       </a>
@@ -385,27 +345,10 @@
                     <div class="space-y-2.5">
                       @foreach($kargo_drones as $item)
                       <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
-                        <div class="flex items-center gap-2">
-                          @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
-                          @else
-                            <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="3"/>
-                              <path d="M10 10l-3.5 -3.5"/>
-                              <path d="M14 10l3.5 -3.5"/>
-                              <path d="M10 14l-3.5 3.5"/>
-                              <path d="M14 14l3.5 3.5"/>
-                              <circle cx="5" cy="5" r="2.5"/>
-                              <circle cx="19" cy="5" r="2.5"/>
-                              <circle cx="5" cy="19" r="2.5"/>
-                              <circle cx="19" cy="19" r="2.5"/>
-                            </svg>
-                          @endif
-                          <span class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                            {!! $item['name'] !!}
-                          </span>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug pl-6">
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
                           {!! $item['spec'] ?: $item['desc'] !!}
                         </div>
                       </a>
@@ -428,27 +371,10 @@
                     <div class="space-y-2.5">
                       @foreach($rebo_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="flex items-center gap-2">
-                          @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 opacity-85 group-hover:opacity-100 group-hover:scale-110 transition-all block">
-                          @else
-                            <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="3"/>
-                              <path d="M10 10l-3.5 -3.5"/>
-                              <path d="M14 10l3.5 -3.5"/>
-                              <path d="M10 14l-3.5 3.5"/>
-                              <path d="M14 14l3.5 3.5"/>
-                              <circle cx="5" cy="5" r="2.5"/>
-                              <circle cx="19" cy="5" r="2.5"/>
-                              <circle cx="5" cy="19" r="2.5"/>
-                              <circle cx="19" cy="19" r="2.5"/>
-                            </svg>
-                          @endif
-                          <span class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
-                            {!! $item['name'] !!}
-                          </span>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                          {!! $item['name'] !!}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug pl-6">
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
                           {!! $item['spec'] ?: $item['desc'] !!}
                         </div>
                       </a>
@@ -615,24 +541,7 @@
                         $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
                       @endphp
                       <a href="{{ $d['url'] }}" class="mobile-nav-link py-1.5 flex items-center justify-between {{ $is_this_drone ? 'text-[#0066cc] font-semibold' : '' }}">
-                        <span class="flex items-center gap-2">
-                          @if(!empty($drone_icon))
-                            <img src="{{ esc_url($drone_icon) }}" alt="Drone" style="width: 16px !important; height: 16px !important; min-width: 16px !important; max-width: 16px !important; max-height: 16px !important; object-fit: contain !important;" class="flex-shrink-0 block">
-                          @else
-                            <svg class="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                              <circle cx="12" cy="12" r="3"/>
-                              <path d="M10 10l-3.5 -3.5"/>
-                              <path d="M14 10l3.5 -3.5"/>
-                              <path d="M10 14l-3.5 3.5"/>
-                              <path d="M14 14l3.5 3.5"/>
-                              <circle cx="5" cy="5" r="2.5"/>
-                              <circle cx="19" cy="5" r="2.5"/>
-                              <circle cx="5" cy="19" r="2.5"/>
-                              <circle cx="19" cy="19" r="2.5"/>
-                            </svg>
-                          @endif
-                          <span>{!! wp_specialchars_decode($d['name']) !!}</span>
-                        </span>
+                        <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
                         <span class="text-[10px] text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
                         @endif

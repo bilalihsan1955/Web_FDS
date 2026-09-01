@@ -47,9 +47,53 @@ add_action('admin_menu', function () {
     }
 }, 9999);
 
-add_action('admin_head', function () {
-    echo '<style>#menu-appearance a[href*="customize.php"], #wp-admin-bar-customize { display: none !important; }</style>';
+// 2. DISABLE WORDPRESS TWEMOJI CONVERSION & PREVENT EMOJIS FROM BLOWING UP
+add_action('init', function () {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
 });
+
+add_action('admin_head', function () {
+    echo '<style>
+        #menu-appearance a[href*="customize.php"], #wp-admin-bar-customize { display: none !important; }
+        img.wp-smiley, img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            max-height: 1em !important;
+            max-width: 1em !important;
+            margin: 0 0.07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>';
+});
+
+add_action('wp_head', function () {
+    echo '<style>
+        img.wp-smiley, img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            max-height: 1em !important;
+            max-width: 1em !important;
+            margin: 0 0.07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>';
+}, 1);
 
 add_action('admin_bar_menu', function ($wp_admin_bar) {
     $wp_admin_bar->remove_node('customize');
@@ -90,9 +134,9 @@ function fds_get_navbar_brand() {
     }
 
     $display_mode = get_option('fds_navbar_display_mode', 'both');
-    $logo_height = (int) get_option('fds_navbar_logo_height', 28);
+    $logo_height = (int) get_option('fds_navbar_logo_height', 34);
     if ($logo_height < 16 || $logo_height > 60) {
-        $logo_height = 28;
+        $logo_height = 34;
     }
 
     $favicon_url = get_option('fds_site_favicon_url', '');
@@ -116,9 +160,13 @@ function fds_get_navbar_brand() {
     ];
 }
 
-// 4a. HELPER STANDALONE ICON DRONE NAVBAR
-function fds_get_navbar_drone_icon() {
+// 4a. HELPER STANDALONE ICON DRONE (NAVBAR, SECTION DRONE, TENTANG KAMI, DLL)
+function fds_get_drone_icon() {
     return get_option('fds_navbar_drone_icon_url', '');
+}
+
+function fds_get_navbar_drone_icon() {
+    return fds_get_drone_icon();
 }
 
 // 4b. OTOMATIS TAMPILKAN ICON TAB BROWSER / FAVICON DI HEAD
@@ -460,13 +508,13 @@ function render_navbar_settings_admin_page() {
                     </div>
                 </div>
 
-                <!-- 3b. UPLOAD DRONE ICON NAVBAR (1 UNTUK SEMUA) -->
+                <!-- 3b. UPLOAD DRONE ICON (1 UNTUK SEMUA) -->
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
-                        🚁 Icon Drone Navbar (1 untuk Semua Produk Drone)
+                        <span class="dashicons dashicons-airplane" style="color: #0066cc; margin-right: 4px; vertical-align: text-bottom;"></span> Icon Drone Website (1 untuk Semua: Section Drone, Tentang Kami &amp; Navbar)
                     </label>
                     <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">
-                        Unggah 1 icon drone yang akan digunakan secara seragam di navbar (Mega Menu dropdown produk, mobile menu, dan menu drone) untuk menggantikan icon drone bawaan. Rekomendasi: format <strong>SVG</strong> atau <strong>PNG transparan</strong> (ukuran 32×32 atau 64×64 piksel).
+                        Unggah 1 icon drone untuk menggantikan icon drone bawaan (segitiga/pesawat biru) secara seragam di seluruh website, termasuk di <strong>Section Drone Beranda</strong>, <strong>Halaman Tentang Kami</strong>, dan <strong>Navbar</strong>. Rekomendasi: format <strong>SVG</strong> atau <strong>PNG transparan</strong> (ukuran 32×32 atau 64×64 piksel).
                     </p>
 
                     <div style="display: flex; align-items: center; gap: 16px;">
@@ -474,7 +522,9 @@ function render_navbar_settings_admin_page() {
                             <?php if (!empty($brand_data['drone_icon_url'])): ?>
                                 <img id="fds_drone_icon_preview" src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" style="width: 100% !important; height: 100% !important; max-width: 34px !important; max-height: 34px !important; object-fit: contain !important; display: block !important;">
                             <?php else: ?>
-                                <div id="fds_drone_icon_preview" style="font-size: 18px;">🚁</div>
+                                <div id="fds_drone_icon_preview">
+                                    <svg style="width: 22px; height: 22px; color: #0066cc; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                </div>
                             <?php endif; ?>
                         </div>
 
@@ -500,7 +550,7 @@ function render_navbar_settings_admin_page() {
                 <!-- 4. PENGATURAN NAMA TAB BROWSER (TITLE TAG UNTUK SEMUA HALAMAN) -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
                     <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                        <span>🌐</span> Pengaturan Nama Tab Browser (Title Tag)
+                        <span class="dashicons dashicons-admin-site-alt3" style="color: #0066cc;"></span> Pengaturan Nama Tab Browser (Title Tag)
                     </h2>
                     <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Kustomisasi teks judul yang tampil pada tab browser saat pengunjung membuka halaman-halaman utama website Anda.</p>
 
@@ -509,7 +559,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 1. Nama Tab Halaman Beranda -->
                         <div>
                             <label for="fds_home_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                🏠 Nama Tab Halaman Beranda / Home:
+                                <span class="dashicons dashicons-admin-home" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Beranda / Home:
                             </label>
                             <input type="text" 
                                    id="fds_home_tab_title" 
@@ -525,7 +575,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 2. Nama Tab Halaman Tentang Kami -->
                         <div>
                             <label for="fds_about_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                🏢 Nama Tab Halaman Tentang Kami:
+                                <span class="dashicons dashicons-building" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Tentang Kami:
                             </label>
                             <input type="text" 
                                    id="fds_about_tab_title" 
@@ -541,7 +591,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 3. Nama Tab Halaman Perbandingan -->
                         <div>
                             <label for="fds_compare_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                ⚖️ Nama Tab Halaman Perbandingan Drone (/bandingkan):
+                                <span class="dashicons dashicons-leftright" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Perbandingan Drone (/bandingkan):
                             </label>
                             <input type="text" 
                                    id="fds_compare_tab_title" 
@@ -557,7 +607,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 4. Nama Tab Halaman Blog -->
                         <div>
                             <label for="fds_blog_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                📰 Nama Tab Halaman Blog / Berita (/blog):
+                                <span class="dashicons dashicons-welcome-write-blog" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Blog / Berita (/blog):
                             </label>
                             <input type="text" 
                                    id="fds_blog_tab_title" 
@@ -573,7 +623,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 5. Akhiran Tab Detail Produk Drone -->
                         <div>
                             <label for="fds_drone_tab_suffix" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                🚁 Akhiran / Format Judul Tab Detail Produk Drone (Opsional):
+                                <span class="dashicons dashicons-airplane" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Akhiran / Format Judul Tab Detail Produk Drone (Opsional):
                             </label>
                             <input type="text" 
                                    id="fds_drone_tab_suffix" 
@@ -834,7 +884,7 @@ function render_navbar_settings_admin_page() {
         $('#fds_remove_drone_icon_btn').on('click', function(e) {
             e.preventDefault();
             $('#fds_navbar_drone_icon_url').val('');
-            $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview" style="font-size: 18px;">🚁</div>');
+            $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview"><svg style="width: 22px; height: 22px; color: #0066cc; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>');
             updateLivePreview();
         });
     });
@@ -848,7 +898,7 @@ add_action('add_meta_boxes', function () {
     foreach ($screens as $screen) {
         add_meta_box(
             'fds_tab_title_meta_box',
-            '🌐 Pengaturan Nama Tab Browser (SEO Title)',
+            'Pengaturan Nama Tab Browser (SEO Title)',
             __NAMESPACE__ . '\\render_tab_title_meta_box',
             $screen,
             'normal',

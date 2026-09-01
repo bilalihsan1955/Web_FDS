@@ -243,7 +243,7 @@ function fds_get_homepage_content() {
         'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Chat via WhatsApp'),
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Kirim pesan inquiry'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Pesan'),
-        'kontak_form_note'       => get_option('fds_kontak_form_note', "Kami merespons dalam 1×24 jam kerja.\nData Anda tidak akan dibagikan ke pihak ketiga."),
+        'kontak_form_note'       => get_option('fds_kontak_form_note', 'Kami merespons dalam 1×24 jam kerja. Data terjamin aman.'),
         'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
     ];
 
@@ -540,20 +540,35 @@ function render_homepage_content_admin_page() {
                     </div>
                 </div>
 
-                <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin-top: 20px; margin-bottom: 16px; border-top: 1px solid #f1f5f9; pt-16;">
-                    🃏 4 Kartu Solusi Industri
-                </h3>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px; margin-bottom: 16px; border-top: 1px solid #f1f5f9; padding-top: 18px;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">
+                            🃏 Daftar Kartu Solusi Industri (Bisa Ditambah &amp; Dihapus Tanpa Batas)
+                        </h3>
+                        <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">Tambahkan kartu solusi sebanyak yang Anda butuhkan. Di halaman beranda, kartu akan otomatis berjejer rapi di slider horizontal bergaya Apple.</p>
+                    </div>
+                    <button type="button" class="button button-primary" onclick="fdsAddSolusiCard()" style="font-size: 12px; font-weight: 600;">
+                        + Tambah Kartu Solusi Baru
+                    </button>
+                </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div id="fds-solusi-cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <?php foreach ($solusi_cards as $idx => $card): ?>
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px;">
-                        <h4 style="margin: 0 0 12px; font-size: 14px; font-weight: 700; color: #0066cc;">Kartu Solusi #<?php echo ($idx + 1); ?></h4>
+                    <div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0066cc;">Kartu Solusi #<span class="solusi-number"><?php echo ($idx + 1); ?></span></h4>
+                            <div style="display: flex; gap: 6px;">
+                                <button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, -1)" title="Pindah ke atas">▲</button>
+                                <button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, 1)" title="Pindah ke bawah">▼</button>
+                                <button type="button" class="button button-small button-link-delete" onclick="fdsDeleteSolusiCard(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>
+                            </div>
+                        </div>
                         
                         <!-- GAMBAR SOLUSI -->
                         <div style="margin-bottom: 12px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Gambar Kartu</label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <img src="<?php echo esc_url($card['image'] ?? ''); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                <img src="<?php echo esc_url($card['image'] ?? 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
                                 <div>
                                     <input type="hidden" name="fds_card_image[]" class="card-image-input" value="<?php echo esc_attr($card['image'] ?? ''); ?>">
                                     <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
@@ -563,12 +578,12 @@ function render_homepage_content_admin_page() {
 
                         <div style="margin-bottom: 10px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu</label>
-                            <input type="text" name="fds_card_title[]" value="<?php echo esc_attr($card['title'] ?? ''); ?>" style="width: 100%; font-size: 13px; font-weight: 600;">
+                            <input type="text" name="fds_card_title[]" value="<?php echo esc_attr($card['title'] ?? ''); ?>" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Penyemprotan & Analisis NDVI">
                         </div>
 
                         <div style="margin-bottom: 10px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi Kartu</label>
-                            <textarea name="fds_card_desc[]" rows="3" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($card['desc'] ?? ''); ?></textarea>
+                            <textarea name="fds_card_desc[]" rows="3" style="width: 100%; font-size: 12px;" placeholder="Tuliskan deskripsi ringkas solusi..."><?php echo esc_textarea($card['desc'] ?? ''); ?></textarea>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
@@ -588,6 +603,12 @@ function render_homepage_content_admin_page() {
                         </div>
                     </div>
                     <?php endforeach; ?>
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <button type="button" class="button button-secondary" onclick="fdsAddSolusiCard()" style="font-size: 12px; font-weight: 600;">
+                        + Tambah Kartu Solusi Baru
+                    </button>
                 </div>
             </div>
 
@@ -1089,6 +1110,89 @@ function render_homepage_content_admin_page() {
         window.fdsRenumberLayanan = function() {
             $('#fds-layanan-repeater-container .fds-layanan-row').each(function(idx) {
                 $(this).find('.layanan-number').text(idx + 1);
+            });
+        };
+
+        // Dynamic Repeater untuk Kartu Solusi Industri
+        window.fdsAddSolusiCard = function() {
+            var count = $('#fds-solusi-cards-container .fds-solusi-card-item').length + 1;
+            var html = '<div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
+                '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
+                    '<h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0066cc;">Kartu Solusi #<span class="solusi-number">' + count + '</span></h4>' +
+                    '<div style="display: flex; gap: 6px;">' +
+                        '<button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, -1)" title="Pindah ke atas">▲</button>' +
+                        '<button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, 1)" title="Pindah ke bawah">▼</button>' +
+                        '<button type="button" class="button button-small button-link-delete" onclick="fdsDeleteSolusiCard(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="margin-bottom: 12px;">' +
+                    '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Gambar Kartu</label>' +
+                    '<div style="display: flex; gap: 10px; align-items: center;">' +
+                        '<img src="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">' +
+                        '<div>' +
+                            '<input type="hidden" name="fds_card_image[]" class="card-image-input" value="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80">' +
+                            '<button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="margin-bottom: 10px;">' +
+                    '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu</label>' +
+                    '<input type="text" name="fds_card_title[]" value="Judul Solusi Baru" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Pemantauan Karhutla & Konservasi">' +
+                '</div>' +
+                '<div style="margin-bottom: 10px;">' +
+                    '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi Kartu</label>' +
+                    '<textarea name="fds_card_desc[]" rows="3" style="width: 100%; font-size: 12px;" placeholder="Tuliskan deskripsi ringkas solusi..."></textarea>' +
+                '</div>' +
+                '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">' +
+                    '<div>' +
+                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Produk / Spek</label>' +
+                        '<input type="text" name="fds_card_tag[]" value="FDS UAV" placeholder="FERTO 5L – 50L" style="width: 100%; font-size: 12px;">' +
+                    '</div>' +
+                    '<div>' +
+                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Link</label>' +
+                        '<input type="text" name="fds_card_link_text[]" value="Pelajari Selengkapnya" style="width: 100%; font-size: 12px;">' +
+                    '</div>' +
+                '</div>' +
+                '<div>' +
+                    '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Target URL Link</label>' +
+                    '<input type="text" name="fds_card_link_url[]" value="#kontak" placeholder="#kontak" style="width: 100%; font-size: 12px;">' +
+                '</div>' +
+            '</div>';
+            $('#fds-solusi-cards-container').append(html);
+            fdsRenumberSolusiCards();
+        };
+
+        window.fdsDeleteSolusiCard = function(btn) {
+            if ($('#fds-solusi-cards-container .fds-solusi-card-item').length <= 1) {
+                alert('Minimal harus ada 1 kartu solusi.');
+                return;
+            }
+            if (confirm('Yakin ingin menghapus kartu solusi ini?')) {
+                $(btn).closest('.fds-solusi-card-item').remove();
+                fdsRenumberSolusiCards();
+            }
+        };
+
+        window.fdsMoveSolusiCard = function(btn, direction) {
+            var row = $(btn).closest('.fds-solusi-card-item');
+            if (direction === -1) {
+                var prev = row.prev('.fds-solusi-card-item');
+                if (prev.length) {
+                    row.insertBefore(prev);
+                    fdsRenumberSolusiCards();
+                }
+            } else if (direction === 1) {
+                var next = row.next('.fds-solusi-card-item');
+                if (next.length) {
+                    row.insertAfter(next);
+                    fdsRenumberSolusiCards();
+                }
+            }
+        };
+
+        window.fdsRenumberSolusiCards = function() {
+            $('#fds-solusi-cards-container .fds-solusi-card-item').each(function(idx) {
+                $(this).find('.solusi-number').text(idx + 1);
             });
         };
     });
