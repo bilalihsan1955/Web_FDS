@@ -40,18 +40,18 @@
         </p>
       </div>
 
-      {{-- Search Form --}}
-      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
+      {{-- Search Form with Instant Pretty & Secure URL --}}
+      <form action="{{ home_url('/') }}" method="get" onsubmit="if(this.s.value.trim()){ window.location.href='{{ home_url('/search') }}/'+encodeURIComponent(this.s.value.trim().replace(/\//g, ''))+'/'; return false; }" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
         <div class="relative flex items-center">
           <div class="absolute left-4 pointer-events-none text-[#86868b]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <input type="search" name="s" value="{{ get_search_query() }}" placeholder="Cari artikel, topik, inovasi..." required
-                 class="w-full pl-11 pr-24 py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0066cc] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-all duration-200 shadow-sm focus:shadow-md">
+          <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
+                 class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0066cc] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
           <button type="submit"
-                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-all duration-150 cursor-pointer">
+                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
             Cari
           </button>
         </div>
@@ -105,25 +105,21 @@
     @endphp
 
     @if(empty($all_posts))
-
-      {{-- Empty state --}}
-      <div class="bg-white rounded-[2rem] p-12 sm:p-20 text-center max-w-[600px] mx-auto shadow-sm">
-        <div class="w-16 h-16 bg-[#f5f5f7] rounded-2xl flex items-center justify-center mx-auto mb-5">
-          <svg class="w-8 h-8 text-[#94a3b8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-        </div>
-        <h2 class="text-[22px] font-semibold text-[#1d1d1f] mb-2">Belum ada artikel</h2>
-        <p class="text-[15px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
+      {{-- Empty state (Containerless / Seamless) --}}
+      <div class="py-16 sm:py-24 text-center max-w-[560px] mx-auto">
+        <svg class="w-14 h-14 sm:w-16 sm:h-16 text-[#94a3b8] mx-auto mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">Belum ada artikel</h2>
+        <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
         @if(is_category() || is_tag())
           <a href="{{ esc_url($blog_url) }}"
-             class="inline-flex items-center gap-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] text-white text-[13px] font-semibold px-5 py-2.5 rounded-full transition-colors">
+             class="inline-flex items-center gap-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] text-white text-[13px] font-semibold px-5 py-2.5 rounded-full transition-colors shadow-sm">
             <span>Lihat Semua Topik</span>
             <span>&rsaquo;</span>
           </a>
         @endif
       </div>
-
     @else
 
       {{-- Page 1 Hero Feature (1st post is always a large featured card on Page 1) --}}
