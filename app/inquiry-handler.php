@@ -272,10 +272,24 @@ add_action('wp_ajax_fds_submit_inquiry', __NAMESPACE__ . '\\fds_handle_inquiry_s
 add_action('wp_ajax_nopriv_fds_submit_inquiry', __NAMESPACE__ . '\\fds_handle_inquiry_submission');
 
 function fds_handle_inquiry_submission() {
+    // 0. Anti-bot honeypot check
+    if (!empty($_POST['website_url_hp'])) {
+        wp_send_json_success(['message' => 'Pesan Anda telah berhasil terkirim.']);
+    }
+
     // 1. Verifikasi Nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'fds_inquiry_nonce')) {
         wp_send_json_error(['message' => 'Sesi kedaluwarsa. Silakan muat ulang halaman dan coba lagi.'], 403);
     }
+
+    // Rate Limiting per IP (Maks 10 pengiriman per 10 menit untuk mencegah spam flooding)
+    $ip = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $rate_key = 'fds_inq_' . md5($ip);
+    $attempts = (int) get_transient($rate_key);
+    if ($attempts >= 10) {
+        wp_send_json_error(['message' => 'Terlalu banyak permintaan pengiriman dalam waktu singkat. Silakan tunggu beberapa saat lagi.'], 429);
+    }
+    set_transient($rate_key, $attempts + 1, 10 * MINUTE_IN_SECONDS);
 
     // 2. Sanitasi Data Masukan
     $first_name = isset($_POST['first_name']) ? sanitize_text_field(wp_unslash($_POST['first_name'])) : '';

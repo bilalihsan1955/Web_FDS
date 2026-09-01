@@ -19,6 +19,9 @@ if (!defined('ABSPATH')) {
 add_action('save_post', function ($post_id) {
     if (wp_is_post_autosave($post_id)) {
         $parent_id = wp_is_post_autosave($post_id);
+        if (!current_user_can('edit_post', $parent_id)) {
+            return;
+        }
         
         // List semua custom field yang relevan untuk drone dan post
         $custom_keys = [

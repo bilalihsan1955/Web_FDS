@@ -349,7 +349,7 @@ function fds_render_schema_jsonld() {
     echo "\n    <!-- SCHEMA.ORG STRUCTURED DATA (JSON-LD) -->\n";
     foreach ($schemas as $s) {
         echo '    <script type="application/ld+json">' . "\n";
-        echo json_encode($s, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n";
+        echo wp_json_encode($s, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . "\n";
         echo "    </script>\n";
     }
 }
