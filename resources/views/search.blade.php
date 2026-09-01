@@ -30,7 +30,7 @@
 {{-- ========================================================== --}}
 <section class="pt-[52px] bg-white border-b border-black/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-16 pb-10 sm:pb-12">
-    <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">Hasil Pencarian</p>
+    <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">Hasil Pencarian Artikel</p>
     
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6">
       <div>
@@ -46,15 +46,15 @@
         </p>
       </div>
 
-      {{-- Search Bar to Refine with Instant Pretty & Secure URL --}}
-      <form action="{{ home_url('/') }}" method="get" onsubmit="if(this.s.value.trim()){ window.location.href='{{ home_url('/search') }}/'+encodeURIComponent(this.s.value.trim().replace(/\//g, ''))+'/'; return false; }" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
+      {{-- Search Bar to Refine --}}
+      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
         <div class="relative flex items-center">
           <div class="absolute left-4 pointer-events-none text-[#86868b]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari kata kunci lain..." required autocomplete="off"
+          <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
                  class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0066cc] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
           <button type="submit"
                   class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
