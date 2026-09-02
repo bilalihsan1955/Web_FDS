@@ -97,6 +97,45 @@ add_action('wp_head', function () {
 
 add_action('admin_bar_menu', function ($wp_admin_bar) {
     $wp_admin_bar->remove_node('customize');
+
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+
+    // Shortcut langsung di Admin Bar untuk mengedit konten beranda tanpa tersesat
+    $wp_admin_bar->add_node([
+        'id'    => 'fds-quick-settings',
+        'title' => '<span class="ab-icon dashicons dashicons-admin-generic" style="top:2px;"></span> Pengaturan FDS',
+        'href'  => admin_url('admin.php?page=fds-homepage-content'),
+    ]);
+
+    $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-home',
+        'parent' => 'fds-quick-settings',
+        'title'  => '🏠 Konten Beranda (Home)',
+        'href'   => admin_url('admin.php?page=fds-homepage-content'),
+    ]);
+
+    $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-about',
+        'parent' => 'fds-quick-settings',
+        'title'  => '🏢 Konten Tentang Kami',
+        'href'   => admin_url('admin.php?page=fds-about-content'),
+    ]);
+
+    $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-navbar',
+        'parent' => 'fds-quick-settings',
+        'title'  => '🎨 Logo & Navbar',
+        'href'   => admin_url('admin.php?page=fds-navbar-settings'),
+    ]);
+
+    $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-footer',
+        'parent' => 'fds-quick-settings',
+        'title'  => '📌 Footer & Kontak',
+        'href'   => admin_url('admin.php?page=fds-footer-settings'),
+    ]);
 }, 9999);
 
 // Jika admin membuka customize.php secara langsung, arahkan ke Konten Beranda
