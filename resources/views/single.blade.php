@@ -44,6 +44,9 @@
             </a>
           </div>
         </div>
+
+        {{-- Komentar Artikel --}}
+        @include('partials.comments')
       </div>
 
     </article>

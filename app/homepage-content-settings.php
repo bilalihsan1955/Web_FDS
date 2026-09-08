@@ -88,32 +88,32 @@ add_action('init', function () {
 function fds_get_default_layanan_items() {
     return [
         [
-            'title' => 'Pemetaan Aerial & GIS',
-            'desc'  => 'Peta topografi resolusi tinggi dengan akurasi sub-sentimeter untuk perencanaan lahan, kehutanan, dan infrastruktur.',
+            'title' => 'Jasa Pemetaan Drone, LiDAR & GIS',
+            'desc'  => 'Layanan drone mapping dan survey drone LiDAR akurasi sub-sentimeter untuk jasa pemetaan drone tambang (volume cut & fill), topografi lahan, dan foto udara GIS.',
             'url'   => home_url('/#layanan'),
             'group' => 'Survei & Inspeksi Teknis',
         ],
         [
-            'title' => 'Inspeksi Industri & Infrastruktur',
-            'desc'  => 'Pemeriksaan visual dan termal berbasis UAV untuk pemantauan fasilitas energi, kelistrikan, migas, dan infrastruktur kritis secara cepat dan aman tanpa menghentikan operasional.',
+            'title' => 'Inspeksi Industri & Termal 150kV',
+            'desc'  => 'Pemeriksaan visual dan sensor termal berbasis UAV untuk pemantauan fasilitas energi, transmisi listrik, migas, dan infrastruktur kritis secara cepat tanpa shutdown.',
             'url'   => home_url('/#layanan'),
             'group' => 'Survei & Inspeksi Teknis',
         ],
         [
-            'title' => 'Sewa Armada Drone',
-            'desc'  => 'Armada FERTO siap pakai untuk proyek jangka pendek, pilot project, atau kebutuhan peak season tanpa investasi unit penuh.',
+            'title' => 'Jasa & Sewa Drone Pertanian Presisi',
+            'desc'  => 'Armada drone sprayer FERTO siap pakai (solusi setara performa DJI Agras ber-TKDN) untuk penyemprotan pupuk & pestisida cair/granul presisi tinggi.',
             'url'   => home_url('/#kontak'),
             'group' => 'Pelatihan & Operasional',
         ],
         [
-            'title' => 'Pelatihan & Sertifikasi Pilot',
-            'desc'  => 'Program pelatihan pilot drone bersertifikat resmi untuk tim lapangan Anda. Kurikulum mencakup misi agrikultur, pemetaan, dan inspeksi.',
+            'title' => 'Pelatihan & Sertifikasi Pilot Drone',
+            'desc'  => 'Program pelatihan pilot drone bersertifikat resmi untuk tim lapangan Anda. Kurikulum mencakup misi drone pertanian, pemetaan drone mapping, dan inspeksi.',
             'url'   => home_url('/#layanan'),
             'group' => 'Pelatihan & Operasional',
         ],
         [
-            'title' => 'After-Sales & Maintenance',
-            'desc'  => 'Layanan purna jual lokal dengan stok suku cadang, teknisi bersertifikat, dan garansi resmi di seluruh Indonesia.',
+            'title' => 'After-Sales & Maintenance Resmi',
+            'desc'  => 'Layanan purna jual resmi produsen UAV Indonesia dengan stok suku cadang lokal tanpa inden, teknisi bersertifikat, dan garansi resmi di seluruh Indonesia.',
             'url'   => home_url('/#kontak'),
             'group' => 'Pelatihan & Operasional',
         ],

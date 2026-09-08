@@ -1105,16 +1105,22 @@ document.addEventListener('DOMContentLoaded', function() {
         <form id="fds-inquiry-form" class="flex-1 flex flex-col justify-between space-y-3.5" onsubmit="fdsSubmitInquiry(event)">
           @php wp_nonce_field('fds_inquiry_nonce', 'fds_inquiry_nonce_val'); @endphp
 
+          {{-- Anti-Bot Honeypot Trap (Hidden from real users, traps spambots) --}}
+          <div style="display:none !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
+            <label for="fds_website_url_hp">Do not fill this field</label>
+            <input type="text" id="fds_website_url_hp" name="website_url_hp" value="" tabindex="-1" autocomplete="off">
+          </div>
+
           <div class="space-y-3.5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
-                <input type="text" name="first_name" required placeholder="Ahmad"
+                <input type="text" name="first_name" required maxlength="60" placeholder="Ahmad"
                   class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
-                <input type="text" name="last_name" required placeholder="Fauzi"
+                <input type="text" name="last_name" required maxlength="60" placeholder="Fauzi"
                   class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
@@ -1122,25 +1128,25 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
-                <input type="text" name="company" required placeholder="PT. Contoh Indonesia"
+                <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia"
                   class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
-                <input type="email" name="email" required placeholder="nama@perusahaan.co.id"
+                <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.co.id"
                   class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
-              <input type="tel" name="phone" required placeholder="+62 812-XXXX-XXXX"
+              <input type="tel" name="phone" required maxlength="30" placeholder="+62 812-XXXX-XXXX"
                 class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Anda <span class="text-red-500">*</span></label>
-              <textarea name="message" rows="3" required placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
+              <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
                 class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
             </div>
           </div>

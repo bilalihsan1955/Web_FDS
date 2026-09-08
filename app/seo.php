@@ -4,7 +4,21 @@ namespace App;
 
 /**
  * FDS SEO & Schema.org Structured Data Engine
- * Enterprise-grade Technical & On-Page SEO for Full Drone Solutions (PT Karya Solusi Angkasa)
+ * Enterprise-grade Technical, On-Page & Rich Snippets SEO
+ * PT Karya Solusi Angkasa (Full Drone Solutions)
+ *
+ * Target Keywords:
+ * - drone mapping
+ * - jasa pemetaan drone
+ * - jasa survey drone
+ * - jasa drone foto udara
+ * - jasa drone lidar
+ * - jasa pemetaan drone tambang
+ * - pemetaan GIS drone
+ * - drone pencarian korban bencana
+ * - drone pertanian
+ * - drone dji agras (DJI Agras T40, T50, T25, T20P)
+ * - produsen UAV Indonesia
  */
 
 if (!defined('ABSPATH')) {
@@ -25,13 +39,16 @@ function fds_get_seo_data() {
     global $post, $wp;
 
     $site_name   = get_bloginfo('name') ?: 'Full Drone Solutions';
-    $site_desc   = get_bloginfo('description') ?: 'Solusi UAV Agrikultur, Pemetaan, dan Industri Indonesia — PT Karya Solusi Angkasa';
+    $site_desc   = get_bloginfo('description') ?: 'Produsen UAV Indonesia — Solusi Pertanian Presisi, Pemetaan GIS & Industri';
     $current_url = home_url(add_query_arg([], $wp->request));
     
+    // Core high-intent keywords
+    $primary_keywords = 'drone mapping, jasa pemetaan drone, jasa survey drone, jasa drone foto udara, jasa drone lidar, jasa pemetaan drone tambang, pemetaan GIS drone, drone pencarian korban bencana, drone pertanian, drone dji agras, drone dji t40, drone dji t50, produsen UAV Indonesia, drone sprayer TKDN, drone FERTO, Fixed-Wing VTOL DELTAV, PT Karya Solusi Angkasa, FDS Station GCS';
+
     // Default fallback values
     $title       = $site_name . ' — ' . $site_desc;
-    $description = 'Full Drone Solutions (PT Karya Solusi Angkasa) menghadirkan platform UAV pertanian FERTO 5L-50L, Fixed-Wing VTOL DELTAV, drone inspeksi termal, kargo, dan reboisasi bersertifikasi TKDN 60,74% & SNI 9199:2023 di Indonesia.';
-    $keywords    = 'Drone Pertanian Indonesia, Drone Sprayer TKDN, Drone FERTO, Fixed-Wing VTOL DELTAV, Drone Inspeksi 150kV, Drone Kargo DELFRO, Drone Reboisasi REBO, PT Karya Solusi Angkasa, FDS Station GCS';
+    $description = 'Produsen UAV Indonesia resmi (PT Karya Solusi Angkasa). Menyediakan jasa pemetaan drone tambang, survey drone LiDAR, foto udara GIS, drone pertanian presisi TKDN 60,74% (solusi setara DJI Agras T40/T50), dan drone pencarian korban bencana SAR.';
+    $keywords    = $primary_keywords;
     $image_url   = '';
     $og_type     = 'website';
     $canonical   = trailingslashit($current_url);
@@ -41,8 +58,9 @@ function fds_get_seo_data() {
 
     // 1. FRONT PAGE / HOMEPAGE
     if (is_front_page() || is_home()) {
-        $title       = 'Full Drone Solutions — Produsen & Solusi UAV Agrikultur, Pemetaan & Industri Indonesia';
-        $description = 'Full Drone Solutions (PT Karya Solusi Angkasa) memproduksi drone pertanian FERTO 5L–50L, VTOL Hybrid DELTAV, inspeksi termal, kargo & reboisasi berstandar TKDN 60,74% & SNI resmi di Indonesia.';
+        $title       = 'Full Drone Solutions — Produsen UAV Indonesia & Jasa Pemetaan Drone, LiDAR, Pertanian Presisi';
+        $description = 'PT Karya Solusi Angkasa (FDS), produsen UAV Indonesia berstandar TKDN 60,74%. Melayani jasa pemetaan drone tambang, survey drone LiDAR, foto udara GIS, drone pertanian presisi (alternatif & komparasi DJI Agras T40/T50), serta drone pencarian korban bencana SAR.';
+        $keywords    = $primary_keywords;
         $canonical   = trailingslashit(home_url('/'));
         $image_url   = fds_get_default_share_image();
     }
@@ -58,29 +76,40 @@ function fds_get_seo_data() {
             $durasi      = get_post_meta($drone_post->ID, 'drone_spec_durasi', true);
             $feat_img    = get_the_post_thumbnail_url($drone_post->ID, 'full');
 
-            $title       = "{$d_title} — Spesifikasi & Fitur Drone {$kategori} | Full Drone Solutions";
+            $title       = "{$d_title} — Spesifikasi Drone {$kategori} & Solusi UAV Indonesia | Full Drone Solutions";
             
             $desc_parts  = [];
             if ($tagline) $desc_parts[] = $tagline;
             if ($payload) $desc_parts[] = "Payload: {$payload}";
             if ($durasi)  $desc_parts[] = "Durasi Terbang: {$durasi}";
-            $desc_parts[] = "Sertifikasi TKDN & SNI resmi PT Karya Solusi Angkasa (FDS).";
+            $desc_parts[] = "Sertifikasi resmi TKDN 60,74% & SNI 9199:2023 buatan PT Karya Solusi Angkasa (FDS), produsen UAV Indonesia.";
             $description = implode('. ', $desc_parts);
 
-            $keywords    = "Drone {$d_title}, Spesifikasi {$d_title}, Drone {$kategori}, UAV Indonesia, {$payload}, {$durasi}, FDS PT Karya Solusi Angkasa";
+            // Contextual keywords per category
+            $cat_lower = strtolower($kategori);
+            if (strpos($cat_lower, 'agri') !== false) {
+                $keywords = "drone pertanian, drone sprayer {$d_title}, drone dji agras, drone dji t40, drone dji t50, drone penyemprot pupuk, drone pertanian indonesia, produsen UAV Indonesia, TKDN, {$payload}";
+            } elseif (strpos($cat_lower, 'peta') !== false || strpos($cat_lower, 'gis') !== false) {
+                $keywords = "drone mapping, jasa pemetaan drone, jasa survey drone, jasa drone foto udara, jasa drone lidar, jasa pemetaan drone tambang, pemetaan GIS drone, fixed wing VTOL, {$d_title}";
+            } elseif (strpos($cat_lower, 'rebo') !== false || strpos($cat_lower, 'kargo') !== false) {
+                $keywords = "drone pencarian korban bencana, drone SAR, drone reboisasi, drone kargo logistik, drone tanggap darurat, UAV Indonesia {$d_title}";
+            } else {
+                $keywords = "Drone {$d_title}, Drone {$kategori}, produsen UAV Indonesia, jasa survey drone, inspeksi drone, PT Karya Solusi Angkasa";
+            }
+
             $canonical   = trailingslashit(get_permalink($drone_post->ID));
             $image_url   = $feat_img ?: fds_get_default_share_image();
             $og_type     = 'product';
 
-            $breadcrumbs[] = ['name' => 'Katalog Drone', 'url' => home_url('/#katalog')];
+            $breadcrumbs[] = ['name' => 'Katalog Drone', 'url' => home_url('/#produk')];
             $breadcrumbs[] = ['name' => $d_title, 'url' => $canonical];
         }
     }
     // 3. BANDINGKAN DRONE PAGE
     elseif (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
-        $title       = 'Bandingkan Spesifikasi Drone UAV FDS — Komparasi Model Pertanian, VTOL & Industri';
-        $description = 'Bandingkan spesifikasi teknis lengkap drone agrikultur FERTO (5L–50L), Fixed-Wing VTOL DELTAV, drone inspeksi, kargo, dan reboisasi buatan PT Karya Solusi Angkasa.';
-        $keywords    = 'Bandingkan Drone Pertanian, Komparasi Drone FDS, Spesifikasi FERTO 50L vs FERTO 30L, Drone VTOL DELTAV, Perbandingan UAV Indonesia';
+        $title       = 'Bandingkan Drone Pertanian & Pemetaan FDS vs DJI Agras — Komparasi UAV TKDN Indonesia';
+        $description = 'Bandingkan spesifikasi teknis lengkap drone pertanian FERTO (5L–50L) vs DJI Agras T40 / T50, Fixed-Wing VTOL DELTAV untuk pemetaan GIS LiDAR, drone inspeksi, dan reboisasi buatan produsen UAV Indonesia PT Karya Solusi Angkasa.';
+        $keywords    = 'drone pertanian, komparasi drone dji agras, drone dji t40 vs ferto, drone dji t50, drone mapping, jasa pemetaan drone, spesifikasi drone pertanian TKDN, produsen UAV Indonesia';
         $canonical   = trailingslashit(home_url('/bandingkan/'));
         $image_url   = fds_get_default_share_image();
 
@@ -88,19 +117,29 @@ function fds_get_seo_data() {
     }
     // 4. TENTANG KAMI PAGE
     elseif (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
-        $title       = 'Tentang Kami — PT Karya Solusi Angkasa (Full Drone Solutions Indonesia)';
-        $description = 'Mengenal PT Karya Solusi Angkasa (Full Drone Solutions), manufaktur drone nasional berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berpusat di Sleman, Yogyakarta.';
-        $keywords    = 'Tentang Full Drone Solutions, PT Karya Solusi Angkasa, Pabrik Drone Indonesia, Produsen UAV Yogyakarta, Drone TKDN SNI';
+        $title       = 'Tentang Kami — PT Karya Solusi Angkasa (Produsen UAV Indonesia Resmi Berstandar TKDN)';
+        $description = 'Profil PT Karya Solusi Angkasa (Full Drone Solutions), manufaktur drone nasional berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015. Pusat riset, perakitan, dan pelatihan pilot drone di Sleman, Yogyakarta.';
+        $keywords    = 'produsen UAV Indonesia, PT Karya Solusi Angkasa, pabrik drone Indonesia, produsen drone pertanian, jasa pemetaan drone, drone TKDN SNI Yogyakarta, FDS';
         $canonical   = trailingslashit(home_url('/tentang-kami/'));
         $image_url   = fds_get_default_share_image();
 
         $breadcrumbs[] = ['name' => 'Tentang Kami', 'url' => $canonical];
     }
-    // 5. GENERIC / OTHER PAGES
+    // 5. BLOG / NEWSROOM
+    elseif (is_home() || is_archive() || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/blog') !== false)) {
+        $title       = 'Newsroom & Artikel Drone — Inovasi Drone Pertanian, Pemetaan LiDAR & Industri UAV';
+        $description = 'Kumpulan berita, artikel teknologi, studi kasus drone mapping pertambangan, efisiensi drone pertanian presisi, regulasi UAV, dan operasional lapangan dari Full Drone Solutions.';
+        $keywords    = 'artikel drone pertanian, berita drone mapping, studi kasus survey drone lidar, jasa pemetaan drone tambang, teknologi UAV indonesia, drone dji agras komparasi';
+        $canonical   = trailingslashit(home_url('/blog/'));
+        $image_url   = fds_get_default_share_image();
+
+        $breadcrumbs[] = ['name' => 'Newsroom', 'url' => $canonical];
+    }
+    // 6. GENERIC / OTHER PAGES
     else {
         if (is_singular()) {
             $p_title     = get_the_title();
-            $title       = "{$p_title} — Full Drone Solutions";
+            $title       = "{$p_title} — Full Drone Solutions Indonesia";
             $p_excerpt   = get_the_excerpt() ?: wp_trim_words(get_the_content(), 25);
             if ($p_excerpt) {
                 $description = wp_strip_all_tags($p_excerpt);
@@ -187,6 +226,7 @@ function fds_render_seo_meta_tags() {
 
 /**
  * Generate JSON-LD Structured Data (Schema.org)
+ * Includes: Organization, LocalBusiness, WebSite, Breadcrumbs, Services, FAQPage, and Products.
  */
 function fds_render_schema_jsonld() {
     $seo = fds_get_seo_data();
@@ -209,7 +249,7 @@ function fds_render_schema_jsonld() {
             'caption'    => 'Full Drone Solutions Logo',
         ],
         'image'           => $logo_url,
-        'description'     => 'Produsen dan penyedia solusi UAV (Unmanned Aerial Vehicle) terkemuka di Indonesia untuk sektor agrikultur, pemetaan GIS, inspeksi infrastruktur, logistik kargo, dan reboisasi hutan.',
+        'description'     => 'Produsen UAV Indonesia terkemuka (PT Karya Solusi Angkasa) penyedia jasa pemetaan drone tambang, survey drone LiDAR, drone pertanian sprayer (setara DJI Agras), inspeksi termal, dan drone pencarian korban bencana.',
         'telephone'       => '+62-821-3555-5347',
         'email'           => 'info@fulldronesolutions.com',
         'priceRange'      => '$$$$',
@@ -231,16 +271,53 @@ function fds_render_schema_jsonld() {
             'name'  => 'Indonesia',
         ],
         'knowsAbout'      => [
-            'Drone Pertanian & Sprayer',
-            'Drone Spreader Granule',
-            'UAV Fixed-Wing Hybrid VTOL',
-            'Survei Topografi & Pemetaan GIS',
-            'Inspeksi Termal Transmisi Listrik 150kV',
-            'Drone Kargo Logistik',
-            'Restorasi Hutan & Seedball Dispensing',
+            'Drone Mapping & Fotogrametri Udara',
+            'Jasa Pemetaan Drone',
+            'Jasa Survey Drone LiDAR',
+            'Jasa Drone Foto Udara',
+            'Jasa Pemetaan Drone Tambang',
+            'Pemetaan GIS Drone',
+            'Drone Pertanian & Sprayer Presisi',
+            'Komparasi Drone DJI Agras (T20P, T25, T40, T50)',
+            'Drone Pencarian Korban Bencana & Misi SAR',
+            'Produsen UAV Indonesia Resmi',
             'Sertifikasi TKDN & BMP hingga 60,74%',
             'Standar Nasional Indonesia SNI 9199:2023',
             'Sistem Manajemen Mutu ISO 9001:2015',
+        ],
+        'hasOfferCatalog' => [
+            '@type'           => 'OfferCatalog',
+            'name'            => 'Layanan Solusi Drone FDS',
+            'itemListElement' => [
+                [
+                    '@type' => 'OfferCatalog',
+                    'name'  => 'Jasa Pemetaan & Survey Drone',
+                    'itemListElement' => [
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone & Drone Mapping']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Survey Drone LiDAR Akurasi Tinggi']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone Tambang (Volume Cut & Fill)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Drone Foto Udara & Pemetaan GIS']],
+                    ],
+                ],
+                [
+                    '@type' => 'OfferCatalog',
+                    'name'  => 'Solusi Drone Pertanian Presisi',
+                    'itemListElement' => [
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pengadaan Drone Pertanian Sprayer FERTO (5L–50L)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Solusi Drone Sprayer Alternatif DJI Agras T40/T50']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Penyemprotan & Pemupukan Presisi']],
+                    ],
+                ],
+                [
+                    '@type' => 'OfferCatalog',
+                    'name'  => 'Misi Khusus & Tanggap Darurat',
+                    'itemListElement' => [
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Pencarian Korban Bencana (SAR Thermal)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Kargo Logistik Darurat']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Reboisasi & Sebar Benih Otonom']],
+                    ],
+                ],
+            ],
         ],
         'contactPoint'    => [
             [
@@ -253,16 +330,25 @@ function fds_render_schema_jsonld() {
         ]
     ];
 
-    // 2. WebSite Schema
+    // 2. WebSite Schema with SearchAction
     $website_schema = [
         '@context'        => 'https://schema.org',
         '@type'           => 'WebSite',
         '@id'             => $home_url . '#website',
         'url'             => $home_url,
         'name'            => 'Full Drone Solutions',
-        'description'     => 'Solusi UAV Pertanian, Pemetaan, dan Industri Indonesia',
+        'alternateName'   => 'FDS Indonesia',
+        'description'     => 'Produsen UAV Indonesia — Solusi Drone Pertanian, Jasa Pemetaan LiDAR & Industri',
         'publisher'       => [
             '@id' => $home_url . '#organization',
+        ],
+        'potentialAction' => [
+            '@type'       => 'SearchAction',
+            'target'      => [
+                '@type'       => 'EntryPoint',
+                'urlTemplate' => $home_url . '?s={search_term_string}',
+            ],
+            'query-input' => 'required name=search_term_string',
         ],
         'inLanguage'      => 'id-ID',
     ];
@@ -284,9 +370,109 @@ function fds_render_schema_jsonld() {
         'itemListElement' => $breadcrumb_items,
     ];
 
-    $schemas = [$org_schema, $website_schema, $breadcrumb_schema];
+    // 4. Service Schemas for Target Keywords (High-value B2B intent)
+    $services_schema = [
+        [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'Service',
+            '@id'           => $home_url . '#service-drone-mapping',
+            'name'          => 'Jasa Pemetaan Drone, Survey LiDAR & Tambang (Drone Mapping & GIS)',
+            'serviceType'   => 'Drone Mapping, Aerial Survey, Mining Topography & GIS Mapping',
+            'provider'      => ['@id' => $home_url . '#organization'],
+            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
+            'description'   => 'Layanan jasa survey drone LiDAR, pemetaan drone tambang untuk perhitungan volume cut and fill, ortomosaik foto udara sub-sentimeter, dan analisis GIS menggunakan armada UAV Fixed-Wing Hybrid VTOL DELTAV.',
+            'offers'        => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'price'         => '0',
+                'availability'  => 'https://schema.org/InStock',
+                'url'           => $home_url . '#kontak',
+            ]
+        ],
+        [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'Service',
+            '@id'           => $home_url . '#service-drone-pertanian',
+            'name'          => 'Solusi & Pengadaan Drone Pertanian Presisi (Alternatif & Mitra DJI Agras)',
+            'serviceType'   => 'Precision Agriculture Drone & Agricultural Sprayer Services',
+            'provider'      => ['@id' => $home_url . '#organization'],
+            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
+            'description'   => 'Solusi drone pertanian sprayer dan spreader granule FDS FERTO (kapasitas 5L hingga 50L) bersertifikasi TKDN 60,74% & SNI resmi. Solusi alternatif dan komparasi dengan DJI Agras T40 / T50 dengan keunggulan servis dan suku cadang lokal Indonesia.',
+            'offers'        => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'price'         => '0',
+                'availability'  => 'https://schema.org/InStock',
+                'url'           => $home_url . '#produk',
+            ]
+        ],
+        [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'Service',
+            '@id'           => $home_url . '#service-drone-bencana',
+            'name'          => 'Drone Pencarian Korban Bencana & Misi SAR (Thermal Surveillance)',
+            'serviceType'   => 'Disaster Relief, Emergency SAR & Thermal Surveillance Drone',
+            'provider'      => ['@id' => $home_url . '#organization'],
+            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
+            'description'   => 'Armada UAV pemantauan darurat berdaya jelajah tinggi dengan kamera termal inframerah dan transmisi video langsung untuk misi pencarian korban bencana (SAR), asesmen kerusakan pasca-bencana, dan mitigasi karhutla.',
+            'offers'        => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'price'         => '0',
+                'availability'  => 'https://schema.org/InStock',
+                'url'           => $home_url . '#kontak',
+            ]
+        ],
+    ];
 
-    // 4. Product Schema (Only on Single Drone CPT Page)
+    // 5. FAQPage Schema (Targets People Also Ask & Featured Snippets on Google)
+    $faq_schema = [
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        '@id'        => $home_url . '#faq',
+        'mainEntity' => [
+            [
+                '@type'          => 'Question',
+                'name'           => 'Apakah PT Karya Solusi Angkasa (FDS) merupakan produsen UAV resmi di Indonesia?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => 'Ya. PT Karya Solusi Angkasa (Full Drone Solutions) adalah produsen UAV terdaftar di Indonesia yang memproduksi drone pertanian, drone mapping VTOL, drone kargo, dan reboisasi dengan sertifikasi nilai TKDN + BMP mencapai 60,74%, Standar Nasional Indonesia SNI 9199:2023, dan ISO 9001:2015 berlokasi pabrik di Sleman, Yogyakarta.',
+                ],
+            ],
+            [
+                '@type'          => 'Question',
+                'name'           => 'Bagaimana perbandingan drone pertanian FDS FERTO dengan drone DJI Agras (T40 / T50)?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => 'Drone pertanian FDS seri FERTO (tersedia kapasitas 5L, 10L, 20L, 30L, hingga 50L) dirancang setara dalam performa semprot dan efisiensi dengan kelas DJI Agras T40 dan T50. Keunggulan utama FDS adalah sertifikasi TKDN 60,74% resmi untuk pengadaan instansi pemerintah/BUMN, ketersediaan suku cadang ready-stock lokal tanpa inden luar negeri, garansi pabrikan langsung di Indonesia, dan sistem kendali GCS berbahasa Indonesia (FDS STATION).',
+                ],
+            ],
+            [
+                '@type'          => 'Question',
+                'name'           => 'Layanan apa saja yang disediakan dalam jasa pemetaan drone dan survey LiDAR FDS?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => 'FDS menyediakan layanan drone mapping lengkap: survey drone LiDAR akurasi tinggi, jasa pemetaan drone tambang untuk perhitungan volume cut and fill dan stockpile, pemetaan GIS koridor infrastruktur jalan dan kelistrikan, serta foto udara ortomosaik sub-sentimeter menggunakan Fixed-Wing Hybrid VTOL DELTAV dengan jangkauan jelajah hingga 60 km.',
+                ],
+            ],
+            [
+                '@type'          => 'Question',
+                'name'           => 'Apakah drone FDS dapat digunakan untuk misi pencarian korban bencana dan SAR?',
+                'acceptedAnswer' => [
+                    '@type' => 'Answer',
+                    'text'  => 'Tentu. FDS memiliki drone khusus tanggap darurat yang dilengkapi sensor kamera termal inframerah (thermal imaging) dan kamera zoom optik tinggi untuk misi pencarian korban bencana alam (SAR), pemantauan banjir, serta patroli otonom pendeteksian titik api karhutla secara real-time.',
+                ],
+            ],
+        ],
+    ];
+
+    $schemas = [$org_schema, $website_schema, $breadcrumb_schema];
+    foreach ($services_schema as $srv) {
+        $schemas[] = $srv;
+    }
+    $schemas[] = $faq_schema;
+
+    // 6. Product Schema (Only on Single Drone CPT Page)
     if (is_singular('drone') || get_query_var('drone')) {
         $drone_post = get_post();
         if ($drone_post) {
@@ -338,7 +524,7 @@ function fds_render_schema_jsonld() {
                     'seller'          => [
                         '@id' => $home_url . '#organization',
                     ],
-                    'description'     => 'Konsultasi pengadaan dan demo unit resmi PT Karya Solusi Angkasa.',
+                    'description'     => 'Konsultasi pengadaan resmi PT Karya Solusi Angkasa bersertifikat TKDN 60,74%.',
                 ],
             ];
 
@@ -353,3 +539,19 @@ function fds_render_schema_jsonld() {
         echo "    </script>\n";
     }
 }
+
+/**
+ * Filter robots.txt to ensure automatic sitemap declaration and indexing directives
+ */
+add_filter('robots_txt', function ($output, $public) {
+    if ('1' === (string) $public) {
+        $sitemap_url = home_url('/wp-sitemap.xml');
+        $output .= "\n# FDS SEO SITEMAP DIRECTIVE\n";
+        $output .= "Sitemap: {$sitemap_url}\n";
+        $output .= "User-agent: *\n";
+        $output .= "Allow: /\n";
+        $output .= "Disallow: /wp-admin/\n";
+        $output .= "Disallow: /wp-includes/\n";
+    }
+    return $output;
+}, 10, 2);

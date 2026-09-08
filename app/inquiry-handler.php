@@ -283,7 +283,16 @@ function fds_handle_inquiry_submission() {
     }
 
     // Rate Limiting per IP (Maks 10 pengiriman per 10 menit untuk mencegah spam flooding)
-    $ip = sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $ip = '';
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+    $ip = sanitize_text_field($ip);
+
     $rate_key = 'fds_inq_' . md5($ip);
     $attempts = (int) get_transient($rate_key);
     if ($attempts >= 10) {
@@ -291,37 +300,44 @@ function fds_handle_inquiry_submission() {
     }
     set_transient($rate_key, $attempts + 1, 10 * MINUTE_IN_SECONDS);
 
-    // 2. Sanitasi Data Masukan
-    $first_name = isset($_POST['first_name']) ? sanitize_text_field(wp_unslash($_POST['first_name'])) : '';
-    $last_name  = isset($_POST['last_name']) ? sanitize_text_field(wp_unslash($_POST['last_name'])) : '';
-    $company    = isset($_POST['company']) ? sanitize_text_field(wp_unslash($_POST['company'])) : '';
-    $email      = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
-    $phone      = isset($_POST['phone']) ? sanitize_text_field(wp_unslash($_POST['phone'])) : '';
-    $message    = isset($_POST['message']) ? sanitize_textarea_field(wp_unslash($_POST['message'])) : '';
+    // 2. Sanitasi & Pembatasan Karakter Data Masukan
+    $raw_first = isset($_POST['first_name']) ? wp_unslash($_POST['first_name']) : '';
+    $raw_last  = isset($_POST['last_name']) ? wp_unslash($_POST['last_name']) : '';
+    $raw_comp  = isset($_POST['company']) ? wp_unslash($_POST['company']) : '';
+    $raw_email = isset($_POST['email']) ? wp_unslash($_POST['email']) : '';
+    $raw_phone = isset($_POST['phone']) ? wp_unslash($_POST['phone']) : '';
+    $raw_msg   = isset($_POST['message']) ? wp_unslash($_POST['message']) : '';
+
+    $first_name = mb_substr(trim(preg_replace('/\s+/', ' ', preg_replace('/[^\p{L}\p{N}\s.\'-]/u', '', wp_strip_all_tags($raw_first)))), 0, 60);
+    $last_name  = mb_substr(trim(preg_replace('/\s+/', ' ', preg_replace('/[^\p{L}\p{N}\s.\'-]/u', '', wp_strip_all_tags($raw_last)))), 0, 60);
+    $company    = mb_substr(trim(preg_replace('/\s+/', ' ', wp_strip_all_tags($raw_comp))), 0, 100);
+    $email      = sanitize_email($raw_email);
+    $phone      = mb_substr(trim(preg_replace('/[^\d+\-\s().]/', '', wp_strip_all_tags($raw_phone))), 0, 30);
+
+    if (mb_strlen($raw_msg) > 3000) {
+        wp_send_json_error(['message' => 'Pesan terlalu panjang. Maksimal 3.000 karakter.'], 400);
+    }
+    $message = mb_substr(trim(wp_strip_all_tags($raw_msg)), 0, 3000);
 
     // 3. Validasi Semua Field Wajib Diisi
     if (empty($first_name)) {
-        wp_send_json_error(['message' => 'Silakan isi nama depan Anda.'], 400);
+        wp_send_json_error(['message' => 'Silakan isi nama depan Anda dengan benar.'], 400);
     }
 
     if (empty($last_name)) {
-        wp_send_json_error(['message' => 'Silakan isi nama belakang Anda.'], 400);
+        wp_send_json_error(['message' => 'Silakan isi nama belakang Anda dengan benar.'], 400);
     }
 
     if (empty($company)) {
         wp_send_json_error(['message' => 'Silakan isi nama perusahaan atau instansi Anda.'], 400);
     }
 
-    if (empty($email)) {
-        wp_send_json_error(['message' => 'Silakan isi alamat email bisnis Anda.'], 400);
-    }
-
-    if (!is_email($email)) {
+    if (empty($email) || !is_email($email)) {
         wp_send_json_error(['message' => 'Format alamat email tidak valid.'], 400);
     }
 
-    if (empty($phone)) {
-        wp_send_json_error(['message' => 'Silakan isi nomor telepon / WhatsApp Anda.'], 400);
+    if (empty($phone) || strlen(preg_replace('/[^0-9]/', '', $phone)) < 6) {
+        wp_send_json_error(['message' => 'Silakan isi nomor telepon / WhatsApp yang valid (minimal 6 digit angka).'], 400);
     }
 
     if (empty($message)) {
@@ -336,17 +352,6 @@ function fds_handle_inquiry_submission() {
     } else {
         $post_title .= ' (' . ($phone ?: $email) . ')';
     }
-
-    // 5. Dapatkan IP Address Pengirim
-    $ip = '';
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    $ip = sanitize_text_field($ip);
 
     // 6. Simpan ke Custom Post Type 'fds_inquiry'
     $post_id = wp_insert_post([
