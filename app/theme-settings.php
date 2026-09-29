@@ -189,13 +189,34 @@ function fds_get_navbar_brand() {
     $drone_icon_url = get_option('fds_navbar_drone_icon_url', '');
 
     return [
-        'has_logo'       => !empty($logo_url),
-        'logo_url'       => $logo_url,
-        'brand_text'     => $brand_text,
-        'display_mode'   => $display_mode,
-        'logo_height'    => $logo_height,
-        'favicon_url'    => $favicon_url,
-        'drone_icon_url' => $drone_icon_url,
+        'has_logo'                => !empty($logo_url),
+        'logo_url'                => $logo_url,
+        'brand_text'              => $brand_text,
+        'display_mode'            => $display_mode,
+        'logo_height'             => $logo_height,
+        'favicon_url'             => $favicon_url,
+        'drone_icon_url'          => $drone_icon_url,
+        // CTA & Mega Menu Content
+        'cta_text'                => get_option('fds_navbar_cta_text', 'Konsultasi Drone'),
+        'cta_url'                 => get_option('fds_navbar_cta_url', home_url('/#kontak')),
+        // Mega Menu Produk Right Sidebar
+        'menu_prod_heading'       => get_option('fds_menu_prod_heading', 'Ekosistem & Standar Mutu'),
+        'menu_prod_item1_title'   => get_option('fds_menu_prod_item1_title', 'FDS STATION GCS'),
+        'menu_prod_item1_desc'    => get_option('fds_menu_prod_item1_desc', 'Software Ground Control Bahasa Indonesia'),
+        'menu_prod_item2_title'   => get_option('fds_menu_prod_item2_title', 'Sertifikasi TKDN 60,74%'),
+        'menu_prod_item2_desc'    => get_option('fds_menu_prod_item2_desc', 'Prioritas Pengadaan Pemerintah & LPSE'),
+        'menu_prod_item3_title'   => get_option('fds_menu_prod_item3_title', 'Standar SNI 9199:2023'),
+        'menu_prod_item3_desc'    => get_option('fds_menu_prod_item3_desc', 'Teruji Resmi Mutu Pertanian Nasional'),
+        'menu_prod_compare_text'  => get_option('fds_menu_prod_compare_text', 'Bandingkan Semua Model Drone'),
+        'menu_prod_compare_url'   => get_option('fds_menu_prod_compare_url', home_url('/bandingkan')),
+        // Mega Menu Layanan Right Sidebar
+        'menu_layanan_heading'    => get_option('fds_menu_layanan_heading', 'Dukungan Teknis Langsung'),
+        'menu_layanan_item1_title'=> get_option('fds_menu_layanan_item1_title', 'Pilot Bersertifikat Resmi'),
+        'menu_layanan_item1_desc' => get_option('fds_menu_layanan_item1_desc', 'Instruktur Berpengalaman di Ratusan Misi Lapangan'),
+        'menu_layanan_item2_title'=> get_option('fds_menu_layanan_item2_title', 'Workshop Sleman Yogyakarta'),
+        'menu_layanan_item2_desc' => get_option('fds_menu_layanan_item2_desc', 'Pusat Perakitan, Riset, & Suku Cadang Asli'),
+        'menu_layanan_cta_text'   => get_option('fds_menu_layanan_cta_text', 'Jadwalkan Demo & Konsultasi'),
+        'menu_layanan_cta_url'    => get_option('fds_menu_layanan_cta_url', home_url('/#kontak')),
     ];
 }
 
@@ -381,6 +402,27 @@ function render_navbar_settings_admin_page() {
         $site_tagline      = sanitize_text_field($_POST['fds_site_tagline'] ?? '');
         $title_separator   = sanitize_text_field($_POST['fds_tab_title_separator'] ?? '–');
 
+        // CTA & Mega Menu Fields
+        $navbar_cta_text        = sanitize_text_field($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone');
+        $navbar_cta_url         = sanitize_text_field($_POST['fds_navbar_cta_url'] ?? '#kontak');
+        $menu_prod_heading      = sanitize_text_field($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu');
+        $menu_prod_item1_title  = sanitize_text_field($_POST['fds_menu_prod_item1_title'] ?? 'FDS STATION GCS');
+        $menu_prod_item1_desc   = sanitize_text_field($_POST['fds_menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia');
+        $menu_prod_item2_title  = sanitize_text_field($_POST['fds_menu_prod_item2_title'] ?? 'Sertifikasi TKDN 60,74%');
+        $menu_prod_item2_desc   = sanitize_text_field($_POST['fds_menu_prod_item2_desc'] ?? 'Prioritas Pengadaan Pemerintah & LPSE');
+        $menu_prod_item3_title  = sanitize_text_field($_POST['fds_menu_prod_item3_title'] ?? 'Standar SNI 9199:2023');
+        $menu_prod_item3_desc   = sanitize_text_field($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional');
+        $menu_prod_compare_text = sanitize_text_field($_POST['fds_menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone');
+        $menu_prod_compare_url  = sanitize_text_field($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan');
+
+        $menu_layanan_heading    = sanitize_text_field($_POST['fds_menu_layanan_heading'] ?? 'Dukungan Teknis Langsung');
+        $menu_layanan_item1_title= sanitize_text_field($_POST['fds_menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi');
+        $menu_layanan_item1_desc = sanitize_text_field($_POST['fds_menu_layanan_item1_desc'] ?? 'Instruktur Berpengalaman di Ratusan Misi Lapangan');
+        $menu_layanan_item2_title= sanitize_text_field($_POST['fds_menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta');
+        $menu_layanan_item2_desc = sanitize_text_field($_POST['fds_menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli');
+        $menu_layanan_cta_text   = sanitize_text_field($_POST['fds_menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi');
+        $menu_layanan_cta_url    = sanitize_text_field($_POST['fds_menu_layanan_cta_url'] ?? '#kontak');
+
         update_option('fds_navbar_logo_url', $logo_url);
         update_option('fds_navbar_brand_text', $brand_text);
         update_option('fds_navbar_display_mode', $display_mode);
@@ -394,6 +436,26 @@ function render_navbar_settings_admin_page() {
         update_option('fds_drone_tab_suffix', $drone_tab_suffix);
         update_option('fds_site_tagline', $site_tagline);
         update_option('fds_tab_title_separator', $title_separator);
+
+        update_option('fds_navbar_cta_text', $navbar_cta_text);
+        update_option('fds_navbar_cta_url', $navbar_cta_url);
+        update_option('fds_menu_prod_heading', $menu_prod_heading);
+        update_option('fds_menu_prod_item1_title', $menu_prod_item1_title);
+        update_option('fds_menu_prod_item1_desc', $menu_prod_item1_desc);
+        update_option('fds_menu_prod_item2_title', $menu_prod_item2_title);
+        update_option('fds_menu_prod_item2_desc', $menu_prod_item2_desc);
+        update_option('fds_menu_prod_item3_title', $menu_prod_item3_title);
+        update_option('fds_menu_prod_item3_desc', $menu_prod_item3_desc);
+        update_option('fds_menu_prod_compare_text', $menu_prod_compare_text);
+        update_option('fds_menu_prod_compare_url', $menu_prod_compare_url);
+
+        update_option('fds_menu_layanan_heading', $menu_layanan_heading);
+        update_option('fds_menu_layanan_item1_title', $menu_layanan_item1_title);
+        update_option('fds_menu_layanan_item1_desc', $menu_layanan_item1_desc);
+        update_option('fds_menu_layanan_item2_title', $menu_layanan_item2_title);
+        update_option('fds_menu_layanan_item2_desc', $menu_layanan_item2_desc);
+        update_option('fds_menu_layanan_cta_text', $menu_layanan_cta_text);
+        update_option('fds_menu_layanan_cta_url', $menu_layanan_cta_url);
 
         // Sinkronkan ke Core WordPress blogname & blogdescription
         if (!empty($brand_text)) {
@@ -779,7 +841,138 @@ function render_navbar_settings_admin_page() {
                     </div>
                 </div>
 
-                <!-- TOMBOL SIMPAN -->
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 8. TOMBOL CTA NAVBAR UTAMA -->
+                <div>
+                    <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-button" style="color: #0066cc;"></span> Tombol Aksi Kanan Navbar (CTA Button)
+                    </h2>
+                    <p style="margin: 0 0 16px; color: #64748b; font-size: 13px;">Tombol menonjol di sebelah kanan navbar (Desktop &amp; Mobile).</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 600px;">
+                        <div>
+                            <label for="fds_navbar_cta_text" style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol CTA</label>
+                            <input type="text" id="fds_navbar_cta_text" name="fds_navbar_cta_text" value="<?php echo esc_attr($brand_data['cta_text']); ?>" style="width: 100%; font-size: 13px; font-weight: 600;" placeholder="Konsultasi Drone">
+                        </div>
+                        <div>
+                            <label for="fds_navbar_cta_url" style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Link Tujuan (URL)</label>
+                            <input type="text" id="fds_navbar_cta_url" name="fds_navbar_cta_url" value="<?php echo esc_attr($brand_data['cta_url']); ?>" style="width: 100%; font-size: 13px;" placeholder="#kontak atau /tentang-kami">
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 9. PENGATURAN TEKS KARTU MEGA MENU DROPDOWN -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
+                    <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-menu" style="color: #0066cc;"></span> Pengaturan Teks &amp; Kartu Mega Menu Dropdown
+                    </h2>
+                    <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Kustomisasi teks kartu sidebar yang tampil di sisi kanan dropdown <strong>Produk</strong> dan <strong>Layanan</strong>.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        
+                        <!-- Kolom Kanan Dropdown Produk -->
+                        <div style="background: #fff; padding: 18px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            <h3 style="margin: 0 0 14px; font-size: 14px; font-weight: 700; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                                ✈️ Sidebar Dropdown "Produk"
+                            </h3>
+
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Kolom</label>
+                                    <input type="text" name="fds_menu_prod_heading" value="<?php echo esc_attr($brand_data['menu_prod_heading']); ?>" style="width: 100%; font-size: 12px; font-weight: 600;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #1 Judul</label>
+                                        <input type="text" name="fds_menu_prod_item1_title" value="<?php echo esc_attr($brand_data['menu_prod_item1_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #1 Subjudul</label>
+                                        <input type="text" name="fds_menu_prod_item1_desc" value="<?php echo esc_attr($brand_data['menu_prod_item1_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #2 Judul</label>
+                                        <input type="text" name="fds_menu_prod_item2_title" value="<?php echo esc_attr($brand_data['menu_prod_item2_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #2 Subjudul</label>
+                                        <input type="text" name="fds_menu_prod_item2_desc" value="<?php echo esc_attr($brand_data['menu_prod_item2_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #3 Judul</label>
+                                        <input type="text" name="fds_menu_prod_item3_title" value="<?php echo esc_attr($brand_data['menu_prod_item3_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #3 Subjudul</label>
+                                        <input type="text" name="fds_menu_prod_item3_desc" value="<?php echo esc_attr($brand_data['menu_prod_item3_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Link Bandingkan</label>
+                                        <input type="text" name="fds_menu_prod_compare_text" value="<?php echo esc_attr($brand_data['menu_prod_compare_text']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">URL Link Bandingkan</label>
+                                        <input type="text" name="fds_menu_prod_compare_url" value="<?php echo esc_attr($brand_data['menu_prod_compare_url']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kolom Kanan Dropdown Layanan -->
+                        <div style="background: #fff; padding: 18px; border-radius: 8px; border: 1px solid #cbd5e1;">
+                            <h3 style="margin: 0 0 14px; font-size: 14px; font-weight: 700; color: #0f172a; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                                🛠️ Sidebar Dropdown "Layanan"
+                            </h3>
+
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Kolom</label>
+                                    <input type="text" name="fds_menu_layanan_heading" value="<?php echo esc_attr($brand_data['menu_layanan_heading']); ?>" style="width: 100%; font-size: 12px; font-weight: 600;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #1 Judul</label>
+                                        <input type="text" name="fds_menu_layanan_item1_title" value="<?php echo esc_attr($brand_data['menu_layanan_item1_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #1 Subjudul</label>
+                                        <input type="text" name="fds_menu_layanan_item1_desc" value="<?php echo esc_attr($brand_data['menu_layanan_item1_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #2 Judul</label>
+                                        <input type="text" name="fds_menu_layanan_item2_title" value="<?php echo esc_attr($brand_data['menu_layanan_item2_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Item #2 Subjudul</label>
+                                        <input type="text" name="fds_menu_layanan_item2_desc" value="<?php echo esc_attr($brand_data['menu_layanan_item2_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Tombol CTA</label>
+                                        <input type="text" name="fds_menu_layanan_cta_text" value="<?php echo esc_attr($brand_data['menu_layanan_cta_text']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">URL Tombol CTA</label>
+                                        <input type="text" name="fds_menu_layanan_cta_url" value="<?php echo esc_attr($brand_data['menu_layanan_cta_url']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
                 <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
                     <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
                         💾 Simpan Perubahan Logo, Navbar &amp; Nama Tab

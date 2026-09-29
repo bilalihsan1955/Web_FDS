@@ -20,7 +20,7 @@ function fds_get_default_solusi_cards() {
         [
             'image'     => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80',
             'title'     => 'Drone Pertanian Presisi & Analisis NDVI',
-            'desc'      => 'Solusi drone pertanian sprayer & spreader pupuk seri FERTO 5L–50L setara performa DJI Agras T40 / T50 berstandar TKDN 60,74%. Menghemat bahan kimia >50% dengan radar terrain-following dan pemantauan kesehatan tanaman NDVI 10x lebih cepat.',
+            'desc'      => 'Solusi drone pertanian sprayer & spreader pupuk seri FERTO 5L–50L berstandar resmi TKDN 60,74% dan SNI 9199:2023. Menghemat bahan kimia >50% dengan radar terrain-following dan pemantauan kesehatan tanaman NDVI 10x lebih cepat.',
             'tag'       => 'FERTO 5L – 50L (TKDN)',
             'link_text' => 'Lihat Seri FERTO',
             'link_url'  => '#produk',
@@ -60,46 +60,47 @@ function fds_get_default_solusi_cards() {
     ];
 }
 
-// Auto-sync 5th card to database if fewer than 5 cards exist
+// Auto-sync anti-slop cards to database (Run once)
 add_action('init', function () {
-    $cards = get_option('fds_solusi_cards', null);
-    if ($cards !== null && is_array($cards) && count($cards) < 5) {
-        $cards[] = [
-            'image'     => 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
-            'title'     => 'Pemantauan Karhutla & Tanggap Bencana',
-            'desc'      => 'Patroli otonom jangkauan jauh dengan sensor termal inframerah dan transmisi video real-time untuk deteksi dini titik api karhutla, monitoring banjir, serta asesmen cepat pasca-bencana alam.',
-            'tag'       => 'SURVEILLANCE UAV',
-            'link_text' => 'Pelajari Solusi',
-            'link_url'  => '#kontak',
-        ];
-        update_option('fds_solusi_cards', $cards);
+    if (!get_option('fds_solusi_cards_antislop_v1')) {
+        $cards = get_option('fds_solusi_cards', null);
+        if ($cards === null || (is_array($cards) && (count($cards) < 5 || (isset($cards[0]['title']) && strpos($cards[0]['title'], 'Drone Pertanian') !== false)))) {
+            update_option('fds_solusi_cards', fds_get_default_solusi_cards());
+        }
+        update_option('fds_solusi_cards_antislop_v1', 1);
     }
 });
 
 // 2. HELPER DATA FRONTEND
 function fds_get_solusi_data() {
-    $badge = get_option('fds_solusi_badge', 'Solusi Industri FDS');
-    $title = get_option('fds_solusi_title', 'Satu platform. Berbagai industri strategis.');
-    $desc  = get_option('fds_solusi_desc', 'Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.');
+    $badge = get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri');
+    $title = get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.');
+    $desc  = get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.');
     
     $saved_cards = get_option('fds_solusi_cards', null);
-    if ($saved_cards === null || !is_array($saved_cards) || empty($saved_cards)) {
+    if ($saved_cards === null) {
         $cards = fds_get_default_solusi_cards();
     } else {
-        $cards = $saved_cards;
+        $cards = is_array($saved_cards) ? $saved_cards : [];
     }
 
     $normalized_cards = [];
     if (is_array($cards)) {
         foreach ($cards as $c) {
+            $title = trim($c['title'] ?? '');
+            $desc  = trim($c['desc'] ?? '');
+            if ($title === '' && $desc === '') {
+                continue; // Skip kartu yang sengaja dikosongkan oleh admin
+            }
+
             $tag = $c['tag'] ?? '';
             if (strpos($tag, 'Warning</b>') !== false) {
                 $tag = '';
             }
             $normalized_cards[] = [
                 'image'     => $c['image'] ?? '',
-                'title'     => $c['title'] ?? '',
-                'desc'      => $c['desc'] ?? '',
+                'title'     => $title,
+                'desc'      => $desc,
                 'tag'       => $tag,
                 'link_text' => $c['link_text'] ?? 'Pelajari Selengkapnya',
                 'link_url'  => $c['link_url'] ?? '#kontak',

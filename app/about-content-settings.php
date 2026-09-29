@@ -127,35 +127,24 @@ function fds_get_default_about_activities() {
 
 function fds_get_about_activities() {
     $saved = get_option('fds_about_activity_items', null);
-    if ($saved !== null && is_array($saved) && !empty($saved)) {
-        return array_map(function($item) {
-            return [
-                'cat'  => wp_specialchars_decode($item['cat'] ?? '', ENT_QUOTES),
-                'name' => wp_specialchars_decode($item['name'] ?? '', ENT_QUOTES),
-                'desc' => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
-            ];
-        }, $saved);
+    if ($saved === null) {
+        return fds_get_default_about_activities();
     }
     
-    // Fallback legacy options
-    $legacy = [];
-    for ($i = 1; $i <= 10; $i++) {
-        $cat  = get_option("fds_about_mitra_item{$i}_cat", '');
-        $name = get_option("fds_about_mitra_item{$i}_name", '');
-        $desc = get_option("fds_about_mitra_item{$i}_desc", '');
-        if (!empty($name)) {
-            $legacy[] = [
-                'cat'  => wp_specialchars_decode($cat, ENT_QUOTES),
-                'name' => wp_specialchars_decode($name, ENT_QUOTES),
-                'desc' => wp_specialchars_decode($desc, ENT_QUOTES),
-            ];
+    $items = [];
+    if (is_array($saved)) {
+        foreach ($saved as $item) {
+            $name = trim($item['name'] ?? '');
+            if (!empty($name)) {
+                $items[] = [
+                    'cat'  => wp_specialchars_decode($item['cat'] ?? '', ENT_QUOTES),
+                    'name' => wp_specialchars_decode($name, ENT_QUOTES),
+                    'desc' => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
+                ];
+            }
         }
     }
-    if (!empty($legacy)) {
-        return $legacy;
-    }
-
-    return fds_get_default_about_activities();
+    return $items;
 }
 
 // 2. HELPER GET ABOUT CONTENT

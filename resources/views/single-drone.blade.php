@@ -317,27 +317,44 @@
       return $val;
   };
 
+  $meta_has = function($key) use ($preview_id, $post_id) {
+      return metadata_exists('post', $preview_id, $key) || metadata_exists('post', $post_id, $key);
+  };
+
   $featuredImg = get_the_post_thumbnail_url($preview_id, 'full') ?: get_the_post_thumbnail_url($post_id, 'full');
   
   if (!$drone) {
       $drone = [
           'name'      => get_the_title($preview_id) ?: get_the_title($post_id),
-          'kategori'  => 'Agrikultur',
-          'badge'     => $get_meta('drone_badge') ?: 'Produk UAV',
+          'kategori'  => $get_meta('drone_kategori') ?: 'Agrikultur',
+          'badge'     => $get_meta('drone_badge'),
           'tagline'   => $get_meta('drone_tagline') ?: get_the_excerpt($preview_id),
           'color'     => '#0066cc',
           'specs'     => [],
           'desc'      => $get_meta('drone_desc') ?: get_the_content(null, false, $preview_id),
           'for'       => [],
-          'stat1_num' => $get_meta('drone_stat1_num') ?: 'SNI',
-          'stat1_lbl' => $get_meta('drone_stat1_lbl') ?: 'SNI 9199:2023',
-          'stat2_num' => $get_meta('drone_stat2_num') ?: '60,74%',
-          'stat2_lbl' => $get_meta('drone_stat2_lbl') ?: 'TKDN + BMP',
-          'stat3_num' => $get_meta('drone_stat3_num') ?: '100%',
-          'stat3_lbl' => $get_meta('drone_stat3_lbl') ?: 'FDS STATION GCS',
-          'stat4_num' => $get_meta('drone_stat4_num') ?: 'Garansi',
-          'stat4_lbl' => $get_meta('drone_stat4_lbl') ?: 'Purna Jual Resmi',
+          'stat1_num' => $get_meta('drone_stat1_num'),
+          'stat1_lbl' => $get_meta('drone_stat1_lbl'),
+          'stat2_num' => $get_meta('drone_stat2_num'),
+          'stat2_lbl' => $get_meta('drone_stat2_lbl'),
+          'stat3_num' => $get_meta('drone_stat3_num'),
+          'stat3_lbl' => $get_meta('drone_stat3_lbl'),
+          'stat4_num' => $get_meta('drone_stat4_num'),
+          'stat4_lbl' => $get_meta('drone_stat4_lbl'),
       ];
+  } else {
+      // Jika metadata ada di database (bahkan jika disengaja dikosongkan), timpa nilai default katalog
+      if ($meta_has('drone_stat1_num')) $drone['stat1_num'] = $get_meta('drone_stat1_num');
+      if ($meta_has('drone_stat1_lbl')) $drone['stat1_lbl'] = $get_meta('drone_stat1_lbl');
+      if ($meta_has('drone_stat2_num')) $drone['stat2_num'] = $get_meta('drone_stat2_num');
+      if ($meta_has('drone_stat2_lbl')) $drone['stat2_lbl'] = $get_meta('drone_stat2_lbl');
+      if ($meta_has('drone_stat3_num')) $drone['stat3_num'] = $get_meta('drone_stat3_num');
+      if ($meta_has('drone_stat3_lbl')) $drone['stat3_lbl'] = $get_meta('drone_stat3_lbl');
+      if ($meta_has('drone_stat4_num')) $drone['stat4_num'] = $get_meta('drone_stat4_num');
+      if ($meta_has('drone_stat4_lbl')) $drone['stat4_lbl'] = $get_meta('drone_stat4_lbl');
+      if ($meta_has('drone_badge'))     $drone['badge']     = $get_meta('drone_badge');
+      if ($meta_has('drone_tagline'))   $drone['tagline']   = $get_meta('drone_tagline');
+      if ($meta_has('drone_desc'))      $drone['desc']      = $get_meta('drone_desc');
   }
 
   // Override / Enrich with DB / Preview meta if present
@@ -347,7 +364,7 @@
   }
 
   $cpt_desc = $get_meta('drone_desc');
-  if (!empty($cpt_desc)) {
+  if ($meta_has('drone_desc')) {
       $drone['desc'] = $cpt_desc;
   } elseif (empty($drone['desc'])) {
       $drone['desc'] = get_the_content(null, false, $preview_id) ?: get_the_content(null, false, $post_id);
@@ -362,10 +379,10 @@
   }
   
   $cpt_badge = $get_meta('drone_badge');
-  if ($cpt_badge) $drone['badge'] = $cpt_badge;
+  if ($meta_has('drone_badge')) $drone['badge'] = $cpt_badge;
   
   $cpt_tagline = $get_meta('drone_tagline');
-  if ($cpt_tagline) $drone['tagline'] = $cpt_tagline;
+  if ($meta_has('drone_tagline')) $drone['tagline'] = $cpt_tagline;
 
   $cpt_specs_raw = $get_meta('drone_specs_raw');
   if ($cpt_specs_raw) {
@@ -392,10 +409,10 @@
           'Sistem Daya (Baterai)'      => $get_meta('drone_spec_baterai') ?: $get_meta('drone_baterai'),
           'Produktivitas / Jangkauan'  => $get_meta('drone_spec_produktivitas') ?: $get_meta('drone_cakupan'),
           'Kecepatan Jelajah'          => $get_meta('drone_spec_kecepatan'),
-          'Ketahanan Lingkungan'       => $get_meta('drone_spec_ketahanan') ?: 'IP65',
+          'Ketahanan Lingkungan'       => $get_meta('drone_spec_ketahanan'),
           'Sistem Otonomi & Navigasi'  => $get_meta('drone_spec_otonomi'),
-          'Ground Control Station'     => $get_meta('drone_spec_gcs') ?: 'FDS STATION (Bahasa Indonesia)',
-          'Sertifikasi & Standar'      => $get_meta('drone_spec_sertifikasi') ?: 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015',
+          'Ground Control Station'     => $get_meta('drone_spec_gcs'),
+          'Sertifikasi & Standar'      => $get_meta('drone_spec_sertifikasi'),
       ];
       $custom_specs = [];
       foreach ($spec_fields as $lbl => $val) {
@@ -427,25 +444,14 @@
       }
   }
 
-  $s1_n = $get_meta('drone_stat1_num');
-  if ($s1_n) $drone['stat1_num'] = $s1_n;
-  $s1_l = $get_meta('drone_stat1_lbl');
-  if ($s1_l) $drone['stat1_lbl'] = $s1_l;
-
-  $s2_n = $get_meta('drone_stat2_num');
-  if ($s2_n) $drone['stat2_num'] = $s2_n;
-  $s2_l = $get_meta('drone_stat2_lbl');
-  if ($s2_l) $drone['stat2_lbl'] = $s2_l;
-
-  $s3_n = $get_meta('drone_stat3_num');
-  if ($s3_n) $drone['stat3_num'] = $s3_n;
-  $s3_l = $get_meta('drone_stat3_lbl');
-  if ($s3_l) $drone['stat3_lbl'] = $s3_l;
-
-  $s4_n = $get_meta('drone_stat4_num');
-  if ($s4_n) $drone['stat4_num'] = $s4_n;
-  $s4_l = $get_meta('drone_stat4_lbl');
-  if ($s4_l) $drone['stat4_lbl'] = $s4_l;
+  if ($meta_has('drone_stat1_num')) $drone['stat1_num'] = $get_meta('drone_stat1_num');
+  if ($meta_has('drone_stat1_lbl')) $drone['stat1_lbl'] = $get_meta('drone_stat1_lbl');
+  if ($meta_has('drone_stat2_num')) $drone['stat2_num'] = $get_meta('drone_stat2_num');
+  if ($meta_has('drone_stat2_lbl')) $drone['stat2_lbl'] = $get_meta('drone_stat2_lbl');
+  if ($meta_has('drone_stat3_num')) $drone['stat3_num'] = $get_meta('drone_stat3_num');
+  if ($meta_has('drone_stat3_lbl')) $drone['stat3_lbl'] = $get_meta('drone_stat3_lbl');
+  if ($meta_has('drone_stat4_num')) $drone['stat4_num'] = $get_meta('drone_stat4_num');
+  if ($meta_has('drone_stat4_lbl')) $drone['stat4_lbl'] = $get_meta('drone_stat4_lbl');
 
   $fds_deep_decode = function($val) use (&$fds_deep_decode) {
       if (is_array($val)) {
@@ -545,7 +551,7 @@
         {{-- CTAs --}}
         <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10">
           <a href="{{ home_url('/#kontak') }}"
-             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md">
+             class="inline-flex items-center bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0066cc]/30">
             Minta Penawaran
           </a>
           <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
@@ -670,28 +676,39 @@
     @endif
 
     {{-- ── STATS BAR ────────────────────────────────────────────── --}}
+    @php
+      $stats_list = [];
+      for ($si = 1; $si <= 4; $si++) {
+          $sNum = trim((string)($drone["stat{$si}_num"] ?? ''));
+          $sLbl = trim((string)($drone["stat{$si}_lbl"] ?? ''));
+          if ($sNum !== '' || $sLbl !== '') {
+              $stats_list[] = [
+                  'num' => $sNum,
+                  'lbl' => $sLbl,
+              ];
+          }
+      }
+      $total_stats = count($stats_list);
+    @endphp
+
+    @if($total_stats > 0)
     <section class="bg-white py-16 border-t border-black/[0.06]">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+        <div class="grid grid-cols-2 {{ $total_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
+          @foreach($stats_list as $st)
           <div>
-            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($drone['stat1_num'] ?? 'SNI', ENT_QUOTES)) !!}</p>
-            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($drone['stat1_lbl'] ?? 'SNI 9199:2023', ENT_QUOTES)) !!}</p>
+            @if(!empty($st['num']))
+            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($st['num'], ENT_QUOTES)) !!}</p>
+            @endif
+            @if(!empty($st['lbl']))
+            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($st['lbl'], ENT_QUOTES)) !!}</p>
+            @endif
           </div>
-          <div>
-            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($drone['stat2_num'] ?? '60,74%', ENT_QUOTES)) !!}</p>
-            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($drone['stat2_lbl'] ?? 'TKDN + BMP', ENT_QUOTES)) !!}</p>
-          </div>
-          <div>
-            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($drone['stat3_num'] ?? '100%', ENT_QUOTES)) !!}</p>
-            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($drone['stat3_lbl'] ?? 'FDS STATION GCS', ENT_QUOTES)) !!}</p>
-          </div>
-          <div>
-            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($drone['stat4_num'] ?? 'Garansi', ENT_QUOTES)) !!}</p>
-            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($drone['stat4_lbl'] ?? 'Purna Jual Resmi', ENT_QUOTES)) !!}</p>
-          </div>
+          @endforeach
         </div>
       </div>
     </section>
+    @endif
 
     {{-- ── CTA ─────────────────────────────────────────────────── --}}
     <section class="bg-[#1d1d1f] py-24">

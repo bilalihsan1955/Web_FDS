@@ -313,24 +313,30 @@ add_action('add_meta_boxes', function () {
 function render_drone_pure_form_metabox($post) {
     wp_nonce_field('fds_drone_form_save', 'fds_drone_form_nonce');
 
-    // Ambil data tersimpan
-    $kategori           = get_post_meta($post->ID, 'drone_kategori', true) ?: 'Agrikultur';
+    // Ambil data tersimpan (Hormati nilai kosong jika admin mengosongkannya)
+    $kategori           = get_post_meta($post->ID, 'drone_kategori', true);
+    if ($kategori === '' && !metadata_exists('post', $post->ID, 'drone_kategori')) {
+        $kategori = 'Agrikultur';
+    }
     $badge              = get_post_meta($post->ID, 'drone_badge', true);
     $tagline            = get_post_meta($post->ID, 'drone_tagline', true);
-    $desc               = get_post_meta($post->ID, 'drone_desc', true) ?: $post->post_content;
+    $desc               = get_post_meta($post->ID, 'drone_desc', true);
+    if ($desc === '' && !metadata_exists('post', $post->ID, 'drone_desc')) {
+        $desc = $post->post_content;
+    }
     $brosur_url         = get_post_meta($post->ID, 'drone_brosur_url', true);
     $video_url          = get_post_meta($post->ID, 'drone_video_url', true);
     $specs_img_url      = get_post_meta($post->ID, 'drone_specs_img', true);
 
-    // 4 Key Stats Bar
-    $stat1_num          = get_post_meta($post->ID, 'drone_stat1_num', true) ?: 'SNI';
-    $stat1_lbl          = get_post_meta($post->ID, 'drone_stat1_lbl', true) ?: 'SNI 9199:2023';
-    $stat2_num          = get_post_meta($post->ID, 'drone_stat2_num', true) ?: '60,74%';
-    $stat2_lbl          = get_post_meta($post->ID, 'drone_stat2_lbl', true) ?: 'TKDN + BMP Resmi';
+    // 4 Key Stats Bar (Tanpa fallback paksa agar bisa dikosongkan sepenuhnya)
+    $stat1_num          = get_post_meta($post->ID, 'drone_stat1_num', true);
+    $stat1_lbl          = get_post_meta($post->ID, 'drone_stat1_lbl', true);
+    $stat2_num          = get_post_meta($post->ID, 'drone_stat2_num', true);
+    $stat2_lbl          = get_post_meta($post->ID, 'drone_stat2_lbl', true);
     $stat3_num          = get_post_meta($post->ID, 'drone_stat3_num', true);
     $stat3_lbl          = get_post_meta($post->ID, 'drone_stat3_lbl', true);
-    $stat4_num          = get_post_meta($post->ID, 'drone_stat4_num', true) ?: 'Garansi';
-    $stat4_lbl          = get_post_meta($post->ID, 'drone_stat4_lbl', true) ?: 'Purna Jual Resmi';
+    $stat4_num          = get_post_meta($post->ID, 'drone_stat4_num', true);
+    $stat4_lbl          = get_post_meta($post->ID, 'drone_stat4_lbl', true);
 
     // Spesifikasi Teknis Terstruktur (Textfields)
     $spec_kapasitas     = get_post_meta($post->ID, 'drone_spec_kapasitas', true);
@@ -340,8 +346,8 @@ function render_drone_pure_form_metabox($post) {
     $spec_kecepatan     = get_post_meta($post->ID, 'drone_spec_kecepatan', true);
     $spec_ketahanan     = get_post_meta($post->ID, 'drone_spec_ketahanan', true);
     $spec_otonomi       = get_post_meta($post->ID, 'drone_spec_otonomi', true);
-    $spec_gcs           = get_post_meta($post->ID, 'drone_spec_gcs', true) ?: 'FDS STATION (Bahasa Indonesia)';
-    $spec_sertifikasi   = get_post_meta($post->ID, 'drone_spec_sertifikasi', true) ?: 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015';
+    $spec_gcs           = get_post_meta($post->ID, 'drone_spec_gcs', true);
+    $spec_sertifikasi   = get_post_meta($post->ID, 'drone_spec_sertifikasi', true);
 
     // 4 Kasus Penggunaan (Use Cases)
     $uc1_t              = get_post_meta($post->ID, 'drone_uc1_t', true);
@@ -650,15 +656,6 @@ add_action('save_post_drone', function ($post_id) {
     if (isset($_POST['drone_desc'])) {
         $clean_desc = sanitize_textarea_field($_POST['drone_desc']);
         update_post_meta($post_id, 'drone_desc', $clean_desc);
-        
-        // Simpan juga ke post_content (menggunakan static $is_saving agar tidak terjadi infinite recursion)
-        $current_post = get_post($post_id);
-        if ($current_post && $current_post->post_content !== $clean_desc) {
-            wp_update_post([
-                'ID'           => $post_id,
-                'post_content' => $clean_desc,
-            ]);
-        }
     }
 
     // Reconstruct string tabel spesifikasi & usecase otomatis
@@ -701,8 +698,239 @@ add_action('save_post_drone', function ($post_id) {
         update_post_meta($post_id, 'drone_kategori', $terms[0]->name);
     }
 
+    // Auto-generate Rich Enterprise SEO Article into post_content and Sync Rank Math Metadata
+    fds_sync_drone_rank_math_seo($post_id);
+
     $is_saving = false;
 });
+
+/**
+ * Generate Comprehensive 800-1200+ Word SEO Article for Drone CPT (Warrior, Legend & Mythic Tier)
+ * Covers: Focus keyword in lead, H2/H3 headings, Specs table, DJI comparison, FAQ, internal/external links.
+ */
+function fds_generate_drone_seo_content($post_id) {
+    $title       = get_the_title($post_id);
+    $slug        = get_post_field('post_name', $post_id);
+    $tagline     = get_post_meta($post_id, 'drone_tagline', true);
+    $desc        = get_post_meta($post_id, 'drone_desc', true);
+    $kategori    = get_post_meta($post_id, 'drone_kategori', true) ?: 'Agrikultur';
+    $kapasitas   = get_post_meta($post_id, 'drone_spec_kapasitas', true) ?: 'Standar Industri';
+    $durasi      = get_post_meta($post_id, 'drone_spec_durasi', true) ?: '15-25 menit';
+    $baterai     = get_post_meta($post_id, 'drone_spec_baterai', true) ?: 'LiPo High Density';
+    $produktivitas = get_post_meta($post_id, 'drone_spec_produktivitas', true) ?: 'Tinggi';
+    $kecepatan   = get_post_meta($post_id, 'drone_spec_kecepatan', true) ?: '2 - 6 m/s';
+    $ketahanan   = get_post_meta($post_id, 'drone_spec_ketahanan', true) ?: 'IP54 / Tahan Debu & Percikan Air';
+    $otonomi     = get_post_meta($post_id, 'drone_spec_otonomi', true) ?: 'Otonom Penuh & Terrain Following';
+    $gcs         = get_post_meta($post_id, 'drone_spec_gcs', true) ?: 'FDS STATION (Bahasa Indonesia)';
+    $sertifikasi = get_post_meta($post_id, 'drone_spec_sertifikasi', true) ?: 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015';
+
+    $stat1_n = get_post_meta($post_id, 'drone_stat1_num', true) ?: 'SNI';
+    $stat1_l = get_post_meta($post_id, 'drone_stat1_lbl', true) ?: 'SNI 9199:2023';
+    $stat2_n = get_post_meta($post_id, 'drone_stat2_num', true) ?: '60,74%';
+    $stat2_l = get_post_meta($post_id, 'drone_stat2_lbl', true) ?: 'TKDN + BMP';
+    $stat3_n = get_post_meta($post_id, 'drone_stat3_num', true) ?: '100%';
+    $stat3_l = get_post_meta($post_id, 'drone_stat3_lbl', true) ?: 'FDS STATION GCS';
+    $stat4_n = get_post_meta($post_id, 'drone_stat4_num', true) ?: 'Garansi';
+    $stat4_l = get_post_meta($post_id, 'drone_stat4_lbl', true) ?: 'Purna Jual Resmi';
+
+    $uc1_t = get_post_meta($post_id, 'drone_uc1_t', true) ?: 'Operasional Komersial & Industri';
+    $uc1_d = get_post_meta($post_id, 'drone_uc1_d', true) ?: 'Meningkatkan efisiensi kerja lapangan secara signifikan.';
+    $uc2_t = get_post_meta($post_id, 'drone_uc2_t', true) ?: 'Pengadaan BUMN & Instansi Pemerintah';
+    $uc2_d = get_post_meta($post_id, 'drone_uc2_d', true) ?: 'Memenuhi persyaratan regulasi TKDN resmi nasional.';
+    $uc3_t = get_post_meta($post_id, 'drone_uc3_t', true) ?: 'Pemeliharaan & Purna Jual Terjamin';
+    $uc3_d = get_post_meta($post_id, 'drone_uc3_d', true) ?: 'Ketersediaan suku cadang cepat dari manufaktur lokal.';
+    $uc4_t = get_post_meta($post_id, 'drone_uc4_t', true) ?: 'Pelatihan Pilot & Sertifikasi Resmi';
+    $uc4_d = get_post_meta($post_id, 'drone_uc4_d', true) ?: 'Didukung instruktur berpengalaman FDS Academy.';
+
+    $home_url   = home_url('/');
+    $compare_url= home_url('/bandingkan/');
+    $about_url  = home_url('/tentang-kami/');
+    $contact_url= home_url('/#kontak');
+
+    $is_agri = (strpos(strtolower($kategori), 'agri') !== false || strpos(strtolower($slug), 'ferto') !== false);
+    $is_map  = (strpos(strtolower($kategori), 'peta') !== false || strpos(strtolower($slug), 'deltav') !== false || strpos(strtolower($slug), 'multi') !== false);
+    $is_cargo= (strpos(strtolower($kategori), 'kargo') !== false || strpos(strtolower($slug), 'delfro') !== false);
+    $is_rebo = (strpos(strtolower($kategori), 'rebo') !== false || strpos(strtolower($slug), 'rebo') !== false);
+
+    $html = [];
+
+    // 1. Lead Section / Ringkasan Eksekutif (Memuat Focus Keyword pada kalimat pertama)
+    $html[] = '<div class="fds-seo-article">';
+    if ($is_agri) {
+        $html[] = "<p class=\"lead\"><strong>{$title}</strong> merupakan inovasi <strong>drone pertanian presisi</strong> unggulan buatan <strong>produsen UAV Indonesia</strong> resmi, <strong>PT Karya Solusi Angkasa (Full Drone Solutions)</strong>. Dirancang khusus untuk menjawab tantangan modernisasi agrikultur, drone sprayer ini menghadirkan efisiensi penyemprotan pupuk cair dan pestisida dengan standar mutu sertifikasi <strong>TKDN 60,74%</strong>, <strong>SNI 9199:2023</strong>, dan manajemen mutu <strong>ISO 9001:2015</strong>.</p>";
+        $html[] = "<p>{$desc} Melalui integrasi sensor cerdas dan perangkat lunak kendali stasiun darat FDS STATION berbahasa Indonesia, {$title} menjadi solusi tangguh bagi pelaku agribisnis, kelompok tani (Gapoktan), BUMN perkebunan, serta penyedia jasa perlindungan tanaman di seluruh Indonesia yang mencari efisiensi maksimal dengan jaminan suku cadang lokal.</p>";
+    } elseif ($is_map) {
+        $html[] = "<p class=\"lead\"><strong>{$title}</strong> adalah platform <strong>drone mapping</strong> dan <strong>jasa survey drone</strong> mutakhir yang dikembangkan oleh <strong>produsen UAV Indonesia</strong> PT Karya Solusi Angkasa (FDS). Diciptakan untuk kebutuhan fotogrametri udara berskala luas, survei topografi tambang, dan analisis geospasial presisi tinggi dengan standar mutu sertifikasi resmi <strong>TKDN</strong> dan <strong>SNI 9199:2023</strong>.</p>";
+        $html[] = "<p>{$desc} Dengan keandalan sistem lepas landas vertikal (VTOL) atau arsitektur multirotor modular, wahana ini melayani jasa pemetaan drone tambang untuk perhitungan volume cut and fill, inspeksi koridor ketenagalistrikan 150 kV, pemetaan GIS kehutanan, serta survey drone LiDAR dengan akurasi sub-sentimeter.</p>";
+    } elseif ($is_cargo) {
+        $html[] = "<p class=\"lead\"><strong>{$title}</strong> adalah platform <strong>drone kargo dan logistik otonom</strong> buatan <strong>produsen UAV Indonesia</strong> PT Karya Solusi Angkasa. Didesain untuk distribusi cepat logistik medis, pasokan tanggap darurat, dan suku cadang industri ke area terpencil serta kepulauan yang sulit dijangkau transportasi darat konvensional.</p>";
+        $html[] = "<p>{$desc} Mengusung sertifikasi standar nasional SNI 9199:2023 dan rangka karbon komposit berkekuatan tinggi, {$title} memberikan jaminan keamanan muatan, stabilitas jelajah otomatis melalui koordinat waypoint cerdas, dan efisiensi waktu distribusi.</p>";
+    } else {
+        $html[] = "<p class=\"lead\"><strong>{$title}</strong> adalah solusi <strong>drone reboisasi hutan dan pencarian korban bencana</strong> inovatif dari <strong>produsen UAV Indonesia</strong> PT Karya Solusi Angkasa. Memiliki kapabilitas penyebaran benih seedball presisi dan pemantauan termal otonom untuk restorasi hutan kritis serta mitigasi pasca-bencana.</p>";
+        $html[] = "<p>{$desc} Dilengkapi sistem dispenser seedball otomatis berbasis koordinat GIS dan rangka kokoh berstandar SNI 9199:2023, platform ini menjadi garda terdepan pelestarian lingkungan serta operasi kemanusiaan nasional.</p>";
+    }
+
+    // 2. Keunggulan Arsitektur & Teknologi
+    $html[] = "<h2>Keunggulan Arsitektur & Teknologi Rekayasa {$title}</h2>";
+    $html[] = "<p>Sebagai manufaktur drone nasional yang berbasis di Sleman, Yogyakarta, PT Karya Solusi Angkasa merancang setiap komponen {$title} dengan mengutamakan durabilitas ekstrem pada iklim tropis Indonesia. Rangka serat karbon berkekuatan tinggi (Toray Carbon Composite) memberikan rasio bobot-terhadap-kekuatan yang superior, memungkinkan kapasitas muatan (<strong>{$kapasitas}</strong>) beroperasi stabil pada kecepatan jelajah <strong>{$kecepatan}</strong>.</p>";
+    $html[] = "<ul>";
+    $html[] = "<li><strong>Efisiensi Tenaga & Daya Tahan Baterai:</strong> Ditenagai sistem manajemen daya cerdas berkapasitas <strong>{$baterai}</strong> dengan durasi terbang optimal <strong>{$durasi}</strong> dalam satu kali pengisian.</li>";
+    $html[] = "<li><strong>Produktivitas & Jangkauan Operasional:</strong> Menghasilkan output produktivitas hingga <strong>{$produktivitas}</strong> untuk mempercepat target kerja lapangan skala besar.</li>";
+    $html[] = "<li><strong>Ketahanan Cuaca Tropis:</strong> Dilengkapi proteksi <strong>{$ketahanan}</strong> yang tahan terhadap korosi kimia, partikel debu tanah, dan kelembapan tinggi.</li>";
+    $html[] = "<li><strong>Sistem Keselamatan Terintegrasi (Fail-Safe):</strong> Fitur otomatis Return to Home (RTH) saat baterai kritis, sinyal terputus, atau hambatan medan berbukit dengan teknologi <strong>{$otonomi}</strong>.</li>";
+    $html[] = "</ul>";
+
+    // 3. Sistem Kendali GCS Bahasa Indonesia
+    $html[] = "<h3>Sistem Navigasi Cerdas & Ground Control Station: {$gcs}</h3>";
+    $html[] = "<p>Salah satu nilai tambah strategis produk FDS adalah integrasi penuh dengan perangkat lunak Ground Control Station (GCS) buatan lokal berbahasa Indonesia. Antarmuka pengguna yang intuitif memudahkan operator dan pilot bersertifikat untuk membuat rencana terbang otomatis, mengatur ketinggian semprot/foto relatif terhadap kontur vegetasi (Terrain Following), serta memantau status telemetri real-time tanpa kendala bahasa teknis.</p>";
+
+    // 4. Tabel Spesifikasi Teknis
+    $html[] = "<h2>Tabel Spesifikasi Teknis Lengkap {$title}</h2>";
+    $html[] = "<p>Berikut adalah rincian data spesifikasi teknis resmi dari {$title} untuk perbandingan pengadaan dan analisis operasional:</p>";
+    $html[] = "<table class=\"fds-seo-spec-table table table-bordered\">";
+    $html[] = "<thead><tr><th style=\"width:35%;\">Parameter Spesifikasi</th><th>Rincian Teknis & Standar Nilai</th></tr></thead>";
+    $html[] = "<tbody>";
+    $html[] = "<tr><td><strong>Model / Nama Wahana</strong></td><td>" . esc_html($title) . " (" . esc_html($kategori) . ")</td></tr>";
+    $html[] = "<tr><td><strong>Kapasitas Muatan (Payload)</strong></td><td>" . esc_html($kapasitas) . "</td></tr>";
+    $html[] = "<tr><td><strong>Durasi Terbang</strong></td><td>" . esc_html($durasi) . "</td></tr>";
+    $html[] = "<tr><td><strong>Sistem Daya (Baterai)</strong></td><td>" . esc_html($baterai) . "</td></tr>";
+    $html[] = "<tr><td><strong>Produktivitas / Jangkauan</strong></td><td>" . esc_html($produktivitas) . "</td></tr>";
+    $html[] = "<tr><td><strong>Kecepatan Jelajah Operasional</strong></td><td>" . esc_html($kecepatan) . "</td></tr>";
+    $html[] = "<tr><td><strong>Ketahanan Lingkungan</strong></td><td>" . esc_html($ketahanan) . "</td></tr>";
+    $html[] = "<tr><td><strong>Mode Navigasi & Otonomi</strong></td><td>" . esc_html($otonomi) . "</td></tr>";
+    $html[] = "<tr><td><strong>Ground Control Station</strong></td><td>" . esc_html($gcs) . "</td></tr>";
+    $html[] = "<tr><td><strong>Sertifikasi & Legalitas</strong></td><td>" . esc_html($sertifikasi) . "</td></tr>";
+    $html[] = "<tr><td><strong>Produsen Manufaktur</strong></td><td>PT Karya Solusi Angkasa — Sleman, D.I. Yogyakarta, Indonesia</td></tr>";
+    $html[] = "</tbody></table>";
+
+    // 5. Analisis Keunggulan Solusi Manufaktur Nasional
+    if ($is_agri) {
+        $html[] = "<h2>Keunggulan Drone Pertanian FDS {$title} untuk Agrikultur Indonesia</h2>";
+        $html[] = "<p>Dalam memilih <strong>drone pertanian</strong> untuk investasi jangka panjang, para pelaku usaha agrikultur membutuhkan wahana yang tangguh, legal, dan didukung layanan purna jual yang cepat. FDS {$title} menghadirkan sejumlah keunggulan strategis:</p>";
+        $html[] = "<ul>";
+        $html[] = "<li><strong>Kepatuhan Regulasi TKDN Pemerintah:</strong> FDS telah mengantongi sertifikat <strong>TKDN + BMP sebesar 60,74%</strong> resmi dari Kementerian Perindustrian RI. Hal ini menjadikan drone FDS legal dan diprioritaskan dalam lelang pengadaan pemerintah (e-Katalog / LPSE).</li>";
+        $html[] = "<li><strong>Jaminan Suku Cadang Ready Stock & Garansi Lokal:</strong> Seluruh suku cadang mekanikal, propulsi, arm karbon, nosel semprot, dan baterai diproduksi dan distok langsung di workshop Yogyakarta tanpa ketergantungan impor.</li>";
+        $html[] = "<li><strong>Biaya Perawatan (Total Cost of Ownership) Lebih Terjangkau:</strong> Biaya servis berkala dan penggantian suku cadang FDS lebih efisien dengan dukungan teknisi langsung dari pabrikan.</li>";
+        $html[] = "<li><strong>Pelatihan Pilot & Pendampingan Lapangan:</strong> Setiap pembelian unit disertai program pelatihan pilot terakreditasi melalui FDS Academy hingga mahir mengoperasikan misi pertanian presisi.</li>";
+        $html[] = "</ul>";
+        $html[] = "<p>Anda dapat meninjau perbandingan spesifikasi seluruh lini produk melalui halaman <a href=\"{$compare_url}\">Bandingkan Model Drone FDS</a>.</p>";
+    } elseif ($is_map) {
+        $html[] = "<h2>Aplikasi Jasa Pemetaan Drone, Survey LiDAR & GIS Tambang</h2>";
+        $html[] = "<p>Kebutuhan <strong>jasa pemetaan drone</strong> dan <strong>survey drone LiDAR</strong> di sektor pertambangan mineral, batu bara, konstruksi infrastruktur jalan tol, serta perkebunan kelapa sawit membutuhkan akurasi data geospasial yang ketat. {$title} memberikan keunggulan komparatif berupa:</p>";
+        $html[] = "<ul>";
+        $html[] = "<li><strong>Akuisisi Data Area Luas dalam Satu Misi:</strong> Mereduksi biaya operasional lapangan dan menghemat waktu pengerjaan hingga 75% dibandingkan metode pengukuran terestrial konvensional.</li>";
+        $html[] = "<li><strong>Perhitungan Volume Stockpile & Cut/Fill Akurat:</strong> Menghasilkan model Digital Elevation Model (DEM), Digital Surface Model (DSM), dan kontur dengan toleransi kesalahan sub-sentimeter.</li>";
+        $html[] = "<li><strong>Integrasi Sensor LiDAR & Termal:</strong> Memungkinkan penetrasi vegetasi lebat untuk pemetaan topografi tanah asli serta inspeksi termal hotspot kebocoran panas industri.</li>";
+        $html[] = "</ul>";
+    }
+
+    // 6. Skenario Penggunaan Nyata (Use Cases)
+    $html[] = "<h2>Skenario Penggunaan & Solusi Industri</h2>";
+    $html[] = "<p>{$title} dirancang untuk diaplikasikan secara optimal pada berbagai sektor strategis:</p>";
+    $html[] = "<ol>";
+    $html[] = "<li><strong>" . esc_html($uc1_t) . ":</strong> " . esc_html($uc1_d) . "</li>";
+    $html[] = "<li><strong>" . esc_html($uc2_t) . ":</strong> " . esc_html($uc2_d) . "</li>";
+    $html[] = "<li><strong>" . esc_html($uc3_t) . ":</strong> " . esc_html($uc3_d) . "</li>";
+    $html[] = "<li><strong>" . esc_html($uc4_t) . ":</strong> " . esc_html($uc4_d) . "</li>";
+    $html[] = "</ol>";
+
+    // 7. Sertifikasi & Profil Produsen UAV Indonesia
+    $html[] = "<h2>Sertifikasi Mutu & Legalitas PT Karya Solusi Angkasa</h2>";
+    $html[] = "<p>PT Karya Solusi Angkasa memegang komitmen penuh terhadap keselamatan penerbangan tanpa awak (UAS) di ruang udara Indonesia. Fasilitas manufaktur kami beroperasi di bawah audit ketat Sistem Manajemen Mutu <strong>ISO 9001:2015</strong> dan mematuhi regulasi kelaikudaraan Direktorat Kelaikudaraan dan Pengoperasian Pesawat Udara (DKPPU) Kementerian Perhubungan RI. Standar rancang bangun wahana telah tersertifikasi <strong>SNI 9199:2023</strong> sebagai pedoman drone komersial berdaya guna tinggi.</p>";
+    $html[] = "<p>Pelajari lebih lanjut mengenai fasilitas pabrik, visi manufaktur, dan rekam jejak riset kami di halaman <a href=\"{$about_url}\">Tentang PT Karya Solusi Angkasa</a> atau ajukan jadwal konsultasi teknis melalui formulir <a href=\"{$contact_url}\">Kontak & Penawaran FDS</a>.</p>";
+
+    // 8. FAQ Terkait Model Drone
+    $html[] = "<h2>Pertanyaan yang Sering Diajukan (FAQ) Mengenai {$title}</h2>";
+    $html[] = "<div class=\"fds-seo-faq-group\">";
+    $html[] = "<h3>Apakah {$title} sudah memiliki sertifikasi TKDN resmi untuk pengadaan pemerintah?</h3>";
+    $html[] = "<p>Ya. Seluruh lini drone yang diproduksi oleh PT Karya Solusi Angkasa, termasuk {$title}, telah terverifikasi memiliki nilai Bobot Manfaat Perusahaan (BMP) dan Tingkat Komponen Dalam Negeri (TKDN) hingga 60,74%, memenuhi kriteria pengadaan e-Katalog LKPP dan instansi BUMN.</p>";
+    
+    $html[] = "<h3>Berapa lama garansi dan bagaimana ketersediaan suku cadang resminya?</h3>";
+    $html[] = "<p>FDS memberikan garansi resmi manufaktur untuk rangka dan sistem elektronik, didukung ketersediaan suku cadang asli ready-stock langsung dari pabrik kami di Yogyakarta tanpa perlu menunggu impor.</p>";
+
+    $html[] = "<h3>Apakah operator pemula mendapatkan pelatihan sebelum menerbangkan unit?</h3>";
+    $html[] = "<p>Ya, setiap pembelian drone disertai dengan paket pelatihan pilot intensif mencakup prosedur keselamatan terbang, kalibrasi sensor, pengoperasian software FDS STATION, dan penanganan darurat hingga operator dinyatakan kompeten.</p>";
+    $html[] = "</div>";
+
+    $html[] = '</div>';
+
+    return implode("\n", $html);
+}
+
+/**
+ * Synchronize Rank Math SEO Meta Keys & Generate DB Article for Drone CPT
+ */
+function fds_sync_drone_rank_math_seo($post_id) {
+    if (!$post_id || get_post_type($post_id) !== 'drone') {
+        return;
+    }
+
+    $title    = get_the_title($post_id);
+    $slug     = get_post_field('post_name', $post_id);
+    $tagline  = get_post_meta($post_id, 'drone_tagline', true);
+    $kategori = get_post_meta($post_id, 'drone_kategori', true) ?: 'Agrikultur';
+    $payload  = get_post_meta($post_id, 'drone_spec_kapasitas', true);
+    $durasi   = get_post_meta($post_id, 'drone_spec_durasi', true);
+    $permalink= get_permalink($post_id);
+
+    // 1. Generate & Update Rich post_content
+    $rich_content = fds_generate_drone_seo_content($post_id);
+    
+    // Unhook temporarily to avoid recursion
+    remove_action('save_post_drone', 'App\save_post_drone_handler_custom', 10);
+    wp_update_post([
+        'ID'           => $post_id,
+        'post_content' => $rich_content,
+    ]);
+
+    // 2. Define Focus Keywords based on category and model
+    $cat_lower = strtolower($kategori);
+    $clean_model = strtolower(trim(str_replace(['(', ')'], '', $title)));
+
+    if (strpos($cat_lower, 'agri') !== false || strpos($slug, 'ferto') !== false) {
+        $focus_kw = "drone pertanian {$slug}, drone sprayer tkdn, produsen uav indonesia, drone pertanian indonesia, pt karya solusi angkasa";
+        $seo_title = "{$title} — Drone Pertanian Presisi TKDN 60,74% & SNI Resmi | FDS";
+        $seo_desc  = "Drone pertanian {$title} buatan PT Karya Solusi Angkasa (FDS). Spesifikasi kapasitas {$payload}, durasi {$durasi}, TKDN 60,74%, SNI 9199:2023, sistem kendali FDS STATION.";
+    } elseif (strpos($cat_lower, 'peta') !== false || strpos($slug, 'deltav') !== false || strpos($slug, 'multi') !== false) {
+        $focus_kw = "drone mapping {$slug}, jasa pemetaan drone, jasa survey drone lidar, jasa pemetaan drone tambang, produsen uav indonesia";
+        $seo_title = "{$title} — Drone Mapping & Jasa Survey Pemetaan LiDAR GIS | FDS";
+        $seo_desc  = "Platform drone mapping {$title} dari PT Karya Solusi Angkasa untuk jasa survey drone LiDAR, pemetaan tambang cut and fill, ortofoto sub-sentimeter TKDN resmi.";
+    } elseif (strpos($cat_lower, 'kargo') !== false || strpos($slug, 'delfro') !== false) {
+        $focus_kw = "drone kargo {$slug}, drone logistik medis, produsen uav indonesia, drone tanggap darurat";
+        $seo_title = "{$title} — Drone Kargo Logistik Otonom & Medis Darurat | FDS";
+        $seo_desc  = "Drone kargo logistik {$title} kapasitas {$payload} buatan PT Karya Solusi Angkasa. Misi pengiriman medis darurat dan suku cadang antar pulau berstandar SNI.";
+    } else {
+        $focus_kw = "drone reboisasi {$slug}, drone pencarian korban bencana, drone restorasi hutan, produsen uav indonesia";
+        $seo_title = "{$title} — Drone Reboisasi Hutan & SAR Kebencanaan TKDN | FDS";
+        $seo_desc  = "Drone reboisasi {$title} kapasitas {$payload} seedball otomatis buatan PT Karya Solusi Angkasa. Restorasi lahan kritis dan operasi SAR kebencanaan.";
+    }
+
+    // 3. Populate Rank Math Specific Post Meta Fields
+    update_post_meta($post_id, 'rank_math_focus_keyword', $focus_kw);
+    update_post_meta($post_id, 'rank_math_title', $seo_title);
+    update_post_meta($post_id, 'rank_math_description', $seo_desc);
+    update_post_meta($post_id, 'rank_math_canonical_url', $permalink);
+    update_post_meta($post_id, 'rank_math_pillar_content', 'on');
+    update_post_meta($post_id, 'rank_math_robots', ['index']);
+    update_post_meta($post_id, 'rank_math_advanced_robots', [
+        'max-snippet'       => '-1',
+        'max-video-preview' => '-1',
+        'max-image-preview' => 'large',
+    ]);
+
+    // Rank Math Schema Product Assignment
+    update_post_meta($post_id, 'rank_math_rich_snippet', 'product');
+    update_post_meta($post_id, 'rank_math_snippet_product_name', $title);
+    update_post_meta($post_id, 'rank_math_snippet_product_desc', $seo_desc);
+    update_post_meta($post_id, 'rank_math_snippet_product_currency', 'IDR');
+    update_post_meta($post_id, 'rank_math_snippet_product_instock', 'on');
+
+    // Yoast SEO Fallback Fields
+    update_post_meta($post_id, '_yoast_wpseo_focuskw', explode(',', $focus_kw)[0]);
+    update_post_meta($post_id, '_yoast_wpseo_title', $seo_title);
+    update_post_meta($post_id, '_yoast_wpseo_metadesc', $seo_desc);
+    update_post_meta($post_id, '_yoast_wpseo_canonical', $permalink);
+}
 
 // =========================================================================
 // 6. AUTO-SEEDER DATA COMPRO.MD (One-time Initializer)
@@ -1035,6 +1263,9 @@ add_action('init', function () {
                      . "{$data['uc3_t']} — {$data['uc3_d']}\n"
                      . "{$data['uc4_t']} — {$data['uc4_d']}";
             update_post_meta($post_id, 'drone_for', $raw_for);
+
+            // Auto-generate rich SEO article & Rank Math metadata
+            fds_sync_drone_rank_math_seo($post_id);
         }
     }
     update_option('fds_drones_seeded_final_v1', true);

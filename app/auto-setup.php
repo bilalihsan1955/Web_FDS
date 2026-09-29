@@ -185,4 +185,21 @@ add_action('init', function () {
     if (!get_option('fds_theme_auto_setup_done_v1')) {
         fds_run_theme_auto_provision();
     }
+
+    // One-time Enterprise SEO & Rank Math Synchronization for all Drones
+    if (!get_option('fds_seo_rankmath_synced_v4')) {
+        if (function_exists('App\fds_sync_drone_rank_math_seo')) {
+            $drones = get_posts([
+                'post_type'      => 'drone',
+                'posts_per_page' => -1,
+                'post_status'    => 'any',
+            ]);
+            foreach ($drones as $d) {
+                fds_sync_drone_rank_math_seo($d->ID);
+            }
+            flush_rewrite_rules(false);
+            update_option('fds_seo_rankmath_synced_v4', true);
+        }
+    }
 }, 20);
+

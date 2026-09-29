@@ -48,28 +48,41 @@
 {{-- ========================================================== --}}
 {{-- STATS — Dark continuation                                 --}}
 {{-- ========================================================== --}}
+{{-- STATS BAR — Dark bar below hero                           --}}
+{{-- ========================================================== --}}
+@php
+  $about_stats_list = [];
+  for ($ai = 1; $ai <= 4; $ai++) {
+      $aNum = trim((string)($about["stat{$ai}_num"] ?? ''));
+      $aLbl = trim((string)($about["stat{$ai}_lbl"] ?? ''));
+      if ($aNum !== '' || $aLbl !== '') {
+          $about_stats_list[] = [
+              'num' => $aNum,
+              'lbl' => $aLbl,
+          ];
+      }
+  }
+  $total_about_stats = count($about_stats_list);
+@endphp
+
+@if($total_about_stats > 0)
 <section class="bg-[#1d1d1f] border-b border-white/[0.08] py-16">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
+    <div class="grid grid-cols-2 {{ $total_about_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_about_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_about_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
+      @foreach($about_stats_list as $ast)
       <div>
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($about['stat1_num'] ?? '2012') !!}</p>
-        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($about['stat1_lbl'] ?? 'Pengalaman UAV (PT Sejak 2019)') !!}</p>
+        @if(!empty($ast['num']))
+        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($ast['num']) !!}</p>
+        @endif
+        @if(!empty($ast['lbl']))
+        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($ast['lbl']) !!}</p>
+        @endif
       </div>
-      <div>
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($about['stat2_num'] ?? '60,74%') !!}</p>
-        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($about['stat2_lbl'] ?? 'Nilai TKDN + BMP Kemenperin') !!}</p>
-      </div>
-      <div>
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($about['stat3_num'] ?? 'ISO & SNI') !!}</p>
-        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($about['stat3_lbl'] ?? 'ISO 9001:2015 & SNI 9199:2023') !!}</p>
-      </div>
-      <div>
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($about['stat4_num'] ?? '100%') !!}</p>
-        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($about['stat4_lbl'] ?? 'Rekayasa & Software Lokal') !!}</p>
-      </div>
+      @endforeach
     </div>
   </div>
 </section>
+@endif
 
 
 {{-- ========================================================== --}}

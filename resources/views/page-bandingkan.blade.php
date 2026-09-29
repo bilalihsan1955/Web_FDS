@@ -352,26 +352,39 @@
     ];
     $cleanDefault = $cleanDroneCutouts[$slug] ?? home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png');
 
+    $has_meta = function($k) use ($post_id) {
+      return metadata_exists('post', $post_id, $k);
+    };
+
     $item = $catalog[$slug] ?? [
       'slug'      => $slug,
       'name'      => get_the_title($post_id),
       'kategori'  => $cat_name,
       'cat_slug'  => $cat_slug,
-      'badge'     => get_post_meta($post_id, 'drone_badge', true) ?: 'Produk UAV',
+      'badge'     => get_post_meta($post_id, 'drone_badge', true),
       'tagline'   => get_post_meta($post_id, 'drone_tagline', true) ?: get_the_excerpt($post_id),
       'color'     => '#0066cc',
       'specs'     => [],
       'desc'      => get_post_meta($post_id, 'drone_desc', true) ?: get_the_content(null, false, $post_id),
       'for'       => [],
-      'stat1_num' => get_post_meta($post_id, 'drone_stat1_num', true) ?: 'SNI',
-      'stat1_lbl' => get_post_meta($post_id, 'drone_stat1_lbl', true) ?: 'SNI 9199:2023',
-      'stat2_num' => get_post_meta($post_id, 'drone_stat2_num', true) ?: '60,74%',
-      'stat2_lbl' => get_post_meta($post_id, 'drone_stat2_lbl', true) ?: 'TKDN + BMP',
-      'stat3_num' => get_post_meta($post_id, 'drone_stat3_num', true) ?: '100%',
-      'stat3_lbl' => get_post_meta($post_id, 'drone_stat3_lbl', true) ?: 'FDS STATION GCS',
-      'stat4_num' => get_post_meta($post_id, 'drone_stat4_num', true) ?: 'Garansi',
-      'stat4_lbl' => get_post_meta($post_id, 'drone_stat4_lbl', true) ?: 'Purna Jual Resmi',
+      'stat1_num' => get_post_meta($post_id, 'drone_stat1_num', true),
+      'stat1_lbl' => get_post_meta($post_id, 'drone_stat1_lbl', true),
+      'stat2_num' => get_post_meta($post_id, 'drone_stat2_num', true),
+      'stat2_lbl' => get_post_meta($post_id, 'drone_stat2_lbl', true),
+      'stat3_num' => get_post_meta($post_id, 'drone_stat3_num', true),
+      'stat3_lbl' => get_post_meta($post_id, 'drone_stat3_lbl', true),
+      'stat4_num' => get_post_meta($post_id, 'drone_stat4_num', true),
+      'stat4_lbl' => get_post_meta($post_id, 'drone_stat4_lbl', true),
     ];
+
+    if ($has_meta('drone_stat1_num')) $item['stat1_num'] = get_post_meta($post_id, 'drone_stat1_num', true);
+    if ($has_meta('drone_stat1_lbl')) $item['stat1_lbl'] = get_post_meta($post_id, 'drone_stat1_lbl', true);
+    if ($has_meta('drone_stat2_num')) $item['stat2_num'] = get_post_meta($post_id, 'drone_stat2_num', true);
+    if ($has_meta('drone_stat2_lbl')) $item['stat2_lbl'] = get_post_meta($post_id, 'drone_stat2_lbl', true);
+    if ($has_meta('drone_stat3_num')) $item['stat3_num'] = get_post_meta($post_id, 'drone_stat3_num', true);
+    if ($has_meta('drone_stat3_lbl')) $item['stat3_lbl'] = get_post_meta($post_id, 'drone_stat3_lbl', true);
+    if ($has_meta('drone_stat4_num')) $item['stat4_num'] = get_post_meta($post_id, 'drone_stat4_num', true);
+    if ($has_meta('drone_stat4_lbl')) $item['stat4_lbl'] = get_post_meta($post_id, 'drone_stat4_lbl', true);
 
     $item['name']      = get_the_title($post_id) ?: $item['name'];
     $item['kategori']  = $cat_name;
@@ -380,14 +393,9 @@
     $item['hero_img']  = $thumb ?: fds_img($droneImgKey, $cleanDefault);
     $item['specs_img'] = $specs_img_db ?: ($thumb ?: fds_img($droneImgKey, $cleanDefault));
 
-    $c_badge = get_post_meta($post_id, 'drone_badge', true);
-    if ($c_badge) $item['badge'] = $c_badge;
-    
-    $c_tagline = get_post_meta($post_id, 'drone_tagline', true);
-    if ($c_tagline) $item['tagline'] = $c_tagline;
-
-    $c_desc = get_post_meta($post_id, 'drone_desc', true);
-    if ($c_desc) $item['desc'] = $c_desc;
+    if ($has_meta('drone_badge'))   $item['badge']   = get_post_meta($post_id, 'drone_badge', true);
+    if ($has_meta('drone_tagline')) $item['tagline'] = get_post_meta($post_id, 'drone_tagline', true);
+    if ($has_meta('drone_desc'))    $item['desc']    = get_post_meta($post_id, 'drone_desc', true);
 
     // Ambil Specs
     $c_specs_raw = get_post_meta($post_id, 'drone_specs_raw', true);
@@ -414,10 +422,10 @@
         'Sistem Daya (Baterai)'      => get_post_meta($post_id, 'drone_spec_baterai', true) ?: get_post_meta($post_id, 'drone_baterai', true),
         'Produktivitas / Jangkauan'  => get_post_meta($post_id, 'drone_spec_produktivitas', true) ?: get_post_meta($post_id, 'drone_cakupan', true),
         'Kecepatan Jelajah'          => get_post_meta($post_id, 'drone_spec_kecepatan', true),
-        'Ketahanan Lingkungan'       => get_post_meta($post_id, 'drone_spec_ketahanan', true) ?: 'IP65',
+        'Ketahanan Lingkungan'       => get_post_meta($post_id, 'drone_spec_ketahanan', true),
         'Sistem Otonomi & Navigasi'  => get_post_meta($post_id, 'drone_spec_otonomi', true),
-        'Ground Control Station'     => get_post_meta($post_id, 'drone_spec_gcs', true) ?: 'FDS STATION (Bahasa Indonesia)',
-        'Sertifikasi & Standar'      => get_post_meta($post_id, 'drone_spec_sertifikasi', true) ?: 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015',
+        'Ground Control Station'     => get_post_meta($post_id, 'drone_spec_gcs', true),
+        'Sertifikasi & Standar'      => get_post_meta($post_id, 'drone_spec_sertifikasi', true),
       ];
       $custom_specs = [];
       foreach ($spec_fields as $lbl => $val) {

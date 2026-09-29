@@ -84,6 +84,119 @@ add_action('init', function () {
     update_option('fds_cleanup_hp_done_v1', 1);
 });
 
+// 3.1. AUTO-MIGRATE ANTI-SLOP COPY & RESTORE HERO COPY (Run once)
+add_action('init', function () {
+    if (!get_option('fds_hero_copy_restored_v3')) {
+        update_option('fds_hero_badge', 'Teknologi UAV Indonesia');
+        update_option('fds_hero_title', "Solusi Drone Industrial\nuntuk Setiap Sektor.");
+        update_option('fds_hero_desc', 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.');
+        update_option('fds_hero_cta1_text', 'Jelajahi Solusi Kami');
+        update_option('fds_hero_cta1_url', '#solusi');
+        update_option('fds_hero_cta2_text', 'Konsultasi Enterprise');
+        update_option('fds_hero_cta2_url', '#kontak');
+        update_option('fds_hero_copy_restored_v3', 1);
+    }
+
+    $antislop_defaults = [
+        'fds_hero_badge'        => 'Teknologi UAV Indonesia',
+        'fds_hero_title'        => "Solusi Drone Industrial\nuntuk Setiap Sektor.",
+        'fds_hero_desc'         => 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.',
+        'fds_hero_cta1_text'    => 'Jelajahi Solusi Kami',
+        'fds_hero_cta1_url'     => '#solusi',
+        'fds_hero_cta2_text'    => 'Konsultasi Enterprise',
+        'fds_hero_cta2_url'     => '#kontak',
+
+        'fds_mitra_heading'     => 'Dipercaya & Digunakan oleh Institusi Nasional dan Lembaga Riset',
+
+        'fds_solusi_badge'      => 'Solusi Berdasarkan Industri',
+        'fds_solusi_title'      => 'Satu Platform UAV. 4 Sektor Kerja Strategis.',
+        'fds_solusi_desc'       => 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.',
+
+        'fds_produk_badge'      => 'Spesifikasi & Sertifikasi',
+        'fds_produk_title'      => 'Standar Mutu Manufaktur Nasional.',
+        'fds_produk_desc'       => 'Seluruh wahana diproduksi di Sleman, Yogyakarta dengan kepatuhan regulasi penerbangan DKPPU dan sertifikasi resmi Kementerian Perindustrian RI.',
+        'fds_produk_stat1_num'  => '60,74%',
+        'fds_produk_stat1_lbl'  => 'TKDN + BMP Kemenperin RI',
+        'fds_produk_stat2_num'  => 'SNI',
+        'fds_produk_stat2_lbl'  => 'SNI 9199:2023 Pertanian',
+        'fds_produk_stat3_num'  => '50 Liter',
+        'fds_produk_stat3_lbl'  => 'Kapasitas Semprot Maksimal FERTO',
+        'fds_produk_stat4_num'  => '48 Jam',
+        'fds_produk_stat4_lbl'  => 'Jaminan Servis & Spare Parts Lokal',
+
+        'fds_keunggulan_badge'       => 'Keunggulan Manufaktur FDS',
+        'fds_keunggulan_title'       => 'Mengapa Memilih Produsen Drone Lokal?',
+        'fds_keunggulan_card1_badge' => 'Riset & Perakitan Sleman',
+        'fds_keunggulan_card1_title' => "Rangka Karbon Komposit &\nAvionik In-House.",
+        'fds_keunggulan_card1_desc'  => 'Setiap unit dirakit dan diuji terbang langsung di fasilitas workshop kami di Sleman, Yogyakarta di bawah audit Sistem Manajemen Mutu ISO 9001:2015.',
+        'fds_keunggulan_card2_badge' => 'Legalitas Pengadaan',
+        'fds_keunggulan_card2_stat'  => '60,74%',
+        'fds_keunggulan_card2_desc'  => 'Sertifikat resmi TKDN Kemenperin RI. Memenuhi syarat prioritas belanja APBN/APBD di e-Katalog LKPP.',
+        'fds_keunggulan_card3_badge' => 'Software Kendali',
+        'fds_keunggulan_card3_title' => "FDS STATION GCS\nBahasa Indonesia.",
+        'fds_keunggulan_card3_desc'  => 'Software Ground Control Station intuitif tanpa kendala bahasa. Rencana terbang waypoint otomatis dan fitur keselamatan fail-safe RTH.',
+        'fds_keunggulan_card4_badge' => 'Sertifikasi Produk',
+        'fds_keunggulan_card4_stat'  => 'SNI & ISO',
+        'fds_keunggulan_card4_desc'  => 'Tersertifikasi SNI 9199:2023 untuk keselamatan terbang drone pertanian dan sertifikasi ISO 9001:2015.',
+        'fds_keunggulan_card5_badge' => 'Layanan Purna Jual',
+        'fds_keunggulan_card5_title' => 'Suku Cadang Ready Stock & Garansi Resmi.',
+        'fds_keunggulan_card5_desc'  => 'Semua komponen arm, motor propulsi, nosel, dan baterai tersedia langsung di workshop tanpa perlu menunggu impor berbulan-bulan.',
+        'fds_keunggulan_card6_badge' => 'Akademi Pilot',
+        'fds_keunggulan_card6_stat'  => '100+ Pilot',
+        'fds_keunggulan_card6_desc'  => 'Pelatihan pilot terakreditasi melalui FDS Academy hingga operator tim Anda mahir mengoperasikan misi di lapangan.',
+        'fds_keunggulan_card7_badge' => 'Skalabilitas Armada',
+        'fds_keunggulan_card7_title' => 'Dukungan Fleet Management Penuh.',
+        'fds_keunggulan_card7_desc'  => 'Dari pengadaan 1 unit kelompok tani hingga puluhan armada untuk konsorsium BUMN perkebunan dan pertambangan.',
+
+        'fds_layanan_badge'          => 'Dukungan Operasional',
+        'fds_layanan_title'          => 'Layanan Lengkap untuk Kelancaran Operasi Lapangan.',
+        'fds_layanan_desc'           => 'Kami tidak hanya menjual hardware. Kami mendampingi tim Anda mulai dari instalasi awal, sertifikasi pilot, hingga pemeliharaan armada secara berkala.',
+        'fds_layanan_cta_text'       => 'Konsultasi Kebutuhan Lapangan',
+        'fds_layanan_cta_url'        => '#kontak',
+
+        'fds_blog_badge'             => 'Newsroom & Edukasi',
+        'fds_blog_title'             => 'Studi Kasus & Informasi Teknologi UAV.',
+        'fds_blog_cta_text'          => 'Lihat Semua Artikel & Studi Kasus',
+
+        'fds_kontak_badge'           => 'Konsultasi & Penawaran',
+        'fds_kontak_title'           => "Jadwalkan Konsultasi Teknis\natau Demo Terbang.",
+        'fds_kontak_desc'            => 'Diskusikan kebutuhan armada drone, estimasi biaya operasional, atau jadwal uji terbang bersama tim engineer PT Karya Solusi Angkasa.',
+        'fds_kontak_wa_text'         => 'Hubungi via WhatsApp',
+        'fds_kontak_form_title'      => 'Formulir Permintaan Penawaran / Jadwal Demo',
+        'fds_kontak_form_btn_text'   => 'Kirim Permintaan Konsultasi',
+        'fds_kontak_form_note'       => 'Tim engineer kami akan merespons dalam 1×24 jam kerja. Data perusahaan Anda terjamin aman.',
+    ];
+
+    foreach ($antislop_defaults as $key => $default_val) {
+        $existing = get_option($key);
+        if (empty($existing) || 
+            strpos($existing, 'Solusi Drone Industrial') !== false ||
+            strpos($existing, 'Satu platform. Berbagai industri') !== false ||
+            strpos($existing, 'Mengapa Memilih FDS') !== false ||
+            strpos($existing, 'Keunggulan teknologi UAV buatan dalam negeri') !== false ||
+            strpos($existing, 'Sertifikasi TKDN + BMP') !== false ||
+            strpos($existing, 'Software') === 0 ||
+            strpos($existing, 'Standar & Mutu') !== false ||
+            strpos($existing, 'After-Sales') !== false ||
+            strpos($existing, 'Pengalaman Industri') !== false ||
+            strpos($existing, 'Cakupan Industri') !== false ||
+            strpos($existing, 'Layanan Enterprise UAV') !== false ||
+            strpos($existing, 'Newsroom') === 0 ||
+            strpos($existing, 'Hubungi Kami') !== false ||
+            strpos($existing, 'Hubungi tim Enterprise FDS') !== false) {
+            update_option($key, $default_val);
+        }
+    }
+
+    // Update Layanan items if default/old
+    $saved_layanan = get_option('fds_layanan_items', null);
+    if ($saved_layanan === null || (is_array($saved_layanan) && count($saved_layanan) <= 5 && isset($saved_layanan[0]['title']) && strpos($saved_layanan[0]['title'], 'Jasa Pemetaan') !== false)) {
+        update_option('fds_layanan_items', fds_get_default_layanan_items());
+    }
+
+    update_option('fds_antislop_copy_updated_v1', 1);
+});
+
 // 4. HELPER DATA KONTEN BERANDA
 function fds_get_default_layanan_items() {
     return [
@@ -101,7 +214,7 @@ function fds_get_default_layanan_items() {
         ],
         [
             'title' => 'Jasa & Sewa Drone Pertanian Presisi',
-            'desc'  => 'Armada drone sprayer FERTO siap pakai (solusi setara performa DJI Agras ber-TKDN) untuk penyemprotan pupuk & pestisida cair/granul presisi tinggi.',
+            'desc'  => 'Armada drone sprayer FERTO siap pakai berstandar resmi TKDN 60,74% untuk penyemprotan pupuk & pestisida cair/granul presisi tinggi.',
             'url'   => home_url('/#kontak'),
             'group' => 'Pelatihan & Operasional',
         ],
@@ -122,41 +235,25 @@ function fds_get_default_layanan_items() {
 
 function fds_get_layanan_items() {
     $saved = get_option('fds_layanan_items', null);
-    if ($saved === null || !is_array($saved) || empty($saved)) {
-        // Cek migrasi dari format legacy
-        $legacy = [];
-        for ($i = 1; $i <= 5; $i++) {
-            $t = get_option("fds_layanan_item{$i}_title", '');
-            $d = get_option("fds_layanan_item{$i}_desc", '');
-            if (!empty($t)) {
-                $grp = ($i <= 2) ? 'Survei & Inspeksi Teknis' : 'Pelatihan & Operasional';
-                $url = ($i === 3 || $i === 5) ? home_url('/#kontak') : home_url('/#layanan');
-                $legacy[] = [
-                    'title' => $t,
-                    'desc'  => $d,
-                    'url'   => $url,
-                    'group' => $grp,
-                ];
-            }
-        }
-        if (!empty($legacy)) {
-            return $legacy;
-        }
+    if ($saved === null) {
         return fds_get_default_layanan_items();
     }
 
     $items = [];
-    foreach ($saved as $item) {
-        if (!empty($item['title'])) {
-            $items[] = [
-                'title' => wp_specialchars_decode($item['title'], ENT_QUOTES),
-                'desc'  => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
-                'url'   => !empty($item['url']) ? $item['url'] : home_url('/#layanan'),
-                'group' => !empty($item['group']) ? $item['group'] : 'Pelatihan & Operasional',
-            ];
+    if (is_array($saved)) {
+        foreach ($saved as $item) {
+            $t = trim($item['title'] ?? '');
+            if (!empty($t)) {
+                $items[] = [
+                    'title' => wp_specialchars_decode($t, ENT_QUOTES),
+                    'desc'  => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
+                    'url'   => !empty($item['url']) ? $item['url'] : home_url('/#layanan'),
+                    'group' => !empty($item['group']) ? $item['group'] : 'Pelatihan & Operasional',
+                ];
+            }
         }
     }
-    return !empty($items) ? $items : fds_get_default_layanan_items();
+    return $items;
 }
 
 function fds_get_homepage_content() {
@@ -171,79 +268,84 @@ function fds_get_homepage_content() {
         'hero_cta2_url'     => get_option('fds_hero_cta2_url', '#kontak'),
 
         // MITRA
-        'mitra_heading'     => get_option('fds_mitra_heading', 'Dipercaya &amp; Digunakan Oleh Berbagai Institusi Terkemuka'),
+        'mitra_heading'     => get_option('fds_mitra_heading', 'Dipercaya & Digunakan oleh Institusi Nasional dan Lembaga Riset'),
 
         // SOLUSI INDUSTRI
-        'solusi_badge'      => get_option('fds_solusi_badge', 'Solusi Industri FDS'),
-        'solusi_title'      => get_option('fds_solusi_title', 'Satu platform. Berbagai industri strategis.'),
-        'solusi_desc'       => get_option('fds_solusi_desc', 'Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.'),
+        'solusi_badge'      => get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri'),
+        'solusi_title'      => get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.'),
+        'solusi_desc'       => get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.'),
 
         // PRODUK DRONE
-        'produk_badge'      => get_option('fds_produk_badge', 'Lini Produk UAV'),
-        'produk_title'      => get_option('fds_produk_title', 'Ekosistem Drone FDS.'),
-        'produk_desc'       => get_option('fds_produk_desc', 'Rangkaian platform UAV bersertifikasi SNI &amp; TKDN untuk kebutuhan agrikultur, pemetaan, inspeksi, dan misi berat.'),
-        'produk_stat1_num'  => get_option('fds_produk_stat1_num', 'SNI'),
-        'produk_stat1_lbl'  => get_option('fds_produk_stat1_lbl', 'SNI 9199:2023 Resmi'),
-        'produk_stat2_num'  => get_option('fds_produk_stat2_num', '60,74%'),
-        'produk_stat2_lbl'  => get_option('fds_produk_stat2_lbl', 'TKDN + BMP Kemenperin'),
-        'produk_stat3_num'  => get_option('fds_produk_stat3_num', '100%'),
-        'produk_stat3_lbl'  => get_option('fds_produk_stat3_lbl', 'FDS Station GCS'),
-        'produk_stat4_num'  => get_option('fds_produk_stat4_num', '2012'),
-        'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Pengalaman Industri UAV'),
+        'produk_badge'      => get_option('fds_produk_badge', 'Spesifikasi & Sertifikasi'),
+        'produk_title'      => get_option('fds_produk_title', 'Standar Mutu Manufaktur Nasional.'),
+        'produk_desc'       => get_option('fds_produk_desc', 'Seluruh wahana diproduksi di Sleman, Yogyakarta dengan kepatuhan regulasi penerbangan DKPPU dan sertifikasi resmi Kementerian Perindustrian RI.'),
+        'produk_stat1_num'  => get_option('fds_produk_stat1_num', '60,74%'),
+        'produk_stat1_lbl'  => get_option('fds_produk_stat1_lbl', 'TKDN + BMP Kemenperin RI'),
+        'produk_stat2_num'  => get_option('fds_produk_stat2_num', 'SNI'),
+        'produk_stat2_lbl'  => get_option('fds_produk_stat2_lbl', 'SNI 9199:2023 Pertanian'),
+        'produk_stat3_num'  => get_option('fds_produk_stat3_num', '50 Liter'),
+        'produk_stat3_lbl'  => get_option('fds_produk_stat3_lbl', 'Kapasitas Semprot Maksimal FERTO'),
+        'produk_stat4_num'  => get_option('fds_produk_stat4_num', '48 Jam'),
+        'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Jaminan Servis & Spare Parts Lokal'),
 
         // KEUNGGULAN (BENTO GRID)
-        'keunggulan_badge'       => get_option('fds_keunggulan_badge', 'Mengapa FDS'),
-        'keunggulan_title'       => get_option('fds_keunggulan_title', 'Keunggulan yang tidak bisa dikompromikan.'),
+        'keunggulan_badge'       => get_option('fds_keunggulan_badge', 'Keunggulan Manufaktur FDS'),
+        'keunggulan_title'       => get_option('fds_keunggulan_title', 'Mengapa Memilih Produsen Drone Lokal?'),
         
-        'keunggulan_card1_badge' => get_option('fds_keunggulan_card1_badge', 'Rekayasa & Manufaktur'),
-        'keunggulan_card1_title' => get_option('fds_keunggulan_card1_title', "Desain Aerodinamis &\nAvionik In-House."),
-        'keunggulan_card1_desc'  => get_option('fds_keunggulan_card1_desc', 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).'),
+        'keunggulan_card1_badge' => get_option('fds_keunggulan_card1_badge', 'Riset & Perakitan Sleman'),
+        'keunggulan_card1_title' => get_option('fds_keunggulan_card1_title', "Rangka Karbon Komposit &\nAvionik In-House."),
+        'keunggulan_card1_desc'  => get_option('fds_keunggulan_card1_desc', 'Setiap unit dirakit dan diuji terbang langsung di fasilitas workshop kami di Sleman, Yogyakarta di bawah audit Sistem Manajemen Mutu ISO 9001:2015.'),
         'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80')),
 
-        'keunggulan_card2_badge' => get_option('fds_keunggulan_card2_badge', 'Sertifikasi TKDN + BMP'),
+        'keunggulan_card2_badge' => get_option('fds_keunggulan_card2_badge', 'Legalitas Pengadaan'),
         'keunggulan_card2_stat'  => get_option('fds_keunggulan_card2_stat', '60,74%'),
-        'keunggulan_card2_desc'  => get_option('fds_keunggulan_card2_desc', 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI.'),
+        'keunggulan_card2_desc'  => get_option('fds_keunggulan_card2_desc', 'Sertifikat resmi TKDN Kemenperin RI. Memenuhi syarat prioritas belanja APBN/APBD di e-Katalog LKPP.'),
+        'keunggulan_card2_img'   => get_option('fds_keunggulan_card2_img', get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg'),
 
-        'keunggulan_card3_badge' => get_option('fds_keunggulan_card3_badge', 'Software'),
-        'keunggulan_card3_title' => get_option('fds_keunggulan_card3_title', "FDS STATION\nGround Control GCS"),
-        'keunggulan_card3_desc'  => get_option('fds_keunggulan_card3_desc', 'Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.'),
+        'keunggulan_card3_badge' => get_option('fds_keunggulan_card3_badge', 'Software Kendali'),
+        'keunggulan_card3_title' => get_option('fds_keunggulan_card3_title', "FDS STATION GCS\nBahasa Indonesia."),
+        'keunggulan_card3_desc'  => get_option('fds_keunggulan_card3_desc', 'Software Ground Control Station intuitif tanpa kendala bahasa. Rencana terbang waypoint otomatis dan fitur keselamatan fail-safe RTH.'),
+        'keunggulan_card3_img'   => get_option('fds_keunggulan_card3_img', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'),
 
-        'keunggulan_card4_badge' => get_option('fds_keunggulan_card4_badge', 'Standar & Mutu'),
+        'keunggulan_card4_badge' => get_option('fds_keunggulan_card4_badge', 'Sertifikasi Produk'),
         'keunggulan_card4_stat'  => get_option('fds_keunggulan_card4_stat', 'ISO & SNI'),
-        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.'),
+        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Tersertifikasi SNI 9199:2023 untuk keselamatan terbang drone pertanian dan sertifikasi ISO 9001:2015.'),
+        'keunggulan_card4_img'   => get_option('fds_keunggulan_card4_img', 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80'),
 
-        'keunggulan_card5_badge' => get_option('fds_keunggulan_card5_badge', 'After-Sales'),
-        'keunggulan_card5_title' => get_option('fds_keunggulan_card5_title', 'Purna Jual & Suku Cadang'),
-        'keunggulan_card5_desc'  => get_option('fds_keunggulan_card5_desc', 'Pelatihan pilot berlisensi, servis berkala, dan spare parts siap kirim dari Yogyakarta.'),
+        'keunggulan_card5_badge' => get_option('fds_keunggulan_card5_badge', 'Layanan Purna Jual'),
+        'keunggulan_card5_title' => get_option('fds_keunggulan_card5_title', 'Suku Cadang Ready Stock & Garansi Resmi.'),
+        'keunggulan_card5_desc'  => get_option('fds_keunggulan_card5_desc', 'Semua komponen arm, motor propulsi, nosel, dan baterai tersedia langsung di workshop tanpa perlu menunggu impor berbulan-bulan.'),
+        'keunggulan_card5_img'   => get_option('fds_keunggulan_card5_img', 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80'),
 
-        'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Pengalaman Industri'),
+        'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Akademi Pilot'),
         'keunggulan_card6_stat'  => get_option('fds_keunggulan_card6_stat', '2012'),
         'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.'),
 
-        'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Cakupan Industri'),
+        'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Skalabilitas Armada'),
         'keunggulan_card7_title' => get_option('fds_keunggulan_card7_title', 'Satu ekosistem. Banyak solusi.'),
         'keunggulan_card7_desc'  => get_option('fds_keunggulan_card7_desc', 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.'),
+        'keunggulan_card7_img'   => get_option('fds_keunggulan_card7_img', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'),
 
         // LAYANAN ENTERPRISE
-        'layanan_badge'          => get_option('fds_layanan_badge', 'Layanan'),
-        'layanan_title'          => get_option('fds_layanan_title', 'Lebih dari sekadar hardware.'),
-        'layanan_desc'           => get_option('fds_layanan_desc', 'Kami menyediakan layanan operasional lengkap untuk memastikan investasi drone Anda memberikan hasil maksimal.'),
-        'layanan_cta_text'       => get_option('fds_layanan_cta_text', 'Diskusi Kebutuhan Anda'),
+        'layanan_badge'          => get_option('fds_layanan_badge', 'Dukungan Operasional'),
+        'layanan_title'          => get_option('fds_layanan_title', 'Layanan Lengkap untuk Kelancaran Operasi Lapangan.'),
+        'layanan_desc'           => get_option('fds_layanan_desc', 'Kami tidak hanya menjual hardware. Kami mendampingi tim Anda mulai dari instalasi awal, sertifikasi pilot, hingga pemeliharaan armada secara berkala.'),
+        'layanan_cta_text'       => get_option('fds_layanan_cta_text', 'Konsultasi Kebutuhan Lapangan'),
         'layanan_cta_url'        => get_option('fds_layanan_cta_url', '#kontak'),
 
         // NEWSROOM
-        'blog_badge'             => get_option('fds_blog_badge', 'Newsroom'),
-        'blog_title'             => get_option('fds_blog_title', 'Berita & Pembaruan Terkini.'),
-        'blog_cta_text'          => get_option('fds_blog_cta_text', 'Lihat semua artikel'),
+        'blog_badge'             => get_option('fds_blog_badge', 'Newsroom & Edukasi'),
+        'blog_title'             => get_option('fds_blog_title', 'Studi Kasus & Informasi Teknologi UAV.'),
+        'blog_cta_text'          => get_option('fds_blog_cta_text', 'Lihat Semua Artikel & Studi Kasus'),
 
         // KONTAK / INQUIRY
-        'kontak_badge'           => get_option('fds_kontak_badge', 'Enterprise Sales'),
-        'kontak_title'           => get_option('fds_kontak_title', "Hubungi tim\nEnterprise FDS."),
-        'kontak_desc'            => get_option('fds_kontak_desc', 'Dari konsultasi teknis, fleet management, hingga program sertifikasi — kami siap mendampingi operasional drone Anda.'),
-        'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Chat via WhatsApp'),
-        'kontak_form_title'      => get_option('fds_kontak_form_title', 'Kirim pesan inquiry'),
-        'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Pesan'),
-        'kontak_form_note'       => get_option('fds_kontak_form_note', 'Kami merespons dalam 1×24 jam kerja. Data terjamin aman.'),
+        'kontak_badge'           => get_option('fds_kontak_badge', 'Konsultasi & Penawaran'),
+        'kontak_title'           => get_option('fds_kontak_title', "Jadwalkan Konsultasi Teknis\natau Demo Terbang."),
+        'kontak_desc'            => get_option('fds_kontak_desc', 'Diskusikan kebutuhan armada drone, estimasi biaya operasional, atau jadwal uji terbang bersama tim engineer PT Karya Solusi Angkasa.'),
+        'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Hubungi via WhatsApp'),
+        'kontak_form_title'      => get_option('fds_kontak_form_title', 'Formulir Permintaan Penawaran / Jadwal Demo'),
+        'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Permintaan Konsultasi'),
+        'kontak_form_note'       => get_option('fds_kontak_form_note', 'Tim engineer kami akan merespons dalam 1×24 jam kerja. Data perusahaan Anda terjamin aman.'),
         'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
     ];
 
@@ -274,7 +376,7 @@ function render_homepage_content_admin_page() {
             'fds_mitra_heading',
             'fds_solusi_badge', 'fds_solusi_title',
             'fds_produk_badge', 'fds_produk_title', 'fds_produk_stat1_num', 'fds_produk_stat1_lbl', 'fds_produk_stat2_num', 'fds_produk_stat2_lbl', 'fds_produk_stat3_num', 'fds_produk_stat3_lbl', 'fds_produk_stat4_num', 'fds_produk_stat4_lbl',
-            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title',
+            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_img',
             'fds_layanan_badge', 'fds_layanan_title', 'fds_layanan_cta_text', 'fds_layanan_cta_url',
             'fds_blog_badge', 'fds_blog_title', 'fds_blog_cta_text',
             'fds_kontak_badge', 'fds_kontak_wa_text', 'fds_kontak_form_title', 'fds_kontak_form_btn_text',
@@ -667,45 +769,98 @@ function render_homepage_content_admin_page() {
 
                     <!-- Card 2 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 2: TKDN &amp; BMP</h4>
+                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 2: TKDN &amp; Bangga Buatan Indonesia</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
                             <input type="text" name="fds_keunggulan_card2_badge" value="<?php echo esc_attr($c['keunggulan_card2_badge']); ?>" placeholder="Badge">
                             <input type="text" name="fds_keunggulan_card2_stat" value="<?php echo esc_attr($c['keunggulan_card2_stat']); ?>" placeholder="Nilai Stat (60,74%)">
                         </div>
-                        <textarea name="fds_keunggulan_card2_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card2_desc']); ?></textarea>
+                        <textarea name="fds_keunggulan_card2_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card2_desc']); ?></textarea>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Logo Bangga Buatan Indonesia / Gambar Tambahan (Opsional)</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <img src="<?php echo esc_url($c['keunggulan_card2_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0; padding: 4px;">
+                                <div>
+                                    <input type="hidden" name="fds_keunggulan_card2_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card2_img']); ?>">
+                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar / Logo</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Card 3 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 3: Software GCS</h4>
+                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 3: Software GCS (Gelap)</h4>
                         <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 8px;">
                             <input type="text" name="fds_keunggulan_card3_badge" value="<?php echo esc_attr($c['keunggulan_card3_badge']); ?>" placeholder="Badge">
                             <input type="text" name="fds_keunggulan_card3_title" value="<?php echo esc_attr($c['keunggulan_card3_title']); ?>" placeholder="Judul">
                         </div>
-                        <textarea name="fds_keunggulan_card3_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card3_desc']); ?></textarea>
+                        <textarea name="fds_keunggulan_card3_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card3_desc']); ?></textarea>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar / Screenshot Software (Opsional)</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <img src="<?php echo esc_url($c['keunggulan_card3_img']); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                <div>
+                                    <input type="hidden" name="fds_keunggulan_card3_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card3_img']); ?>">
+                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Card 4, 5, 6, 7 -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 4: Standar ISO &amp; SNI</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 4: Standar ISO &amp; SNI</h4>
                             <input type="text" name="fds_keunggulan_card4_stat" value="<?php echo esc_attr($c['keunggulan_card4_stat']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card4_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card4_desc']); ?></textarea>
+                            <textarea name="fds_keunggulan_card4_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card4_desc']); ?></textarea>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <img src="<?php echo esc_url($c['keunggulan_card4_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                    <div>
+                                        <input type="hidden" name="fds_keunggulan_card4_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card4_img']); ?>">
+                                        <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 5: Purna Jual &amp; Suku Cadang</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 5: Purna Jual &amp; Suku Cadang</h4>
                             <input type="text" name="fds_keunggulan_card5_title" value="<?php echo esc_attr($c['keunggulan_card5_title']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card5_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card5_desc']); ?></textarea>
+                            <textarea name="fds_keunggulan_card5_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card5_desc']); ?></textarea>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <img src="<?php echo esc_url($c['keunggulan_card5_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                    <div>
+                                        <input type="hidden" name="fds_keunggulan_card5_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card5_img']); ?>">
+                                        <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
                             <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 6: Pengalaman Industri (2012)</h4>
                             <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; margin-bottom: 6px;">
                             <textarea name="fds_keunggulan_card6_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card6_desc']); ?></textarea>
                         </div>
+
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 7: Ekosistem Multi-Sektor</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 7: Ekosistem Multi-Sektor</h4>
                             <input type="text" name="fds_keunggulan_card7_title" value="<?php echo esc_attr($c['keunggulan_card7_title']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card7_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card7_desc']); ?></textarea>
+                            <textarea name="fds_keunggulan_card7_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card7_desc']); ?></textarea>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <img src="<?php echo esc_url($c['keunggulan_card7_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                    <div>
+                                        <input type="hidden" name="fds_keunggulan_card7_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card7_img']); ?>">
+                                        <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

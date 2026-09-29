@@ -7,162 +7,196 @@
 @endphp
 
 {{-- ========================================================== --}}
-{{-- 1. HERO — Dinamis dari WP Admin Konten Beranda            --}}
+{{-- 1. HERO — Full-Bleed Background Hero Section (Dinamis)    --}}
 {{-- ========================================================== --}}
-<section id="overview" class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-20 pb-0 text-center">
+@php
+  $hero_slides = \App\fds_get_hero_slides();
+@endphp
+<section id="overview" class="relative w-full h-screen min-h-[100vh] min-h-[100dvh] flex flex-col justify-between overflow-hidden bg-[#070b14] pt-[52px] select-none">
+  
+  {{-- ── FULL-BLEED BACKGROUND SLIDER ──────────────────────── --}}
+  <div id="fds-hero-slider" class="absolute inset-0 w-full h-full z-0 overflow-hidden" data-slide-count="{{ count($hero_slides) }}">
+    @foreach($hero_slides as $i => $slide)
+    <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
+      <img
+        src="{{ $slide['url'] }}"
+        alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
+        class="w-full h-full object-cover object-center"
+        loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
+      >
+      {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
+      <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
+    </div>
+    @endforeach
+  </div>
 
+  {{-- ── FOREGROUND CONTENT (CENTER STAGE) ─────────────────── --}}
+  <div class="relative z-20 max-w-[1400px] w-full mx-auto px-6 lg:px-12 flex-1 flex flex-col justify-center items-center text-center py-6 sm:py-10 my-auto">
+    
     @if(!empty($hp['hero_badge']))
-    <p class="inline-block text-[13px] font-semibold text-[#0066cc] mb-5 tracking-wide">
-      {!! esc_html($hp['hero_badge']) !!}
-    </p>
+    <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all animate-fade-in">
+      <span>{!! esc_html($hp['hero_badge'] ?? 'Teknologi UAV Indonesia') !!}</span>
+    </div>
     @endif
 
-    <h1 class="text-[44px] sm:text-[58px] lg:text-[72px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.05] max-w-[820px] mx-auto">
+    <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]">
       {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Industrial\nuntuk Setiap Sektor.")) !!}
     </h1>
 
-    <p class="mt-6 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[580px] mx-auto leading-[1.55]">
-      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Teknologi udara berstandar industri, diproduksi lokal.')) !!}
+    <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.')) !!}
     </p>
 
-    <div class="mt-8 flex items-center justify-center gap-4 flex-wrap">
-      <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0066cc]/20">
+    <div class="mt-9 flex items-center justify-center gap-4 flex-wrap">
+      <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" 
+         class="inline-flex items-center justify-center bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-xl shadow-[#0066cc]/40 hover:shadow-[#0066cc]/60 hover:-translate-y-0.5">
         {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
       </a>
-      <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" class="inline-flex items-center text-[#0066cc] text-[15px] font-medium hover:underline gap-1 group">
+      <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" 
+         class="inline-flex items-center justify-center bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/30 text-[15px] sm:text-[16px] font-medium px-8 py-4 rounded-full transition-all duration-200 gap-2 hover:-translate-y-0.5 shadow-lg">
         {!! esc_html($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') !!}
-        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
       </a>
     </div>
 
-    @php
-      $hero_slides = \App\fds_get_hero_slides();
-    @endphp
+  </div>
 
-    {{-- ── HERO SLIDER CAROUSEL ──────────────────────────────── --}}
-    <div id="fds-hero-slider" class="mt-14 rounded-t-[2rem] overflow-hidden shadow-2xl shadow-black/10 relative group bg-[#000] select-none" data-slide-count="{{ count($hero_slides) }}">
+  {{-- ── BOTTOM SLIDER NAVIGATION BAR ──────────────────────── --}}
+  <div class="relative z-20 w-full border-t border-white/10 bg-white/10 backdrop-blur-md py-4">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4">
       
-      {{-- Slides Wrapper --}}
-      <div class="relative w-full h-[360px] sm:h-[520px] lg:h-[620px] overflow-hidden">
-        @foreach($hero_slides as $i => $slide)
-        <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
-          <img
-            src="{{ $slide['url'] }}"
-            alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
-            class="w-full h-full object-cover"
-            loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
-          >
-          @if(!empty($slide['title']))
-          <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent p-6 sm:p-10 text-left">
-            <p class="text-white text-[16px] sm:text-[20px] font-semibold tracking-[-0.01em] drop-shadow-md">
-              {!! esc_html(wp_specialchars_decode($slide['title'], ENT_QUOTES)) !!}
-            </p>
-          </div>
-          @endif
+      {{-- Slide Title / Caption --}}
+      <div class="flex items-center gap-3 text-left">
+        <span class="w-2 h-2 rounded-full bg-white/80"></span>
+        <div id="fds-hero-slide-caption" class="text-[13px] font-medium text-white/90 tracking-wide transition-opacity duration-300">
+          {!! esc_html(wp_specialchars_decode($hero_slides[0]['title'] ?? 'Platform UAV Enterprise Indonesia', ENT_QUOTES)) !!}
         </div>
-        @endforeach
       </div>
 
-      {{-- Prev & Next Navigation Buttons (Visible on hover on desktop) --}}
-      @if(count($hero_slides) > 1)
-      <button type="button" id="fds-slider-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-[#1d1d1f] flex items-center justify-center backdrop-blur-md shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hover:scale-105 active:scale-95 focus:outline-none" aria-label="Previous Slide">
-        <svg class="w-5 h-5 -translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
-      </button>
-      <button type="button" id="fds-slider-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/80 hover:bg-white text-[#1d1d1f] flex items-center justify-center backdrop-blur-md shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 z-20 hover:scale-105 active:scale-95 focus:outline-none" aria-label="Next Slide">
-        <svg class="w-5 h-5 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-      </button>
+      {{-- Controls (Indicators & Arrows) --}}
+      <div class="flex items-center gap-5">
+        
+        @if(count($hero_slides) > 1)
+        {{-- Dot Indicators --}}
+        <div class="flex items-center gap-2">
+          @foreach($hero_slides as $i => $slide)
+          <button type="button" class="fds-slider-dot h-2 rounded-full transition-all duration-300 {{ $i === 0 ? 'w-8 bg-[#0066cc]' : 'w-2 bg-white/40 hover:bg-white/70' }}" data-dot-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}"></button>
+          @endforeach
+        </div>
 
-      {{-- Dot Indicators --}}
-      <div class="absolute bottom-5 inset-x-0 flex items-center justify-center gap-2 z-20 pointer-events-auto">
-        @foreach($hero_slides as $i => $slide)
-        <button type="button" class="fds-slider-dot h-2 rounded-full transition-all duration-300 {{ $i === 0 ? 'w-8 bg-white' : 'w-2 bg-white/50 hover:bg-white/80' }}" data-dot-index="{{ $i }}" aria-label="Go to slide {{ $i + 1 }}"></button>
-        @endforeach
+        {{-- Arrows --}}
+        <div class="flex items-center gap-2">
+          <button type="button" id="fds-slider-prev" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 border border-white/25 text-white flex items-center justify-center backdrop-blur-md transition-all active:scale-95" aria-label="Previous Slide">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button type="button" id="fds-slider-next" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/30 border border-white/25 text-white flex items-center justify-center backdrop-blur-md transition-all active:scale-95" aria-label="Next Slide">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        @endif
+
       </div>
-      @endif
 
     </div>
+  </div>
 
-    @if(count($hero_slides) > 1)
-    <script>
-      (function() {
-        const slider = document.getElementById('fds-hero-slider');
-        if (!slider) return;
-        
-        const slides = slider.querySelectorAll('.fds-hero-slide');
-        const dots = slider.querySelectorAll('.fds-slider-dot');
-        const prevBtn = document.getElementById('fds-slider-prev');
-        const nextBtn = document.getElementById('fds-slider-next');
-        const total = slides.length;
-        let current = 0;
-        let timer = null;
-        const interval = 5000; // 5 detik per slide
+  @if(count($hero_slides) > 1)
+  <script>
+    (function() {
+      const slider = document.getElementById('fds-hero-slider');
+      if (!slider) return;
+      
+      const slides = slider.querySelectorAll('.fds-hero-slide');
+      const dots = document.querySelectorAll('.fds-slider-dot');
+      const prevBtn = document.getElementById('fds-slider-prev');
+      const nextBtn = document.getElementById('fds-slider-next');
+      const captionEl = document.getElementById('fds-hero-slide-caption');
+      
+      const slideTitles = @json(array_column($hero_slides, 'title'));
+      const total = slides.length;
+      let current = 0;
+      let timer = null;
+      const interval = 6000; // 6 detik per slide
 
-        function showSlide(index) {
-          if (index < 0) index = total - 1;
-          if (index >= total) index = 0;
-          current = index;
+      function showSlide(index) {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        current = index;
 
-          slides.forEach((slide, i) => {
-            if (i === current) {
-              slide.classList.remove('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
-              slide.classList.add('opacity-100', 'scale-100', 'z-10');
-            } else {
-              slide.classList.remove('opacity-100', 'scale-100', 'z-10');
-              slide.classList.add('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
-            }
-          });
-
-          dots.forEach((dot, i) => {
-            if (i === current) {
-              dot.classList.remove('w-2', 'bg-white/50');
-              dot.classList.add('w-8', 'bg-white');
-            } else {
-              dot.classList.remove('w-8', 'bg-white');
-              dot.classList.add('w-2', 'bg-white/50');
-            }
-          });
-        }
-
-        function nextSlide() {
-          showSlide(current + 1);
-        }
-
-        function prevSlide() {
-          showSlide(current - 1);
-        }
-
-        function startAutoPlay() {
-          stopAutoPlay();
-          timer = setInterval(nextSlide, interval);
-        }
-
-        function stopAutoPlay() {
-          if (timer) clearInterval(timer);
-        }
-
-        if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); startAutoPlay(); });
-        if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); startAutoPlay(); });
-
-        dots.forEach(dot => {
-          dot.addEventListener('click', (e) => {
-            const idx = parseInt(e.currentTarget.getAttribute('data-dot-index'), 10);
-            showSlide(idx);
-            startAutoPlay();
-          });
+        slides.forEach((slide, i) => {
+          if (i === current) {
+            slide.classList.remove('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
+            slide.classList.add('opacity-100', 'scale-100', 'z-10');
+          } else {
+            slide.classList.remove('opacity-100', 'scale-100', 'z-10');
+            slide.classList.add('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
+          }
         });
 
-        // Pause on mouse hover
-        slider.addEventListener('mouseenter', stopAutoPlay);
-        slider.addEventListener('mouseleave', startAutoPlay);
+        dots.forEach((dot, i) => {
+          if (i === current) {
+            dot.classList.remove('w-2', 'bg-white/40');
+            dot.classList.add('w-8', 'bg-[#0066cc]');
+          } else {
+            dot.classList.remove('w-8', 'bg-[#0066cc]');
+            dot.classList.add('w-2', 'bg-white/40');
+          }
+        });
 
-        // Touch swipe support on mobile
-        let touchStartX = 0;
-        let touchEndX = 0;
-        slider.addEventListener('touchstart', (e) => {
+        if (captionEl && slideTitles[current]) {
+          captionEl.style.opacity = '0';
+          setTimeout(() => {
+            captionEl.textContent = slideTitles[current] || 'Platform UAV Enterprise Indonesia';
+            captionEl.style.opacity = '1';
+          }, 150);
+        }
+      }
+
+      function nextSlide() {
+        showSlide(current + 1);
+      }
+
+      function prevSlide() {
+        showSlide(current - 1);
+      }
+
+      function startAutoPlay() {
+        stopAutoPlay();
+        timer = setInterval(nextSlide, interval);
+      }
+
+      function stopAutoPlay() {
+        if (timer) clearInterval(timer);
+      }
+
+      if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); startAutoPlay(); });
+      if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); startAutoPlay(); });
+
+      dots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const idx = parseInt(e.currentTarget.getAttribute('data-dot-index'), 10);
+          showSlide(idx);
+          startAutoPlay();
+        });
+      });
+
+      // Pause on mouse hover over overview section
+      const overview = document.getElementById('overview');
+      if (overview) {
+        overview.addEventListener('mouseenter', stopAutoPlay);
+        overview.addEventListener('mouseleave', startAutoPlay);
+      }
+
+      // Touch swipe support on mobile
+      let touchStartX = 0;
+      let touchEndX = 0;
+      if (overview) {
+        overview.addEventListener('touchstart', (e) => {
           touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
-        slider.addEventListener('touchend', (e) => {
+        overview.addEventListener('touchend', (e) => {
           touchEndX = e.changedTouches[0].screenX;
           if (touchStartX - touchEndX > 50) {
             nextSlide();
@@ -172,13 +206,13 @@
             startAutoPlay();
           }
         }, { passive: true });
+      }
 
-        // Start autoplay
-        startAutoPlay();
-      })();
-    </script>
-    @endif
-  </div>
+      // Start autoplay
+      startAutoPlay();
+    })();
+  </script>
+  @endif
 </section>
 
 
@@ -432,108 +466,131 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 {{-- ========================================================== --}}
-{{-- 4. KEUNGGULAN — Bento grid light                           --}}
+{{-- 4. KEUNGGULAN — Bento grid (Masonry Reference Architecture) --}}
 {{-- ========================================================== --}}
-<section class="bg-white py-24 sm:py-32">
+<section class="bg-white pt-20 pb-24 sm:pt-28 sm:pb-32 border-b border-black/[0.04]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     {{-- Section header --}}
-    <div class="mb-14">
+    <div class="mb-12 sm:mb-14">
       <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
-        {!! esc_html($hp['keunggulan_badge'] ?? 'Mengapa Memilih FDS') !!}
+        {!! esc_html($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') !!}
       </p>
-      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[680px]">
-        {!! $hp['keunggulan_title'] ?? 'Keunggulan teknologi UAV buatan dalam negeri.' !!}
+      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[700px]">
+        {!! $hp['keunggulan_title'] ?? 'Mengapa Memilih Produsen Drone Lokal?' !!}
       </h2>
     </div>
 
-    {{-- Bento Grid (7 Cards) --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
+    {{-- Bento Grid (Sesuai Referensi: Kiri Atas Lebar, Kanan Tinggi 2 Baris TKDN, Tengah 2 Kotak, & Bawah Lebar) --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-      {{-- Large hero card — local manufacturing --}}
-      <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] overflow-hidden relative min-h-[340px] group"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
+      {{-- Card 1: Kiri Atas Lebar (lg:col-span-2) — Manufaktur Sleman --}}
+      <div class="lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[260px] sm:min-h-[280px] group flex flex-col justify-end p-7 sm:p-8 border border-black/[0.08]"
+           style="box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
         <div class="absolute inset-0 z-0">
           <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80') }}"
                alt="Pabrik &amp; Workshop FDS"
-               class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/80 via-[#1d1d1f]/20 to-transparent"></div>
+               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/40 to-transparent"></div>
         </div>
-        <div class="relative z-10 h-full flex flex-col justify-end p-8 sm:p-10">
-          <p class="text-[12px] font-bold text-white/50 tracking-wide mb-3">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Rekayasa & Manufaktur') !!}</p>
-          <h3 class="text-[28px] sm:text-[34px] font-semibold text-white tracking-[-0.02em] leading-[1.1] mb-2">
-            {!! nl2br(esc_html($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis &\nAvionik In-House.")) !!}
+        <div class="relative z-10">
+          <span class="text-[12px] font-medium text-white/80 block mb-2">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') !!}</span>
+          <h3 class="text-[22px] sm:text-[26px] font-semibold text-white tracking-[-0.02em] leading-tight mb-2 max-w-[600px]">
+            {!! nl2br(esc_html($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")) !!}
           </h3>
-          <p class="text-[15px] text-white/70 max-w-[420px] leading-relaxed">
+          <p class="text-[13px] sm:text-[14px] text-white/85 max-w-[560px] leading-relaxed">
             {!! nl2br(esc_html($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')) !!}
           </p>
         </div>
       </div>
 
-      {{-- TKDN Card --}}
-      <div class="lg:col-span-4 bg-[#0066cc] rounded-[2rem] p-8 flex flex-col justify-between min-h-[200px]"
-           style="box-shadow: 0 2px 24px rgba(0,102,204,0.2);">
-        <p class="text-[12px] font-bold text-white/60 tracking-wide">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Sertifikasi TKDN + BMP') !!}</p>
+      {{-- Card 2: Kolom Kanan Tinggi Gabung 2 Baris (lg:col-span-1 lg:row-span-2) — TKDN & Bangga Buatan Indonesia --}}
+      @php
+        $card2_default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
+        $card2_img = !empty($hp['keunggulan_card2_img']) ? $hp['keunggulan_card2_img'] : $card2_default_img;
+      @endphp
+      <div class="lg:col-span-1 lg:row-span-2 bg-gradient-to-br from-[#0066cc] to-[#004f9e] rounded-3xl p-7 sm:p-8 flex flex-col justify-between min-h-[420px] lg:min-h-full relative overflow-hidden group shadow-lg shadow-blue-600/10">
         <div>
-          <p class="text-[54px] sm:text-[64px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
-          <p class="text-[14px] text-white/70 mt-2">{!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI.') !!}</p>
+          <span class="text-[12px] font-medium text-white/80 block mb-3">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') !!}</span>
+          
+          {{-- Persentase TKDN --}}
+          <div class="my-2">
+            <p class="text-[52px] sm:text-[62px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
+            <p class="text-[13px] font-medium text-white/85 mt-1.5">Nilai TKDN + BMP Kemenperin RI</p>
+          </div>
+        </div>
+
+        {{-- Logo Bangga Buatan Indonesia Langsung di Tengah Bawah Tanpa Container --}}
+        <div class="my-auto py-6 sm:py-8 flex justify-center items-center w-full">
+          <img src="{{ esc_url($card2_img) }}" 
+               alt="Bangga Buatan Indonesia" 
+               class="w-auto max-w-[85%] max-h-[140px] sm:max-h-[160px] object-contain drop-shadow-md">
+        </div>
+        
+        <div class="pt-4 border-t border-white/15">
+          <p class="text-[13px] text-white/90 leading-relaxed">
+            {!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI. Prioritas e-Katalog LKPP untuk belanja instansi pemerintah dan BUMN.') !!}
+          </p>
         </div>
       </div>
 
-      {{-- Software — GCS App --}}
-      <div class="lg:col-span-4 bg-[#1d1d1f] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.08);">
+      {{-- Card 3: Tengah Kiri (lg:col-span-1) --}}
+      <div class="lg:col-span-1 bg-[#0e1117] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[200px] border border-white/[0.08] relative overflow-hidden group hover:border-white/20 transition-all duration-300 shadow-md">
+        <span class="text-[12px] font-medium text-[#7bb2ff] block mb-2">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software Kendali') !!}</span>
         <div>
-          <p class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software') !!}</p>
-          <h3 class="text-[22px] font-semibold text-white tracking-[-0.02em] mb-2">{!! nl2br(esc_html($hp['keunggulan_card3_title'] ?? "FDS STATION\nGround Control GCS")) !!}</h3>
-          <p class="text-[14px] text-white/50 leading-relaxed">{!! esc_html($hp['keunggulan_card3_desc'] ?? 'Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.') !!}</p>
+          <h3 class="text-[18px] sm:text-[20px] font-semibold text-white tracking-[-0.02em] leading-snug my-2">
+            {!! nl2br(esc_html($hp['keunggulan_card3_title'] ?? "FDS STATION Ground Control GCS")) !!}
+          </h3>
+          <p class="text-[13px] text-white/65 leading-relaxed">
+            {!! esc_html($hp['keunggulan_card3_desc'] ?? 'Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.') !!}
+          </p>
         </div>
       </div>
 
-      {{-- Standar Mutu ISO & SNI --}}
-      <div class="lg:col-span-4 bg-[#f5f5f7] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
+      {{-- Card 4: Tengah Kanan (lg:col-span-1) --}}
+      <div class="lg:col-span-1 bg-[#f8f9fc] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[200px] border border-black/[0.05] hover:border-black/10 transition-all duration-300 shadow-sm">
         <div>
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card4_badge'] ?? 'Standar & Mutu') !!}</p>
-          <p class="text-[44px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
-          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">{!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}</p>
+          <span class="text-[12px] font-medium text-[#6e6e73] block mb-2">{!! esc_html($hp['keunggulan_card4_badge'] ?? 'Sertifikasi Produk') !!}</span>
+          <p class="text-[28px] sm:text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em] leading-none mb-2">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[11px] font-medium text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded">SNI 9199:2023</span>
+            <span class="text-[11px] font-medium text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded">ISO 9001:2015</span>
+          </div>
         </div>
+        <p class="text-[13px] text-[#515154] leading-relaxed pt-2 border-t border-black/[0.05]">
+          {!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}
+        </p>
       </div>
 
-      {{-- After-Sales --}}
-      <div class="lg:col-span-4 bg-[#f5f5f7] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
-        <div>
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card5_badge'] ?? 'After-Sales') !!}</p>
-          <h3 class="text-[22px] font-semibold text-[#1d1d1f] tracking-[-0.02em] mb-2">{!! esc_html($hp['keunggulan_card5_title'] ?? 'Purna Jual & Suku Cadang') !!}</h3>
-          <p class="text-[14px] text-[#515154] leading-relaxed">{!! esc_html($hp['keunggulan_card5_desc'] ?? 'Pelatihan pilot berlisensi, servis berkala, dan spare parts siap kirim dari Yogyakarta.') !!}</p>
-        </div>
-      </div>
-
-      {{-- 2012 Experience --}}
-      <div class="lg:col-span-4 sm:col-span-2 bg-[#e8f0fe] rounded-[2rem] p-8 min-h-[200px] flex flex-col justify-between"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.04);">
-        <div>
-          <p class="text-[12px] font-bold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['keunggulan_card6_badge'] ?? 'Pengalaman Industri') !!}</p>
-          <p class="text-[54px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
-          <p class="text-[14px] text-[#515154] mt-2 leading-relaxed">{!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}</p>
-        </div>
-      </div>
-
-      {{-- Multi-Sector --}}
-      <div class="lg:col-span-8 bg-[#f5f5f7] rounded-[2rem] p-8 sm:p-10 min-h-[160px] flex flex-col sm:flex-row items-center gap-8"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
+      {{-- Card 5: Bawah Lebar (lg:col-span-2) --}}
+      <div class="lg:col-span-2 bg-[#f8f9fc] rounded-3xl p-6 sm:p-8 min-h-[190px] flex flex-col sm:flex-row items-center justify-between gap-6 border border-black/[0.05] shadow-sm">
         <div class="flex-1">
-          <p class="text-[12px] font-bold text-[#86868b] tracking-wide mb-3">{!! esc_html($hp['keunggulan_card7_badge'] ?? 'Cakupan Industri') !!}</p>
-          <h3 class="text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em]">{!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}</h3>
-          <p class="text-[15px] text-[#515154] mt-2 leading-relaxed max-w-[420px]">{!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}</p>
+          <span class="text-[12px] font-medium text-[#6e6e73] block mb-1.5">{!! esc_html($hp['keunggulan_card7_badge'] ?? 'Skalabilitas Armada') !!}</span>
+          <h3 class="text-[20px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-snug mb-1.5">{!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}</h3>
+          <p class="text-[13px] text-[#515154] leading-relaxed max-w-[460px]">{!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}</p>
         </div>
-        <div class="grid grid-cols-3 gap-3 flex-shrink-0">
+        <div class="flex flex-wrap gap-2 sm:max-w-[280px] flex-shrink-0">
           @foreach(['Agri', 'Mapping', 'Inspeksi', 'Tambang', 'Hutan', 'BUMN'] as $sector)
-            <div class="bg-white rounded-xl px-3 py-2 text-[12px] font-semibold text-[#515154] text-center"
-                 style="box-shadow: 0 1px 8px rgba(0,0,0,0.06);">{{ $sector }}</div>
+            <span class="bg-white rounded-full px-3.5 py-1.5 text-[12px] font-medium text-[#1d1d1f] border border-black/[0.06] shadow-sm hover:border-[#0066cc] hover:text-[#0066cc] transition-colors cursor-default">
+              {{ $sector }}
+            </span>
           @endforeach
         </div>
+      </div>
+
+      {{-- Card 6: Bawah Kanan (lg:col-span-1) --}}
+      <div class="lg:col-span-1 bg-[#f0f6ff] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[190px] border border-[#dce9fe] shadow-sm">
+        <div class="flex items-center justify-between">
+          <span class="text-[12px] font-medium text-[#0066cc]">{!! esc_html($hp['keunggulan_card6_badge'] ?? 'Akademi Pilot') !!}</span>
+          <span class="text-[11px] font-semibold text-[#0066cc] bg-white px-2.5 py-0.5 rounded-full border border-[#0066cc]/20">10+ Tahun</span>
+        </div>
+        <div class="my-auto py-1">
+          <p class="text-[38px] sm:text-[44px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
+          <p class="text-[12px] font-medium text-[#0066cc] mt-1">Dedikasi Riset &amp; Manufaktur UAV</p>
+        </div>
+        <p class="text-[13px] text-[#515154] leading-relaxed">
+          {!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}
+        </p>
       </div>
 
     </div>
@@ -654,15 +711,15 @@ document.addEventListener('DOMContentLoaded', function() {
         color: #515154;
       }
       .drone-tab:hover {
-        border-color: #1d1d1f;
-        color: #1d1d1f;
+        border-color: #0066cc;
+        color: #0066cc;
       }
       .drone-tab.active,
       .drone-tab.active:hover,
       .drone-tab.active:focus {
-        background-color: #1d1d1f !important;
+        background-color: #0066cc !important;
         color: #ffffff !important;
-        border-color: #1d1d1f !important;
+        border-color: #0066cc !important;
       }
     </style>
 
@@ -724,25 +781,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     </div>
 
-    {{-- USP strip --}}
-    <div class="mt-14 grid grid-cols-2 md:grid-cols-4 gap-6">
+    {{-- USP strip (Dinamis & Adaptif: Otomatis Sembunyi Jika Dikosongkan) --}}
+    @php
+      $usp_stats_list = [];
+      for ($ui = 1; $ui <= 4; $ui++) {
+          $uNum = trim((string)($hp["produk_stat{$ui}_num"] ?? ''));
+          $uLbl = trim((string)($hp["produk_stat{$ui}_lbl"] ?? ''));
+          if ($uNum !== '' || $uLbl !== '') {
+              $usp_stats_list[] = [
+                  'num' => $uNum,
+                  'lbl' => $uLbl,
+              ];
+          }
+      }
+      $total_usp_stats = count($usp_stats_list);
+    @endphp
+
+    @if($total_usp_stats > 0)
+    <div class="mt-14 grid grid-cols-2 {{ $total_usp_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_usp_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_usp_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-6">
+      @foreach($usp_stats_list as $ust)
       <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat1_num'] ?? '60,74%') !!}</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat1_lbl'] ?? 'Nilai TKDN + BMP') !!}</p>
+        @if(!empty($ust['num']))
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($ust['num']) !!}</p>
+        @endif
+        @if(!empty($ust['lbl']))
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($ust['lbl']) !!}</p>
+        @endif
       </div>
-      <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat2_num'] ?? 'ISO & SNI') !!}</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat2_lbl'] ?? 'ISO 9001 & SNI 9199:2023') !!}</p>
-      </div>
-      <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat3_num'] ?? '100%') !!}</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat3_lbl'] ?? 'FDS STATION GCS') !!}</p>
-      </div>
-      <div class="text-center">
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($hp['produk_stat4_num'] ?? '2012') !!}</p>
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($hp['produk_stat4_lbl'] ?? 'Pengalaman Industri UAV') !!}</p>
-      </div>
+      @endforeach
     </div>
+    @endif
 
   </div>
 </section>
@@ -779,25 +847,35 @@ function filterDrones(btn) {
 @php
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
+@if(!empty($layanan_items) || !empty($hp['layanan_title']))
 <section id="layanan" class="bg-[#1d1d1f] py-24 sm:py-32 border-t border-white/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+    <div class="grid grid-cols-1 {{ !empty($layanan_items) ? 'lg:grid-cols-2' : 'max-w-2xl' }} gap-16 items-start">
 
       <div class="lg:sticky lg:top-24">
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['layanan_badge'] ?? 'Layanan') !!}</p>
+        @if(!empty($hp['layanan_badge']))
+        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
+        @endif
+        @if(!empty($hp['layanan_title']))
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
-          {!! esc_html($hp['layanan_title'] ?? 'Lebih dari sekadar hardware.') !!}
+          {!! esc_html($hp['layanan_title']) !!}
         </h2>
+        @endif
+        @if(!empty($hp['layanan_desc']))
         <p class="text-[18px] text-white/50 leading-relaxed max-w-[380px] mb-8">
-          {!! nl2br(esc_html($hp['layanan_desc'] ?? 'Kami menyediakan layanan operasional lengkap untuk memastikan investasi drone Anda memberikan hasil maksimal.')) !!}
+          {!! nl2br(esc_html($hp['layanan_desc'])) !!}
         </p>
+        @endif
+        @if(!empty($hp['layanan_cta_text']))
         <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
            class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
-          {!! esc_html($hp['layanan_cta_text'] ?? 'Diskusi Kebutuhan Anda') !!}
+          {!! esc_html($hp['layanan_cta_text']) !!}
         </a>
+        @endif
       </div>
 
+      @if(!empty($layanan_items))
       <div class="divide-y divide-white/[0.08]">
         @foreach($layanan_items as $lItem)
         <div class="py-7 group">
@@ -809,16 +887,20 @@ function filterDrones(btn) {
             </a>
             @endif
           </h3>
+          @if(!empty($lItem['desc']))
           <p class="text-[15px] text-white/50 leading-relaxed">
             {!! nl2br(esc_html(wp_specialchars_decode($lItem['desc']))) !!}
           </p>
+          @endif
         </div>
         @endforeach
       </div>
+      @endif
 
     </div>
   </div>
 </section>
+@endif
 
 
 {{-- ========================================================== --}}
@@ -1154,8 +1236,8 @@ document.addEventListener('DOMContentLoaded', function() {
           {{-- Submit Row (Docked to bottom, without divider line) --}}
           <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <button type="submit" id="fds-inquiry-btn"
-              class="bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-[0.97] text-white font-medium text-[13.5px] px-6 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-sm inline-flex items-center gap-1.5 cursor-pointer">
-              <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Pesan') !!}</span>
+              class="bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0066cc]/25 inline-flex items-center gap-1.5 cursor-pointer">
+              <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') !!}</span>
               <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
             </button>
             <div class="flex items-center gap-1.5 text-[11.5px] text-[#86868b] whitespace-nowrap">

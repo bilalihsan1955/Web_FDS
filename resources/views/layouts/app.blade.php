@@ -220,8 +220,8 @@
 
             <!-- CTA -->
             <div class="flex items-center gap-4">
-              <a href="{{ home_url('/#kontak') }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
-                Hubungi Kami
+              <a href="{{ esc_url($nb_brand['cta_url'] ?? home_url('/#kontak')) }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
+                {!! esc_html($nb_brand['cta_text'] ?? 'Konsultasi Drone') !!}
               </a>
               <button id="mobile-menu-toggle" type="button" class="lg:hidden w-8 h-8 flex flex-col gap-1.5 items-center justify-center" aria-label="Menu">
                 <span id="bar1" class="block w-5 h-[1.5px] bg-[#1d1d1f] transition-all duration-300 origin-center"></span>
@@ -393,29 +393,29 @@
                 <!-- Column 4: Ekosistem & Standar (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-4">Ekosistem &amp; Standar</p>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-4">{!! esc_html($nb_brand['menu_prod_heading'] ?? 'Ekosistem & Standar Mutu') !!}</p>
                     
                     <div class="space-y-3.5">
                       <div>
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">FDS Station GCS</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Software Ground Control Bahasa Indonesia</div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_prod_item1_title'] ?? 'FDS STATION GCS') !!}</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia') !!}</div>
                       </div>
 
                       <div>
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Sertifikasi TKDN + BMP</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Nilai kandungan lokal mencapai 60,74%</div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_prod_item2_title'] ?? 'Sertifikasi TKDN 60,74%') !!}</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_prod_item2_desc'] ?? 'Prioritas Pengadaan Pemerintah & LPSE') !!}</div>
                       </div>
 
                       <div>
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Standar SNI 9199:2023</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">Teruji standar mutu pertanian nasional</div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_prod_item3_title'] ?? 'Standar SNI 9199:2023') !!}</div>
+                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional') !!}</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="pt-5 border-t border-black/[0.06]">
-                    <a href="{{ home_url('/bandingkan') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
-                      Bandingkan Semua Model Drone
+                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan')) }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                      {!! esc_html($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone') !!}
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                   </div>
@@ -494,24 +494,24 @@
                 <!-- Column 3: Hubungi Spesialis Layanan (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">Dukungan Teknis</p>
+                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">{!! esc_html($nb_brand['menu_layanan_heading'] ?? 'Dukungan Teknis Langsung') !!}</p>
                     
                     <div class="space-y-4">
                       <div>
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Pilot Bersertifikat Resmi</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Instruktur berpengalaman di ratusan misi lapangan</div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi') !!}</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item1_desc'] ?? 'Instruktur Berpengalaman di Ratusan Misi Lapangan') !!}</div>
                       </div>
 
                       <div>
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">Workshop Yogyakarta</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">Pusat perakitan, riset terpadu, dan kalibrasi UAV</div>
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta') !!}</div>
+                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli') !!}</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="pt-6 border-t border-black/[0.06]">
-                    <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
-                      Jadwalkan Demo &amp; Konsultasi
+                    <a href="{{ esc_url($nb_brand['menu_layanan_cta_url'] ?? home_url('/#kontak')) }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                      {!! esc_html($nb_brand['menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi') !!}
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
                   </div>
