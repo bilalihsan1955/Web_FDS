@@ -291,9 +291,51 @@
     'cards' => [],
   ];
 @endphp
-<section id="solusi" class="bg-[#1d1d1f] py-24 sm:py-32 overflow-hidden">
+<section id="solusi" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-b border-white/[0.06]">
+  
+  {{-- Vector Background: Diagonal Sweeping Fluid Horizon (Identik dengan Section Spektrum Teknologi UAV) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
+        <linearGradient id="solusi-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
+          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Diagonal Wave Layers (Identik dengan Spektrum Teknologi UAV) --}}
+        <linearGradient id="solusi-wave-diag1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
+          <stop offset="50%" stop-color="#003388" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        <linearGradient id="solusi-wave-diag2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.42" />
+          <stop offset="60%" stop-color="#0066cc" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        <linearGradient id="solusi-wave-diag3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
+          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light: Gradasi Linear Biasa dari Bawah ke Atas (Tanpa Lingkaran) -->
+      <rect width="1440" height="600" fill="url(#solusi-ambient-bottom)" />
+
+      <!-- Diagonal Sweeping Fluid Fills (Identik dengan Spektrum Teknologi UAV) -->
+      <path d="M0,0 C420,40 760,220 1020,420 C1200,540 1340,580 1440,600 L0,600 Z" fill="url(#solusi-wave-diag1)" />
+      <path d="M0,80 C360,120 680,300 940,470 C1140,570 1300,590 1440,600 L0,600 Z" fill="url(#solusi-wave-diag2)" />
+      <path d="M0,220 C300,240 580,380 820,510 C1040,600 1260,600 1440,600 L0,600 Z" fill="url(#solusi-wave-diag3)" />
+    </svg>
+  </div>
+
   {{-- Header inside 1400px Container --}}
-  <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14">
+  <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14 relative z-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
@@ -309,19 +351,19 @@
 
   {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, No Padding Cut-off) --}}
   @if(!empty($solusi_data['cards']))
-  <div class="w-full">
+  <div class="w-full relative z-10">
     <div id="solusi-carousel-track"
          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
 
       @foreach($solusi_data['cards'] as $card)
-      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white/[0.06] rounded-[1.5rem] overflow-hidden group hover:bg-white/[0.09] transition-all duration-300 flex flex-col justify-between select-none">
+      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[1.5rem] overflow-hidden group hover:bg-[#1d202a] transition-all duration-300 flex flex-col justify-between select-none shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
         <div>
           {{-- Image Box --}}
           <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#1e293b]">
             <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#1d1d1f]/70 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#101216]/80 via-transparent to-transparent pointer-events-none"></div>
             @if(!empty($card['tag']))
               <div class="absolute top-3.5 left-3.5 z-10">
                 <span class="text-[10px] font-bold text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 uppercase tracking-wider">
@@ -359,7 +401,7 @@
   </div>
 
   {{-- Bottom Right Circular Arrow Buttons (Flush to 1400px Right Padding) --}}
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="solusi-prev-btn" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
               class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/10">
@@ -484,113 +526,228 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Bento Grid (Sesuai Referensi: Kiri Atas Lebar, Kanan Tinggi 2 Baris TKDN, Tengah 2 Kotak, & Bawah Lebar) --}}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-      {{-- Card 1: Kiri Atas Lebar (lg:col-span-2) — Manufaktur Sleman --}}
-      <div class="lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[260px] sm:min-h-[280px] group flex flex-col justify-end p-7 sm:p-8 border border-black/[0.08]"
-           style="box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
+      {{-- Card 1: Kiri Atas Lebar (md:col-span-2 lg:col-span-2) — Manufaktur Sleman --}}
+      <div class="md:col-span-2 lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[340px] sm:min-h-[280px] lg:min-h-[240px] group flex flex-col justify-end p-5 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         <div class="absolute inset-0 z-0">
           <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80') }}"
                alt="Pabrik &amp; Workshop FDS"
-               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/40 to-transparent"></div>
+               class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
+          {{-- Gradasi Halus Terkalibrasi: Gelap Mantap di Area Teks Bawah (~45%) Agar Teks Sangat Kontras & Tajam di Mobile, Tablet, dan Desktop --}}
+          <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/65 via-45% to-transparent sm:from-[#070b14]/90 sm:via-[#070b14]/55 sm:via-45% lg:from-[#070b14]/90 lg:via-[#070b14]/50 lg:via-45% lg:to-transparent"></div>
         </div>
         <div class="relative z-10">
-          <span class="text-[12px] font-medium text-white/80 block mb-2">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') !!}</span>
-          <h3 class="text-[22px] sm:text-[26px] font-semibold text-white tracking-[-0.02em] leading-tight mb-2 max-w-[600px]">
+          <span class="text-[11px] font-medium text-white/85 block mb-1 drop-shadow-sm">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') !!}</span>
+          <h3 class="text-[19px] sm:text-[23px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2 max-w-[600px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             {!! nl2br(esc_html($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")) !!}
           </h3>
-          <p class="text-[13px] sm:text-[14px] text-white/85 max-w-[560px] leading-relaxed">
+          <p class="text-[12.5px] sm:text-[13px] text-white/90 max-w-[560px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {!! nl2br(esc_html($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')) !!}
           </p>
         </div>
       </div>
 
-      {{-- Card 2: Kolom Kanan Tinggi Gabung 2 Baris (lg:col-span-1 lg:row-span-2) — TKDN & Bangga Buatan Indonesia --}}
+      {{-- Card 2: Kolom Kanan Tinggi Gabung 2 Baris di Desktop (md:col-span-2 lg:col-span-1 lg:row-span-2) — TKDN & Bangga Buatan Indonesia --}}
       @php
         $card2_default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
         $card2_img = !empty($hp['keunggulan_card2_img']) ? $hp['keunggulan_card2_img'] : $card2_default_img;
       @endphp
-      <div class="lg:col-span-1 lg:row-span-2 bg-gradient-to-br from-[#0066cc] to-[#004f9e] rounded-3xl p-7 sm:p-8 flex flex-col justify-between min-h-[420px] lg:min-h-full relative overflow-hidden group shadow-lg shadow-blue-600/10">
-        <div>
-          <span class="text-[12px] font-medium text-white/80 block mb-3">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') !!}</span>
-          
-          {{-- Persentase TKDN --}}
-          <div class="my-2">
-            <p class="text-[52px] sm:text-[62px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
-            <p class="text-[13px] font-medium text-white/85 mt-1.5">Nilai TKDN + BMP Kemenperin RI</p>
-          </div>
+      <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0066cc] via-[#0052a3] to-[#002d66] rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(0,102,204,0.06)]">
+        
+        {{-- Concentric Wave Circles (Biru Sistem #0066cc) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute -bottom-10 -left-10 w-[550px] h-[550px]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Lingkaran 5 (Paling Luar) -->
+            <circle cx="40" cy="460" r="440" fill="#ffffff" fill-opacity="0.04" />
+            <!-- Lingkaran 4 -->
+            <circle cx="40" cy="460" r="330" fill="#ffffff" fill-opacity="0.06" />
+            <!-- Lingkaran 3 -->
+            <circle cx="40" cy="460" r="230" fill="#ffffff" fill-opacity="0.09" />
+            <!-- Lingkaran 2 -->
+            <circle cx="40" cy="460" r="140" fill="#ffffff" fill-opacity="0.14" />
+            <!-- Lingkaran 1 (Dalam) -->
+            <circle cx="40" cy="460" r="70" fill="#ffffff" fill-opacity="0.20" />
+          </svg>
         </div>
 
-        {{-- Logo Bangga Buatan Indonesia Langsung di Tengah Bawah Tanpa Container --}}
-        <div class="my-auto py-6 sm:py-8 flex justify-center items-center w-full">
+        {{-- Bottom Dark Gradient Overlay --}}
+        <div class="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#00142b]/90 via-[#00224a]/45 to-transparent pointer-events-none z-0"></div>
+
+        {{-- Bagian Atas / Kiri: Stat & Teks Deskripsi (Di Mobile & Tablet: Deskripsi Langsung di Samping/Bawah Stat Tanpa Divider) --}}
+        <div class="relative z-10 flex-1 md:max-w-[58%] lg:max-w-full">
+          <span class="text-[11px] font-medium text-white/80 block mb-2">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') !!}</span>
+          
+          {{-- Persentase TKDN --}}
+          <div class="my-1.5">
+            <p class="text-[48px] sm:text-[56px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
+            <p class="text-[12px] font-medium text-white/85 mt-1">Nilai TKDN + BMP Kemenperin RI</p>
+          </div>
+
+          {{-- Teks Deskripsi Khusus Mobile & Tablet (Tanpa Garis Divider) --}}
+          <p class="block lg:hidden text-[12.5px] sm:text-[13px] text-white/90 leading-relaxed mt-2.5">
+            {!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI. Prioritas e-Katalog LKPP untuk belanja instansi pemerintah dan BUMN.') !!}
+          </p>
+        </div>
+
+        {{-- Logo Bangga Buatan Indonesia (Tengah pada Layar Besar) --}}
+        <div class="relative z-10 my-auto py-2 flex justify-center items-center flex-shrink-0 md:max-w-[38%] lg:max-w-full">
           <img src="{{ esc_url($card2_img) }}" 
                alt="Bangga Buatan Indonesia" 
-               class="w-auto max-w-[85%] max-h-[140px] sm:max-h-[160px] object-contain drop-shadow-md">
+               class="w-auto max-w-[95%] sm:max-w-full max-h-[140px] md:max-h-[160px] lg:max-h-[205px] object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500">
         </div>
-        
-        <div class="pt-4 border-t border-white/15">
-          <p class="text-[13px] text-white/90 leading-relaxed">
+
+        {{-- Teks Deskripsi Khusus Layar Besar / Desktop (Posisi di Bawah Gambar Logo dengan Divider) --}}
+        <div class="hidden lg:block relative z-10 pt-3 border-t border-white/15">
+          <p class="text-[12px] sm:text-[13px] text-white/90 leading-relaxed">
             {!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI. Prioritas e-Katalog LKPP untuk belanja instansi pemerintah dan BUMN.') !!}
           </p>
         </div>
       </div>
 
-      {{-- Card 3: Tengah Kiri (lg:col-span-1) --}}
-      <div class="lg:col-span-1 bg-[#0e1117] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[200px] border border-white/[0.08] relative overflow-hidden group hover:border-white/20 transition-all duration-300 shadow-md">
-        <span class="text-[12px] font-medium text-[#7bb2ff] block mb-2">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software Kendali') !!}</span>
-        <div>
-          <h3 class="text-[18px] sm:text-[20px] font-semibold text-white tracking-[-0.02em] leading-snug my-2">
+      {{-- Card 3: Tengah Kiri (md:col-span-1 lg:col-span-1) — Pure Organic Wave Curves (Tanpa Garis/Titik) --}}
+      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        
+        {{-- Vector Background: Pure Organic Wave Fills (Persis Filosofi CONTOH.svg, Tanpa Garis/Titik) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="w-full h-full" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="gcs-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#2563eb" stop-opacity="0.38" />
+                <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.16" />
+                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              </linearGradient>
+              <linearGradient id="gcs-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.28" />
+                <stop offset="70%" stop-color="#2563eb" stop-opacity="0.12" />
+                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              </linearGradient>
+              <linearGradient id="gcs-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.32" />
+                <stop offset="50%" stop-color="#2563eb" stop-opacity="0.18" />
+                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            <!-- Pure Fluid Wave Fills -->
+            <path d="M0,170 C90,160 150,110 250,75 C290,60 310,50 320,40 L320,200 L0,200 Z" fill="url(#gcs-wave-fill1)" />
+            <path d="M0,195 C120,190 190,140 280,95 C305,80 315,70 320,60 L320,200 L0,200 Z" fill="url(#gcs-wave-fill2)" />
+            <path d="M140,200 C190,170 250,150 320,110 L320,200 Z" fill="url(#gcs-wave-fill3)" />
+          </svg>
+        </div>
+
+        <div class="relative z-10">
+          <span class="text-[11px] font-medium text-white/90 block mb-1">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software Kendali') !!}</span>
+          
+          <h3 class="text-[22px] sm:text-[25px] lg:text-[27px] font-semibold text-white tracking-[-0.03em] leading-snug my-2">
             {!! nl2br(esc_html($hp['keunggulan_card3_title'] ?? "FDS STATION Ground Control GCS")) !!}
           </h3>
-          <p class="text-[13px] text-white/65 leading-relaxed">
-            {!! esc_html($hp['keunggulan_card3_desc'] ?? 'Perencanaan misi otomatis dan pemantauan real-time berbahasa Indonesia.') !!}
+          
+          <p class="text-[13px] text-white/85 leading-relaxed">
+            {!! esc_html($hp['keunggulan_card3_desc'] ?? 'Misi otomatis & telemetri Bahasa Indonesia.') !!}
           </p>
         </div>
       </div>
 
-      {{-- Card 4: Tengah Kanan (lg:col-span-1) --}}
-      <div class="lg:col-span-1 bg-[#f8f9fc] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[200px] border border-black/[0.05] hover:border-black/10 transition-all duration-300 shadow-sm">
-        <div>
-          <span class="text-[12px] font-medium text-[#6e6e73] block mb-2">{!! esc_html($hp['keunggulan_card4_badge'] ?? 'Sertifikasi Produk') !!}</span>
-          <p class="text-[28px] sm:text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em] leading-none mb-2">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-[11px] font-medium text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded">SNI 9199:2023</span>
-            <span class="text-[11px] font-medium text-emerald-700 bg-emerald-500/10 px-2 py-0.5 rounded">ISO 9001:2015</span>
-          </div>
+      {{-- Card 4: Tengah Kanan (md:col-span-1 lg:col-span-1) — Lingkaran Konsentris Terbalik (Natural Inverted Circles) --}}
+      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] rounded-3xl p-6 sm:p-7 flex flex-col justify-end min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        
+        {{-- Vector Background: Lingkaran Konsentris Terbalik (Proporsi Sedang / Golden Ratio di Pojok Kanan Atas, Biru Sistem #0066cc) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute -top-6 -right-6 w-[400px] sm:w-[440px] h-[400px] sm:h-[440px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Lingkaran 4 (Luar) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="320" fill="#0066cc" fill-opacity="0.05" />
+            <!-- Lingkaran 3 (Sedang) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="220" fill="#0066cc" fill-opacity="0.10" />
+            <!-- Lingkaran 2 (Tengah) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="130" fill="#0066cc" fill-opacity="0.18" />
+            <!-- Lingkaran 1 (Inti) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="60" fill="#0066cc" fill-opacity="0.30" />
+          </svg>
         </div>
-        <p class="text-[13px] text-[#515154] leading-relaxed pt-2 border-t border-black/[0.05]">
-          {!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}
-        </p>
+
+        <div class="relative z-10">
+          <p class="text-[50px] sm:text-[60px] lg:text-[66px] xl:text-[72px] font-medium text-white tracking-[-0.03em] leading-[0.92] mb-2.5">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
+          <p class="text-[13px] sm:text-[14px] text-white/85 leading-relaxed max-w-[380px]">
+            {!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}
+          </p>
+        </div>
       </div>
 
-      {{-- Card 5: Bawah Lebar (lg:col-span-2) --}}
-      <div class="lg:col-span-2 bg-[#f8f9fc] rounded-3xl p-6 sm:p-8 min-h-[190px] flex flex-col sm:flex-row items-center justify-between gap-6 border border-black/[0.05] shadow-sm">
-        <div class="flex-1">
-          <span class="text-[12px] font-medium text-[#6e6e73] block mb-1.5">{!! esc_html($hp['keunggulan_card7_badge'] ?? 'Skalabilitas Armada') !!}</span>
-          <h3 class="text-[20px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-snug mb-1.5">{!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}</h3>
-          <p class="text-[13px] text-[#515154] leading-relaxed max-w-[460px]">{!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}</p>
+      {{-- Card 6 / 2012: Bawah Kiri (md:col-span-1 lg:col-span-1) — Teks Stat Raksasa & Deskripsi (Tanpa Badge) --}}
+      @php
+        $card6_default_img = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80';
+        $card6_img = !empty($hp['keunggulan_card6_img']) ? $hp['keunggulan_card6_img'] : $card6_default_img;
+      @endphp
+      <div class="md:col-span-1 lg:col-span-1 bg-[#0a0c10] rounded-3xl overflow-hidden relative min-h-[185px] sm:min-h-[200px] group flex flex-col justify-end p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        {{-- Background Image Foto Pilot/Operasional --}}
+        <div class="absolute inset-0 z-0">
+          <img src="{{ esc_url($card6_img) }}" 
+               alt="Akademi Pilot &amp; Riset FDS" 
+               class="w-full h-full object-cover brightness-[0.95] group-hover:scale-105 group-hover:brightness-105 transition-all duration-700">
+          {{-- Vignette Halus Terkalibrasi (Cukup Gelap di Bagian Teks Bawah) --}}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10"></div>
         </div>
-        <div class="flex flex-wrap gap-2 sm:max-w-[280px] flex-shrink-0">
+
+        <div class="relative z-10">
+          <p class="text-[64px] sm:text-[80px] lg:text-[96px] xl:text-[104px] font-medium text-white tracking-[-0.04em] leading-[0.85] mb-3 drop-shadow-md">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
+          <p class="text-[13px] sm:text-[14px] text-white/95 leading-relaxed drop-shadow-sm max-w-[380px]">
+            {!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}
+          </p>
+        </div>
+      </div>
+
+      {{-- Card 5: Bawah Kanan (md:col-span-1 lg:col-span-2) — 100% Exact Math Geometry from CONTOH.svg --}}
+      <div class="md:col-span-1 lg:col-span-2 bg-[#0c1018] rounded-3xl p-6 sm:p-7 min-h-[185px] sm:min-h-[200px] flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)] group">
+        
+        {{-- Exact 100% Math Paths from CONTOH.svg (Figma Export) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="w-full h-full" viewBox="0 0 398 96" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <g>
+              <rect width="398" height="96" fill="url(#paint0_dark_eko)"/>
+              <path d="M-18.2893 -6.32697C-136.964 10.9814 -24.6036 35.4983 -46.9639 64.4209C-70.1751 94.444 4.76287 155.377 4.76287 155.377L406.77 160.338L455.686 19.5816C455.686 19.5816 486.61 10.9501 346.048 50.0886C205.485 89.2271 100.385 -23.6353 -18.2893 -6.32697Z" fill="url(#paint1_dark_eko)"/>
+              <path d="M-87.4837 43.4736C-65.1233 14.551 -71.703 -9.63438 27.815 2.49305C127.333 14.6205 180.184 94.5513 338.738 73.6039C402.333 65.2021 433.365 58.4269 447.725 53.3251L453.437 41.8199C453.437 41.8199 469.167 45.7069 447.725 53.3251L389.303 171L-53.1488 161.803C-53.1488 161.803 -110.695 73.4967 -87.4837 43.4736Z" fill="url(#paint2_dark_eko)"/>
+              <path d="M52.5537 76.3607C17.9455 66.8521 -56.751 53.9736 -56.751 53.9736L-46.402 162.355L187.493 166.765C187.493 166.765 114.012 93.2462 52.5537 76.3607Z" fill="url(#paint3_dark_eko)"/>
+            </g>
+            <defs>
+              <linearGradient id="paint0_dark_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#1b2434"/>
+                <stop offset="0.915" stop-color="#0c121e"/>
+              </linearGradient>
+              <linearGradient id="paint1_dark_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#2563eb" stop-opacity="0.40"/>
+                <stop offset="0.915" stop-color="#1d4ed8" stop-opacity="0.15"/>
+              </linearGradient>
+              <linearGradient id="paint2_dark_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3b82f6" stop-opacity="0.35"/>
+                <stop offset="0.49" stop-color="#1d4ed8" stop-opacity="0.22"/>
+                <stop offset="0.9999" stop-color="#080c14"/>
+              </linearGradient>
+              <linearGradient id="paint3_dark_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#60a5fa" stop-opacity="0.40"/>
+                <stop offset="0.49" stop-color="#2563eb" stop-opacity="0.25"/>
+                <stop offset="0.9999" stop-color="#060910"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {{-- Left: Content Heading & Description (Tanpa Badge) --}}
+        <div class="flex-1 relative z-10">
+          <h3 class="text-[20px] sm:text-[24px] lg:text-[26px] font-semibold text-white tracking-[-0.02em] leading-snug mb-1.5">
+            {!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}
+          </h3>
+          <p class="text-[13px] text-white/85 leading-relaxed max-w-[500px]">
+            {!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}
+          </p>
+        </div>
+
+        {{-- Right: Sector Badges (Wrap Rapi Tanpa Terpotong) --}}
+        <div class="flex flex-wrap gap-2 max-w-full sm:max-w-[320px] flex-shrink-0 relative z-10">
           @foreach(['Agri', 'Mapping', 'Inspeksi', 'Tambang', 'Hutan', 'BUMN'] as $sector)
-            <span class="bg-white rounded-full px-3.5 py-1.5 text-[12px] font-medium text-[#1d1d1f] border border-black/[0.06] shadow-sm hover:border-[#0066cc] hover:text-[#0066cc] transition-colors cursor-default">
+            <span class="bg-white/10 hover:bg-white/20 text-white rounded-full px-3.5 py-1 text-[11px] font-medium border border-white/15 hover:border-blue-400/40 transition-all backdrop-blur-md cursor-default shadow-sm">
               {{ $sector }}
             </span>
           @endforeach
         </div>
-      </div>
-
-      {{-- Card 6: Bawah Kanan (lg:col-span-1) --}}
-      <div class="lg:col-span-1 bg-[#f0f6ff] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[190px] border border-[#dce9fe] shadow-sm">
-        <div class="flex items-center justify-between">
-          <span class="text-[12px] font-medium text-[#0066cc]">{!! esc_html($hp['keunggulan_card6_badge'] ?? 'Akademi Pilot') !!}</span>
-          <span class="text-[11px] font-semibold text-[#0066cc] bg-white px-2.5 py-0.5 rounded-full border border-[#0066cc]/20">10+ Tahun</span>
-        </div>
-        <div class="my-auto py-1">
-          <p class="text-[38px] sm:text-[44px] font-semibold text-[#1d1d1f] tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
-          <p class="text-[12px] font-medium text-[#0066cc] mt-1">Dedikasi Riset &amp; Manufaktur UAV</p>
-        </div>
-        <p class="text-[13px] text-[#515154] leading-relaxed">
-          {!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}
-        </p>
       </div>
 
     </div>
@@ -842,14 +999,59 @@ function filterDrones(btn) {
 
 
 {{-- ========================================================== --}}
+{{-- ========================================================== --}}
 {{-- 5. LAYANAN ENTERPRISE                                     --}}
 {{-- ========================================================== --}}
 @php
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
 @if(!empty($layanan_items) || !empty($hp['layanan_title']))
-<section id="layanan" class="bg-[#1d1d1f] py-24 sm:py-32 border-t border-white/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+<section id="layanan" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-white/[0.06]">
+  
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Konsisten dengan Tema FDS & Tanpa Lingkaran) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
+        <linearGradient id="layanan-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
+          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 1 (Terluar - Melebar Halus ke Kiri) --}}
+        <linearGradient id="layanan-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Berjarak Seimbang) --}}
+        <linearGradient id="layanan-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.32" />
+          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti - Sisi Kanan Membingkai Daftar Layanan) --}}
+        <linearGradient id="layanan-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
+          <stop offset="55%" stop-color="#0071e3" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light: Gradasi Linear Biasa dari Bawah ke Atas (Tanpa Lingkaran) -->
+      <rect width="1440" height="700" fill="url(#layanan-ambient-bottom)" />
+
+      <!-- 3 Lapisan Lekukan Vektor Organik Khas FDS (Identik & Konsisten dengan Halaman Tentang Kami & Produk) -->
+      <path d="M180,0 C420,130 1060,160 920,380 C780,540 560,590 380,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill1)" />
+      <path d="M520,0 C740,120 1220,150 1080,350 C950,510 760,580 580,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill2)" />
+      <path d="M880,0 C1060,100 1380,140 1260,320 C1150,470 990,560 820,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill3)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
 
     <div class="grid grid-cols-1 {{ !empty($layanan_items) ? 'lg:grid-cols-2' : 'max-w-2xl' }} gap-16 items-start">
 
@@ -1116,10 +1318,25 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
     <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left Side: Dark Architectural Panel (5 cols) --}}
-      <div class="lg:col-span-5 bg-[#161618] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.06]">
+      {{-- Left Side: Dark Architectural Panel (5 cols) with Inverted Concentric Circles (Identik Card ISO & SNI) --}}
+      <div class="lg:col-span-5 bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.06] group">
+        
+        {{-- Vector Background: Lingkaran Konsentris Terbalik (Identik dengan Card ISO & SNI di Pojok Kanan Atas) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute -top-10 -right-10 w-[450px] sm:w-[500px] h-[450px] sm:h-[500px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Lingkaran 4 (Luar) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="320" fill="#0066cc" fill-opacity="0.05" />
+            <!-- Lingkaran 3 (Sedang) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="220" fill="#0066cc" fill-opacity="0.10" />
+            <!-- Lingkaran 2 (Tengah) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="130" fill="#0066cc" fill-opacity="0.18" />
+            <!-- Lingkaran 1 (Inti) — Biru Sistem #0066cc -->
+            <circle cx="370" cy="30" r="60" fill="#0066cc" fill-opacity="0.30" />
+          </svg>
+        </div>
+
         {{-- Top Header Section --}}
-        <div>
+        <div class="relative z-10">
           <div class="mb-2">
             <span class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide">
               {!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}
@@ -1135,7 +1352,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         {{-- Direct Contact Information (Pinned to Bottom with Adaptive Space) --}}
-        <div class="mt-8 pt-2 space-y-4">
+        <div class="mt-8 pt-2 space-y-4 relative z-10">
           {{-- WhatsApp Channel --}}
           <div>
             <p class="text-[11px] font-medium text-white/40 mb-1">Telepon / WhatsApp</p>

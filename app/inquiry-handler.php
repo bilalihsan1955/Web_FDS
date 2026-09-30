@@ -21,29 +21,10 @@ if (!defined('ABSPATH')) {
 // =========================================================================
 
 add_action('init', function () {
-    // Hitung pesan unread untuk badge counter di menu
-    $unread_count = 0;
-    if (is_admin()) {
-        $unread_query = new \WP_Query([
-            'post_type'      => 'fds_inquiry',
-            'post_status'    => 'publish',
-            'meta_key'       => '_fds_inquiry_status',
-            'meta_value'     => 'unread',
-            'posts_per_page' => -1,
-            'fields'         => 'ids',
-        ]);
-        $unread_count = $unread_query->found_posts;
-    }
-
-    $menu_title = 'Pesan Masuk';
-    if ($unread_count > 0) {
-        $menu_title .= sprintf(' <span class="awaiting-mod count-%d" style="background:#2563eb;color:#fff;border-radius:10px;padding:2px 7px;font-size:10px;font-weight:700;"><span class="pending-count">%d</span></span>', $unread_count, $unread_count);
-    }
-
     $labels = [
         'name'               => 'Pesan Masuk',
         'singular_name'      => 'Pesan Masuk',
-        'menu_name'          => $menu_title,
+        'menu_name'          => 'Pesan Masuk',
         'name_admin_bar'     => 'Pesan Masuk',
         'add_new'            => 'Tambah Manual',
         'add_new_item'       => 'Tambah Pesan Masuk Baru',
@@ -69,6 +50,38 @@ add_action('init', function () {
         'hierarchical'       => false,
     ]);
 });
+
+// Tambahkan badge counter unread ke menu Pesan Masuk secara native WordPress
+add_action('admin_menu', function () {
+    global $menu;
+    if (!is_admin() || !is_array($menu)) {
+        return;
+    }
+
+    $unread_query = new \WP_Query([
+        'post_type'      => 'fds_inquiry',
+        'post_status'    => 'publish',
+        'meta_key'       => '_fds_inquiry_status',
+        'meta_value'     => 'unread',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'no_found_rows'  => false,
+    ]);
+    $unread_count = (int) $unread_query->found_posts;
+
+    if ($unread_count > 0) {
+        foreach ($menu as $key => $item) {
+            if (isset($item[2]) && $item[2] === 'edit.php?post_type=fds_inquiry') {
+                $menu[$key][0] .= sprintf(
+                    ' <span class="update-plugins count-%d" style="background-color:#2563eb;"><span class="plugin-count">%d</span></span>',
+                    $unread_count,
+                    $unread_count
+                );
+                break;
+            }
+        }
+    }
+}, 999);
 
 // Nonaktifkan Gutenberg untuk fds_inquiry
 add_filter('use_block_editor_for_post_type', function ($use_block, $post_type) {

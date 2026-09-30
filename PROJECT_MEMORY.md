@@ -135,7 +135,36 @@ Remove-Item -Path "..\..\cache\acorn\framework\views\*" -Recurse -Force
    - Logo harus diletakkan transparan secara langsung di atas background kartu.
 2. **Dilarang Memberi Titik/Hiasan di Samping Teks:**
    - Tidak boleh menambahkan pulsing dots, decorative bullets, atau emoji di samping teks badge/heading.
-3. **Patuhi Referensi Wireframe Tanpa Halusinasi:**
+3. **Patuhi Referensi Wireframe & Geometri Vektor Tanpa Halusinasi:**
    - Terapkan struktur grid/masonry sesuai referensi yang diberikan user secara presisi tanpa menambah elemen buatan sendiri yang tidak diperintahkan.
-4. **Konsistensi Skala Tipografi:**
+   - **Ketaatan Geometri Vektor:** Jika user meminta bentuk lingkaran konsentris terbalik (inverted concentric circles), HANYA balikkan orientasi lingkaran konsentris dan haluskan pewarnaannya secara natural. Dilarang keras mengganti bentuk geometri dasar menjadi bentuk lain (seperti gelombang acak).
+4. **Definisi Teks Kecil vs Deskripsi:**
+   - "Teks kecil" yang diminta dihapus oleh user merujuk secara spesifik pada **Badge / Label pill kecil** di atas judul. Teks **Deskripsi Penjelasan** di bawah judul/stat HARUS tetap ada dan dapat diedit di WP Admin.
+5. **Konsistensi Skala Tipografi:**
    - Semua judul section wajib seragam menggunakan `text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] leading-[1.1]`.
+   - Angka & teks stat kunci seperti **`ISO & SNI`** dan **`2012`** harus berukuran besar, tebal, dan proporsional.
+6. **Warna Biru Sistem Brand Wajib (`#0066cc`):**
+   - Semua aksen grafis, vektor, lingkaran konsentris, tombol utama, dan highlight wajib menggunakan warna biru sistem resmi FDS yaitu **`#0066cc`**. Dilarang keras mengganti ke warna cyan/sky blue (`#38bdf8`) atau warna di luar palet sistem brand.
+7. **DILARANG MENGGUNAKAN TEKS ALL-CAPS / KAPITAL SEMUA:**
+   - **Dilarang keras** menggunakan utility class CSS `uppercase` atau menulis seluruh kalimat dalam huruf kapital pada heading, subhead, micro-label, tombol, maupun badge.
+   - Selalu gunakan **Title Case** (Huruf Kapital di awal kata saja) atau **Sentence case** yang natural, elegan, dan nyaman dibaca.
+8. **Layout Footer & Penempatan Logo Sertifikasi/Partner:**
+   - **Tablet & Desktop (`md:` ke atas):** Kolom 4 (Dukungan) memiliki `relative min-h-[160px] pb-10 md:pb-12`. Deretan logo dikunci menggunakan `absolute right-0 bottom-0 w-max max-w-none` (`hidden md:flex flex-nowrap items-center gap-4 sm:gap-5 absolute right-0 bottom-0 w-max max-w-none`) sehingga tepi kanan logo selalu terkunci rapat di batas padding kanan dan panjangnya otomatis mengalir ke **KIRI** (ke area kosong di bawah kolom 3), 100% bebas dari offside/terpotong di sisi kanan.
+   - **Mobile (`< md`):** Deretan logo berada di bawah 4 kolom tautan dan merentang penuh 2 kolom (`col-span-2 md:hidden pt-2`), diposisikan **rata kiri (dimulai dari kiri)** (`flex flex-nowrap items-center gap-4 justify-start overflow-x-auto no-scrollbar py-1`) sehingga 1 baris utuh, tidak terpotong tepi layar, ukuran dan jarak tidak mengecil.
+   - **Baris Tengah (Middle Row):** Sisi kiri (`lg:col-span-8`) berisi Informasi Perusahaan (Nama PT, Alamat Sleman, No. Telp, Email), dan sisi kanan (`lg:col-span-4`) berisi Ikon Sosial Media (Instagram, YouTube, LinkedIn, TikTok, X, WhatsApp) rata kanan (`justify-start lg:justify-end`).
+   - **Transparansi Logo:** Menggunakan `mix-blend-mode: multiply !important; background-color: transparent !important;` langsung pada tag `<img>` tanpa wrapper ber-`opacity` / `transform` agar latar belakang putih pada gambar JPG/PNG otomatis hilang menyatu dengan warna footer `#f5f5f7` tanpa glitch hover.
+   - **Kontrol Dimensi:** Tinggi global dan Max Width per-logo dapat diatur secara fleksibel melalui WP Admin &rarr; Logo & Navbar (Card 8).
+9. **Fitur Unduh Brosur Drone & Gated Email Lead Capture:**
+   - **File Handler & Settings:** Terpusat di [`app/brochure-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/brochure-settings.php).
+   - **Menu WP Admin:** Tersedia di **Produk Drone &rarr; Pengaturan Brosur** untuk kustomisasi teks (Judul dengan tag dinamis `{drone_name}`, Deskripsi, Placeholder email, Teks tombol, dan Global Fallback PDF) serta tabel log email leads dengan fitur *Export CSV*.
+   - **Upload PDF per Drone:** Dikelola langsung di halaman **Produk Drone &rarr; Edit Drone** ([`app/cpt-drones.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/cpt-drones.php)) dengan tombol WordPress Media Uploader `[📁 Upload PDF]`.
+   - **Frontend Section:** Ditampilkan di [`resources/views/single-drone.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/single-drone.blade.php) tepat di bawah tabel spesifikasi teknis (#spesifikasi).
+   - **Desain & Alur Interaksi (2-State Minimalist Flow):** Desain super bersih tanpa badge/teks berlebih. State 1: Input email + tombol "Kirim Email" (sebelum kirim email, akses download terkunci). State 2: Setelah email diverifikasi via AJAX, form input otomatis bertransisi menjadi **Tombol Download Brosur (PDF) Aktif** (berwarna biru `#0066cc`) dan file PDF langsung terunduh/terbuka di browser.
+10. **DILARANG MENGGUNAKAN GARIS / STROKE PADA VEKTOR BACKGROUND:**
+   - Vektor latar belakang (background vector) HANYA boleh menggunakan bentuk fluida organik dengan isian gradasi solid (`<path ... fill="url(#...)" />`).
+   - **Dilarang keras** menambahkan elemen garis, stroke, outlines, wireframe lines, dashed lines, atau garis pembatas (`stroke="..." fill="none"`) pada vektor background kecuali user secara eksplisit memintanya.
+
+
+
+
+

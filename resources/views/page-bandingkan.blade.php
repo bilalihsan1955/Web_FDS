@@ -666,22 +666,51 @@
     </div>
   </section>
 
-  {{-- ── 7. CLOSING CTA (DARK BG-[#1d1d1f]) ────────────────────── --}}
-  <section class="bg-[#1d1d1f] py-24 text-center">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <h2 class="text-[36px] sm:text-[50px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-4">
+  {{-- ── 7. CLOSING CTA (SOFTWARE KENDALI / UNTUK SIAPA VECTOR BACKGROUND) ── --}}
+  <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.06] text-center">
+    
+    {{-- Vector Background: Pure Organic Wave Fills (Matching Section Untuk Siapa) --}}
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="bandingkan-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
+            <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          </linearGradient>
+          <linearGradient id="bandingkan-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
+            <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
+            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          </linearGradient>
+          <linearGradient id="bandingkan-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
+            <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
+            <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          </linearGradient>
+        </defs>
+
+        <!-- Pure Fluid Wave Fills: Sedikit di kiri bawah, mengalir elegan naik ke kanan -->
+        <path d="M0,340 C280,320 470,220 780,150 C900,120 960,100 1000,80 L1000,400 L0,400 Z" fill="url(#bandingkan-wave-fill1)" />
+        <path d="M0,380 C360,370 580,280 860,190 C930,160 970,140 1000,120 L1000,400 L0,400 Z" fill="url(#bandingkan-wave-fill2)" />
+        <path d="M440,400 C590,340 780,300 1000,220 L1000,400 Z" fill="url(#bandingkan-wave-fill3)" />
+      </svg>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+      <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
         Siap menentukan pilihan armada Anda?
       </h2>
-      <p class="text-[17px] text-white/60 max-w-[520px] mx-auto mb-8 leading-relaxed">
+      <p class="text-[16px] sm:text-[18px] lg:text-[19px] text-white/80 max-w-[540px] mx-auto mb-9 leading-relaxed">
         Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
         <a href="{{ home_url('/#kontak') }}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[15px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg">
+           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0c121e] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
           Hubungi Tim Sales FDS
         </a>
         <a href="{{ home_url('/blog') }}"
-           class="inline-flex items-center text-white/70 text-[15px] font-medium hover:text-white transition-colors gap-1 px-4 py-4">
+           class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-1 px-4 py-3">
           Baca studi kasus operasional &rsaquo;
         </a>
       </div>

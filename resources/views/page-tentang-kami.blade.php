@@ -16,10 +16,44 @@
 @endphp
 
 {{-- ========================================================== --}}
-{{-- HERO — Dark full-bleed                                     --}}
+{{-- HERO — Dark full-bleed with Vector Background              --}}
 {{-- ========================================================== --}}
-<section class="pt-[52px] bg-[#1d1d1f] overflow-hidden">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0">
+<section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] pt-[52px] overflow-hidden">
+  
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (3 Lapisan Lebih Lebar & Berjarak) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Lapisan 1 (Terluar - Melebar ke Kiri) --}}
+        <linearGradient id="tk-hero-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Berjarak Seimbang) --}}
+        <linearGradient id="tk-hero-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.32" />
+          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti - Sisi Kanan) --}}
+        <linearGradient id="tk-hero-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
+          <stop offset="55%" stop-color="#0071e3" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+        </linearGradient>
+      </defs>
+
+      <!-- 3 Lapisan Lekukan Vektor Organik: Lekukan Bawah Mengalir ke Tengah -->
+      <path d="M180,0 C420,130 1060,160 920,380 C780,540 560,590 380,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill1)" />
+      <path d="M520,0 C740,120 1220,150 1080,350 C950,510 760,580 580,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill2)" />
+      <path d="M880,0 C1060,100 1380,140 1260,320 C1150,470 990,560 820,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill3)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0 relative z-10">
 
     <div class="max-w-[840px]">
       <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">
@@ -34,7 +68,7 @@
     </div>
 
     {{-- Hero image --}}
-    <div class="mt-16 rounded-t-[2rem] overflow-hidden" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
+    <div class="mt-16 rounded-t-[2rem] overflow-hidden relative z-10" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
       <img
         src="{{ !empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80') }}"
         alt="Tim & Workshop PT Karya Solusi Angkasa (FDS)"
@@ -134,8 +168,50 @@
 {{-- ========================================================== --}}
 {{-- EKOSISTEM TEKNOLOGI — Spektrum UAV & AI                    --}}
 {{-- ========================================================== --}}
-<section class="bg-[#1d1d1f] py-24 sm:py-32">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+<section class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-b border-white/[0.06]">
+  
+  {{-- Vector Background: Diagonal Sweeping Fluid Horizon (Gradient Bawah ke Atas Tanpa Lingkaran) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
+        <linearGradient id="spektrum-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
+          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Diagonal Wave Layers (Desain Asli Spektrum) --}}
+        <linearGradient id="spektrum-wave-diag1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
+          <stop offset="50%" stop-color="#003388" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        <linearGradient id="spektrum-wave-diag2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.42" />
+          <stop offset="60%" stop-color="#0066cc" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+
+        <linearGradient id="spektrum-wave-diag3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
+          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light: Gradasi Linear Biasa dari Bawah ke Atas (Tanpa Lingkaran) -->
+      <rect width="1440" height="600" fill="url(#spektrum-ambient-bottom)" />
+
+      <!-- Diagonal Sweeping Fluid Fills (Desain Asli Spektrum dari Top-Left ke Bottom-Right) -->
+      <path d="M0,0 C420,40 760,220 1020,420 C1200,540 1340,580 1440,600 L0,600 Z" fill="url(#spektrum-wave-diag1)" />
+      <path d="M0,80 C360,120 680,300 940,470 C1140,570 1300,590 1440,600 L0,600 Z" fill="url(#spektrum-wave-diag2)" />
+      <path d="M0,220 C300,240 580,380 820,510 C1040,600 1260,600 1440,600 L0,600 Z" fill="url(#spektrum-wave-diag3)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
 
     <div class="mb-16">
       <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">
@@ -148,7 +224,7 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
       {{-- Rotary Wing --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 hover:bg-white/[0.09] transition-colors">
+      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
         <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
           @php
             $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
@@ -166,7 +242,7 @@
       </div>
 
       {{-- Fixed Wing --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 hover:bg-white/[0.09] transition-colors">
+      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
         <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
           <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
@@ -177,7 +253,7 @@
       </div>
 
       {{-- Hybrid VTOL --}}
-      <div class="bg-white/[0.06] border border-white/[0.08] rounded-[2rem] p-8 sm:p-10 hover:bg-white/[0.09] transition-colors">
+      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
         <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
           <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
         </div>
@@ -290,7 +366,7 @@
 
 
 {{-- ========================================================== --}}
-{{-- CTA & WORKSHOP — Clean Editorial Dark Split & Full Map     --}}
+{{-- CTA & WORKSHOP — Ekosistem Bento Card Vector & Dark Theme  --}}
 {{-- ========================================================== --}}
 @php
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
@@ -302,8 +378,37 @@
   $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));
 @endphp
-<section class="bg-[#1d1d1f] pt-28 sm:pt-36 pb-0 border-t border-white/[0.08] overflow-hidden flex flex-col justify-between">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full pb-20 sm:pb-28">
+<section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-white/[0.08]">
+  
+  {{-- Vector Background: Pure Organic Wave Fills (Matching Section Untuk Siapa) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="about-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
+          <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+        </linearGradient>
+        <linearGradient id="about-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
+          <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+        </linearGradient>
+        <linearGradient id="about-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
+          <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Pure Fluid Wave Fills: Sedikit di kiri bawah, mengalir elegan naik ke kanan -->
+      <path d="M0,340 C280,320 470,220 780,150 C900,120 960,100 1000,80 L1000,400 L0,400 Z" fill="url(#about-wave-fill1)" />
+      <path d="M0,380 C360,370 580,280 860,190 C930,160 970,140 1000,120 L1000,400 L0,400 Z" fill="url(#about-wave-fill2)" />
+      <path d="M440,400 C590,340 780,300 1000,220 L1000,400 Z" fill="url(#about-wave-fill3)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full relative z-10">
     
     {{-- 2-Column Split: Headline & Directory List --}}
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
@@ -386,22 +491,22 @@
     </div>
 
   </div>
-
-  @if($show_map_about && !empty($c_maps))
-  {{-- Full-width Map Media Block — exactly like drone detail hero image --}}
-  <div class="w-full overflow-hidden border-t border-white/[0.08] relative" style="height: 520px; max-height: 600px;">
-    <iframe 
-      src="{{ esc_url($c_maps) }}" 
-      width="100%" 
-      height="100%" 
-      style="border:0;" 
-      allowfullscreen="" 
-      loading="lazy" 
-      referrerpolicy="strict-origin-when-cross-origin"
-      title="Lokasi Full Drone Solutions Sleman Yogyakarta">
-    </iframe>
-  </div>
-  @endif
 </section>
+
+@if($show_map_about && !empty($c_maps))
+{{-- Full-width Map Media Block — Terpisah Namun Mepet --}}
+<section class="w-full overflow-hidden border-t border-white/[0.08] relative bg-[#0c1018]" style="height: 520px; max-height: 600px;">
+  <iframe 
+    src="{{ esc_url($c_maps) }}" 
+    width="100%" 
+    height="100%" 
+    style="border:0;" 
+    allowfullscreen="" 
+    loading="lazy" 
+    referrerpolicy="strict-origin-when-cross-origin"
+    title="Lokasi Full Drone Solutions Sleman Yogyakarta">
+  </iframe>
+</section>
+@endif
 
 @endsection

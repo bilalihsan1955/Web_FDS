@@ -457,6 +457,31 @@ function render_navbar_settings_admin_page() {
         update_option('fds_menu_layanan_cta_text', $menu_layanan_cta_text);
         update_option('fds_menu_layanan_cta_url', $menu_layanan_cta_url);
 
+        // Logo-Logo Footer (Dinamis)
+        $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);
+        if ($footer_logo_height < 15) $footer_logo_height = 15;
+        if ($footer_logo_height > 80) $footer_logo_height = 80;
+        update_option('fds_footer_logo_height', $footer_logo_height);
+
+        if (isset($_POST['fds_footer_logos']) && is_array($_POST['fds_footer_logos'])) {
+            $cleaned_logos = [];
+            foreach ($_POST['fds_footer_logos'] as $item) {
+                $img       = esc_url_raw($item['img'] ?? '');
+                $name      = sanitize_text_field($item['name'] ?? '');
+                $url       = esc_url_raw($item['url'] ?? '');
+                $max_width = !empty($item['max_width']) ? intval($item['max_width']) : 0;
+                if (!empty($img) || !empty($name)) {
+                    $cleaned_logos[] = [
+                        'img'       => $img,
+                        'name'      => $name,
+                        'url'       => $url,
+                        'max_width' => $max_width,
+                    ];
+                }
+            }
+            update_option('fds_footer_logos', json_encode($cleaned_logos, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        }
+
         // Sinkronkan ke Core WordPress blogname & blogdescription
         if (!empty($brand_text)) {
             update_option('blogname', $brand_text);
@@ -475,11 +500,13 @@ function render_navbar_settings_admin_page() {
             delete_option('site_icon');
         }
 
-        $message = 'Pengaturan Logo, Navbar, Icon Tab &amp; Nama Tab Semua Halaman berhasil disimpan!';
+        $message = 'Pengaturan Logo, Navbar, Icon Tab, Mega Menu &amp; Logo Footer berhasil disimpan!';
     }
 
-    $brand_data        = fds_get_navbar_brand();
-    $home_tab_title    = get_option('fds_home_tab_title', '');
+    $brand_data           = fds_get_navbar_brand();
+    $footer_logos         = function_exists('\App\fds_get_footer_logos') ? fds_get_footer_logos() : [];
+    $footer_logo_height   = intval(get_option('fds_footer_logo_height', 28)) ?: 28;
+    $home_tab_title       = get_option('fds_home_tab_title', '');
     $about_tab_title   = get_option('fds_about_tab_title', '');
     $compare_tab_title = get_option('fds_compare_tab_title', '');
     $blog_tab_title    = get_option('fds_blog_tab_title', '');
@@ -973,9 +1000,82 @@ function render_navbar_settings_admin_page() {
 
                     </div>
                 </div>
+
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 8. LOGO INSTANSI / PARTNER / SERTIFIKASI (FOOTER KANAN) -->
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <div>
+                            <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a;">
+                                🏢 Logo Instansi, Mitra &amp; Sertifikasi (Footer Kanan)
+                            </label>
+                            <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola deretan logo sertifikasi &amp; mitra yang tampil di sisi kanan bawah footer. Anda dapat mengatur tinggi logo secara umum, membatasi lebar maksimal logo tertentu jika ada gambar yang terlalu panjang (horizontal), serta menambah/menghapus logo kapan saja.</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 14px; margin-bottom: 16px; padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 4px;">Tinggi Logo Global (px)</label>
+                            <div style="display: flex; align-items: center; gap: 6px;">
+                                <input type="number" name="fds_footer_logo_height" value="<?php echo esc_attr($footer_logo_height); ?>" min="15" max="80" style="width: 90px; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 13px;">
+                                <span style="font-size: 12px; color: #64748b;">px (Default: 28px)</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 12px; color: #64748b; border-left: 1px solid #cbd5e1; padding-left: 16px;">
+                            💡 <strong>Tips Lebar:</strong> Jika ada logo instansi/partner yang terlalu lebar (misal logo + teks panjang), isi kolom <em>Batas Lebar</em> pada baris logo tersebut (contoh: <code>90</code> atau <code>100</code>) agar tetap proporsional tanpa merusak rasio gambar.
+                        </div>
+                    </div>
+
+                    <div id="fds-navbar-logos-container" style="display: flex; flex-direction: column; gap: 12px; margin: 16px 0;">
+                        <?php if (empty($footer_logos)): ?>
+                            <div id="fds-navbar-no-logos" style="padding: 16px; text-align: center; color: #94a3b8; font-size: 13px; border: 1px dashed #cbd5e1; border-radius: 8px;">
+                                Belum ada logo footer. Klik tombol di bawah untuk menambahkan logo baru.
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($footer_logos as $idx => $item): ?>
+                                <div class="fds-logo-row" style="display: grid; grid-template-columns: 70px 1.2fr 1fr 1fr 105px 45px; gap: 10px; align-items: center; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                    <div style="width: 65px; height: 48px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                        <img class="fds-logo-preview" src="<?php echo esc_url($item['img'] ?? ''); ?>" style="max-width: 100%; max-height: 100%; object-fit: contain; <?php echo empty($item['img']) ? 'display:none;' : ''; ?>">
+                                        <span class="fds-no-img-text" style="font-size: 10px; color: #94a3b8; <?php echo !empty($item['img']) ? 'display:none;' : ''; ?>">No Image</span>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">URL Gambar Logo</label>
+                                        <div style="display: flex; gap: 6px;">
+                                            <input type="text" name="fds_footer_logos[<?php echo $idx; ?>][img]" value="<?php echo esc_attr($item['img'] ?? ''); ?>" class="fds-logo-url-input" placeholder="https://..." style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                                            <button type="button" class="button fds-upload-footer-logo-btn" style="padding: 0 10px; font-size: 12px;">Upload</button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Nama / Alt Logo</label>
+                                        <input type="text" name="fds_footer_logos[<?php echo $idx; ?>][name]" value="<?php echo esc_attr($item['name'] ?? ''); ?>" placeholder="Contoh: Bangga Buatan Indonesia" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Tautan Klik (Opsional)</label>
+                                        <input type="url" name="fds_footer_logos[<?php echo $idx; ?>][url]" value="<?php echo esc_attr($item['url'] ?? ''); ?>" placeholder="https://..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Batas Lebar (px)</label>
+                                        <input type="number" name="fds_footer_logos[<?php echo $idx; ?>][max_width]" value="<?php echo !empty($item['max_width']) ? intval($item['max_width']) : ''; ?>" placeholder="Otomatis / 90" min="20" max="250" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <button type="button" class="button fds-remove-logo-btn" style="color: #ef4444; border-color: #fecaca; background: #fff; padding: 4px 8px; font-size: 12px;" title="Hapus Logo">
+                                            <span class="dashicons dashicons-trash" style="font-size: 16px; width: 16px; height: 16px; margin-top: 2px;"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <button type="button" id="fds-navbar-add-logo-btn" class="button button-secondary" style="font-weight: 600; font-size: 13px; padding: 6px 16px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;">
+                        <span class="dashicons dashicons-plus-alt2" style="font-size: 16px; width: 16px; height: 16px;"></span> Tambah Logo Footer Baru
+                    </button>
+                </div>
+
                 <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
                     <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
-                        💾 Simpan Perubahan Logo, Navbar &amp; Nama Tab
+                        💾 Simpan Perubahan Logo, Navbar &amp; Logo Footer
                     </button>
                 </div>
 
@@ -1110,6 +1210,91 @@ function render_navbar_settings_admin_page() {
             e.preventDefault();
             $('#fds_site_favicon_url').val('');
             $('#fds_favicon_wrapper').html('<div id="fds_favicon_preview" style="font-size: 10px; color: #94a3b8; font-weight: 600;">Icon</div>');
+        });
+
+        // Footer Logos Repeater
+        var footerLogoIndex = <?php echo max(count($footer_logos), 1); ?>;
+
+        $('#fds-navbar-add-logo-btn').on('click', function(e) {
+            e.preventDefault();
+            $('#fds-navbar-no-logos').hide();
+            
+            var rowHtml = `
+            <div class="fds-logo-row" style="display: grid; grid-template-columns: 70px 1.2fr 1fr 1fr 105px 45px; gap: 10px; align-items: center; padding: 12px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <div style="width: 65px; height: 48px; background: #fff; border: 1px solid #cbd5e1; border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                    <img class="fds-logo-preview" src="" style="max-width: 100%; max-height: 100%; object-fit: contain; display: none;">
+                    <span class="fds-no-img-text" style="font-size: 10px; color: #94a3b8;">No Image</span>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">URL Gambar Logo</label>
+                    <div style="display: flex; gap: 6px;">
+                        <input type="text" name="fds_footer_logos[` + footerLogoIndex + `][img]" value="" class="fds-logo-url-input" placeholder="https://..." style="flex: 1; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                        <button type="button" class="button fds-upload-footer-logo-btn" style="padding: 0 10px; font-size: 12px;">Upload</button>
+                    </div>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Nama / Alt Logo</label>
+                    <input type="text" name="fds_footer_logos[` + footerLogoIndex + `][name]" value="" placeholder="Contoh: Logo Mitra / Sertifikasi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Tautan Klik (Opsional)</label>
+                    <input type="url" name="fds_footer_logos[` + footerLogoIndex + `][url]" value="" placeholder="https://..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12px;">
+                </div>
+                <div>
+                    <label style="display: block; font-size: 11px; font-weight: 600; color: #475569; margin-bottom: 4px;">Batas Lebar (px)</label>
+                    <input type="number" name="fds_footer_logos[` + footerLogoIndex + `][max_width]" value="" placeholder="Otomatis / 90" min="20" max="250" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 8px; font-size: 12px;">
+                </div>
+                <div style="text-align: center;">
+                    <button type="button" class="button fds-remove-logo-btn" style="color: #ef4444; border-color: #fecaca; background: #fff; padding: 4px 8px; font-size: 12px;" title="Hapus Logo">
+                        <span class="dashicons dashicons-trash" style="font-size: 16px; width: 16px; height: 16px; margin-top: 2px;"></span>
+                    </button>
+                </div>
+            </div>`;
+
+            $('#fds-navbar-logos-container').append(rowHtml);
+            footerLogoIndex++;
+        });
+
+        $(document).on('click', '.fds-remove-logo-btn', function(e) {
+            e.preventDefault();
+            $(this).closest('.fds-logo-row').remove();
+            if ($('#fds-navbar-logos-container .fds-logo-row').length === 0) {
+                $('#fds-navbar-no-logos').show();
+            }
+        });
+
+        $(document).on('click', '.fds-upload-footer-logo-btn', function(e) {
+            e.preventDefault();
+            var $row = $(this).closest('.fds-logo-row');
+            var $input = $row.find('.fds-logo-url-input');
+            var $preview = $row.find('.fds-logo-preview');
+            var $noImg = $row.find('.fds-no-img-text');
+
+            var customUploader = wp.media({
+                title: 'Pilih / Unggah Logo Footer',
+                button: { text: 'Gunakan Logo Ini' },
+                multiple: false
+            }).on('select', function() {
+                var attachment = customUploader.state().get('selection').first().toJSON();
+                $input.val(attachment.url);
+                $preview.attr('src', attachment.url).show();
+                $noImg.hide();
+            }).open();
+        });
+
+        $(document).on('input change', '.fds-logo-url-input', function() {
+            var url = $(this).val().trim();
+            var $row = $(this).closest('.fds-logo-row');
+            var $preview = $row.find('.fds-logo-preview');
+            var $noImg = $row.find('.fds-no-img-text');
+
+            if (url) {
+                $preview.attr('src', url).show();
+                $noImg.hide();
+            } else {
+                $preview.hide();
+                $noImg.show();
+            }
         });
 
         // Remove Drone Icon Button

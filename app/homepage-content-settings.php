@@ -320,11 +320,12 @@ function fds_get_homepage_content() {
         'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Akademi Pilot'),
         'keunggulan_card6_stat'  => get_option('fds_keunggulan_card6_stat', '2012'),
         'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.'),
+        'keunggulan_card6_img'   => get_option('fds_keunggulan_card6_img', 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80'),
 
         'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Skalabilitas Armada'),
         'keunggulan_card7_title' => get_option('fds_keunggulan_card7_title', 'Satu ekosistem. Banyak solusi.'),
         'keunggulan_card7_desc'  => get_option('fds_keunggulan_card7_desc', 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.'),
-        'keunggulan_card7_img'   => get_option('fds_keunggulan_card7_img', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'),
+        'keunggulan_card7_img'   => get_option('fds_keunggulan_card7_img', get_template_directory_uri() . '/public/images/drone-ecosystem-3d.jpg'),
 
         // LAYANAN ENTERPRISE
         'layanan_badge'          => get_option('fds_layanan_badge', 'Dukungan Operasional'),
@@ -376,7 +377,7 @@ function render_homepage_content_admin_page() {
             'fds_mitra_heading',
             'fds_solusi_badge', 'fds_solusi_title',
             'fds_produk_badge', 'fds_produk_title', 'fds_produk_stat1_num', 'fds_produk_stat1_lbl', 'fds_produk_stat2_num', 'fds_produk_stat2_lbl', 'fds_produk_stat3_num', 'fds_produk_stat3_lbl', 'fds_produk_stat4_num', 'fds_produk_stat4_lbl',
-            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_img',
+            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card6_img', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_img',
             'fds_layanan_badge', 'fds_layanan_title', 'fds_layanan_cta_text', 'fds_layanan_cta_url',
             'fds_blog_badge', 'fds_blog_title', 'fds_blog_cta_text',
             'fds_kontak_badge', 'fds_kontak_wa_text', 'fds_kontak_form_title', 'fds_kontak_form_btn_text',
@@ -769,97 +770,101 @@ function render_homepage_content_admin_page() {
 
                     <!-- Card 2 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 2: TKDN &amp; Bangga Buatan Indonesia</h4>
+                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 2: TKDN &amp; Bangga Buatan Indonesia (Kanan - Tinggi)</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
-                            <input type="text" name="fds_keunggulan_card2_badge" value="<?php echo esc_attr($c['keunggulan_card2_badge']); ?>" placeholder="Badge">
-                            <input type="text" name="fds_keunggulan_card2_stat" value="<?php echo esc_attr($c['keunggulan_card2_stat']); ?>" placeholder="Nilai Stat (60,74%)">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge</label>
+                                <input type="text" name="fds_keunggulan_card2_badge" value="<?php echo esc_attr($c['keunggulan_card2_badge']); ?>" style="width: 100%;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat</label>
+                                <input type="text" name="fds_keunggulan_card2_stat" value="<?php echo esc_attr($c['keunggulan_card2_stat']); ?>" style="width: 100%;">
+                            </div>
                         </div>
-                        <textarea name="fds_keunggulan_card2_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card2_desc']); ?></textarea>
+                        <div style="margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                            <textarea name="fds_keunggulan_card2_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card2_desc']); ?></textarea>
+                        </div>
                         <div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Logo Bangga Buatan Indonesia / Gambar Tambahan (Opsional)</label>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Logo Bangga Buatan Indonesia / TKDN</label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <img src="<?php echo esc_url($c['keunggulan_card2_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0; padding: 4px;">
+                                <img src="<?php echo esc_url($c['keunggulan_card2_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid #cbd5e1; background: #fff; padding: 4px;">
                                 <div>
                                     <input type="hidden" name="fds_keunggulan_card2_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card2_img']); ?>">
-                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar / Logo</button>
+                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Logo</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Card 3 -->
-                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 3: Software GCS (Gelap)</h4>
-                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 8px;">
-                            <input type="text" name="fds_keunggulan_card3_badge" value="<?php echo esc_attr($c['keunggulan_card3_badge']); ?>" placeholder="Badge">
-                            <input type="text" name="fds_keunggulan_card3_title" value="<?php echo esc_attr($c['keunggulan_card3_title']); ?>" placeholder="Judul">
-                        </div>
-                        <textarea name="fds_keunggulan_card3_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card3_desc']); ?></textarea>
-                        <div>
-                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar / Screenshot Software (Opsional)</label>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <img src="<?php echo esc_url($c['keunggulan_card3_img']); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
-                                <div>
-                                    <input type="hidden" name="fds_keunggulan_card3_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card3_img']); ?>">
-                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 4, 5, 6, 7 -->
+                    <!-- Middle Row: Card 3 & Card 4 -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <!-- Card 3 -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 4: Standar ISO &amp; SNI</h4>
-                            <input type="text" name="fds_keunggulan_card4_stat" value="<?php echo esc_attr($c['keunggulan_card4_stat']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card4_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card4_desc']); ?></textarea>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 3: Software GCS (Tengah Kiri)</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge</label>
+                                <input type="text" name="fds_keunggulan_card3_badge" value="<?php echo esc_attr($c['keunggulan_card3_badge']); ?>" style="width: 100%;">
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul</label>
+                                <input type="text" name="fds_keunggulan_card3_title" value="<?php echo esc_attr($c['keunggulan_card3_title']); ?>" style="width: 100%;">
+                            </div>
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                                <textarea name="fds_keunggulan_card3_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card3_desc']); ?></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 4: Standar ISO &amp; SNI (Tengah Kanan)</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Stat (ISO &amp; SNI)</label>
+                                <input type="text" name="fds_keunggulan_card4_stat" value="<?php echo esc_attr($c['keunggulan_card4_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                                <textarea name="fds_keunggulan_card4_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card4_desc']); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Row: Card 2012 & Card Ekosistem Multi-Sektor -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <!-- Card 2012 -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 5: Pengalaman Industri (2012) — (Bawah Kiri)</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat (2012)</label>
+                                <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                                <textarea name="fds_keunggulan_card6_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card6_desc']); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Background Foto Tim / Operasional</label>
                                 <div style="display: flex; gap: 10px; align-items: center;">
-                                    <img src="<?php echo esc_url($c['keunggulan_card4_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                    <img src="<?php echo esc_url($c['keunggulan_card6_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
                                     <div>
-                                        <input type="hidden" name="fds_keunggulan_card4_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card4_img']); ?>">
+                                        <input type="hidden" name="fds_keunggulan_card6_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card6_img']); ?>">
                                         <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Card Satu Ekosistem -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 5: Purna Jual &amp; Suku Cadang</h4>
-                            <input type="text" name="fds_keunggulan_card5_title" value="<?php echo esc_attr($c['keunggulan_card5_title']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card5_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card5_desc']); ?></textarea>
-                            <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <img src="<?php echo esc_url($c['keunggulan_card5_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
-                                    <div>
-                                        <input type="hidden" name="fds_keunggulan_card5_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card5_img']); ?>">
-                                        <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
-                                    </div>
-                                </div>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 6: Ekosistem Multi-Sektor (Bawah Kanan - Lebar)</h4>
+                            <div style="margin-bottom: 8px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Utama</label>
+                                <input type="text" name="fds_keunggulan_card7_title" value="<?php echo esc_attr($c['keunggulan_card7_title']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
                             </div>
-                        </div>
-
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700;">Card 6: Pengalaman Industri (2012)</h4>
-                            <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card6_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card6_desc']); ?></textarea>
-                        </div>
-
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 7: Ekosistem Multi-Sektor</h4>
-                            <input type="text" name="fds_keunggulan_card7_title" value="<?php echo esc_attr($c['keunggulan_card7_title']); ?>" style="width: 100%; margin-bottom: 6px;">
-                            <textarea name="fds_keunggulan_card7_desc" rows="2" style="width: 100%; font-size: 12px; margin-bottom: 8px;"><?php echo esc_textarea($c['keunggulan_card7_desc']); ?></textarea>
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">🖼️ Gambar Kartu (Opsional)</label>
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <img src="<?php echo esc_url($c['keunggulan_card7_img']); ?>" class="card-preview-img" style="width: 90px; height: 50px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
-                                    <div>
-                                        <input type="hidden" name="fds_keunggulan_card7_img" class="card-image-input" value="<?php echo esc_attr($c['keunggulan_card7_img']); ?>">
-                                        <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
-                                    </div>
-                                </div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
+                                <textarea name="fds_keunggulan_card7_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card7_desc']); ?></textarea>
                             </div>
                         </div>
                     </div>

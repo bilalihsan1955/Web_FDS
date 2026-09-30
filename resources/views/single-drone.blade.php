@@ -519,31 +519,71 @@
 
   <div class="bg-white pt-[52px]">
 
-    {{-- ── HERO — Dark split layout ────────────────────────────── --}}
-    {{-- ── HERO — Dark split layout ────────────────────────────── --}}
-    <section class="bg-[#1d1d1f] flex flex-col justify-between overflow-hidden">
+    {{-- ── HERO — Dark split layout (ORIGINAL HERO STRUCTURE WITH ENHANCED BACKGROUND VECTOR) ─── --}}
+    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] flex flex-col justify-between overflow-hidden">
 
-      {{-- Top: text block --}}
-      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
+      {{-- Vector Background: Lekukan Gelombang Organik Fluida dengan Gradasi ke Gelap di Sisi Kanan --}}
+      <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            {{-- Lapisan 1 (Terluar) — Biru di sisi kurva, bergradasi ke gelap di sisi kanan --}}
+            <linearGradient id="hero-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
+              <stop offset="0%" stop-color="#0071e3" stop-opacity="0.16" />
+              <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+            </linearGradient>
+
+            {{-- Lapisan 2 (Sedang-Luar) — Bergradasi ke gelap di sisi kanan --}}
+            <linearGradient id="hero-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
+              <stop offset="0%" stop-color="#0077ed" stop-opacity="0.25" />
+              <stop offset="50%" stop-color="#0052a3" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+            </linearGradient>
+
+            {{-- Lapisan 3 (Tengah) — Bergradasi ke gelap di sisi kanan --}}
+            <linearGradient id="hero-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
+              <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.36" />
+              <stop offset="55%" stop-color="#0066cc" stop-opacity="0.18" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.75" />
+            </linearGradient>
+
+            {{-- Lapisan 4 (Inti) — Biru Vibrant di awal, bergradasi ke gelap di sisi kanan --}}
+            <linearGradient id="hero-curve-fill4" x1="0%" y1="20%" x2="100%" y2="80%">
+              <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
+              <stop offset="55%" stop-color="#0071e3" stop-opacity="0.26" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+            </linearGradient>
+          </defs>
+
+          <!-- Lapisan Lekukan Vektor Organik: Digeser Lebih ke Kanan, Kiri Biru Cerah, Kanan Bergradasi ke Gelap -->
+          <path d="M380,0 C560,110 1160,160 1060,360 C980,520 900,620 800,700 L1440,700 L1440,0 Z" fill="url(#hero-curve-fill1)" />
+          <path d="M600,0 C760,100 1260,150 1180,330 C1100,490 1020,600 940,700 L1440,700 L1440,0 Z" fill="url(#hero-curve-fill2)" />
+          <path d="M820,0 C960,90 1340,140 1280,300 C1220,450 1160,570 1080,700 L1440,700 L1440,0 Z" fill="url(#hero-curve-fill3)" />
+          <path d="M1040,0 C1160,80 1420,130 1360,270 C1300,410 1240,540 1200,700 L1440,700 L1440,0 Z" fill="url(#hero-curve-fill4)" />
+        </svg>
+      </div>
+
+      {{-- Top: text block (STRUKTUR ASLI TIDAK DIUBAH) --}}
+      <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
         {{-- Badge chips --}}
         <div class="flex flex-wrap items-start gap-3 mb-8">
-          <span class="inline-flex items-center text-[12px] font-semibold text-white/40 tracking-wide border border-white/[0.12] rounded-full px-3.5 py-1">
+          <span class="inline-flex items-center text-[12px] font-semibold text-white/70 tracking-wide border border-white/[0.15] bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm">
             {!! wp_specialchars_decode($drone['kategori'] ?? 'Agrikultur') !!}
           </span>
           @if(!empty($drone['badge']))
-          <span class="inline-flex items-center text-[12px] font-semibold text-[#6e9fd4] tracking-wide bg-[#0066cc]/15 rounded-full px-3.5 py-1">
+          <span class="inline-flex items-center text-[12px] font-semibold text-[#60a5fa] tracking-wide bg-[#0066cc]/20 border border-blue-400/30 rounded-full px-3.5 py-1 backdrop-blur-sm">
             {!! wp_specialchars_decode($drone['badge']) !!}
           </span>
           @endif
         </div>
 
         {{-- Nama produk --}}
-        <h1 class="text-[72px] sm:text-[100px] lg:text-[128px] font-semibold tracking-[-0.05em] text-white leading-[0.9] mb-8">
+        <h1 class="text-[72px] sm:text-[100px] lg:text-[128px] font-semibold tracking-[-0.05em] text-white leading-[0.9] mb-8 drop-shadow-sm">
           {!! wp_specialchars_decode($drone['name']) !!}
         </h1>
 
         @if(!empty($drone['tagline']))
-        <p class="text-[18px] sm:text-[20px] text-white/55 max-w-[580px] leading-[1.6] mb-10">
+        <p class="text-[18px] sm:text-[20px] text-white/75 max-w-[580px] leading-[1.6] mb-10">
           {!! wp_specialchars_decode($drone['tagline']) !!}
         </p>
         @endif
@@ -555,14 +595,14 @@
             Minta Penawaran
           </a>
           <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
-             class="inline-flex items-center text-white/75 hover:text-white text-[15px] font-medium transition-colors gap-1.5 px-3 py-3">
+             class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-1.5 px-3 py-3">
             Bandingkan model &rsaquo;
           </a>
         </div>
       </div>
 
-      {{-- Hero image — Laptop 1024px (lg: 260px), Laptop L 1440px (xl: 400px), 4K (2xl: 680px) --}}
-      <div class="w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
+      {{-- Hero image (STRUKTUR ASLI TIDAK DIUBAH) --}}
+      <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
         @php
           $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
@@ -573,6 +613,7 @@
              fetchpriority="high"
              class="w-full h-auto object-cover object-center block max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
       </div>
+
     </section>
 
     {{-- ── SPECS ─────────────────────────────────────────────────── --}}
@@ -649,24 +690,310 @@
     </section>
     @endif
 
-    {{-- ── FOR WHOM ─────────────────────────────────────────────── --}}
-    @if(!empty($drone['for']))
-    <section class="bg-[#1d1d1f] pt-24 sm:pt-32 pb-24 sm:pb-32 relative z-0">
+    {{-- ── DOWNLOAD BROCHURE SECTION (CLEAN & MINIMALIST) ─────────────── --}}
+    @php
+      $brochure_enable        = get_option('fds_brochure_enable', '1');
+      $brochure_layout        = get_option('fds_brochure_layout', 'horizontal');
+      $raw_title              = get_option('fds_brochure_title', 'Brosur Spesifikasi {drone_name}');
+      $brochure_title         = str_replace('{drone_name}', wp_specialchars_decode($drone['name']), $raw_title);
+      $brochure_desc_initial  = get_option('fds_brochure_desc', 'Masukkan email Anda untuk mengunduh brosur spesifikasi teknis resmi (PDF).');
+      $brochure_desc_ready    = get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.');
+      $brochure_ph            = get_option('fds_brochure_placeholder', 'Masukkan email Anda...');
+      $brochure_btn           = get_option('fds_brochure_button_text', 'Download Brosur (PDF)');
+      $brochure_file_url      = get_post_meta($post_id, 'drone_brosur_url', true) ?: get_option('fds_brochure_default_pdf', '');
+    @endphp
+
+    @if($brochure_enable === '1')
+    <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 border-t border-black/[0.08] relative z-10">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        
+        @if($brochure_layout === 'centered')
+        {{-- VARIAN 2: CENTERED / RATA TENGAH (PROPORTIONAL & PROMINENT) --}}
+        <div class="max-w-3xl mx-auto text-center flex flex-col items-center">
+          
+          {{-- Heading & Subtitle Centered --}}
+          <h3 class="text-[30px] sm:text-[38px] lg:text-[44px] font-bold text-[#1d1d1f] tracking-tight leading-[1.15]">
+            {!! esc_html($brochure_title) !!}
+          </h3>
+          <p class="fds-brochure-desc-text text-[16px] sm:text-[18px] lg:text-[19px] text-[#6e6e73] mt-3 sm:mt-4 leading-relaxed max-w-xl mx-auto transition-all duration-200"
+             data-desc-initial="{!! esc_attr(wp_specialchars_decode($brochure_desc_initial)) !!}"
+             data-desc-ready="{!! esc_attr(wp_specialchars_decode($brochure_desc_ready)) !!}">
+            {!! esc_html(wp_specialchars_decode($brochure_desc_initial)) !!}
+          </p>
+
+          {{-- Action Area Centered --}}
+          <div class="w-full mt-8 sm:mt-10 flex flex-col items-center justify-center">
+            
+            {{-- STATE 1: FORM INPUT EMAIL --}}
+            <form id="fds-brochure-form" class="w-full max-w-xl flex flex-col sm:flex-row items-center justify-center gap-3.5">
+              <input type="hidden" name="action" value="fds_download_brochure">
+              <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
+              <input type="hidden" name="drone_id" value="{{ $post_id }}">
+              <input type="hidden" name="drone_name" value="{{ esc_attr(wp_specialchars_decode($drone['name'])) }}">
+
+              <div class="relative w-full sm:w-[340px]">
+                <input type="email" 
+                       id="brochure_email" 
+                       name="email" 
+                       required 
+                       placeholder="{{ esc_attr($brochure_ph) }}" 
+                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/20 transition-all text-center sm:text-left">
+              </div>
+
+              <button type="submit" 
+                      id="fds-brochure-submit-btn" 
+                      class="w-full sm:w-auto h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap">
+                <span>Kirim Email</span>
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </button>
+            </form>
+
+            {{-- STATE 2: TOMBOL DOWNLOAD AKTIF --}}
+            <div id="fds-brochure-download-ready" class="hidden items-center justify-center">
+              <a id="fds-brochure-download-link" 
+                 href="{{ esc_url($brochure_file_url ?: '#') }}" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-3 bg-[#0066cc] hover:bg-[#0055b3] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <span>{!! esc_html(wp_specialchars_decode($brochure_btn)) !!}</span>
+              </a>
+            </div>
+
+            {{-- Status & Error Feedback Only --}}
+            <div id="fds-brochure-msg" class="hidden text-[13px] mt-3 px-2 text-center"></div>
+          </div>
+
+        </div>
+
+        @else
+        {{-- VARIAN 1: HORIZONTAL / SPLIT (KIRI-KANAN) --}}
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
+          
+          {{-- Left: Big Heading & Subtitle --}}
+          <div class="max-w-2xl">
+            <h3 class="text-[28px] sm:text-[36px] lg:text-[40px] font-bold text-[#1d1d1f] tracking-tight leading-[1.18]">
+              {!! esc_html($brochure_title) !!}
+            </h3>
+            <p class="fds-brochure-desc-text text-[16px] sm:text-[18px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
+               data-desc-initial="{!! esc_attr(wp_specialchars_decode($brochure_desc_initial)) !!}"
+               data-desc-ready="{!! esc_attr(wp_specialchars_decode($brochure_desc_ready)) !!}">
+              {!! esc_html(wp_specialchars_decode($brochure_desc_initial)) !!}
+            </p>
+          </div>
+
+          {{-- Right: Big Action Area --}}
+          <div class="w-full lg:w-auto">
+            
+            {{-- STATE 1: FORM INPUT EMAIL (SEBELUM KIRIM EMAIL) --}}
+            <form id="fds-brochure-form" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+              <input type="hidden" name="action" value="fds_download_brochure">
+              <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
+              <input type="hidden" name="drone_id" value="{{ $post_id }}">
+              <input type="hidden" name="drone_name" value="{{ esc_attr(wp_specialchars_decode($drone['name'])) }}">
+
+              <div class="relative w-full sm:w-[320px] lg:w-[340px]">
+                <input type="email" 
+                       id="brochure_email" 
+                       name="email" 
+                       required 
+                       placeholder="{{ esc_attr($brochure_ph) }}" 
+                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/20 transition-all">
+              </div>
+
+              <button type="submit" 
+                      id="fds-brochure-submit-btn" 
+                      class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap">
+                <span>Kirim Email</span>
+                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                </svg>
+              </button>
+            </form>
+
+            {{-- STATE 2: TOMBOL DOWNLOAD AKTIF (BERSIH TANPA CLUTTER) --}}
+            <div id="fds-brochure-download-ready" class="hidden items-center">
+              <a id="fds-brochure-download-link" 
+                 href="{{ esc_url($brochure_file_url ?: '#') }}" 
+                 target="_blank" 
+                 rel="noopener noreferrer"
+                 class="inline-flex items-center justify-center gap-3 bg-[#0066cc] hover:bg-[#0055b3] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <span>{!! esc_html(wp_specialchars_decode($brochure_btn)) !!}</span>
+              </a>
+            </div>
+
+            {{-- Status & Error Feedback Only --}}
+            <div id="fds-brochure-msg" class="hidden text-[13px] mt-2.5 px-2 text-center sm:text-left"></div>
+          </div>
+
+        </div>
+        @endif
+      </div>
+    </section>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('fds-brochure-form');
+      const readyBox = document.getElementById('fds-brochure-download-ready');
+      const downloadLink = document.getElementById('fds-brochure-download-link');
+      const submitBtn = document.getElementById('fds-brochure-submit-btn');
+      const msgBox = document.getElementById('fds-brochure-msg');
+      const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
+      const initialPdf = '{{ esc_js($brochure_file_url) }}';
+
+      if (!form || !readyBox) return;
+
+      function updateDescToReady() {
+        descTexts.forEach(el => {
+          if (el.dataset.descReady) {
+            el.textContent = el.dataset.descReady;
+          }
+        });
+      }
+
+      // 1. CEK STATE CLIENT LOCAL STORAGE (Jika user sudah pernah input email, langsung buka tombol & update deskripsi)
+      const isUnlocked = localStorage.getItem('fds_brochure_unlocked') === '1';
+      if (isUnlocked) {
+        form.classList.add('hidden');
+        readyBox.classList.remove('hidden');
+        readyBox.classList.add('flex');
+        updateDescToReady();
+        if (initialPdf && downloadLink) {
+          downloadLink.href = initialPdf;
+        }
+      }
+
+      // 2. FORM SUBMIT HANDLER
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const emailInput = document.getElementById('brochure_email');
+        const emailVal = emailInput ? emailInput.value.trim() : '';
+
+        if (!emailVal || (emailInput && !emailInput.validity.valid)) {
+          if (msgBox) {
+            msgBox.textContent = 'Silakan masukkan alamat email yang valid.';
+            msgBox.className = 'text-[13px] mt-2.5 font-medium text-rose-600 block text-center sm:text-left';
+            msgBox.classList.remove('hidden');
+          }
+          return;
+        }
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Memproses...</span>
+          `;
+        }
+        if (msgBox) msgBox.classList.add('hidden');
+
+        const formData = new FormData(form);
+
+        fetch('{{ admin_url('admin-ajax.php') }}', {
+          method: 'POST',
+          body: formData,
+        })
+        .then(res => res.json())
+        .then(data => {
+          // Simpan status unlock ke localStorage user
+          localStorage.setItem('fds_brochure_email', emailVal);
+          localStorage.setItem('fds_brochure_unlocked', '1');
+
+          if (data && data.success && data.data && data.data.download_url) {
+            if (downloadLink) downloadLink.href = data.data.download_url;
+          } else if (initialPdf && downloadLink) {
+            downloadLink.href = initialPdf;
+          }
+
+          // Langsung ganti tampilan ke tombol download biru & update kalimat deskripsi
+          form.classList.add('hidden');
+          readyBox.classList.remove('hidden');
+          readyBox.classList.add('flex');
+          updateDescToReady();
+        })
+        .catch(() => {
+          // Fallback jika offline/error: tetap unlock tombol
+          localStorage.setItem('fds_brochure_email', emailVal);
+          localStorage.setItem('fds_brochure_unlocked', '1');
+          form.classList.add('hidden');
+          readyBox.classList.remove('hidden');
+          readyBox.classList.add('flex');
+          updateDescToReady();
+        })
+        .finally(() => {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `
+              <span>Kirim Email</span>
+              <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+              </svg>
+            `;
+          }
+        });
+      });
+    });
+    </script>
+    @endif
+
+    {{-- ── FOR WHOM (SOFTWARE KENDALI ORGANIC WAVE BACKGROUND) ─────── --}}
+    @if(!empty($drone['for']))
+    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
+      
+      {{-- Vector Background: Pure Organic Wave Fills (Persis Proporsi Card Software Kendali) --}}
+      <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="forwhom-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
+              <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            </linearGradient>
+            <linearGradient id="forwhom-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
+              <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
+              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            </linearGradient>
+            <linearGradient id="forwhom-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
+              <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            </linearGradient>
+          </defs>
+
+          <!-- Pure Fluid Wave Fills: Sedikit di kiri bawah, mengalir elegan naik ke kanan -->
+          <path d="M0,340 C280,320 470,220 780,150 C900,120 960,100 1000,80 L1000,400 L0,400 Z" fill="url(#forwhom-wave-fill1)" />
+          <path d="M0,380 C360,370 580,280 860,190 C930,160 970,140 1000,120 L1000,400 L0,400 Z" fill="url(#forwhom-wave-fill2)" />
+          <path d="M440,400 C590,340 780,300 1000,220 L1000,400 Z" fill="url(#forwhom-wave-fill3)" />
+        </svg>
+      </div>
+
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">Untuk Siapa</p>
-            <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1]">
+            <span class="text-[12px] font-semibold text-[#60a5fa] tracking-wide mb-3 block">Untuk Siapa</span>
+            <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
               {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} cocok untuk Anda.
             </h2>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             @foreach($drone['for'] as $usecase)
-            <div class="bg-white/[0.06] border border-white/[0.08] rounded-2xl p-5 flex items-start gap-3">
-              <div class="w-5 h-5 bg-[#0066cc]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                <svg class="w-3 h-3 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <div class="bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] hover:border-blue-400/30 rounded-2xl p-5 flex items-start gap-3.5 backdrop-blur-md transition-all duration-200 shadow-sm">
+              <div class="w-5 h-5 bg-[#2563eb]/25 text-[#60a5fa] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-blue-400/30">
+                <svg class="w-3 h-3 text-[#60a5fa]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
               </div>
-              <p class="text-[14px] font-medium text-white/80 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
+              <p class="text-[14px] font-medium text-white/90 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
             </div>
             @endforeach
           </div>
@@ -710,22 +1037,55 @@
     </section>
     @endif
 
-    {{-- ── CTA ─────────────────────────────────────────────────── --}}
-    <section class="bg-[#1d1d1f] py-24">
-      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center">
-        <h2 class="text-[36px] sm:text-[52px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
+    {{-- ── CTA (EKOSISTEM VECTOR BACKGROUND) ─────────────────────── --}}
+    <section class="relative bg-[#0c1018] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.06]">
+      
+      {{-- Organic Wave Geometry Vector Background (Matching Ekosistem Bento Card) --}}
+      <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <svg class="w-full h-full" viewBox="0 0 398 96" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <g>
+            <rect width="398" height="96" fill="url(#paint0_drone_cta_eko)"/>
+            <path d="M-18.2893 -6.32697C-136.964 10.9814 -24.6036 35.4983 -46.9639 64.4209C-70.1751 94.444 4.76287 155.377 4.76287 155.377L406.77 160.338L455.686 19.5816C455.686 19.5816 486.61 10.9501 346.048 50.0886C205.485 89.2271 100.385 -23.6353 -18.2893 -6.32697Z" fill="url(#paint1_drone_cta_eko)"/>
+            <path d="M-87.4837 43.4736C-65.1233 14.551 -71.703 -9.63438 27.815 2.49305C127.333 14.6205 180.184 94.5513 338.738 73.6039C402.333 65.2021 433.365 58.4269 447.725 53.3251L453.437 41.8199C453.437 41.8199 469.167 45.7069 447.725 53.3251L389.303 171L-53.1488 161.803C-53.1488 161.803 -110.695 73.4967 -87.4837 43.4736Z" fill="url(#paint2_drone_cta_eko)"/>
+            <path d="M52.5537 76.3607C17.9455 66.8521 -56.751 53.9736 -56.751 53.9736L-46.402 162.355L187.493 166.765C187.493 166.765 114.012 93.2462 52.5537 76.3607Z" fill="url(#paint3_drone_cta_eko)"/>
+          </g>
+          <defs>
+            <linearGradient id="paint0_drone_cta_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1b2434"/>
+              <stop offset="0.915" stop-color="#0c121e"/>
+            </linearGradient>
+            <linearGradient id="paint1_drone_cta_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#2563eb" stop-opacity="0.40"/>
+              <stop offset="0.915" stop-color="#1d4ed8" stop-opacity="0.15"/>
+            </linearGradient>
+            <linearGradient id="paint2_drone_cta_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#3b82f6" stop-opacity="0.35"/>
+              <stop offset="0.49" stop-color="#1d4ed8" stop-opacity="0.22"/>
+              <stop offset="0.9999" stop-color="#080c14"/>
+            </linearGradient>
+            <linearGradient id="paint3_drone_cta_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#60a5fa" stop-opacity="0.40"/>
+              <stop offset="0.49" stop-color="#2563eb" stop-opacity="0.25"/>
+              <stop offset="0.9999" stop-color="#060910"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
+        <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
           Siap mengoperasikan {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!}?
         </h2>
-        <p class="text-[18px] text-white/60 max-w-[480px] mx-auto mb-8 leading-relaxed">
+        <p class="text-[16px] sm:text-[18px] lg:text-[19px] text-white/80 max-w-[540px] mx-auto mb-9 leading-relaxed">
           Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.
         </p>
-        <div class="flex flex-wrap gap-4 justify-center">
+        <div class="flex flex-wrap gap-4 items-center justify-center">
           <a href="{{ home_url('/#kontak') }}"
-             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150">
+             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0c121e] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
             Hubungi Tim Sales
           </a>
           <a href="{{ home_url('/blog') }}"
-             class="inline-flex items-center text-white/70 text-[15px] font-medium hover:text-white transition-colors gap-1">
+             class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-1 px-4 py-3">
             Baca studi kasus &rsaquo;
           </a>
         </div>

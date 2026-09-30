@@ -421,12 +421,18 @@ function render_drone_pure_form_metabox($post) {
 
         <div class="fds-row-2">
             <div class="fds-field">
-                <label for="drone_brosur_url">Tautan Unduh Brosur PDF (Opsional)</label>
-                <input type="text" id="drone_brosur_url" name="drone_brosur_url" value="<?php echo esc_attr($brosur_url); ?>" placeholder="https://... atau #kontak">
+                <label for="drone_brosur_url">📄 File Brosur PDF Spesifikasi (Opsional)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" id="drone_brosur_url" name="drone_brosur_url" value="<?php echo esc_attr($brosur_url); ?>" placeholder="https://... (URL File PDF)">
+                    <button type="button" id="fds_upload_brosur_btn" class="button" style="white-space: nowrap; font-weight: 600;">📁 Upload PDF</button>
+                    <button type="button" id="fds_remove_brosur_btn" class="button" style="color: #dc2626;">Hapus</button>
+                </div>
+                <span class="fds-subtext">Pilih atau unggah dokumen PDF spesifikasi resmi drone ini. Pengunjung akan mengunduh file ini setelah memasukkan email.</span>
             </div>
             <div class="fds-field">
                 <label for="drone_video_url">Tautan Video Demo YouTube (Opsional)</label>
                 <input type="text" id="drone_video_url" name="drone_video_url" value="<?php echo esc_attr($video_url); ?>" placeholder="https://youtube.com/watch?v=...">
+                <span class="fds-subtext">Tautan video demonstrasi penerbangan atau uji coba lapangan.</span>
             </div>
         </div>
     </div>
@@ -586,7 +592,25 @@ function render_drone_pure_form_metabox($post) {
     </div>
 
     <script>
-    jQuery(document).ready(function($) {
+        // Media Uploader untuk File PDF Brosur
+        $('#fds_upload_brosur_btn').on('click', function(e) {
+            e.preventDefault();
+            var brosurUploader = wp.media({
+                title: 'Pilih atau Unggah File PDF Brosur Drone',
+                button: { text: 'Gunakan File PDF Ini' },
+                library: { type: 'application/pdf' },
+                multiple: false
+            }).on('select', function() {
+                var attachment = brosurUploader.state().get('selection').first().toJSON();
+                $('#drone_brosur_url').val(attachment.url);
+            }).open();
+        });
+
+        $('#fds_remove_brosur_btn').on('click', function(e) {
+            e.preventDefault();
+            $('#drone_brosur_url').val('');
+        });
+
         // Media Uploader untuk Foto Spesifikasi Drone (PNG)
         $('#fds_upload_specs_btn').on('click', function(e) {
             e.preventDefault();

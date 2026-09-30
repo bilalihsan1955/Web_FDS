@@ -8,14 +8,14 @@ if (!defined('ABSPATH')) {
 
 /**
  * =========================================================================
- * FDS GLOBAL CONTACT & SOCIAL MEDIA MANAGER (PT KARYA SOLUSI ANGKASA)
+ * FDS GLOBAL CONTACT, SOCIAL MEDIA & FOOTER MANAGER
  * =========================================================================
  * Pusat kontrol terpadu untuk mengelola seluruh informasi kontak, alamat,
- * email, telepon, tautan Google Maps, serta akun sosial media (dengan toggle
- * aktif/nonaktif) dan footer di seluruh halaman website FDS.
+ * email, telepon, tautan Google Maps, akun sosial media, dan logo-logo
+ * partner/sertifikasi di bagian bawah footer.
  */
 
-// 1. DAFTARKAN MENU TERPUSAT DI WP ADMIN
+// 1. DAFTARKAN MENU TERPUSAT DI WP ADMIN & ENQUEUE MEDIA
 add_action('admin_menu', function () {
     add_menu_page(
         'Pengaturan Kontak & Sosial Media',
@@ -26,6 +26,12 @@ add_action('admin_menu', function () {
         'dashicons-share',
         28
     );
+});
+
+add_action('admin_enqueue_scripts', function ($hook) {
+    if (strpos($hook, 'fds-footer-settings') !== false) {
+        wp_enqueue_media();
+    }
 });
 
 // 2. HELPER GLOBAL CONTACT & SOCIAL MEDIA (SINGLE SOURCE OF TRUTH)
@@ -67,8 +73,7 @@ function fds_get_global_contact() {
         'whatsapp'         => get_option('fds_sosmed_whatsapp_url', get_option('fds_footer_whatsapp', 'https://wa.me/628112748882')),
         'whatsapp_active'  => (bool) get_option('fds_sosmed_whatsapp_active', 1),
 
-        // FOOTER DISCLAIMER & LEGAL
-        'disclaimer'   => get_option('fds_footer_disclaimer', 'PT Karya Solusi Angkasa (Full Drone Solutions) — Advanced UAV Engineering, Manufacturing & AI Technology. Sertifikasi ISO 9001:2015, SNI 9199:2023, serta Sertifikasi Nilai TKDN + BMP mencapai 60,74% diterbitkan resmi oleh Kementerian Perindustrian Republik Indonesia. Spesifikasi dapat disesuaikan dengan kebutuhan misi kustom.'),
+        // HAK CIPTA & LEGAL
         'copyright'    => get_option('fds_footer_copyright', 'Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.'),
         'privacy_url'  => get_option('fds_footer_privacy_url', '#'),
         'terms_url'    => get_option('fds_footer_terms_url', '#'),
@@ -89,6 +94,34 @@ function fds_get_global_contact() {
 // Backward-compatible alias
 function fds_get_footer_data() {
     return fds_get_global_contact();
+}
+
+// HELPER LOGO-LOGO FOOTER (DINAMIS)
+function fds_get_footer_logos() {
+    $raw = get_option('fds_footer_logos');
+    if ($raw === false || $raw === null) {
+        $default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
+        return [
+            [
+                'img'  => $default_img,
+                'name' => 'Bangga Buatan Indonesia',
+                'url'  => '',
+            ],
+        ];
+    }
+
+    if (is_string($raw)) {
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+    }
+
+    if (is_array($raw)) {
+        return $raw;
+    }
+
+    return [];
 }
 
 // 3. TAMPILAN HALAMAN PENGATURAN WP ADMIN TERPADU
@@ -151,13 +184,12 @@ function render_global_contact_admin_page() {
         update_option('fds_sosmed_whatsapp_url', esc_url_raw($_POST['fds_sosmed_whatsapp_url'] ?? ''));
         update_option('fds_sosmed_whatsapp_active', isset($_POST['fds_sosmed_whatsapp_active']) ? 1 : 0);
 
-        // 3. Simpan Footer Disclaimer & Legal
-        update_option('fds_footer_disclaimer', sanitize_textarea_field($_POST['fds_footer_disclaimer'] ?? ''));
+        // 3. Simpan Footer Hak Cipta
         update_option('fds_footer_copyright', sanitize_text_field($_POST['fds_footer_copyright'] ?? ''));
         update_option('fds_footer_privacy_url', esc_url_raw($_POST['fds_footer_privacy_url'] ?? '#'));
         update_option('fds_footer_terms_url', esc_url_raw($_POST['fds_footer_terms_url'] ?? '#'));
 
-        $message = 'Pengaturan Kontak Global, Sosial Media &amp; Footer berhasil diperbarui dan disinkronkan ke seluruh halaman!';
+        $message = 'Pengaturan Kontak Global, Sosial Media &amp; Hak Cipta berhasil diperbarui!';
     }
 
     $c = fds_get_global_contact();
@@ -171,8 +203,8 @@ function render_global_contact_admin_page() {
                     <span class="dashicons dashicons-share" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
-                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pusat Pengaturan Kontak, Sosmed &amp; Footer</h1>
-                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola informasi kontak dan sosial media di <strong>satu tempat saja</strong>. Perubahan di sini otomatis berlaku di Beranda, Tentang Kami, Footer, dan seluruh halaman.</p>
+                    <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #1e293b;">Pusat Pengaturan Kontak &amp; Sosial Media</h1>
+                    <p style="margin: 4px 0 0; color: #64748b; font-size: 13px;">Kelola informasi kontak, alamat kantor/workshop Sleman, akun sosial media, dan hak cipta. (Untuk pengelolaan logo silakan ke menu <strong>Logo &amp; Navbar</strong>).</p>
                 </div>
             </div>
         </div>
@@ -327,17 +359,12 @@ function render_global_contact_admin_page() {
                 </div>
             </div>
 
-            <!-- CARD 3: DISCLAIMER & HAK CIPTA -->
+            <!-- CARD 3: HAK CIPTA & KETENTUAN HUKUM -->
             <div style="background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
                 <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin-top: 0; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-media-document" style="color: #0066cc;"></span> Disclaimer, Legalitas &amp; Hak Cipta Footer
+                    <span class="dashicons dashicons-media-document" style="color: #0066cc;"></span> Hak Cipta &amp; Ketentuan Hukum Footer
                 </h2>
-                <p style="font-size: 13px; color: #64748b; margin-top: 0; margin-bottom: 20px;">Teks sertifikasi mutu Kemenperin dan baris hak cipta di bagian terbawah footer.</p>
-
-                <div style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Disclaimer Mutu &amp; Sertifikasi</label>
-                    <textarea name="fds_footer_disclaimer" rows="3" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['disclaimer']); ?></textarea>
-                </div>
+                <p style="font-size: 13px; color: #64748b; margin-top: 0; margin-bottom: 20px;">Baris hak cipta dan tautan hukum di bagian paling dasar website.</p>
 
                 <div style="margin-bottom: 18px;">
                     <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Hak Cipta (Copyright)</label>
