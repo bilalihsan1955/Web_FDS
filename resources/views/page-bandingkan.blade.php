@@ -598,12 +598,14 @@
     </div>
   </section>
 
-  {{-- ── 5. SECTION SASARAN PENGGUNA (DARK BG-[#1d1d1f]) ──────── --}}
-  <section id="section-usecases" class="bg-[#1d1d1f] py-24 border-b border-white/[0.08]">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+  {{-- ── 5. SECTION SASARAN PENGGUNA (DARK GRADIENT BG) ──────── --}}
+  <section id="section-usecases" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 border-b border-white/[0.08] overflow-hidden">
+
+
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
       
       <div class="text-center max-w-2xl mx-auto mb-14">
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-2">Aplikasi &amp; Use-Cases</p>
+        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-2">Aplikasi &amp; Use-Cases</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3">
           Untuk Siapa Model Ini Diciptakan.
         </h2>
@@ -1221,17 +1223,18 @@
       if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span> <span>${escapeHtml(d1.name)}</span>`;
       if (d1List) {
         d1List.innerHTML = (d1.for || []).map(uc => `
-          <div class="bg-white/[0.06] border border-white/[0.08] rounded-2xl p-5 flex items-start gap-3">
-            <div class="w-5 h-5 bg-[#0066cc]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3 h-3 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"></div>
+            <div class="w-5 h-5 bg-white/10 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-white/20">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <p class="text-[14px] font-medium text-white/80 leading-snug">${escapeHtml(uc)}</p>
+            <p class="text-[14px] font-medium text-white/90 leading-snug">${escapeHtml(uc)}</p>
           </div>
         `).join('') || '<p class="text-[14px] text-white/50">Lembar spesifikasi use-case lengkap tersedia di rincian produk.</p>';
       }
     } else {
       if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-white/20"></span> <span>Model Pertama Belum Dipilih</span>`;
-      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-[#6e9fd4] hover:underline font-semibold cursor-pointer">+ Pilih Drone Pertama</button></div>`;
+      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-white hover:underline font-semibold cursor-pointer">+ Pilih Drone Pertama</button></div>`;
     }
 
     const d2Title = document.getElementById('d2-for-title');
@@ -1240,17 +1243,18 @@
       if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span> <span>${escapeHtml(d2.name)}</span>`;
       if (d2List) {
         d2List.innerHTML = (d2.for || []).map(uc => `
-          <div class="bg-white/[0.06] border border-white/[0.08] rounded-2xl p-5 flex items-start gap-3">
-            <div class="w-5 h-5 bg-[#0066cc]/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-              <svg class="w-3 h-3 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"></div>
+            <div class="w-5 h-5 bg-white/10 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-white/20">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <p class="text-[14px] font-medium text-white/80 leading-snug">${escapeHtml(uc)}</p>
+            <p class="text-[14px] font-medium text-white/90 leading-snug">${escapeHtml(uc)}</p>
           </div>
         `).join('') || '<p class="text-[14px] text-white/50">Lembar spesifikasi use-case lengkap tersedia di rincian produk.</p>';
       }
     } else {
       if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-white/20"></span> <span>Model Kedua Belum Dipilih</span>`;
-      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-[#6e9fd4] hover:underline font-semibold cursor-pointer">+ Pilih Drone Kedua</button></div>`;
+      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-white hover:underline font-semibold cursor-pointer">+ Pilih Drone Kedua</button></div>`;
     }
   }
 

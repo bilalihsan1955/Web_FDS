@@ -20,49 +20,91 @@
 {{-- ========================================================== --}}
 <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] pt-[52px] overflow-hidden">
   
-  {{-- Vector Background: Lekukan Gelombang Organik Fluida (3 Lapisan Lebih Lebar & Berjarak) --}}
+  {{-- Vector Background: Redesigned Pure Aerodynamic Flow Strata (Bersih, Luwes & Mewah) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="w-full h-full" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
       <defs>
-        {{-- Lapisan 1 (Terluar - Melebar ke Kiri) --}}
-        <linearGradient id="tk-hero-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+        {{-- Base Canvas Gradient --}}
+        <linearGradient id="tk_hero_base" x1="720" y1="0" x2="720" y2="600" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#141720"/>
+          <stop offset="0.65" stop-color="#0e1118"/>
+          <stop offset="1" stop-color="#080a0e"/>
         </linearGradient>
 
-        {{-- Lapisan 2 (Tengah - Berjarak Seimbang) --}}
-        <linearGradient id="tk-hero-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.32" />
-          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.15" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
+        {{-- Wave Gradients --}}
+        <linearGradient id="tk_flow_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0052a3" stop-opacity="0.22"/>
+          <stop offset="50%" stop-color="#003366" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
-        {{-- Lapisan 3 (Inti - Sisi Kanan) --}}
-        <linearGradient id="tk-hero-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
-          <stop offset="55%" stop-color="#0071e3" stop-opacity="0.25" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+        <linearGradient id="tk_flow_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.28"/>
+          <stop offset="50%" stop-color="#004080" stop-opacity="0.14"/>
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+        </linearGradient>
+
+        <linearGradient id="tk_flow_grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0077ed" stop-opacity="0.34"/>
+          <stop offset="50%" stop-color="#0052a3" stop-opacity="0.16"/>
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+        </linearGradient>
+
+        <linearGradient id="tk_flow_grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.40"/>
+          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+        </linearGradient>
+
+        <linearGradient id="tk_flow_grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.46"/>
+          <stop offset="50%" stop-color="#0077ed" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+        </linearGradient>
+
+        {{-- Bottom Dark Fade to seamlessly blend into section below --}}
+        <linearGradient id="tk_bottom_fade" x1="0" y1="320" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#080a0e" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#0e1118" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#141720" stop-opacity="1"/>
         </linearGradient>
       </defs>
 
-      <!-- 3 Lapisan Lekukan Vektor Organik: Lekukan Bawah Mengalir ke Tengah -->
-      <path d="M180,0 C420,130 1060,160 920,380 C780,540 560,590 380,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill1)" />
-      <path d="M520,0 C740,120 1220,150 1080,350 C950,510 760,580 580,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill2)" />
-      <path d="M880,0 C1060,100 1380,140 1260,320 C1150,470 990,560 820,700 L1440,700 L1440,0 Z" fill="url(#tk-hero-curve-fill3)" />
+      <g>
+        <!-- Base Canvas -->
+        <rect width="1440" height="600" fill="url(#tk_hero_base)"/>
+
+        <!-- 1. Wave Layer 1 (U-Cradle: Kiri -50px, Tengah 360px, Kanan -50px) -->
+        <path d="M-50,-50 C250,40 500,360 720,360 C940,360 1190,40 1490,-50 L1490,700 L-50,700 Z" fill="url(#tk_flow_grad1)"/>
+
+        <!-- 2. Wave Layer 2 (Samping +135px, Tengah +50px) -->
+        <path d="M-50,85 C250,160 500,410 720,410 C940,410 1190,160 1490,85 L1490,700 L-50,700 Z" fill="url(#tk_flow_grad2)"/>
+
+        <!-- 3. Wave Layer 3 (Samping +135px, Tengah +50px) -->
+        <path d="M-50,220 C250,280 500,460 720,460 C940,460 1190,280 1490,220 L1490,700 L-50,700 Z" fill="url(#tk_flow_grad3)"/>
+
+        <!-- 4. Wave Layer 4 (Samping +135px, Tengah +55px) -->
+        <path d="M-50,355 C250,400 500,515 720,515 C940,515 1190,400 1490,355 L1490,700 L-50,700 Z" fill="url(#tk_flow_grad4)"/>
+
+        <!-- 5. Wave Layer 5 (Samping +135px, Tengah +55px, Inti Depan) -->
+        <path d="M-50,490 C250,510 500,570 720,570 C940,570 1190,510 1490,490 L1490,700 L-50,700 Z" fill="url(#tk_flow_grad5)"/>
+
+        <!-- Bottom Blend Gradient Overlay -->
+        <rect y="320" width="1440" height="280" fill="url(#tk_bottom_fade)"/>
+      </g>
     </svg>
   </div>
 
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0 relative z-10">
 
-    <div class="max-w-[840px]">
-      <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">
+    <div class="max-w-[1140px] mx-auto text-center flex flex-col items-center">
+      <p class="text-[13px] sm:text-[14px] font-semibold text-white/80 tracking-wide mb-6">
         {!! esc_html(wp_specialchars_decode($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Pengalaman UAV Sejak 2012 · Yogyakarta')) !!}
       </p>
-      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.02]">
+      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px]">
         {!! nl2br(esc_html(wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology."))) !!}
       </h1>
-      <p class="mt-7 text-[18px] sm:text-[20px] text-white/60 max-w-[640px] leading-[1.6]">
+      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/65 max-w-[880px] mx-auto leading-[1.65]">
         {!! nl2br(esc_html(wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'))) !!}
       </p>
     </div>
@@ -170,9 +212,11 @@
 {{-- ========================================================== --}}
 <section class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-b border-white/[0.06]">
   
-  {{-- Vector Background: Diagonal Sweeping Fluid Horizon (Gradient Bawah ke Atas Tanpa Lingkaran) --}}
+  {{-- Vector Background: Diagonal Sweeping Fluid Horizon with Linear Bottom Gradient (Tanpa Lingkaran) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0066cc]/20 via-[#004080]/05 to-transparent pointer-events-none"></div>
+
+    <svg class="absolute inset-0 w-full h-full object-cover opacity-80" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
         <linearGradient id="spektrum-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
@@ -214,7 +258,7 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
 
     <div class="mb-16">
-      <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">
+      <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-4">
         {!! esc_html($about['spektrum_badge'] ?? 'Spektrum Teknologi UAV') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[620px]">
@@ -222,45 +266,37 @@
       </h2>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-      {{-- Rotary Wing --}}
-      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
-        <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
-          @php
-            $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
-          @endphp
-          @if(!empty($global_drone_icon))
-            <div style="width: 20px; height: 20px; background-color: #6e9fd4; -webkit-mask: url('{{ esc_url($global_drone_icon) }}') no-repeat center / contain; mask: url('{{ esc_url($global_drone_icon) }}') no-repeat center / contain; display: inline-block;" aria-label="Rotary Wing"></div>
-          @else
-            <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-          @endif
+    <div class="relative">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 relative z-10">
+        {{-- Rotary Wing --}}
+        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+          {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
+          <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') !!}</h3>
+          <p class="text-[15px] text-white/75 leading-relaxed">
+            {!! $about['spektrum1_desc'] ?? 'Kemampuan Vertical Takeoff and Landing (VTOL), kontrol posisi presisi tinggi, dan hovering super stabil.' !!}
+          </p>
         </div>
-        <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') !!}</h3>
-        <p class="text-[15px] text-white/60 leading-relaxed">
-          {!! $about['spektrum1_desc'] ?? 'Kemampuan Vertical Takeoff and Landing (VTOL), kontrol posisi presisi tinggi, dan hovering super stabil.' !!}
-        </p>
-      </div>
 
-      {{-- Fixed Wing --}}
-      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
-        <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        {{-- Fixed Wing --}}
+        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+          {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
+          <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum2_title'] ?? 'Fixed Wing (Sayap Tetap)') !!}</h3>
+          <p class="text-[15px] text-white/75 leading-relaxed">
+            {!! $about['spektrum2_desc'] ?? 'Dirancang untuk misi jarak jauh, daya tahan terbang tinggi (endurance), dan cakupan area pemetaan luas.' !!}
+          </p>
         </div>
-        <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum2_title'] ?? 'Fixed Wing (Sayap Tetap)') !!}</h3>
-        <p class="text-[15px] text-white/60 leading-relaxed">
-          {!! $about['spektrum2_desc'] ?? 'Dirancang untuk misi jarak jauh, daya tahan terbang tinggi (endurance), dan cakupan area pemetaan luas.' !!}
-        </p>
-      </div>
 
-      {{-- Hybrid VTOL --}}
-      <div class="bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[2rem] p-8 sm:p-10 hover:bg-[#1d202a] transition-all duration-300 shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
-        <div class="w-10 h-10 bg-[#0066cc]/20 rounded-xl flex items-center justify-center mb-6">
-          <svg class="w-5 h-5 text-[#6e9fd4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+        {{-- Hybrid VTOL --}}
+        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+          {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
+          <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum3_title'] ?? 'Hybrid VTOL (DELTAV)') !!}</h3>
+          <p class="text-[15px] text-white/75 leading-relaxed">
+            {!! $about['spektrum3_desc'] ?? 'Menggabungkan fleksibilitas peluncuran vertikal tanpa landasan dengan kecepatan jelajah 15–22 m/s dan jangkauan 60 km.' !!}
+          </p>
         </div>
-        <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum3_title'] ?? 'Hybrid VTOL (DELTAV)') !!}</h3>
-        <p class="text-[15px] text-white/60 leading-relaxed">
-          {!! $about['spektrum3_desc'] ?? 'Menggabungkan fleksibilitas peluncuran vertikal tanpa landasan dengan kecepatan jelajah 15–22 m/s dan jangkauan 60 km.' !!}
-        </p>
       </div>
     </div>
 
@@ -330,33 +366,99 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
-      {{-- Card 1: TKDN 60,74% --}}
-      <div class="bg-[#0066cc] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[250px] transition-transform duration-200 hover:-translate-y-1"
-           style="box-shadow: 0 4px 32px rgba(0,102,204,0.2);">
-        <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-6">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
-        <div>
+      {{-- Card 1: TKDN 60,74% (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
+      <div class="relative overflow-hidden bg-[#0066cc] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_32px_rgba(0,102,204,0.25)]">
+        
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="orb1-tkdn" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0.28" stop-color="white" stop-opacity="0"/>
+                <stop offset="1" stop-color="white" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="orb2-tkdn" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
+                <stop offset="0.28" stop-color="white" stop-opacity="0"/>
+                <stop offset="1" stop-color="white" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <g opacity="0.22">
+              <circle cx="286" cy="5" r="75" fill="url(#orb1-tkdn)"/>
+              <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-tkdn)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="relative z-10">
+          <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-6">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
+        </div>
+        <div class="relative z-10">
           <p class="text-[44px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">{!! esc_html($about['cert1_val'] ?? '60,74%') !!}</p>
-          <p class="text-[14px] text-white/80 mt-3 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
+          <p class="text-[14px] text-white/85 mt-3 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
         </div>
       </div>
 
-      {{-- Card 2: ISO & SNI --}}
-      <div class="bg-white rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[250px] border border-black/[0.04] transition-transform duration-200 hover:-translate-y-1"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.05);">
-        <p class="text-[13px] font-semibold text-[#86868b] tracking-wide mb-6">{!! esc_html($about['cert2_badge'] ?? 'Standar Produk & Manajemen') !!}</p>
-        <div>
+      {{-- Card 2: ISO & SNI (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
+      <div class="relative overflow-hidden bg-white rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-black/[0.06] transition-all duration-300 hover:-translate-y-1 group shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+        
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="orb1-iso" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0.28" stop-color="#0066cc" stop-opacity="0"/>
+                <stop offset="1" stop-color="#0066cc" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="orb2-iso" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
+                <stop offset="0.28" stop-color="#0066cc" stop-opacity="0"/>
+                <stop offset="1" stop-color="#0066cc" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <g opacity="0.14">
+              <circle cx="286" cy="5" r="75" fill="url(#orb1-iso)"/>
+              <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-iso)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="relative z-10">
+          <p class="text-[13px] font-semibold text-[#86868b] tracking-wide mb-6">{!! esc_html($about['cert2_badge'] ?? 'Standar Produk & Manajemen') !!}</p>
+        </div>
+        <div class="relative z-10">
           <p class="text-[44px] sm:text-[48px] font-bold text-[#1d1d1f] tracking-[-0.03em] leading-tight">{!! esc_html($about['cert2_val'] ?? 'ISO & SNI') !!}</p>
           <p class="text-[14px] text-[#515154] mt-3 leading-relaxed">{!! esc_html($about['cert2_desc'] ?? 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 (Standar Nasional Drone Pertanian).') !!}</p>
         </div>
       </div>
 
-      {{-- Card 3: 24/7 Service --}}
-      <div class="bg-[#1d1d1f] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[250px] transition-transform duration-200 hover:-translate-y-1"
-           style="box-shadow: 0 2px 24px rgba(0,0,0,0.08);">
-        <p class="text-[13px] font-semibold text-white/60 tracking-wide mb-6">{!! esc_html($about['cert3_badge'] ?? 'Jaminan Layanan') !!}</p>
-        <div>
+      {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#0d2342] via-[#09182d] to-[#050f1d] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+        
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="orb1-srv" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="orb2-srv" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <g opacity="0.65">
+              <circle cx="286" cy="5" r="75" fill="url(#orb1-srv)"/>
+              <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-srv)"/>
+            </g>
+          </svg>
+        </div>
+
+        <div class="relative z-10">
+          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-6">{!! esc_html($about['cert3_badge'] ?? 'Jaminan Layanan') !!}</p>
+        </div>
+        <div class="relative z-10">
           <p class="text-[44px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">{!! esc_html($about['cert3_val'] ?? '24/7') !!}</p>
-          <p class="text-[14px] text-white/70 mt-3 leading-relaxed">{!! esc_html($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') !!}</p>
+          <p class="text-[14px] text-white/80 mt-3 leading-relaxed">{!! esc_html($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') !!}</p>
         </div>
       </div>
 
@@ -415,7 +517,7 @@
 
       {{-- Left: Massive Editorial Headline & Action Buttons (Col 7) --}}
       <div class="lg:col-span-7">
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-6">
+        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-6">
           Kemitraan &amp; Pengadaan Korporasi
         </p>
         <h2 class="text-[38px] sm:text-[52px] lg:text-[60px] font-semibold tracking-[-0.035em] text-white leading-[1.06] mb-8">
@@ -450,7 +552,7 @@
         <div class="divide-y divide-white/[0.08]">
           
           <div class="pb-7">
-            <p class="text-[13px] font-semibold text-[#6e9fd4] mb-1">Entitas Resmi</p>
+            <p class="text-[13px] font-semibold text-white/60 mb-1">Entitas Resmi</p>
             <p class="text-[17px] font-medium text-white leading-snug">
               {!! esc_html($c_entitas) !!}
             </p>

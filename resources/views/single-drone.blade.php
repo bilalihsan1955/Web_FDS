@@ -949,11 +949,11 @@
 
     {{-- ── FOR WHOM (SOFTWARE KENDALI ORGANIC WAVE BACKGROUND) ─────── --}}
     @if(!empty($drone['for']))
-    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
+    <section class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
       
-      {{-- Vector Background: Pure Organic Wave Fills (Persis Proporsi Card Software Kendali) --}}
+      {{-- Vector Background: Pure Organic Wave Fills --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <svg class="w-full h-full opacity-80" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs>
             <linearGradient id="forwhom-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
               <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
@@ -982,20 +982,24 @@
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <span class="text-[12px] font-semibold text-[#60a5fa] tracking-wide mb-3 block">Untuk Siapa</span>
+            <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Untuk Siapa</span>
             <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
               {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} cocok untuk Anda.
             </h2>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            @foreach($drone['for'] as $usecase)
-            <div class="bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.1] hover:border-blue-400/30 rounded-2xl p-5 flex items-start gap-3.5 backdrop-blur-md transition-all duration-200 shadow-sm">
-              <div class="w-5 h-5 bg-[#2563eb]/25 text-[#60a5fa] rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-blue-400/30">
-                <svg class="w-3 h-3 text-[#60a5fa]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <div class="relative">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+              @foreach($drone['for'] as $usecase)
+              <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
+                {{-- Top Specular Edge Sheen --}}
+                <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"></div>
+                <div class="w-5 h-5 bg-white/10 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-white/20">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <p class="text-[14px] font-medium text-white/90 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
               </div>
-              <p class="text-[14px] font-medium text-white/90 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
+              @endforeach
             </div>
-            @endforeach
           </div>
         </div>
       </div>

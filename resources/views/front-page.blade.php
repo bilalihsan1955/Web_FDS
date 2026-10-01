@@ -68,8 +68,7 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4">
       
       {{-- Slide Title / Caption --}}
-      <div class="flex items-center gap-3 text-left">
-        <span class="w-2 h-2 rounded-full bg-white/80"></span>
+      <div class="flex items-center text-left">
         <div id="fds-hero-slide-caption" class="text-[13px] font-medium text-white/90 tracking-wide transition-opacity duration-300">
           {!! esc_html(wp_specialchars_decode($hero_slides[0]['title'] ?? 'Platform UAV Enterprise Indonesia', ENT_QUOTES)) !!}
         </div>
@@ -293,44 +292,64 @@
 @endphp
 <section id="solusi" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-b border-white/[0.06]">
   
-  {{-- Vector Background: Diagonal Sweeping Fluid Horizon (Identik dengan Section Spektrum Teknologi UAV) --}}
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (4 Lapisan Halus, Luwes & Gradasi Gelap di Bawah) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
-        <linearGradient id="solusi-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
-          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
-        </linearGradient>
-
-        {{-- Diagonal Wave Layers (Identik dengan Spektrum Teknologi UAV) --}}
-        <linearGradient id="solusi-wave-diag1" x1="0%" y1="0%" x2="100%" y2="100%">
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="solusi-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
           <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
-          <stop offset="50%" stop-color="#003388" stop-opacity="0.12" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.12" />
           <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </radialGradient>
+
+        {{-- Dark Gradient Fade di Bagian Bawah --}}
+        <linearGradient id="solusi-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a0c10" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
         </linearGradient>
 
-        <linearGradient id="solusi-wave-diag2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.42" />
-          <stop offset="60%" stop-color="#0066cc" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        {{-- Lapisan 1 (Terluar - Lekukan Halus, Menukik Anggun & Mengangkat di Ujung Kanan) --}}
+        <linearGradient id="solusi-wave-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.35" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
         </linearGradient>
 
-        <linearGradient id="solusi-wave-diag3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
-          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Gelap di Bawah) --}}
+        <linearGradient id="solusi-wave-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.45" />
+          <stop offset="45%" stop-color="#0066cc" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="solusi-wave-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.55" />
+          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.90" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="solusi-wave-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.38" />
+          <stop offset="45%" stop-color="#1d4ed8" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
         </linearGradient>
       </defs>
 
-      <!-- Ambient Light: Gradasi Linear Biasa dari Bawah ke Atas (Tanpa Lingkaran) -->
-      <rect width="1440" height="600" fill="url(#solusi-ambient-bottom)" />
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#solusi-ambient-bl)" />
 
-      <!-- Diagonal Sweeping Fluid Fills (Identik dengan Spektrum Teknologi UAV) -->
-      <path d="M0,0 C420,40 760,220 1020,420 C1200,540 1340,580 1440,600 L0,600 Z" fill="url(#solusi-wave-diag1)" />
-      <path d="M0,80 C360,120 680,300 940,470 C1140,570 1300,590 1440,600 L0,600 Z" fill="url(#solusi-wave-diag2)" />
-      <path d="M0,220 C300,240 580,380 820,510 C1040,600 1260,600 1440,600 L0,600 Z" fill="url(#solusi-wave-diag3)" />
+      <!-- 4 Lapisan Vektor Organik: Mengalir Luwes, Elegan & Mengangkat di Sisi Kanan -->
+      <path d="M0,110 C280,130 580,270 860,420 C1120,550 1300,570 1440,520 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill1)" />
+      <path d="M0,250 C280,290 560,410 820,530 C1060,610 1260,620 1440,580 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill2)" />
+      <path d="M0,390 C250,420 500,500 740,580 C980,640 1200,645 1440,620 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill3)" />
+      <path d="M0,510 C180,520 380,580 600,630 C840,670 1100,675 1440,655 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill4)" />
+
+      <!-- Dark Gradient Overlay di Bagian Bawah untuk Transisi Gelap Mulus -->
+      <rect y="420" width="1440" height="280" fill="url(#solusi-bottom-dark)" />
     </svg>
   </div>
 
@@ -338,7 +357,7 @@
   <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14 relative z-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
           {!! esc_html($solusi_data['title']) !!}
         </h2>
@@ -356,7 +375,7 @@
          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
 
       @foreach($solusi_data['cards'] as $card)
-      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#16181f] border border-white/[0.10] hover:border-blue-500/40 rounded-[1.5rem] overflow-hidden group hover:bg-[#1d202a] transition-all duration-300 flex flex-col justify-between select-none shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
+      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#16181f] rounded-[1.5rem] overflow-hidden group hover:bg-[#1d202a] transition-all duration-300 flex flex-col justify-between select-none shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
         <div>
           {{-- Image Box --}}
           <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#1e293b]">
@@ -387,8 +406,8 @@
         {{-- Footer Link --}}
         <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
           <div class="pt-3.5 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-bold text-[#6e9fd4] tracking-wide uppercase">{!! esc_html($card['tag'] ?? 'FDS DRONE') !!}</span>
-            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-[#6e9fd4] inline-flex items-center gap-1.5 transition-colors group-hover:translate-x-0.5 duration-200">
+            <span class="text-[11px] font-bold text-white/80 tracking-wide uppercase">{!! esc_html($card['tag'] ?? 'FDS DRONE') !!}</span>
+            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-white/80 inline-flex items-center gap-1.5 transition-colors group-hover:translate-x-0.5 duration-200">
               <span>{!! esc_html($card['link_text'] ?: 'Pelajari') !!}</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>
@@ -1006,48 +1025,66 @@ function filterDrones(btn) {
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
 @if(!empty($layanan_items) || !empty($hp['layanan_title']))
-<section id="layanan" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-white/[0.06]">
+<section id="layanan" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 border-t border-white/[0.06]">
   
-  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Konsisten dengan Tema FDS & Tanpa Lingkaran) --}}
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Top Wave Halus & Gradasi Gelap di Bawah) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
     <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
-        <linearGradient id="layanan-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
-          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="layanan-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.12" />
           <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+        </radialGradient>
+
+        {{-- Dark Gradient Fade di Bagian Bawah --}}
+        <linearGradient id="layanan-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a0c10" stop-opacity="0.45" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
         </linearGradient>
 
-        {{-- Lapisan 1 (Terluar - Melebar Halus ke Kiri) --}}
-        <linearGradient id="layanan-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#0071e3" stop-opacity="0.18" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
-        </linearGradient>
-
-        {{-- Lapisan 2 (Tengah - Berjarak Seimbang) --}}
-        <linearGradient id="layanan-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.32" />
-          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.15" />
+        {{-- Lapisan 1 (Terluar - Lekukan Lebih Dalam, Halus, Alami & Tidak Datar) --}}
+        <linearGradient id="layanan-curve-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.35" />
+          <stop offset="45%" stop-color="#004080" stop-opacity="0.16" />
           <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
         </linearGradient>
 
-        {{-- Lapisan 3 (Inti - Sisi Kanan Membingkai Daftar Layanan) --}}
-        <linearGradient id="layanan-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
-          <stop offset="55%" stop-color="#0071e3" stop-opacity="0.25" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Gelap di Bawah) --}}
+        <linearGradient id="layanan-curve-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.45" />
+          <stop offset="45%" stop-color="#0066cc" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="layanan-curve-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.55" />
+          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.90" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="layanan-curve-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.38" />
+          <stop offset="45%" stop-color="#1d4ed8" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
         </linearGradient>
       </defs>
 
-      <!-- Ambient Light: Gradasi Linear Biasa dari Bawah ke Atas (Tanpa Lingkaran) -->
-      <rect width="1440" height="700" fill="url(#layanan-ambient-bottom)" />
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#layanan-ambient-bl)" />
 
-      <!-- 3 Lapisan Lekukan Vektor Organik Khas FDS (Identik & Konsisten dengan Halaman Tentang Kami & Produk) -->
-      <path d="M180,0 C420,130 1060,160 920,380 C780,540 560,590 380,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill1)" />
-      <path d="M520,0 C740,120 1220,150 1080,350 C950,510 760,580 580,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill2)" />
-      <path d="M880,0 C1060,100 1380,140 1260,320 C1150,470 990,560 820,700 L1440,700 L1440,0 Z" fill="url(#layanan-curve-fill3)" />
+      <!-- 4 Lapisan Vektor Organik: Lapisan Atas Dibuat Sangat Halus & Mengalir Luwes -->
+      <path d="M0,130 C260,150 540,290 820,440 C1080,570 1280,590 1440,540 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill1)" />
+      <path d="M0,290 C280,330 560,460 820,570 C1040,640 1260,655 1440,625 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill2)" />
+      <path d="M0,430 C240,450 480,530 720,610 C940,660 1180,670 1440,650 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill3)" />
+      <path d="M0,540 C180,550 360,610 560,650 C780,680 1060,685 1440,670 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill4)" />
+
+      <!-- Dark Gradient Overlay di Bagian Bawah untuk Transisi Gelap yang Menyatu Mulus -->
+      <rect y="420" width="1440" height="280" fill="url(#layanan-bottom-dark)" />
     </svg>
   </div>
 
@@ -1055,9 +1092,9 @@ function filterDrones(btn) {
 
     <div class="grid grid-cols-1 {{ !empty($layanan_items) ? 'lg:grid-cols-2' : 'max-w-2xl' }} gap-16 items-start">
 
-      <div class="lg:sticky lg:top-24">
+      <div class="lg:sticky lg:top-28">
         @if(!empty($hp['layanan_badge']))
-        <p class="text-[13px] font-semibold text-[#6e9fd4] tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
         @endif
         @if(!empty($hp['layanan_title']))
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
@@ -1318,27 +1355,33 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
     <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left Side: Dark Architectural Panel (5 cols) with Inverted Concentric Circles (Identik Card ISO & SNI) --}}
-      <div class="lg:col-span-5 bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.06] group">
+      {{-- Left Side: Dark Blue Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
+      <div class="lg:col-span-5 bg-gradient-to-br from-[#0d2342] via-[#09182d] to-[#050f1d] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
         
-        {{-- Vector Background: Lingkaran Konsentris Terbalik (Identik dengan Card ISO & SNI di Pojok Kanan Atas) --}}
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg - Richer Blue) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <svg class="absolute -top-10 -right-10 w-[450px] sm:w-[500px] h-[450px] sm:h-[500px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Lingkaran 4 (Luar) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="320" fill="#0066cc" fill-opacity="0.05" />
-            <!-- Lingkaran 3 (Sedang) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="220" fill="#0066cc" fill-opacity="0.10" />
-            <!-- Lingkaran 2 (Tengah) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="130" fill="#0066cc" fill-opacity="0.18" />
-            <!-- Lingkaran 1 (Inti) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="60" fill="#0066cc" fill-opacity="0.30" />
+          <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="orb1-kontak" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="orb2-kontak" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <g opacity="0.55">
+              <circle cx="286" cy="5" r="75" fill="url(#orb1-kontak)"/>
+              <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-kontak)"/>
+            </g>
           </svg>
         </div>
 
         {{-- Top Header Section --}}
         <div class="relative z-10">
           <div class="mb-2">
-            <span class="text-[12px] font-semibold text-[#6e9fd4] tracking-wide">
+            <span class="text-[12px] font-semibold text-white/80 tracking-wide">
               {!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}
             </span>
           </div>
