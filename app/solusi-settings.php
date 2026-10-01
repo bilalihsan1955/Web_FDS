@@ -60,28 +60,17 @@ function fds_get_default_solusi_cards() {
     ];
 }
 
-// Auto-sync anti-slop cards to database (Run once)
-add_action('init', function () {
-    if (!get_option('fds_solusi_cards_antislop_v1')) {
-        $cards = get_option('fds_solusi_cards', null);
-        if ($cards === null || (is_array($cards) && (count($cards) < 5 || (isset($cards[0]['title']) && strpos($cards[0]['title'], 'Drone Pertanian') !== false)))) {
-            update_option('fds_solusi_cards', fds_get_default_solusi_cards());
-        }
-        update_option('fds_solusi_cards_antislop_v1', 1);
-    }
-});
-
 // 2. HELPER DATA FRONTEND
 function fds_get_solusi_data() {
-    $section_badge = get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri');
-    $section_title = get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.');
-    $section_desc  = get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.');
+    $section_badge = get_option('fds_solusi_badge', 'Solusi Industri FDS');
+    $section_title = get_option('fds_solusi_title', 'Satu platform. Berbagai industri strategis.');
+    $section_desc  = get_option('fds_solusi_desc', 'Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.');
     
     $saved_cards = get_option('fds_solusi_cards', null);
-    if ($saved_cards === null) {
+    if ($saved_cards === null || !is_array($saved_cards) || empty($saved_cards)) {
         $cards = fds_get_default_solusi_cards();
     } else {
-        $cards = is_array($saved_cards) ? $saved_cards : [];
+        $cards = $saved_cards;
     }
 
     $normalized_cards = [];

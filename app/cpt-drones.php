@@ -169,19 +169,7 @@ add_filter('enter_title_here', function ($title, $post) {
     return $title;
 }, 10, 2);
 
-// Auto-insert page 'bandingkan' if not exists
-add_action('init', function () {
-    if (!get_page_by_path('bandingkan')) {
-        wp_insert_post([
-            'post_title'     => 'Bandingkan Model Drone',
-            'post_name'      => 'bandingkan',
-            'post_status'    => 'publish',
-            'post_type'      => 'page',
-            'comment_status' => 'closed',
-            'ping_status'    => 'closed',
-        ]);
-    }
-});
+
 
 // Auto-route / redirect root slug /{slug} or legacy page to drone single if slug matches a drone post
 add_action('template_redirect', function () {
@@ -897,15 +885,18 @@ function fds_sync_drone_rank_math_seo($post_id) {
     $durasi   = get_post_meta($post_id, 'drone_spec_durasi', true);
     $permalink= get_permalink($post_id);
 
-    // 1. Generate & Update Rich post_content
-    $rich_content = fds_generate_drone_seo_content($post_id);
-    
-    // Unhook temporarily to avoid recursion
-    remove_action('save_post_drone', 'App\save_post_drone_handler_custom', 10);
-    wp_update_post([
-        'ID'           => $post_id,
-        'post_content' => $rich_content,
-    ]);
+    // 1. Generate & Update Rich post_content only if currently empty
+    $current_content = get_post_field('post_content', $post_id);
+    if (empty(trim((string)$current_content))) {
+        $rich_content = fds_generate_drone_seo_content($post_id);
+        
+        // Unhook temporarily to avoid recursion
+        remove_action('save_post_drone', 'App\save_post_drone_handler_custom', 10);
+        wp_update_post([
+            'ID'           => $post_id,
+            'post_content' => $rich_content,
+        ]);
+    }
 
     // 2. Define Focus Keywords based on category and model
     $cat_lower = strtolower($kategori);
@@ -929,11 +920,19 @@ function fds_sync_drone_rank_math_seo($post_id) {
         $seo_desc  = "Drone reboisasi {$title} kapasitas {$payload} seedball otomatis buatan PT Karya Solusi Angkasa. Restorasi lahan kritis dan operasi SAR kebencanaan.";
     }
 
-    // 3. Populate Rank Math Specific Post Meta Fields
-    update_post_meta($post_id, 'rank_math_focus_keyword', $focus_kw);
-    update_post_meta($post_id, 'rank_math_title', $seo_title);
-    update_post_meta($post_id, 'rank_math_description', $seo_desc);
-    update_post_meta($post_id, 'rank_math_canonical_url', $permalink);
+    // 3. Populate Rank Math Specific Post Meta Fields (only if empty to avoid overwriting user edits)
+    if (!get_post_meta($post_id, 'rank_math_focus_keyword', true)) {
+        update_post_meta($post_id, 'rank_math_focus_keyword', $focus_kw);
+    }
+    if (!get_post_meta($post_id, 'rank_math_title', true)) {
+        update_post_meta($post_id, 'rank_math_title', $seo_title);
+    }
+    if (!get_post_meta($post_id, 'rank_math_description', true)) {
+        update_post_meta($post_id, 'rank_math_description', $seo_desc);
+    }
+    if (!get_post_meta($post_id, 'rank_math_canonical_url', true)) {
+        update_post_meta($post_id, 'rank_math_canonical_url', $permalink);
+    }
     update_post_meta($post_id, 'rank_math_pillar_content', 'on');
     update_post_meta($post_id, 'rank_math_robots', ['index']);
     update_post_meta($post_id, 'rank_math_advanced_robots', [
@@ -949,11 +948,19 @@ function fds_sync_drone_rank_math_seo($post_id) {
     update_post_meta($post_id, 'rank_math_snippet_product_currency', 'IDR');
     update_post_meta($post_id, 'rank_math_snippet_product_instock', 'on');
 
-    // Yoast SEO Fallback Fields
-    update_post_meta($post_id, '_yoast_wpseo_focuskw', explode(',', $focus_kw)[0]);
-    update_post_meta($post_id, '_yoast_wpseo_title', $seo_title);
-    update_post_meta($post_id, '_yoast_wpseo_metadesc', $seo_desc);
-    update_post_meta($post_id, '_yoast_wpseo_canonical', $permalink);
+    // Yoast SEO Fallback Fields (only if empty to avoid overwriting user edits)
+    if (!get_post_meta($post_id, '_yoast_wpseo_focuskw', true)) {
+        update_post_meta($post_id, '_yoast_wpseo_focuskw', explode(',', $focus_kw)[0]);
+    }
+    if (!get_post_meta($post_id, '_yoast_wpseo_title', true)) {
+        update_post_meta($post_id, '_yoast_wpseo_title', $seo_title);
+    }
+    if (!get_post_meta($post_id, '_yoast_wpseo_metadesc', true)) {
+        update_post_meta($post_id, '_yoast_wpseo_metadesc', $seo_desc);
+    }
+    if (!get_post_meta($post_id, '_yoast_wpseo_canonical', true)) {
+        update_post_meta($post_id, '_yoast_wpseo_canonical', $permalink);
+    }
 }
 
 // =========================================================================
@@ -1226,70 +1233,68 @@ add_action('init', function () {
                 'post_excerpt' => $data['tagline'],
                 'post_status'  => 'publish',
             ]);
-        }
 
-        if ($post_id && !is_wp_error($post_id)) {
-            // 1. Assign Taxonomy Term 'kategori_drone'
-            wp_set_object_terms($post_id, $data['kategori'], 'kategori_drone', false);
+            if ($post_id && !is_wp_error($post_id)) {
+                // 1. Assign Taxonomy Term 'kategori_drone'
+                wp_set_object_terms($post_id, $data['kategori'], 'kategori_drone', false);
 
-            // 2. Set/Update All Post Meta
-            update_post_meta($post_id, 'drone_kategori', $data['kategori']);
-            update_post_meta($post_id, 'drone_badge', $data['badge']);
-            update_post_meta($post_id, 'drone_tagline', $data['tagline']);
-            update_post_meta($post_id, 'drone_desc', $data['content']);
+                // 2. Set All Post Meta for newly seeded post
+                update_post_meta($post_id, 'drone_kategori', $data['kategori']);
+                update_post_meta($post_id, 'drone_badge', $data['badge']);
+                update_post_meta($post_id, 'drone_tagline', $data['tagline']);
+                update_post_meta($post_id, 'drone_desc', $data['content']);
 
-            update_post_meta($post_id, 'drone_stat1_num', $data['stat1_n']);
-            update_post_meta($post_id, 'drone_stat1_lbl', $data['stat1_l']);
-            update_post_meta($post_id, 'drone_stat2_num', $data['stat2_n']);
-            update_post_meta($post_id, 'drone_stat2_lbl', $data['stat2_l']);
-            update_post_meta($post_id, 'drone_stat3_num', $data['stat3_n']);
-            update_post_meta($post_id, 'drone_stat3_lbl', $data['stat3_l']);
-            update_post_meta($post_id, 'drone_stat4_num', $data['stat4_n']);
-            update_post_meta($post_id, 'drone_stat4_lbl', $data['stat4_l']);
+                update_post_meta($post_id, 'drone_stat1_num', $data['stat1_n']);
+                update_post_meta($post_id, 'drone_stat1_lbl', $data['stat1_l']);
+                update_post_meta($post_id, 'drone_stat2_num', $data['stat2_n']);
+                update_post_meta($post_id, 'drone_stat2_lbl', $data['stat2_l']);
+                update_post_meta($post_id, 'drone_stat3_num', $data['stat3_n']);
+                update_post_meta($post_id, 'drone_stat3_lbl', $data['stat3_l']);
+                update_post_meta($post_id, 'drone_stat4_num', $data['stat4_n']);
+                update_post_meta($post_id, 'drone_stat4_lbl', $data['stat4_l']);
 
-            update_post_meta($post_id, 'drone_spec_kapasitas', $data['sp_kap']);
-            update_post_meta($post_id, 'drone_spec_durasi', $data['sp_dur']);
-            update_post_meta($post_id, 'drone_spec_baterai', $data['sp_bat']);
-            update_post_meta($post_id, 'drone_spec_produktivitas', $data['sp_prod']);
-            update_post_meta($post_id, 'drone_spec_kecepatan', $data['sp_kec']);
-            if (!empty($data['sp_ket'])) {
-                update_post_meta($post_id, 'drone_spec_ketahanan', $data['sp_ket']);
-            } else {
-                delete_post_meta($post_id, 'drone_spec_ketahanan');
+                update_post_meta($post_id, 'drone_spec_kapasitas', $data['sp_kap']);
+                update_post_meta($post_id, 'drone_spec_durasi', $data['sp_dur']);
+                update_post_meta($post_id, 'drone_spec_baterai', $data['sp_bat']);
+                update_post_meta($post_id, 'drone_spec_produktivitas', $data['sp_prod']);
+                update_post_meta($post_id, 'drone_spec_kecepatan', $data['sp_kec']);
+                if (!empty($data['sp_ket'])) {
+                    update_post_meta($post_id, 'drone_spec_ketahanan', $data['sp_ket']);
+                }
+                update_post_meta($post_id, 'drone_spec_otonomi', $data['sp_oto']);
+                update_post_meta($post_id, 'drone_spec_gcs', $data['sp_gcs']);
+                update_post_meta($post_id, 'drone_spec_sertifikasi', $data['sp_sert']);
+
+                // Structured Raw Specs string
+                $raw_specs = "Payload: {$data['sp_kap']}\n"
+                           . "Durasi Terbang: {$data['sp_dur']}\n"
+                           . "Sistem Daya (Baterai): {$data['sp_bat']}\n"
+                           . "Produktivitas / Jangkauan: {$data['sp_prod']}\n"
+                           . "Kecepatan Jelajah: {$data['sp_kec']}\n"
+                           . (!empty($data['sp_ket']) ? "Ketahanan Lingkungan: {$data['sp_ket']}\n" : "")
+                           . "Sistem Otonomi & Navigasi: {$data['sp_oto']}\n"
+                           . "Ground Control Station: {$data['sp_gcs']}\n"
+                           . "Sertifikasi & Standar: {$data['sp_sert']}";
+                update_post_meta($post_id, 'drone_specs_raw', trim($raw_specs));
+
+                update_post_meta($post_id, 'drone_uc1_t', $data['uc1_t']);
+                update_post_meta($post_id, 'drone_uc1_d', $data['uc1_d']);
+                update_post_meta($post_id, 'drone_uc2_t', $data['uc2_t']);
+                update_post_meta($post_id, 'drone_uc2_d', $data['uc2_d']);
+                update_post_meta($post_id, 'drone_uc3_t', $data['uc3_t']);
+                update_post_meta($post_id, 'drone_uc3_d', $data['uc3_d']);
+                update_post_meta($post_id, 'drone_uc4_t', $data['uc4_t']);
+                update_post_meta($post_id, 'drone_uc4_d', $data['uc4_d']);
+
+                $raw_for = "{$data['uc1_t']} — {$data['uc1_d']}\n"
+                         . "{$data['uc2_t']} — {$data['uc2_d']}\n"
+                         . "{$data['uc3_t']} — {$data['uc3_d']}\n"
+                         . "{$data['uc4_t']} — {$data['uc4_d']}";
+                update_post_meta($post_id, 'drone_for', $raw_for);
+
+                // Auto-generate rich SEO article & Rank Math metadata for newly seeded post
+                fds_sync_drone_rank_math_seo($post_id);
             }
-            update_post_meta($post_id, 'drone_spec_otonomi', $data['sp_oto']);
-            update_post_meta($post_id, 'drone_spec_gcs', $data['sp_gcs']);
-            update_post_meta($post_id, 'drone_spec_sertifikasi', $data['sp_sert']);
-
-            // Structured Raw Specs string
-            $raw_specs = "Payload: {$data['sp_kap']}\n"
-                       . "Durasi Terbang: {$data['sp_dur']}\n"
-                       . "Sistem Daya (Baterai): {$data['sp_bat']}\n"
-                       . "Produktivitas / Jangkauan: {$data['sp_prod']}\n"
-                       . "Kecepatan Jelajah: {$data['sp_kec']}\n"
-                       . (!empty($data['sp_ket']) ? "Ketahanan Lingkungan: {$data['sp_ket']}\n" : "")
-                       . "Sistem Otonomi & Navigasi: {$data['sp_oto']}\n"
-                       . "Ground Control Station: {$data['sp_gcs']}\n"
-                       . "Sertifikasi & Standar: {$data['sp_sert']}";
-            update_post_meta($post_id, 'drone_specs_raw', trim($raw_specs));
-
-            update_post_meta($post_id, 'drone_uc1_t', $data['uc1_t']);
-            update_post_meta($post_id, 'drone_uc1_d', $data['uc1_d']);
-            update_post_meta($post_id, 'drone_uc2_t', $data['uc2_t']);
-            update_post_meta($post_id, 'drone_uc2_d', $data['uc2_d']);
-            update_post_meta($post_id, 'drone_uc3_t', $data['uc3_t']);
-            update_post_meta($post_id, 'drone_uc3_d', $data['uc3_d']);
-            update_post_meta($post_id, 'drone_uc4_t', $data['uc4_t']);
-            update_post_meta($post_id, 'drone_uc4_d', $data['uc4_d']);
-
-            $raw_for = "{$data['uc1_t']} — {$data['uc1_d']}\n"
-                     . "{$data['uc2_t']} — {$data['uc2_d']}\n"
-                     . "{$data['uc3_t']} — {$data['uc3_d']}\n"
-                     . "{$data['uc4_t']} — {$data['uc4_d']}";
-            update_post_meta($post_id, 'drone_for', $raw_for);
-
-            // Auto-generate rich SEO article & Rank Math metadata
-            fds_sync_drone_rank_math_seo($post_id);
         }
     }
     update_option('fds_drones_seeded_final_v1', true);

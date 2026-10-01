@@ -38,13 +38,19 @@ function fds_ensure_view_cache_dir() {
 function fds_run_theme_auto_provision() {
     fds_ensure_view_cache_dir();
 
-    // Pastikan permalink ramah SEO (/%postname%/)
+    // HANYA JALANKAN SATU KALI SAAT PERTAMA KALI INSTALL
+    // Jangan pernah menimpa pengaturan yang sudah ada saat update tema
+    if (get_option('fds_theme_auto_setup_done_v1')) {
+        return;
+    }
+
+    // Pastikan permalink ramah SEO (/%postname%/) jika belum ada
     $current_permalink = get_option('permalink_structure');
     if (empty($current_permalink) || $current_permalink === '') {
         update_option('permalink_structure', '/%postname%/');
     }
 
-    // 1. BUAT HALAMAN BERANDA (Front Page)
+    // 1. BUAT HALAMAN BERANDA (Front Page) jika belum ada
     $front_page = get_page_by_path('beranda');
     if (!$front_page) {
         $front_id = wp_insert_post([
@@ -58,12 +64,13 @@ function fds_run_theme_auto_provision() {
         $front_id = $front_page->ID;
     }
 
-    if ($front_id && !is_wp_error($front_id)) {
+    // Hanya set page_on_front jika belum disetel oleh admin
+    if (!get_option('page_on_front') && $front_id && !is_wp_error($front_id)) {
         update_option('show_on_front', 'page');
         update_option('page_on_front', $front_id);
     }
 
-    // 2. BUAT HALAMAN BLOG (Posts Page)
+    // 2. BUAT HALAMAN BLOG (Posts Page) jika belum ada
     $blog_page = get_page_by_path('blog');
     if (!$blog_page) {
         $blog_id = wp_insert_post([
@@ -77,7 +84,8 @@ function fds_run_theme_auto_provision() {
         $blog_id = $blog_page->ID;
     }
 
-    if ($blog_id && !is_wp_error($blog_id)) {
+    // Hanya set page_for_posts jika belum disetel oleh admin
+    if (!get_option('page_for_posts') && $blog_id && !is_wp_error($blog_id)) {
         update_option('page_for_posts', $blog_id);
     }
 
@@ -184,22 +192,6 @@ add_action('after_switch_theme', __NAMESPACE__ . '\\fds_run_theme_auto_provision
 add_action('init', function () {
     if (!get_option('fds_theme_auto_setup_done_v1')) {
         fds_run_theme_auto_provision();
-    }
-
-    // One-time Enterprise SEO & Rank Math Synchronization for all Drones
-    if (!get_option('fds_seo_rankmath_synced_v4')) {
-        if (function_exists('App\fds_sync_drone_rank_math_seo')) {
-            $drones = get_posts([
-                'post_type'      => 'drone',
-                'posts_per_page' => -1,
-                'post_status'    => 'any',
-            ]);
-            foreach ($drones as $d) {
-                fds_sync_drone_rank_math_seo($d->ID);
-            }
-            flush_rewrite_rules(false);
-            update_option('fds_seo_rankmath_synced_v4', true);
-        }
     }
 }, 20);
 

@@ -163,6 +163,10 @@ Remove-Item -Path "..\..\cache\acorn\framework\views\*" -Recurse -Force
 10. **DILARANG MENGGUNAKAN GARIS / STROKE PADA VEKTOR BACKGROUND:**
    - Vektor latar belakang (background vector) HANYA boleh menggunakan bentuk fluida organik dengan isian gradasi solid (`<path ... fill="url(#...)" />`).
    - **Dilarang keras** menambahkan elemen garis, stroke, outlines, wireframe lines, dashed lines, atau garis pembatas (`stroke="..." fill="none"`) pada vektor background kecuali user secara eksplisit memintanya.
+11. **ATURAN ANTI-OVERWRITE SAAT UPDATE TEMA (Strict Non-Destructive Data Rule):**
+    - Data auto-seeder (Halaman Beranda, Tentang Kami, Bandingkan, Blog, 10 model drone CPT, hero slides, mitra, kontak & alamat default) **HANYA** boleh dijalankan **SATU KALI** saat pertama kali tema diinstal pada instalasi WordPress baru (dikunci oleh flag `fds_theme_auto_setup_done_v1` dan `fds_drones_seeded_final_v1`).
+    - Saat tema diperbarui (*theme update*), diunggah ulang (*re-upload*), atau diaktifkan ulang di masa mendatang, **DILARANG KERAS** menimpa (*overwrite*) data halaman, konten yang sudah diedit admin, pengaturan WP Admin, spesifikasi CPT drone, logo, hero slides, maupun metadata SEO yang sudah tersimpan di database.
+    - Semua fungsi *sync* atau *migration* wajib mengecek apakah nilai di database sudah ada atau kosong (`empty()`) sebelum melakukan penulisan (`update_option` / `update_post_meta`).
 
 
 
