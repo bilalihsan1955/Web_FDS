@@ -73,9 +73,9 @@ add_action('init', function () {
 
 // 2. HELPER DATA FRONTEND
 function fds_get_solusi_data() {
-    $badge = get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri');
-    $title = get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.');
-    $desc  = get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.');
+    $section_badge = get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri');
+    $section_title = get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.');
+    $section_desc  = get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.');
     
     $saved_cards = get_option('fds_solusi_cards', null);
     if ($saved_cards === null) {
@@ -87,9 +87,9 @@ function fds_get_solusi_data() {
     $normalized_cards = [];
     if (is_array($cards)) {
         foreach ($cards as $c) {
-            $title = trim($c['title'] ?? '');
-            $desc  = trim($c['desc'] ?? '');
-            if ($title === '' && $desc === '') {
+            $card_title = trim($c['title'] ?? '');
+            $card_desc  = trim($c['desc'] ?? '');
+            if ($card_title === '' && $card_desc === '') {
                 continue; // Skip kartu yang sengaja dikosongkan oleh admin
             }
 
@@ -99,8 +99,8 @@ function fds_get_solusi_data() {
             }
             $normalized_cards[] = [
                 'image'     => $c['image'] ?? '',
-                'title'     => $title,
-                'desc'      => $desc,
+                'title'     => $card_title,
+                'desc'      => $card_desc,
                 'tag'       => $tag,
                 'link_text' => $c['link_text'] ?? 'Pelajari Selengkapnya',
                 'link_url'  => $c['link_url'] ?? '#kontak',
@@ -128,9 +128,9 @@ function fds_get_solusi_data() {
     unset($nc);
 
     return [
-        'badge' => $fds_deep_decode($badge),
-        'title' => $fds_deep_decode($title),
-        'desc'  => $fds_deep_decode($desc),
+        'badge' => $fds_deep_decode($section_badge),
+        'title' => $fds_deep_decode($section_title),
+        'desc'  => $fds_deep_decode($section_desc),
         'cards' => $normalized_cards,
     ];
 }
