@@ -1,152 +1,121 @@
-# PRODUCT REQUIREMENTS DOCUMENT (PRD)
+# 📑 PRD.md — PRODUCT REQUIREMENTS DOCUMENT
+## Redesain & Pengembangan Website Company Profile (Compro) Enterprise Full Drone Solutions (FDS)
 
-## Redesain Website Full Drone Solutions (FDS)
-
-**STATUS: FINAL (REVISI STRUKTUR MULTI-HALAMAN)**
-
-| | |
-| --- | --- |
-| **Nama Produk** | Redesain Website Company Profile Multi-Halaman Full Drone Solutions |
-| **Versi Dokumen** | v0.2 |
-| **Disusun oleh** | Bilal Al Ihsan (Pengembang) |
-| **Untuk** | Tim Manajemen Full Drone Solutions (Klien) |
-| **Tanggal** | 18 Agustus 2026 |
-| **Dokumen Terkait** | Notulen Diskusi Revisi PRD - Evaluasi Konten Eksisting & Blog |
+**STATUS: FINAL / PRODUCTION (VERSI MULTI-HALAMAN COMPRO B2B ENTERPRISE)**  
+**Versi Dokumen:** v2.4 (Enterprise Production Edition)  
+**Tipe Platform:** Website Company Profile (Compro) B2B Enterprise  
+**Entitas:** PT Karya Solusi Angkasa (Full Drone Solutions)  
+**Disusun oleh:** Bilal Al Ihsan (Pengembang Utama & UI/UX Specialist)  
+**Untuk:** Tim Manajemen & Stakeholder PT Karya Solusi Angkasa  
+**Tanggal Rilis:** 2026-10-13  
+**Dokumen Terkait:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md), [`PROJECT_MEMORY.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PROJECT_MEMORY.md), [`AGENTS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/AGENTS.md), [`INIT.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/INIT.md)  
 
 ---
 
-# 1. Ringkasan Produk (Overview)
+# 1. Ringkasan Eksekutif (Executive Summary)
 
-Website Full Drone Solutions (FDS) saat ini sudah memiliki konten yang solid dan lengkap, mencakup berbagai produk (Drone Sprayer, Spreader, Pemetaan, Inspeksi), layanan purna jual, hingga kolaborasi dengan instansi besar (Bappenas, BI, UGM). Namun, antarmuka visual saat ini dinilai terlalu kaku dan terkesan generik, sehingga belum memancarkan citra sebagai produsen drone teknologi tinggi dengan sertifikasi TKDN tertinggi di Indonesia.
+Website **Full Drone Solutions (FDS)** — berbadan hukum resmi **PT Karya Solusi Angkasa** yang berlokasi di Sleman, D.I. Yogyakarta — merupakan representasi digital manufaktur Pesawat Udara Nirawak (UAV) terkemuka di Indonesia.
 
-Proyek ini bertujuan untuk merombak total antarmuka (*frontend*) seluruh halaman website FDS menggunakan pendekatan desain *Clean Minimalist* tanpa mengubah inti konten yang sudah ada. Pengembangan akan dibangun secara monolitik di atas WordPress menggunakan Roots Sage dan Tailwind CSS. Ruang lingkup mencakup pembuatan sistem navigasi multi-halaman yang mulus, perombakan halaman produk (Seri FERTO), halaman layanan (Rental & Kursus), revitalisasi halaman Tentang Kami, serta optimalisasi halaman Blog sebagai pusat pembaruan informasi dan SEO.
-
-# 2. Tujuan & Sasaran (Goals)
-
-- Menyajikan seluruh katalog produk dan layanan eksisting FDS dalam balutan desain yang lebih profesional, modern, dan mudah dinavigasi.
-- Menyoroti secara prominen *Unique Selling Proposition* (USP) perusahaan: Produk buatan Indonesia ber-TKDN (44,85%), Software Berbahasa Indonesia, dan Jasa *After-Sales* lokal.
-- Menyediakan arsitektur sistem Blog yang rapi untuk mendukung visibilitas *search engine* dan publikasi artikel teknis/kegiatan kolaborasi.
-- Mengubah struktur *codebase* menggunakan Roots Sage agar lebih ringan, memangkas waktu *loading*, dan memudahkan *maintenance* tanpa menggunakan *page builder* yang berat.
-
-# 3. Pengguna & Peran (Users & Roles)
-
-- **Pengunjung (Calon Klien & Mitra) :** Mengakses situs untuk mencari detail spesifikasi drone, membaca studi kasus/blog, mengeksplorasi layanan kursus/sewa, dan melakukan kontak.
-- **Admin Konten FDS :** Memperbarui katalog produk, mempublikasikan artikel di blog, serta mengelola form pesan yang masuk dari pengunjung melalui *dashboard* WordPress.
-
-# 4. Ruang Lingkup (Scope)
-
-## 4.1 Termasuk (MVP)
-
-- **Navigasi Global:** Header, *dropdown* menu multi-halaman, dan Footer.
-- **Halaman Beranda:** Menampilkan ringkasan USP, kategori drone utama, dan logo kolaborator.
-- **Halaman Layanan & Produk:** Sub-halaman untuk Drone Sprayer (Ferto 5, 10, 15, 22), Spreader, Pemetaan, Inspeksi, serta Pesewaan & Kursus FDS.
-- **Halaman Tentang Kami:** Fokus pada pengalaman 10+ tahun, pabrik lokal, sertifikasi, dan kolaborasi strategis (Bappenas, BI, UGM, Swiss).
-- **Halaman Blog:** Daftar artikel, kategori, fungsi pencarian, dan halaman baca artikel teroptimasi.
-- **Halaman Kontak:** Formulir *inquiry*, tautan WhatsApp, dan informasi lokasi.
-
-## 4.2 Di Luar Lingkup Awal / Fase Lanjutan
-
-- Sistem portal manajemen klien (Client Area) untuk memantau status servis *after-sales* secara mandiri.
-- Integrasi pembayaran otomatis (E-commerce langsung) untuk pesanan unit drone atau kursus.
-
-# 5. Asumsi & Batasan (Assumptions & Constraints)
-
-- Data produk yang digunakan merujuk pada unit yang sudah terdaftar (FDS Ferto 5, 10, 15, 22, dll).
-- Infrastruktur *backend* tetap menggunakan WordPress untuk mempertahankan ekosistem Blog dan SEO yang sudah ada.
-- *Styling* akan sepenuhnya menggunakan Tailwind CSS yang dikompilasi di dalam tema Roots Sage (Blade Templating).
-- Klien bersedia menyiapkan ulang gambar produk beresolusi tinggi dengan *background* polos/transparan agar estetika *minimalist* dapat tercapai.
-
-# 6. Kebutuhan Fungsional (Functional Requirements)
-
-## 6.1 Pengunjung — Halaman Beranda (HOM)
-
-| **ID** | **Kebutuhan Fungsional** | **Prioritas** |
-| --- | --- | --- |
-| **HOM-1** | Sistem menampilkan *Hero Banner* dengan CTA utama dan visual drone pertanian berteknologi tinggi. | **Wajib** |
-| **HOM-2** | Sistem menampilkan poin USP FDS: Sertifikat TKDN, Pengalaman 10 Tahun, Jaminan *After-Sales*, dan Melayani *Customized*. | **Wajib** |
-| **HOM-3** | Sistem menampilkan daftar logo mitra kolaborasi strategis (Bappenas, Pemerintah Australia, Bank Indonesia, UGM). | **Wajib** |
-
-## 6.2 Pengunjung — Katalog Produk & Layanan (PRD)
-
-| **ID** | **Kebutuhan Fungsional** | **Prioritas** |
-| --- | --- | --- |
-| **PRD-1** | Sistem menyediakan halaman khusus untuk setiap kategori: Sprayer, Spreader, Pemetaan, dan Inspeksi. | **Wajib** |
-| **PRD-2** | Sistem menampilkan katalog seri FDS FERTO (5L, 10L, 15L, 22L) lengkap dengan kapasitas tangki dan fungsi teknisnya. | **Wajib** |
-| **PRD-3** | Sistem menampilkan informasi layanan terpisah untuk Penyewaan Drone dan Kursus FDS. | **Wajib** |
-| **PRD-4** | Sistem menyajikan halaman detail produk dengan tata letak informasi yang bersih dan mudah dipindai (*scannable*). | **Wajib** |
-
-## 6.3 Pengunjung — Sistem Blog (BLG)
-
-| **ID** | **Kebutuhan Fungsional** | **Prioritas** |
-| --- | --- | --- |
-| **BLG-1** | Sistem menampilkan halaman arsip (Daftar Blog) yang diurutkan dari artikel terbaru ke terlama dengan fitur *pagination*. | **Wajib** |
-| **BLG-2** | Setiap kartu (*card*) artikel pada halaman arsip menampilkan gambar *thumbnail*, judul, tanggal terbit, dan cuplikan teks (*excerpt*). | **Wajib** |
-| **BLG-3** | Sistem menampilkan halaman baca artikel (Single Post) yang rapi, mendukung elemen tipografi artikel (*heading, blockquote*, daftar), dan memiliki fitur bagikan ke media sosial. | **Wajib** |
-
-## 6.4 Pengunjung — Kontak & Tentang Kami (KTK)
-
-| **ID** | **Kebutuhan Fungsional** | **Prioritas** |
-| --- | --- | --- |
-| **KTK-1** | Sistem menampilkan sejarah FDS, komitmen penggunaan Software Bahasa Indonesia, dan nilai TKDN pada halaman Tentang Kami. | **Wajib** |
-| **KTK-2** | Sistem menyediakan formulir *inquiry* di halaman Contact yang langsung terhubung ke sistem pengiriman *email*. | **Wajib** |
-| **KTK-3** | Sistem memuat integrasi tombol akses cepat WhatsApp untuk mempermudah komunikasi langsung dengan pihak *Sales*. | **Penting** |
-
-# 7. Alur Pengguna Utama (Key User Flows)
-
-## 7.1 Alur Eksplorasi Produk Lengkap
-
-1. Pengunjung menavigasi menu *dropdown* "Layanan Drone" di Header.
-2. Pengunjung memilih "Drone Sprayer".
-3. Sistem memuat halaman katalog khusus Sprayer yang menampilkan seri FERTO 5, 10, 15, dan 22.
-4. Pengunjung mengklik salah satu produk untuk membaca spesifikasi detail, lalu mengklik tombol WhatsApp atau form penawaran untuk berkonsultasi.
-
-## 7.2 Alur Konsumsi Konten Blog & Berita
-
-1. Pengunjung menavigasi menu "Blogs" di Navbar utama.
-2. Sistem menampilkan halaman arsip *grid* berisi artikel terbaru terkait pameran (misal: MUNAS ASTTA 2025) atau studi kasus kolaborasi.
-3. Pengunjung mengklik artikel, lalu sistem memuat halaman baca (*Single Post*) yang dioptimasi agar ramah di mata (*readable*).
-
-# 8. Model Data (High-Level)
-
-| **Entitas** | **Field Utama** | **Keterangan** |
-| --- | --- | --- |
-| **Post_Artikel** | id, judul, slug, konten, id_kategori, tanggal_terbit, status, meta_deskripsi | Data bawaan *post* WordPress untuk fungsionalitas Blog. |
-| **Produk_Drone** | id, nama_produk, kategori_layanan, deskripsi, spesifikasi_teks, gambar_url | Katalog unit, dapat memanfaatkan *Custom Post Type* atau *Page* terstruktur. |
-| **Pesan_Kontak** | id, nama_pengirim, email_pengirim, no_telepon, isi_pesan, tanggal | Data masukan dari form *Contact Us*. |
-
-**Catatan:** field dalam [tanda kurung siku] merupakan bagian dari fitur usulan/Fase Lanjutan (Bab 11).
-
-# 9. Kebutuhan Non-Fungsional (Non-Functional Requirements)
-
-- **UI/UX (Clean Minimalist) :** Desain harus mengurangi *noise* visual yang berlebihan. Menggunakan banyak ruang kosong (*whitespace*), tipografi yang tajam, dan warna *background* yang menonjolkan perangkat *hardware* drone.
-- **Sistem Templating :** Penggunaan Roots Sage untuk merender tampilan (*Blade*) guna mencegah HTML *bloat* yang sering terjadi pada tema standar WordPress.
-- **SEO & Performa :** Dukungan penuh terhadap integrasi *plugin* SEO (untuk optimasi Blog). *Asset build* (CSS Tailwind & JS) diwajibkan melewati proses *minify* untuk mengamankan skor kecepatan web.
-
-# 10. Integrasi Pihak Ketiga
-
-| **Layanan** | **Fungsi** | **Catatan** |
-| --- | --- | --- |
-| **Plugin Formulir (Contact Form 7 / WPForms)** | Menangkap *leads* dari halaman Kontak dan meneruskan ke *email* FDS. | Tampilan formulir akan dioverride menggunakan *class* Tailwind. |
-| **Plugin SEO (Yoast / RankMath)** | Manajemen OpenGraph dan *meta tags* untuk halaman Produk dan Blog. | - |
-| **WhatsApp API** | Integrasi tautan klik-langsung ke nomor WhatsApp resmi FDS. | - |
-
-# 11. Fitur Usulan / Fase Lanjutan
-
-- **Sistem Filtering Katalog Produk.** Memungkinkan pengunjung untuk memfilter daftar produk secara dinamis (tanpa *reload*) berdasarkan kapasitas *payload* (5L, 10L, 15L, 22L) atau berdasarkan sektor industri.
-- **Kalkulator Penghematan Agrikultur.** *Widget* interaktif di halaman Sprayer yang memungkinkan petani menghitung estimasi penghematan waktu/pupuk apabila menggunakan produk FDS dibandingkan metode manual.
-
-# 12. Pertanyaan Terbuka / TBD
-
-- **Migrasi Konten:** Apakah seluruh pos artikel blog yang ada di web lama (*fulldronesolutions.co.id*) perlu dipindahkan (*migrate*) satu per satu ke dalam sistem instalasi lokal yang baru, atau pembuatan konten blog akan dimulai dari nol (hanya memindahkan yang penting saja)?
-- **Aset Gambar:** Apakah ada tautan *Google Drive* yang berisi *file* foto mentah/asli untuk tim teknis dan jajaran drone FDS agar bisa dipotong latar belakangnya (*cut-out*) secara rapi?
-
-# 13. Glosarium
-
-- **Seri FERTO :** Lini produk utama dari Full Drone Solutions (Ferto-5, Ferto-10, Ferto-15, Ferto-22).
-- **Roots Sage :** Ekosistem dan *starter theme* WordPress yang memfasilitasi penggunaan Blade Templating dan *utility-first* CSS (Tailwind) untuk perancangan tema yang lebih tangguh dan rapi.
-- **TKDN :** Tingkat Komponen Dalam Negeri; metrik persentase komponen buatan lokal. FDS menonjol dengan nilai tertinggi (44,85%).
-- **Clean Minimalist :** Pendekatan desain antarmuka yang mengutamakan fungsi, kejernihan tipografi, dan menghindari dekorasi visual yang tidak perlu untuk menampilkan kesan elegan dan profesional.
+Website ini dirancang dan dibangun sebagai **Website Company Profile (Compro) B2B Enterprise Modern Berstandar Industri Tinggi**. Platform ini dirancang untuk:
+1. Menampilkan keunggulan legalitas resmi nasional: **TKDN + BMP mencapai 60,74%** (Kementerian Perindustrian RI) dan standar **SNI 9199:2023** untuk kebutuhan pengadaan barang pemerintah, BUMN, dan e-Katalog LKPP.
+2. Menyajikan etalase katalog 10 model drone nasional yang mencakup 4 sektor utama: Agrikultur, Pemetaan & GIS, Kargo Logistik, dan Reboisasi Khusus.
+3. Mengonversi pengunjung korporat menjadi prospek bisnis (*leads*) melalui **Sistem Gated Download Brosur PDF** dan form penawaran interaktif.
+4. Memberikan pengalaman navigasi kelas dunia menggunakan arsitektur **Clean Apple-Grade B2B Minimalist** di atas Roots Sage 10 + Laravel Acorn Blade tanpa beban *page-builder* yang lambat.
 
 ---
 
-*Dokumen ini merupakan draft sementara dan dapat berubah seiring pembahasan lebih lanjut dengan klien.*
+# 2. Tujuan & Sasaran Bisnis (Business Goals & Metrics)
+
+* **Otoritas Manufaktur Nasional:** Mengukuhkan posisi FDS sebagai produsen UAV mandiri asli Indonesia dengan fasilitas riset dan perakitan langsung di Sleman, suku cadang *ready-stock* 48 jam, dan GCS berbahasa Indonesia (**FDS STATION**).
+* **Konversi B2B & Lead Generation:** Menyediakan alur *gated download* spesifikasi teknis untuk menangkap data calon pembeli (email instansi/korporasi) secara otomatis.
+* **Kecepatan & Performa Tinggi:** Memastikan kecepatan render halaman di bawah 1,2 detik dengan pemangkasan aset CSS/JS menggunakan Vite dan Tailwind CSS.
+* **Visibilitas Search Engine & AI Search:** Mencapai posisi puncak pencarian Google untuk kata kunci B2B berintensitas tinggi (*drone mapping, drone pertanian TKDN, produsen UAV Indonesia*) serta keterbacaan oleh bot AI (ChatGPT, Claude, Perplexity) melalui Schema JSON-LD dan `/llms.txt`.
+
+---
+
+# 3. Profil Pengguna & Peran (User Personas & Roles)
+
+1. **Pejabat Pengadaan / BUMN / Lembaga Negara:** Membutuhkan kepastian sertifikasi TKDN 60,74%, SNI, legalitas DKPPU Kemenhub, dan dokumen spesifikasi resmi untuk proses lelang/tender LKPP.
+2. **Manajer Operasional Perkebunan, Tambang, & Kehutanan:** Membutuhkan data teknis riil: kapasitas angkut (*payload*), daya tahan baterai (*flight endurance*), produktivitas hektar per jam, dan kemudahan servis lokal.
+3. **Pilot UAV & Akademisi Riset:** Memerhatikan integrasi software FDS STATION GCS, lisensi FDS Academy, dan kolaborasi riset.
+4. **Admin Konten & Tim Marketing FDS:** Mengelola harga, katalog drone, hero banner beranda, halaman profil, mengunduh rekap email leads dari form brosur, serta menyinkronkan SEO Rank Math.
+
+---
+
+# 4. Cakupan Sistem & Fitur Website Compro (Core Features)
+
+## 4.1 Navigasi Global & Unified Mega Menu (NAV)
+* **NAV-1 (Apple-Style Blur Header):** Header sticky dengan efek kaca blur (*backdrop-blur-md*), logo dinamis, dan tombol CTA kanan atas.
+* **NAV-2 (Mega Menu Produk):** Menu dropdown interaktif yang mengorganisir katalog berdasarkan 4 tab kategori (`Agrikultur`, `Pemetaan & GIS`, `Kargo`, `Reboisasi`) serta 3 kartu highlight otoritas (FDS STATION, TKDN 60,74%, SNI 9199:2023) dan tombol komparasi drone.
+* **NAV-3 (Mega Menu Layanan):** Menu dropdown layanan industri (Survey LiDAR, Pemetaan GIS, Jasa Semprot Hama, FDS Academy) dengan highlight workshop Sleman.
+
+## 4.2 Halaman Beranda Compro (HOM)
+* **HOM-1 (Full-Bleed Cinematic Hero):** Slider latar belakang layar penuh dengan transisi elegan, badge *"Teknologi UAV Indonesia"*, H1 headline dinamis, deskripsi, dan tombol CTA ganda.
+* **HOM-2 (Marquee Mitra Strategis):** Slider logo bergerak mulus yang menampilkan mitra kolaborasi (Bappenas, Pemerintah Australia PRISMA, Bank Indonesia, UGM, Swiss).
+* **HOM-3 (Solusi Sektor Industri):** 4 kartu interaktif sektor kerja: Perkebunan Sawit/Padi, Pertambangan Mineral LiDAR, Inspeksi Energi 150kV, Misi Tanggap Darurat & Reboisasi.
+* **HOM-4 (Bento 7 Keunggulan Manufaktur):** Struktur grid asimetris yang menampilkan 7 pilar keunggulan FDS (Rangka Karbon, TKDN 60,74%, GCS Bahasa Indonesia, SNI 9199, Spare Parts 48 Jam, FDS Academy, Fleet Telemetri).
+* **HOM-5 (Katalog Filterable Drone):** Tab filter dinamis tanpa reload halaman untuk menelusuri unit drone unggulan.
+* **HOM-6 (Newsroom / Blog Terkini):** Menampilkan artikel berita, rilis teknologi, dan studi kasus terbaru.
+* **HOM-7 (Formulir Penawaran & Konsultasi):** Form pemesanan unit dan permohonan demo terbang.
+
+## 4.3 Katalog & Halaman Detail Drone (CPT `drone`)
+* **DRN-1 (Custom Post Type & 4 Kategori):** Struktur data dinamis untuk 10 model drone nasional.
+* **DRN-2 (Tabel Spesifikasi Teknis Interaktif):** Menampilkan data kapasitas muatan, durasi terbang, baterai, produktivitas per jam, GCS, TKDN, SNI, dan garansi secara rapi dan terstruktur.
+* **DRN-3 (Skenario Operasional / Use Cases):** 4 skenario pemanfaatan riil per unit drone dengan penjelasan detail.
+* **DRN-4 (Sistem Gated Download Brosur 2-State):**
+  - State 1: Input email bisnis + tombol "Kirim Email" (akses PDF terkunci).
+  - Validasi AJAX: Validasi email tanpa reload halaman dan rekam leads ke database.
+  - State 2: Bertransisi otomatis menjadi tombol "Download Brosur PDF" aktif berwarna biru `#0066cc`.
+  - Akses Langsung: Mengunduh file PDF brosur resmi drone tersebut.
+* **DRN-5 (Auto-SEO Technical Content Engine):** Sistem otomatis menyuntikkan artikel komprehensif 800–1200+ kata berstandar Rank Math ke `post_content` saat drone disimpan jika artikel masih kosong.
+
+## 4.4 Halaman Alat Komparasi Spesifikasi (`/bandingkan/`)
+* **CMP-1 (Side-by-Side Comparison):** Memungkinkan pengunjung membandingkan 2 atau lebih model drone secara berdampingan.
+* **CMP-2 (Parameter Matriks Lengkap):** Membandingkan muatan, durasi terbang, produktivitas, standar TKDN, dan skenario pemanfaatan.
+
+## 4.5 Halaman Profil Perusahaan (`/tentang-kami/`)
+* **ABT-1 (Hero Sejarah & Narasi 2012):** Perjalanan dari riset aeromodelling mandiri di Sleman hingga berdiri resmi sebagai PT Karya Solusi Angkasa.
+* **ABT-2 (Visi & Misi Strategis):** Komitmen kedaulatan teknologi kedirgantaraan nirawak Indonesia.
+* **ABT-3 (Spektrum 3 Arsitektur Wahana):** Rotary-Wing Multirotor, Fixed-Wing Long Endurance, dan Hybrid VTOL DELTAV.
+* **ABT-4 (Fasilitas Riset & Manufaktur):** Dokumentasi workshop Sleman, mesin perakitan, dan tim insinyur lokal.
+* **ABT-5 (Peta Workshop):** Embed Google Maps interaktif kantor pusat Sleman.
+
+## 4.6 Global Footer & Kontak (FTR)
+* **FTR-1 (Grid 4 Kolom Navigasi):** Produk Drone, Layanan, Perusahaan, dan Dukungan.
+* **FTR-2 (Penempatan Logo Partner/Sertifikasi):** Terkunci di pojok kanan bawah kolom 4 (Dukungan) mepet batas padding kanan, mengalir rapi ke kiri.
+* **FTR-3 (Transparansi Logo Multiply):** Efek transparansi mutlak tanpa kotak putih menggunakan `mix-blend-mode: multiply !important;`.
+* **FTR-4 (Baris Tengah):** Informasi resmi PT di sisi kiri (`col-span-8`) dan tombol sosial media resmi di sisi kanan (`col-span-4 justify-end`).
+* **FTR-5 (Bottom Bar):** Copyright & Legal Notice sertifikasi Kemenperin.
+
+---
+
+# 5. Kebutuhan Non-Fungsional (Non-Functional Requirements)
+
+* **Keamanan & Validasi Input:** Seluruh form AJAX (Brosur, Kontak) diverifikasi menggunakan WordPress Nonces (`check_ajax_referer`), sanitasi email (`sanitize_email`), dan sanitasi teks (`sanitize_text_field`).
+* **Arsitektur Tanpa Page-Builder:** Zero dependency pada Elementor, WPBakery, atau Divi. Kode bersih murni Laravel Blade + Tailwind CSS.
+* **Performa Cache Blade:** Pemanfaatan caching view terkompilasi oleh Laravel Acorn untuk memangkas *database overhead*.
+* **Aksesibilitas & Responsive:** Mendukung 100% responsivitas di Mobile (< 640px), Tablet (768px - 1024px), dan Layar Lebar Desktop (1280px - 1920px).
+* **Anti-Destructive Data Rule:** Pembaruan tema tidak boleh menimpa data yang telah dikonfigurasi admin di WP Admin.
+
+---
+
+# 6. Integrasi SEO, Rank Math, & Generative Engine Optimization (GEO)
+
+* **Dual-Engine SEO Architecture:** Tema mendukung fallback mandiri dan otomatis mengalah 100% jika plugin Rank Math SEO aktif, mencegah duplikasi metadata.
+* **Rank Math Full Field Support:** Mendukung Title, Description, Focus Keywords, dan Social Share Image secara *native*.
+* **Schema.org JSON-LD:** Structured data otomatis untuk `Organization`, `LocalBusiness`, `WebSite`, `Breadcrumbs`, `Service`, `FAQPage`, dan `Product`.
+* **Dukungan AI Crawler:** Konfigurasi `robots.txt` khusus bot AI resmi serta penyediaan ringkasan knowledge base bersih di `/llms.txt`.
+
+---
+
+# 7. Penerimaan & Kriteria Keberhasilan (Acceptance Criteria)
+
+1. Semua halaman inti (`/`, `/tentang-kami/`, `/bandingkan/`, `/blog/`, `/drone/*`) dapat diakses tanpa broken layout atau error 500.
+2. Form unduh brosur berhasil menangkap email dan memicu download PDF brosur tanpa reload halaman.
+3. Seluruh logo sertifikasi/partner tampil transparan di footer tanpa kotak putih atau glitch hover.
+4. Tidak ada teks menggunakan gaya ALL-CAPS (`uppercase`), melainkan menggunakan Title Case atau Sentence case elegan.
+5. Panduan pengelolaan konten operasional terdokumentasi lengkap di [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md).
+
+---
+
+*Dokumen ini merupakan spesifikasi resmi kebutuhan produk Website Company Profile Full Drone Solutions (FDS) PT Karya Solusi Angkasa.*

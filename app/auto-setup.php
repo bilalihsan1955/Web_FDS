@@ -113,7 +113,19 @@ function fds_run_theme_auto_provision() {
         ]);
     }
 
-    // 5. SEED DEFAULT MITRA LOGOS JIKA KOSONG
+    // 5. BUAT HALAMAN KONTAK
+    $kontak_page = get_page_by_path('kontak');
+    if (!$kontak_page) {
+        wp_insert_post([
+            'post_title'   => 'Kontak Kami',
+            'post_name'    => 'kontak',
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => '',
+        ]);
+    }
+
+    // 6. SEED DEFAULT MITRA LOGOS JIKA KOSONG
     $mitra_count = wp_count_posts('mitra');
     if (empty($mitra_count->publish) || $mitra_count->publish == 0) {
         $default_mitras = [
@@ -192,6 +204,19 @@ add_action('after_switch_theme', __NAMESPACE__ . '\\fds_run_theme_auto_provision
 add_action('init', function () {
     if (!get_option('fds_theme_auto_setup_done_v1')) {
         fds_run_theme_auto_provision();
+    } elseif (!get_option('fds_page_kontak_seeded_v1')) {
+        $kontak_page = get_page_by_path('kontak');
+        if (!$kontak_page) {
+            wp_insert_post([
+                'post_title'   => 'Kontak Kami',
+                'post_name'    => 'kontak',
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+                'post_content' => '',
+            ]);
+            flush_rewrite_rules(false);
+        }
+        update_option('fds_page_kontak_seeded_v1', 1);
     }
 }, 20);
 

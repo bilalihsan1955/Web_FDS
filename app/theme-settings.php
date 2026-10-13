@@ -401,6 +401,7 @@ function render_navbar_settings_admin_page() {
         $drone_tab_suffix  = sanitize_text_field($_POST['fds_drone_tab_suffix'] ?? '');
         $site_tagline      = sanitize_text_field($_POST['fds_site_tagline'] ?? '');
         $title_separator   = sanitize_text_field($_POST['fds_tab_title_separator'] ?? '–');
+        $custom_keywords   = sanitize_textarea_field($_POST['fds_custom_keywords'] ?? '');
 
         // CTA & Mega Menu Fields
         $navbar_cta_text        = sanitize_text_field($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone');
@@ -436,6 +437,7 @@ function render_navbar_settings_admin_page() {
         update_option('fds_drone_tab_suffix', $drone_tab_suffix);
         update_option('fds_site_tagline', $site_tagline);
         update_option('fds_tab_title_separator', $title_separator);
+        update_option('fds_custom_keywords', $custom_keywords);
 
         update_option('fds_navbar_cta_text', $navbar_cta_text);
         update_option('fds_navbar_cta_url', $navbar_cta_url);
@@ -500,7 +502,7 @@ function render_navbar_settings_admin_page() {
             delete_option('site_icon');
         }
 
-        $message = 'Pengaturan Logo, Navbar, Icon Tab, Mega Menu &amp; Logo Footer berhasil disimpan!';
+        $message = 'Pengaturan Logo, Navbar, Icon Tab, Kata Kunci SEO, Mega Menu &amp; Logo Footer berhasil disimpan!';
     }
 
     $brand_data           = fds_get_navbar_brand();
@@ -513,6 +515,8 @@ function render_navbar_settings_admin_page() {
     $drone_tab_suffix  = get_option('fds_drone_tab_suffix', '');
     $site_tagline      = get_option('fds_site_tagline', get_bloginfo('description') ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia');
     $title_separator   = get_option('fds_tab_title_separator', '–');
+    $custom_keywords   = get_option('fds_custom_keywords', '');
+    $default_keywords_grouped = function_exists('\App\fds_get_default_drone_keywords_grouped') ? \App\fds_get_default_drone_keywords_grouped() : [];
     ?>
     <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
@@ -809,6 +813,138 @@ function render_navbar_settings_admin_page() {
                         </div>
 
                     </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
+                <!-- 4b. PENGATURAN KATA KUNCI SEO & PENCARIAN GOOGLE (DRONE SEO KEYWORDS ENGINE) -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
+                    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                                <span class="dashicons dashicons-search" style="color: #0066cc;"></span> Kata Kunci Pencarian Google (Drone SEO Keywords Engine)
+                            </h2>
+                            <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.5;">
+                                Sistem tema Full Drone Solutions telah dilengkapi kata kunci bawaan berperingkat tinggi untuk memaksimalkan visibilitas di Google Search, Googlebot, dan mesin pencari AI cerdas (ChatGPT Search, Perplexity AI, Claude, Google Gemini). Anda juga dapat menambahkan kata kunci kustom tambahan di bawah ini.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- PREVIEW KATA KUNCI BAWAAN SISTEM -->
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 8px;">
+                            📋 Kata Kunci Bawaan Tema yang Sedang Aktif:
+                        </label>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+                            
+                            <!-- Kategori Pertanian -->
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                                <div style="font-size: 12px; font-weight: 700; color: #15803d; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                    <span>🌾 Drone Pertanian &amp; Perkebunan</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    <?php 
+                                    $agri_kws = $default_keywords_grouped['pertanian'] ?? [];
+                                    foreach ($agri_kws as $kw): ?>
+                                        <span class="fds-kw-pill" style="display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0;">
+                                            <?php echo esc_html($kw); ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <!-- Kategori Pemetaan & LiDAR -->
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                                <div style="font-size: 12px; font-weight: 700; color: #0369a1; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                    <span>🗺️ Pemetaan, Survey &amp; LiDAR Tambang</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    <?php 
+                                    $peta_kws = $default_keywords_grouped['pemetaan'] ?? [];
+                                    foreach ($peta_kws as $kw): ?>
+                                        <span class="fds-kw-pill" style="display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #f0f9ff; color: #075985; border: 1px solid #bae6fd;">
+                                            <?php echo esc_html($kw); ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <!-- Kategori Industri, SAR & Misi Khusus -->
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                                <div style="font-size: 12px; font-weight: 700; color: #b45309; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                    <span>🚨 Inspeksi Industri, SAR &amp; Kargo</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    <?php 
+                                    $ind_kws = $default_keywords_grouped['industri_sar'] ?? [];
+                                    foreach ($ind_kws as $kw): ?>
+                                        <span class="fds-kw-pill" style="display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #fffbeb; color: #92400e; border: 1px solid #fde68a;">
+                                            <?php echo esc_html($kw); ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <!-- Kategori Produsen & Legalitas -->
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                                <div style="font-size: 12px; font-weight: 700; color: #4338ca; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                                    <span>🏭 Produsen UAV &amp; Sertifikasi TKDN</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 5px;">
+                                    <?php 
+                                    $prod_kws = $default_keywords_grouped['produsen_legalitas'] ?? [];
+                                    foreach ($prod_kws as $kw): ?>
+                                        <span class="fds-kw-pill" style="display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe;">
+                                            <?php echo esc_html($kw); ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- INPUT KATA KUNCI KUSTOM TAMBAHAN -->
+                    <div>
+                        <label for="fds_custom_keywords" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
+                            ✍️ Tambah Kata Kunci Kustom Anda Sendiri (Pisahkan dengan tanda koma):
+                        </label>
+                        <textarea id="fds_custom_keywords" 
+                                  name="fds_custom_keywords" 
+                                  rows="3" 
+                                  style="width: 100%; font-size: 13px; line-height: 1.5; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: monospace;" 
+                                  placeholder="Contoh: sewa drone semprot jawa barat, drone inspeksi pipa gas pertamina, tender pengadaan drone pemda kalimantan, drone reboisasi bibit bakau"><?php echo esc_textarea($custom_keywords); ?></textarea>
+                        
+                        <p style="margin: 6px 0 0; color: #64748b; font-size: 12px; line-height: 1.5;">
+                            Kata kunci kustom di atas akan otomatis digabungkan dengan kata kunci bawaan ke dalam <strong>Meta Tag Keywords</strong>, <strong>Schema.org Structured Data (Google Knowledge Graph)</strong>, dan direktif AI Search <strong>(/llms.txt)</strong>.
+                        </p>
+                    </div>
+
+                    <!-- TIPS REKOMENDASI CEPAT KLIK -->
+                    <div style="margin-top: 14px; padding: 12px 14px; background: #eff6ff; border: 1px solid #dbeafe; border-radius: 6px; font-size: 12px; color: #1e40af;">
+                        <span style="font-weight: 700;">💡 Saran Kata Kunci Siap Tambah (Klik untuk masukkan ke kolom):</span>
+                        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;" id="fds-quick-chips">
+                            <?php 
+                            $quick_suggestions = [
+                                'sewa drone sprayer jawa tengah',
+                                'sewa drone pertanian sumatera',
+                                'drone inspeksi solar panel surya',
+                                'jasa foto udara perkebunan sawit riau',
+                                'perhitungan cadangan tambang drone',
+                                'pelatihan pilot drone fds yogyakarta',
+                                'pengadaan drone bumn bappenas',
+                                'drone pemadam kebakaran karhutla',
+                                'drone sprayer 50 liter resmi tkdn',
+                            ];
+                            foreach ($quick_suggestions as $qs): ?>
+                                <button type="button" class="button button-small fds-chip-add" data-kw="<?php echo esc_attr($qs); ?>" style="font-size: 11px; padding: 1px 8px; border-radius: 12px; background: #fff; border: 1px solid #93c5fd; color: #1d4ed8; cursor: pointer;">
+                                    + <?php echo esc_html($qs); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
                 </div>
 
                 <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
@@ -1303,6 +1439,20 @@ function render_navbar_settings_admin_page() {
             $('#fds_navbar_drone_icon_url').val('');
             $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview"><svg style="width: 22px; height: 22px; color: #0066cc; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>');
             updateLivePreview();
+        });
+
+        // Quick Add Keywords Chip Click
+        $('.fds-chip-add').on('click', function(e) {
+            e.preventDefault();
+            var kw = $(this).data('kw');
+            var $textarea = $('#fds_custom_keywords');
+            var currentVal = $textarea.val().trim();
+            if (currentVal.length > 0) {
+                $textarea.val(currentVal + ', ' + kw);
+            } else {
+                $textarea.val(kw);
+            }
+            $(this).css({'background': '#22c55e', 'color': '#ffffff', 'border-color': '#16a34a'}).text('✓ ' + kw);
         });
     });
     </script>

@@ -1,7 +1,8 @@
 # 🧠 PROJECT MEMORY & ARCHITECTURE MASTER REFERENCE
-**Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa  
+**Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa (Website Company Profile B2B Enterprise)  
 **Platform:** WordPress Custom Theme (Roots Sage / Acorn Blade Architecture)  
-**Terakhir Diperbarui:** 2026-09-29  
+**Dokumen Operasional Utama:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md) & [`PRD.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PRD.md)  
+**Terakhir Diperbarui:** 2026-10-13  
 
 ---
 
@@ -44,7 +45,7 @@
 | `resources/views/front-page.blade.php` | Halaman Beranda lengkap: **Full-Bleed Background Hero Section** (gambar latar layar penuh sinematik dengan multi-layer gradient overlay & slider interaktif), Stats Bar, Katalog Filterable Drone, Solusi Industri, Video / Fasilitas, Keunggulan Manufaktur, Testimoni, Blog, & Kontak Form. |
 | `resources/views/single-drone.blade.php` | Halaman Detail Produk Drone: Galeri foto, badge TKDN & SNI, highlight statistik, tabel spesifikasi interaktif, 4 skenario penggunaan (use cases), dan FAQ. |
 | `resources/views/page-bandingkan.blade.php` | Alat Komparasi Spesifikasi Teknis: Membandingkan 2 atau lebih model drone FDS secara berdampingan (*side-by-side*). |
-| `resources/views/page-tentang-kami.blade.php` | Halaman Profil Perusahaan PT Karya Solusi Angkasa: Sejarah, Visi Misi, Sertifikasi TKDN/SNI/ISO, Tim Inti, dan Fasilitas Riset di Sleman. |
+| `resources/views/page-kontak.blade.php` | **Halaman Pusat Kontak Resmi (Streamlined & Minimalist):** Hero header ringkas Apple, Master Dual-Surface Contact & Inquiry Hub (Info PT Sleman, Telepon/WA, Email, Jam Operasional di kiri, Formulir Inquiry cepat di kanan), dan Peta Interaktif Google Maps Fasilitas Workshop Sleman dengan tombol langsung ke Google Maps. Dilengkapi Schema.org `ContactPage` JSON-LD & 301 legacy redirects. |
 
 ---
 

@@ -1,3 +1,7 @@
+{{--
+  Template Name: Tentang Kami / About FDS
+--}}
+
 @extends('layouts.app')
 
 @section('content')

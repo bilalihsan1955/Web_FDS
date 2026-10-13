@@ -903,19 +903,19 @@ function fds_sync_drone_rank_math_seo($post_id) {
     $clean_model = strtolower(trim(str_replace(['(', ')'], '', $title)));
 
     if (strpos($cat_lower, 'agri') !== false || strpos($slug, 'ferto') !== false) {
-        $focus_kw = "drone pertanian {$slug}, drone sprayer tkdn, produsen uav indonesia, drone pertanian indonesia, pt karya solusi angkasa";
+        $focus_kw = "drone pertanian {$slug}, jual drone pertanian, harga drone pertanian, drone sprayer tkdn, drone penyemprot pupuk, produsen uav indonesia, drone pertanian indonesia, pt karya solusi angkasa";
         $seo_title = "{$title} — Drone Pertanian Presisi TKDN 60,74% & SNI Resmi | FDS";
         $seo_desc  = "Drone pertanian {$title} buatan PT Karya Solusi Angkasa (FDS). Spesifikasi kapasitas {$payload}, durasi {$durasi}, TKDN 60,74%, SNI 9199:2023, sistem kendali FDS STATION.";
     } elseif (strpos($cat_lower, 'peta') !== false || strpos($slug, 'deltav') !== false || strpos($slug, 'multi') !== false) {
-        $focus_kw = "drone mapping {$slug}, jasa pemetaan drone, jasa survey drone lidar, jasa pemetaan drone tambang, produsen uav indonesia";
+        $focus_kw = "drone mapping {$slug}, jual drone mapping, jasa pemetaan drone, jasa survey drone lidar, jasa pemetaan drone tambang, drone fixed wing vtol, produsen uav indonesia";
         $seo_title = "{$title} — Drone Mapping & Jasa Survey Pemetaan LiDAR GIS | FDS";
         $seo_desc  = "Platform drone mapping {$title} dari PT Karya Solusi Angkasa untuk jasa survey drone LiDAR, pemetaan tambang cut and fill, ortofoto sub-sentimeter TKDN resmi.";
     } elseif (strpos($cat_lower, 'kargo') !== false || strpos($slug, 'delfro') !== false) {
-        $focus_kw = "drone kargo {$slug}, drone logistik medis, produsen uav indonesia, drone tanggap darurat";
+        $focus_kw = "drone kargo {$slug}, drone logistik medis, drone payload besar, produsen uav indonesia, drone tanggap darurat";
         $seo_title = "{$title} — Drone Kargo Logistik Otonom & Medis Darurat | FDS";
         $seo_desc  = "Drone kargo logistik {$title} kapasitas {$payload} buatan PT Karya Solusi Angkasa. Misi pengiriman medis darurat dan suku cadang antar pulau berstandar SNI.";
     } else {
-        $focus_kw = "drone reboisasi {$slug}, drone pencarian korban bencana, drone restorasi hutan, produsen uav indonesia";
+        $focus_kw = "drone reboisasi {$slug}, drone pencarian korban bencana, drone misi sar thermal, drone restorasi hutan, produsen uav indonesia";
         $seo_title = "{$title} — Drone Reboisasi Hutan & SAR Kebencanaan TKDN | FDS";
         $seo_desc  = "Drone reboisasi {$title} kapasitas {$payload} seedball otomatis buatan PT Karya Solusi Angkasa. Restorasi lahan kritis dan operasi SAR kebencanaan.";
     }

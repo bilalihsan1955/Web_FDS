@@ -185,6 +185,7 @@
               $is_active_layanan = is_page('layanan') || is_singular('layanan');
               $is_active_about   = is_page('tentang-kami') || is_page('about') || is_page('about-us');
               $is_active_blog    = is_home() || is_page('blog') || (is_single() && get_post_type() === 'post') || is_category() || is_tag();
+              $is_active_kontak  = is_page('kontak') || is_page('contact') || is_page('hubungi-kami');
             @endphp
             <nav class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
               <a href="{{ home_url('/') }}" 
@@ -215,6 +216,10 @@
               <a href="{{ home_url('/blog') }}" 
                  class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_blog ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Blog
+              </a>
+              <a href="{{ home_url('/kontak') }}" 
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_kontak ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                Kontak
               </a>
             </nav>
 
@@ -570,7 +575,7 @@
             </details>
             <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0066cc] font-semibold' : '' }}">Tentang Kami</a>
             <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0066cc] font-semibold' : '' }}">Blog</a>
-            <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link py-1.5 text-[#0066cc] font-semibold">Hubungi Kami</a>
+            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-1.5 {{ $is_active_kontak ? 'text-[#0066cc] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
           </nav>
         </div>
       </header>
@@ -631,9 +636,9 @@
               <div>
                 <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Dukungan</h4>
                 <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                  <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
-                  <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
-                  <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Garansi &amp; Suku Cadang Asli</a></li>
+                  <li><a href="{{ home_url('/kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
+                  <li><a href="{{ home_url('/kontak#lokasi-workshop') }}" class="hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
+                  <li><a href="{{ home_url('/kontak#hubungi-form') }}" class="hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
                 </ul>
               </div>
 
