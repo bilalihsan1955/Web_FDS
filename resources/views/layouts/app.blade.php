@@ -183,7 +183,7 @@
               $is_active_home    = is_front_page() && !is_home();
               $is_active_produk  = is_singular('drone') || is_page('bandingkan') || is_tax('kategori_drone');
               $is_active_layanan = is_page('layanan') || is_singular('layanan');
-              $is_active_about   = is_page('tentang-kami') || is_page('about') || is_page('about-us');
+              $is_active_about   = is_page('tentang-kami') || is_page('tentang-kami-2') || is_page('about') || is_page('about-2') || is_page('about-us');
               $is_active_blog    = is_home() || is_page('blog') || (is_single() && get_post_type() === 'post') || is_category() || is_tag();
               $is_active_kontak  = is_page('kontak') || is_page('contact') || is_page('hubungi-kami');
             @endphp

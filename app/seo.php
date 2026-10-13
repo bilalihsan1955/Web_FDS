@@ -833,22 +833,32 @@ add_action('template_redirect', function () {
     // 1. Legacy About Page 301 Redirects -> /tentang-kami/
     $legacy_about_slugs = [
         'about',
+        'about-2',
+        'about-3',
         'about-us',
+        'about-us-2',
         'aboutus',
         'profil',
+        'profil-2',
         'profil-kami',
         'profil-perusahaan',
+        'profil-perusahaan-2',
         'profile',
+        'profile-2',
         'company-profile',
         'company',
+        'company-2',
         'tentang',
+        'tentang-2',
         'tentangkami',
+        'tentang-kami-2',
         'page/about',
+        'page/about-2',
         'about.html',
         'about.php',
     ];
 
-    if (in_array($path_lower, $legacy_about_slugs, true)) {
+    if ($path_lower !== 'tentang-kami' && (in_array($path_lower, $legacy_about_slugs, true) || preg_match('/^(about|about-us|tentang|tentang-kami|profil|profile)(-\d+)?$/i', $path_lower))) {
         wp_safe_redirect(home_url('/tentang-kami/'), 301);
         exit;
     }
@@ -856,14 +866,17 @@ add_action('template_redirect', function () {
     // 2. Legacy Compare Page 301 Redirects -> /bandingkan/
     $legacy_compare_slugs = [
         'compare',
+        'compare-2',
         'compare-drone',
+        'bandingkan-2',
         'bandingkan-drone',
         'komparasi',
+        'komparasi-2',
         'komparasi-drone',
         'perbandingan-drone',
     ];
 
-    if (in_array($path_lower, $legacy_compare_slugs, true)) {
+    if ($path_lower !== 'bandingkan' && (in_array($path_lower, $legacy_compare_slugs, true) || preg_match('/^(compare|compare-drone|bandingkan|komparasi)(-\d+)?$/i', $path_lower))) {
         wp_safe_redirect(home_url('/bandingkan/'), 301);
         exit;
     }
@@ -871,20 +884,27 @@ add_action('template_redirect', function () {
     // 3. Legacy Contact Page 301 Redirects -> /kontak/
     $legacy_contact_slugs = [
         'contact',
+        'contact-2',
+        'contact-3',
         'contact-us',
+        'contact-us-2',
         'contactus',
         'hubungi',
+        'hubungi-2',
         'hubungi-kami',
+        'hubungi-kami-2',
         'hubungikami',
+        'kontak-2',
         'kontak-kami',
         'kontakkami',
         'page/contact',
+        'page/contact-2',
         'page/kontak',
         'contact.html',
         'contact.php',
     ];
 
-    if (in_array($path_lower, $legacy_contact_slugs, true)) {
+    if ($path_lower !== 'kontak' && (in_array($path_lower, $legacy_contact_slugs, true) || preg_match('/^(contact|contact-us|hubungi|hubungi-kami|kontak|kontak-kami)(-\d+)?$/i', $path_lower))) {
         wp_safe_redirect(home_url('/kontak/'), 301);
         exit;
     }

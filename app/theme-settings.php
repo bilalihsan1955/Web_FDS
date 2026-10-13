@@ -271,7 +271,7 @@ add_filter('document_title_parts', function ($title_parts) {
     }
 
     // 2. HALAMAN TENTANG KAMI
-    if (is_page('tentang-kami') || is_page('about') || is_page('about-us')) {
+    if (is_page('tentang-kami') || is_page('tentang-kami-2') || is_page('about') || is_page('about-2') || is_page('about-us')) {
         $custom_page_title = get_post_meta(get_the_ID(), '_fds_custom_tab_title', true);
         if (!empty($custom_page_title)) {
             return ['title' => $custom_page_title];
