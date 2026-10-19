@@ -371,7 +371,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
       {{-- Card 1: TKDN 60,74% (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -394,16 +394,16 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-6">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
+          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[44px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">{!! esc_html($about['cert1_val'] ?? '60,74%') !!}</p>
-          <p class="text-[14px] text-white/80 mt-3 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
+          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert1_val'] ?? '60,74%') !!}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
         </div>
       </div>
 
       {{-- Card 2: ISO & SNI (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-white rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-black/[0.06] transition-all duration-300 hover:-translate-y-1 group shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div class="relative overflow-hidden bg-white rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-black/[0.06] transition-all duration-300 hover:-translate-y-1 group shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -426,16 +426,16 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-[#86868b] tracking-wide mb-6">{!! esc_html($about['cert2_badge'] ?? 'Standar Produk & Manajemen') !!}</p>
+          <p class="text-[13px] font-semibold text-[#86868b] tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert2_badge'] ?? 'Standar Produk & Manajemen') !!}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[44px] sm:text-[48px] font-bold text-[#1d1d1f] tracking-[-0.03em] leading-tight">{!! esc_html($about['cert2_val'] ?? 'ISO & SNI') !!}</p>
-          <p class="text-[14px] text-[#515154] mt-3 leading-relaxed">{!! esc_html($about['cert2_desc'] ?? 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 (Standar Nasional Drone Pertanian).') !!}</p>
+          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-[#1d1d1f] tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert2_val'] ?? 'ISO & SNI') !!}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-[#515154] mt-2.5 leading-relaxed">{!! esc_html($about['cert2_desc'] ?? 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 (Standar Nasional Drone Pertanian).') !!}</p>
         </div>
       </div>
 
       {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -458,11 +458,11 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-6">{!! esc_html($about['cert3_badge'] ?? 'Jaminan Layanan') !!}</p>
+          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert3_badge'] ?? 'Jaminan Layanan') !!}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[44px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">{!! esc_html($about['cert3_val'] ?? '24/7') !!}</p>
-          <p class="text-[14px] text-white/80 mt-3 leading-relaxed">{!! esc_html($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') !!}</p>
+          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert3_val'] ?? '24/7') !!}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{!! esc_html($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') !!}</p>
         </div>
       </div>
 
