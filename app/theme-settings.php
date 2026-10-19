@@ -481,7 +481,7 @@ function render_navbar_settings_admin_page() {
                     ];
                 }
             }
-            update_option('fds_footer_logos', json_encode($cleaned_logos, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+            update_option('fds_footer_logos', json_encode($cleaned_logos, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE), 'no');
         }
 
         // Sinkronkan ke Core WordPress blogname & blogdescription

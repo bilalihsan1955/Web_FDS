@@ -264,7 +264,7 @@ function render_homepage_content_admin_page() {
                     ];
                 }
             }
-            update_option('fds_hero_slides', $saved_slides);
+            update_option('fds_hero_slides', $saved_slides, 'no');
         }
 
         // 3. Simpan Kartu Solusi Industri
@@ -280,7 +280,7 @@ function render_homepage_content_admin_page() {
                     'link_url'  => sanitize_text_field($_POST['fds_card_link_url'][$idx] ?? '#kontak'),
                 ];
             }
-            update_option('fds_solusi_cards', $saved_cards);
+            update_option('fds_solusi_cards', $saved_cards, 'no');
         }
 
         // 4. Simpan Item Layanan Enterprise Dinamis (Bisa Ditambah & Dikurangi)
@@ -297,7 +297,7 @@ function render_homepage_content_admin_page() {
                     ];
                 }
             }
-            update_option('fds_layanan_items', $saved_layanan);
+            update_option('fds_layanan_items', $saved_layanan, 'no');
         }
 
         $message = 'Semua perubahan konten Beranda berhasil disimpan!';

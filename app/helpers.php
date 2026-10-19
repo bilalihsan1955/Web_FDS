@@ -79,3 +79,44 @@ if (!function_exists('fds_posts_pagination')) {
         return $html;
     }
 }
+
+if (!function_exists('fds_clean_string')) {
+    /**
+     * Clean and safely decode HTML entities from dynamic strings
+     */
+    function fds_clean_string($val) {
+        if (!is_string($val)) return $val;
+        $prev = '';
+        while ($prev !== $val) {
+            $prev = $val;
+            $val = wp_specialchars_decode($val, ENT_QUOTES);
+            $val = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+        return $val;
+    }
+}
+
+if (!function_exists('fds_deep_decode')) {
+    /**
+     * Recursively clean and decode HTML entities from arrays or strings
+     */
+    function fds_deep_decode($val) {
+        if (is_array($val)) {
+            return array_map('fds_deep_decode', $val);
+        }
+        return fds_clean_string($val);
+    }
+}
+
+if (!function_exists('fds_get_default_drone_catalog')) {
+    /**
+     * Global accessor for default drone catalog specs
+     */
+    function fds_get_default_drone_catalog() {
+        if (function_exists('\App\fds_get_default_drone_catalog')) {
+            return \App\fds_get_default_drone_catalog();
+        }
+        return [];
+    }
+}
+

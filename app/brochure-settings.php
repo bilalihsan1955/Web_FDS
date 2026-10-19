@@ -257,6 +257,17 @@ add_action('wp_ajax_nopriv_fds_download_brochure', __NAMESPACE__ . '\\handle_bro
 function handle_brochure_download_ajax() {
     check_ajax_referer('fds_brochure_download_nonce', 'nonce');
 
+    // Anti-Spoofing IP & Rate Limiting (Maks 5 request / 5 menit per IP)
+    $ip = function_exists(__NAMESPACE__ . '\\fds_get_client_ip') ? fds_get_client_ip() : (sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'));
+    $rate_key = 'fds_brochure_rate_' . md5($ip);
+    $attempts = (int) get_transient($rate_key);
+    if ($attempts >= 5) {
+        wp_send_json_error([
+            'message' => 'Terlalu banyak permintaan unduhan brosur. Silakan tunggu 5 menit lagi.',
+        ], 429);
+    }
+    set_transient($rate_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
+
     $email      = sanitize_email($_POST['email'] ?? '');
     $drone_id   = intval($_POST['drone_id'] ?? 0);
     $drone_name = sanitize_text_field($_POST['drone_name'] ?? 'Drone FDS');
@@ -264,13 +275,16 @@ function handle_brochure_download_ajax() {
     if (!is_email($email)) {
         wp_send_json_error([
             'message' => 'Silakan masukkan alamat email yang valid.',
-        ]);
+        ], 400);
     }
 
     // Ambil URL PDF spesifik drone
     $pdf_url = '';
     if ($drone_id > 0) {
-        $pdf_url = get_post_meta($drone_id, 'drone_brosur_url', true);
+        // Verifikasi bahwa post valid dan bertipe drone
+        if (in_array(get_post_type($drone_id), ['drone', 'drones'], true) && get_post_status($drone_id) === 'publish') {
+            $pdf_url = get_post_meta($drone_id, 'drone_brosur_url', true);
+        }
     }
     if (empty($pdf_url) || $pdf_url === '#') {
         $pdf_url = get_option('fds_brochure_default_pdf', '');
@@ -308,8 +322,9 @@ function handle_brochure_download_ajax() {
             update_post_meta($inquiry_id, '_fds_inquiry_email', $email);
             update_post_meta($inquiry_id, '_fds_inquiry_drone', $drone_name);
             update_post_meta($inquiry_id, '_fds_inquiry_status', 'unread');
-            update_post_meta($inquiry_id, '_fds_inquiry_ip', sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? ''));
+            update_post_meta($inquiry_id, '_fds_inquiry_ip', $ip);
             update_post_meta($inquiry_id, '_fds_inquiry_message', 'Unduh Brosur PDF: ' . $drone_name);
+            delete_transient('fds_unread_inquiry_count');
         }
     }
 
@@ -319,7 +334,7 @@ function handle_brochure_download_ajax() {
     ]);
 }
 
-// 5. EXPORT CSV HANDLER
+// 5. EXPORT CSV HANDLER (DILENGKAPI ANTI-CSV FORMULA INJECTION)
 add_action('admin_post_fds_export_brochure_leads', function () {
     if (!current_user_can('manage_options') || !check_admin_referer('fds_export_leads_nonce')) {
         wp_die('Akses ditolak.');
@@ -343,11 +358,15 @@ add_action('admin_post_fds_export_brochure_leads', function () {
     fputcsv($output, ['No', 'Tanggal & Waktu', 'Email', 'Model Drone', 'IP Address']);
 
     $no = 1;
+    $sanitize_csv = function_exists(__NAMESPACE__ . '\\fds_sanitize_csv_cell')
+        ? __NAMESPACE__ . '\\fds_sanitize_csv_cell'
+        : function($v) { return (string)$v; };
+
     foreach ($leads as $l) {
-        $email      = get_post_meta($l->ID, '_fds_inquiry_email', true) ?: '-';
-        $drone_name = get_post_meta($l->ID, '_fds_inquiry_drone', true) ?: '-';
-        $ip         = get_post_meta($l->ID, '_fds_inquiry_ip', true) ?: '-';
-        $date       = get_the_date('Y-m-d H:i:s', $l->ID);
+        $email      = $sanitize_csv(get_post_meta($l->ID, '_fds_inquiry_email', true) ?: '-');
+        $drone_name = $sanitize_csv(get_post_meta($l->ID, '_fds_inquiry_drone', true) ?: '-');
+        $ip         = $sanitize_csv(get_post_meta($l->ID, '_fds_inquiry_ip', true) ?: '-');
+        $date       = $sanitize_csv(get_the_date('Y-m-d H:i:s', $l->ID));
 
         fputcsv($output, [$no++, $date, $email, $drone_name, $ip]);
     }

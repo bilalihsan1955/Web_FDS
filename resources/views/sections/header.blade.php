@@ -152,7 +152,7 @@
                 </div>
 
                 <div class="pt-4">
-                  <a href="#kontak" class="block w-full text-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-[#0f808a]/20 transition-all normal-case">
+                  <a href="#kontak" class="block w-full text-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-md shadow-black/15 transition-all normal-case">
                     Jadwalkan Demo Produk &rarr;
                   </a>
                 </div>
@@ -290,7 +290,7 @@
 
       <!-- CTA Button & Mobile Menu Button -->
       <div class="flex items-center gap-3 sm:gap-4">
-        <a href="#kontak" class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-lg shadow-[#0f808a]/20 transition-all flex items-center gap-2">
+        <a href="#kontak" class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-md shadow-black/15 transition-all flex items-center gap-2">
           <span>Jadwalkan Demo</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>

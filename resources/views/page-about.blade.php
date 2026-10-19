@@ -22,7 +22,7 @@
 {{-- ========================================================== --}}
 {{-- HERO — Dark full-bleed with Vector Background              --}}
 {{-- ========================================================== --}}
-<section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] pt-[52px] overflow-hidden">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-[52px] overflow-hidden">
   
   {{-- Vector Background: Redesigned Pure Aerodynamic Flow Strata (Bersih, Luwes & Mewah) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -30,47 +30,47 @@
       <defs>
         {{-- Base Canvas Gradient --}}
         <linearGradient id="tk_hero_base" x1="720" y1="0" x2="720" y2="600" gradientUnits="userSpaceOnUse">
-          <stop stop-color="#141720"/>
-          <stop offset="0.65" stop-color="#0e1118"/>
-          <stop offset="1" stop-color="#080a0e"/>
+          <stop stop-color="#13abb9"/>
+          <stop offset="0.65" stop-color="#0f808a"/>
+          <stop offset="1" stop-color="#0a555c"/>
         </linearGradient>
 
         {{-- Wave Gradients --}}
         <linearGradient id="tk_flow_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#0a555c" stop-opacity="0.22"/>
-          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.10"/>
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.10"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#0f808a" stop-opacity="0.28"/>
           <stop offset="50%" stop-color="#0a555c" stop-opacity="0.14"/>
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad3" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#46deec" stop-opacity="0.34"/>
           <stop offset="50%" stop-color="#0a555c" stop-opacity="0.16"/>
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad4" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#13abb9" stop-opacity="0.40"/>
           <stop offset="50%" stop-color="#0f808a" stop-opacity="0.18"/>
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad5" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.46"/>
           <stop offset="50%" stop-color="#46deec" stop-opacity="0.22"/>
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
         </linearGradient>
 
         {{-- Bottom Dark Fade to seamlessly blend into section below --}}
         <linearGradient id="tk_bottom_fade" x1="0" y1="320" x2="0" y2="600" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#080a0e" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="#031e20" stop-opacity="1"/>
+          <stop offset="0%" stop-color="#0a555c" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="1"/>
         </linearGradient>
       </defs>
 
@@ -146,7 +146,7 @@
 @endphp
 
 @if($total_about_stats > 0)
-<section class="bg-[#1d1d1f] border-b border-white/[0.08] py-16">
+<section class="bg-[#0a555c] py-16">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
     <div class="grid grid-cols-2 {{ $total_about_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_about_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_about_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
       @foreach($about_stats_list as $ast)
@@ -214,7 +214,7 @@
 {{-- ========================================================== --}}
 {{-- EKOSISTEM TEKNOLOGI — Spektrum UAV & AI                    --}}
 {{-- ========================================================== --}}
-<section class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-b border-white/[0.06]">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-b border-white/[0.06]">
   
   {{-- Vector Background: Diagonal Sweeping Fluid Horizon with Linear Bottom Gradient (Tanpa Lingkaran) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -226,26 +226,26 @@
         <linearGradient id="spektrum-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
           <stop offset="0%" stop-color="#0f808a" stop-opacity="0.18" />
           <stop offset="50%" stop-color="#0a555c" stop-opacity="0.06" />
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
 
         {{-- Diagonal Wave Layers (Desain Asli Spektrum) --}}
         <linearGradient id="spektrum-wave-diag1" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#0f808a" stop-opacity="0.30" />
-          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
 
         <linearGradient id="spektrum-wave-diag2" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#13abb9" stop-opacity="0.42" />
           <stop offset="60%" stop-color="#0f808a" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
 
         <linearGradient id="spektrum-wave-diag3" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.52" />
           <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
       </defs>
 
@@ -371,22 +371,22 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
       {{-- Card 1: TKDN 60,74% (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-[#0f808a] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_32px_rgba(15,128,138,0.25)]">
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="orb1-tkdn" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0.28" stop-color="white" stop-opacity="0"/>
-                <stop offset="1" stop-color="white" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
               </linearGradient>
               <linearGradient id="orb2-tkdn" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
-                <stop offset="0.28" stop-color="white" stop-opacity="0"/>
-                <stop offset="1" stop-color="white" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
               </linearGradient>
             </defs>
-            <g opacity="0.22">
+            <g opacity="0.65">
               <circle cx="286" cy="5" r="75" fill="url(#orb1-tkdn)"/>
               <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-tkdn)"/>
             </g>
@@ -394,11 +394,11 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-6">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
+          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-6">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
         </div>
         <div class="relative z-10">
           <p class="text-[44px] sm:text-[48px] font-bold text-white tracking-[-0.03em] leading-tight">{!! esc_html($about['cert1_val'] ?? '60,74%') !!}</p>
-          <p class="text-[14px] text-white/85 mt-3 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
+          <p class="text-[14px] text-white/80 mt-3 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
         </div>
       </div>
 
@@ -435,7 +435,7 @@
       </div>
 
       {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -484,7 +484,7 @@
   $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));
 @endphp
-<section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-white/[0.08]">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-t border-white/[0.08]">
   
   {{-- Vector Background: Pure Organic Wave Fills (Matching Section Untuk Siapa) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -493,17 +493,17 @@
         <linearGradient id="about-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
           <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
         <linearGradient id="about-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
           <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
         <linearGradient id="about-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
           <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
           <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
         </linearGradient>
       </defs>
 
@@ -571,22 +571,24 @@
           </div>
 
           <div class="py-7">
-            <p class="text-[13px] font-semibold text-white/40 mb-1">Email Resmi</p>
+            <p class="text-[13px] font-semibold text-white/50 mb-1">Email Resmi</p>
             <a href="mailto:{{ esc_attr($c_email) }}" 
-               class="text-[16px] font-medium text-white hover:text-[#6e9fd4] transition-colors block">
+               class="text-[16px] font-medium text-white hover:underline transition-all block">
               {!! esc_html($c_email) !!}
             </a>
           </div>
 
           <div class="pt-7">
-            <p class="text-[13px] font-semibold text-white/40 mb-1">Kontak &amp; Layanan Cepat</p>
-            <div class="flex items-center gap-3 mt-1">
-              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $c_phone) }}" class="text-[16px] font-medium text-white hover:text-[#6e9fd4] transition-colors">
+            <p class="text-[13px] font-semibold text-white/50 mb-1.5">Kontak &amp; Layanan Cepat</p>
+            <div class="flex flex-wrap items-center gap-3 mt-1">
+              <a href="tel:{{ preg_replace('/[^0-9+]/', '', $c_phone) }}" class="text-[16px] font-medium text-white hover:underline transition-all">
                 {!! esc_html($c_phone) !!}
               </a>
-              <span class="text-white/20">&middot;</span>
-              <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener" class="text-[13px] font-medium text-[#25D366] hover:underline inline-flex items-center gap-1">
-                WhatsApp <span>&rsaquo;</span>
+              <span class="text-white/30">&middot;</span>
+              <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-[12.5px] font-semibold transition-all duration-150 shadow-sm hover:shadow active:scale-95">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                <span>WhatsApp</span>
+                <span class="text-[14px] leading-none">&rsaquo;</span>
               </a>
             </div>
           </div>
@@ -601,7 +603,7 @@
 
 @if($show_map_about && !empty($c_maps))
 {{-- Full-width Map Media Block — Terpisah Namun Mepet --}}
-<section class="w-full overflow-hidden border-t border-white/[0.08] relative bg-[#0c1018]" style="height: 520px; max-height: 600px;">
+<section class="w-full overflow-hidden border-t border-white/[0.08] relative bg-[#0a555c]" style="height: 520px; max-height: 600px;">
   <iframe 
     src="{{ esc_url($c_maps) }}" 
     width="100%" 

@@ -92,7 +92,7 @@ function render_hero_slider_admin_page() {
             }
         }
 
-        update_option('fds_hero_slides', $sanitized_slides);
+        update_option('fds_hero_slides', $sanitized_slides, 'no');
         $message = 'Pengaturan Hero Slider berhasil disimpan!';
     }
 

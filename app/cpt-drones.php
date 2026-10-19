@@ -713,7 +713,33 @@ add_action('save_post_drone', function ($post_id) {
     // Auto-generate Rich Enterprise SEO Article into post_content and Sync Rank Math Metadata
     fds_sync_drone_rank_math_seo($post_id);
 
+    // Invalidate Mega Menu Nav Transient Cache
+    delete_transient('fds_mega_menu_data');
+
     $is_saving = false;
+});
+
+// Invalidate Mega Menu cache saat drone dihapus atau di-restore
+add_action('wp_trash_post', function ($post_id) {
+    if (get_post_type($post_id) === 'drone') {
+        delete_transient('fds_mega_menu_data');
+    }
+});
+add_action('untrash_post', function ($post_id) {
+    if (get_post_type($post_id) === 'drone') {
+        delete_transient('fds_mega_menu_data');
+    }
+});
+add_action('delete_post', function ($post_id) {
+    if (get_post_type($post_id) === 'drone') {
+        delete_transient('fds_mega_menu_data');
+    }
+});
+add_action('saved_kategori_drone', function () {
+    delete_transient('fds_mega_menu_data');
+});
+add_action('delete_kategori_drone', function () {
+    delete_transient('fds_mega_menu_data');
 });
 
 /**
@@ -1299,3 +1325,311 @@ add_action('init', function () {
     }
     update_option('fds_drones_seeded_final_v1', true);
 });
+
+/**
+ * Master Registry of Default FDS Drone Catalog
+ * Single Source of Truth for Fallback / Canonical Specs
+ * Used by single-drone.blade.php, page-bandingkan.blade.php, and API endpoints.
+ */
+if (!function_exists('\App\fds_get_default_drone_catalog')) {
+    function fds_get_default_drone_catalog() {
+    static $catalog = null;
+    if ($catalog !== null) {
+        return $catalog;
+    }
+
+    $catalog = [
+        'ferto-5l' => [
+            'name'      => 'FERTO 5',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Kompak & Lincah',
+            'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '5 Liter'],
+                ['Durasi Terbang', '10 – 15 menit'],
+                ['Sistem Daya (Baterai)', '8.000 mAh'],
+                ['Produktivitas Semprot', '1 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 6 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 5 didesain sebagai platform multirotor modular dengan mobilitas tinggi untuk menjangkau area berbukit, terasering, dan lahan perkebunan dengan kontur ekstrem. Dilengkapi fitur terrain-following otomatis dan sistem kendali FDS STATION, drone ini menjamin presisi penyemprotan pupuk cair maupun pestisida secara merata dengan produktivitas 1 Ha per jam.',
+            'for'       => [
+                'Lahan berbukit & terasering — Bobot ringan dan dimensi ringkas mempermudah manuver di area sempit.',
+                'Petani hortikultura & kebun — Efisiensi bahan kimia >50% dengan penyemprotan droplet presisi.',
+                'Penyedia jasa semprot mandiri — Mobilitas tinggi mudah dibawa dengan sepeda motor ke pelosok sawah.',
+                'Dukungan purna jual resmi — Jaringan servis dan suku cadang asli lokal FDS siap pakai.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '100%', 'stat3_lbl' => 'FDS STATION GCS',
+            'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
+        ],
+        'ferto-10l' => [
+            'name'      => 'FERTO 10',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Terlaris',
+            'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '10 Liter'],
+                ['Durasi Terbang', '12 – 15 menit'],
+                ['Sistem Daya (Baterai)', '16.000 mAh'],
+                ['Produktivitas Semprot', '1 – 1,5 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 6 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 10 adalah varian terlaris FDS yang menawarkan keseimbangan optimal antara kapasitas muatan 10 liter, ketahanan baterai 16.000 mAh, dan produktivitas 1 - 1,5 Ha/jam. Menggunakan rangka karbon komposit buatan dalam negeri berstandar SNI 9199:2023, drone ini menjadi tulang punggung modernisasi pertanian di berbagai wilayah Indonesia.',
+            'for'       => [
+                'Kelompok tani & Gapoktan — Titik temu terbaik antara kapasitas operasional dan efisiensi investasi.',
+                'Koperasi pertanian — Mengurangi beban biaya tenaga kerja semprot manual hingga 60%.',
+                'Program ketahanan pangan Bappenas & BI — Terbukti andal di berbagai proyek percontohan nasional.',
+                'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Yogyakarta.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '1,5 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
+            'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
+        ],
+        'ferto-15l' => [
+            'name'      => 'FERTO 15',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Komersial',
+            'tagline'   => 'Drone Pertanian FERTO 15 — Produktivitas 8 Ha/jam untuk perkebunan dan komersial.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '17 Liter (15L Standar)'],
+                ['Durasi Terbang', '15 – 22 menit'],
+                ['Sistem Daya (Baterai)', '16.000 mAh'],
+                ['Produktivitas Semprot', '8 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 6 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 15 dirancang untuk ritme kerja lapangan yang padat dengan kapasitas tangki fleksibel hingga 17 liter dan produktivitas semprot hingga 8 hektar per jam. Mampu menuntaskan penyemprotan pupuk cair maupun penyebaran pestisida pada lahan perkebunan luas dalam durasi terbang 15 hingga 22 menit per sortie baterai.',
+            'for'       => [
+                'Perkebunan komersial & BUMN — Efisiensi kerja skala besar dengan kapasitas tangki hingga 17 liter.',
+                'Kontraktor jasa aplikasi presisi — Durasi terbang hingga 22 menit untuk ritme kerja lapangan padat.',
+                'Dinas Pertanian & Tanaman Pangan — Standar TKDN 60,74% memudahkan pengadaan e-Katalog LKPP.',
+                'Dukungan teknis pilot bersertifikat — Layanan pendampingan dan pelatihan pilot resmi FDS.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '8 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
+            'stat4_num' => '17 L', 'stat4_lbl' => 'Kapasitas Maksimal',
+        ],
+        'ferto-22l' => [
+            'name'      => 'FERTO 22',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Enterprise',
+            'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas muat besar untuk perkebunan kelapa sawit & tebu.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '22 Liter'],
+                ['Durasi Terbang', '15 – 25 menit'],
+                ['Sistem Daya (Baterai)', '22.000 mAh'],
+                ['Produktivitas Semprot', '10 – 12 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 7 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 22 adalah varian heavy-duty yang didesain untuk operasional perkebunan skala korporasi seperti kelapa sawit, karet, dan tebu. Didukung baterai berdensitas energi tinggi 22.000 mAh dan pompa bertekanan tinggi dengan nozzle atomisasi sentrifugal, drone ini menghasilkan droplet halus merata hingga ke bagian bawah kanopi tanaman tinggi.',
+            'for'       => [
+                'Perkebunan kelapa sawit & industri — Mampu menyemprot kanopi tinggi kelapa sawit secara merata.',
+                'Agroindustri tebu & jagung — Cakupan luas 10-12 Ha/jam mempercepat siklus perlindungan tanaman.',
+                'Korporasi agribisnis terintegrasi — Terintegrasi dengan analitik telemetri FDS STATION.',
+                'Garansi & suku cadang workshop FDS — Jaminan ketersediaan komponen tanpa inden impor.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '12 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
+            'stat4_num' => '22 L', 'stat4_lbl' => 'Kapasitas Muatan',
+        ],
+        'ferto-30l' => [
+            'name'      => 'FERTO 30',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Heavy Duty',
+            'tagline'   => 'Drone Pertanian FERTO 30 — Produktivitas 15 Ha/jam untuk perkebunan berskala luas.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '30 Liter'],
+                ['Durasi Terbang', '15 – 25 menit'],
+                ['Sistem Daya (Baterai)', '28.000 mAh'],
+                ['Produktivitas Semprot', '15 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 7 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 30 hadir untuk memenuhi kebutuhan efisiensi maksimal pada perkebunan raksasa dan proyek reboisasi. Mengusung motor bertenaga tinggi dan tangki 30 liter yang kokoh berbahan komposit khusus, drone ini mampu mencakup hingga 15 hektar per jam dengan kemampuan dual-mode: penyemprotan cairan dan penyebaran pupuk/benih granular padat.',
+            'for'       => [
+                'Perkebunan kelapa sawit & hutan tanaman industri (HTI) — Mengurangi rotasi isi ulang dengan muatan 30L.',
+                'Penyebaran pupuk granular & benih padi — Dual-mode semprot cair dan sebar butiran padat.',
+                'Perusahaan perkebunan multinasional — Integrasi armada drone dengan manajemen logistik terpusat.',
+                'Dukungan logistik & purna jual komprehensif — Paket perawatan berkala dan penyediaan suku cadang resmi.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '15 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
+            'stat4_num' => '30 L', 'stat4_lbl' => 'Muatan Heavy Duty',
+        ],
+        'ferto-50l' => [
+            'name'      => 'FERTO 50',
+            'kategori'  => 'Agrikultur',
+            'badge'     => 'Kapasitas Puncak',
+            'tagline'   => 'Drone Pertanian FERTO 50 — Muatan maksimum 50 liter untuk efisiensi puncak agroindustri.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '50 Liter'],
+                ['Durasi Terbang', '15 – 25 menit'],
+                ['Sistem Daya (Baterai)', '30.000 mAh High Capacity'],
+                ['Produktivitas Semprot', '18 – 22 Ha / jam'],
+                ['Kecepatan Jelajah', '2 – 8 m/s'],
+                ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
+                ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
+                ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+            ],
+            'desc'      => 'FERTO 50 adalah varian terkuat dalam lini drone pertanian FDS dengan daya muat spektakuler hingga 50 liter. Dirancang khusus untuk agroindustri terintegrasi dan perkebunan ratusan hingga ribuan hektar yang membutuhkan produktivitas tertinggi dalam waktu terbatas. Sistem penyemprotan cerdas dengan kontrol aliran berbasis radar memastikan takaran bahan aktif presisi di setiap meter persegi.',
+            'for'       => [
+                'Agroindustri skala mega — Produktivitas hingga 22 Ha/jam menuntaskan ribuan hektar secara kilat.',
+                'Penyebaran urea & pupuk organik padat — Kapasitas sebar butiran hingga 50 kg per sortie.',
+                'Mitra korporasi perkebunan nasional — Standardisasi armada semprot modern berstandar TKDN & SNI.',
+                'Layanan purna jual prioritas — Tim teknisi respons cepat langsung ke site perkebunan.',
+            ],
+            'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
+            'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
+            'stat3_num' => '22 Ha/j', 'stat3_lbl' => 'Produktivitas Puncak',
+            'stat4_num' => '50 L', 'stat4_lbl' => 'Kapasitas Terbesar',
+        ],
+        'deltav' => [
+            'name'      => 'DELTAV',
+            'kategori'  => 'Pemetaan & GIS',
+            'badge'     => 'Hybrid VTOL',
+            'tagline'   => 'Fixed-Wing VTOL UAV — Jangkauan 60 km untuk pemetaan topografi, koridor, & survei udara luas.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Bentang Sayap (Wingspan)', '2.000 mm'],
+                ['Konfigurasi Motor', 'VTOL Quad-Rotor + Pusher Fixed-Wing'],
+                ['Berat Lepas Landas (MTOW)', '8 – 12 kg'],
+                ['Durasi Terbang', '60 – 120 menit'],
+                ['Jangkauan Misi (Range)', 'Hingga 60 km'],
+                ['Sensor Kompatibel', 'Kamera RGB 24-42 MP, LiDAR Ringan, Multispektral'],
+                ['Sistem Otonomi & Navigasi', 'Full Autonomous Waypoint Flight, Auto-Return to Launch (RTL)'],
+                ['Software Perencanaan Misi', 'FDS STATION Pemetaan & Telemetri Real-Time'],
+            ],
+            'desc'      => 'DELTAV adalah pesawat UAV fixed-wing berteknologi Hybrid VTOL (Vertical Takeoff and Landing) yang menggabungkan kemudahan lepas landas tegak lurus tanpa landasan pacu dengan kecepatan jelajah serta efisiensi aerodinamis pesawat sayap tetap. Dengan jangkauan hingga 60 km dan durasi terbang 60-120 menit, DELTAV adalah solusi terbaik untuk survei topografi, ortofoto beresolusi tinggi, pemetaan kehutanan, dan akuisisi data geospasial area luas dalam sekali terbang.',
+            'for'       => [
+                'Survei topografi & konstruksi — Menghemat waktu 70-80% untuk pemodelan 3D, ortomozaik, dan perhitungan cut & fill.',
+                'Kehutanan & lingkungan — Pemetaan daerah aliran sungai (DAS), tutupan kanopi, dan progres reklamasi tambang 80% lebih cepat.',
+                'Pertambangan & kuari — Pemetaan kontur presisi dan pemantauan batas konsesi tambang.',
+                'Perencanaan tata ruang & GIS nasional — Akurasi data geospasial sub-sentimeter siap integrasi CAD & BIM.',
+            ],
+            'stat1_num' => '2.000mm', 'stat1_lbl' => 'Bentang Sayap',
+            'stat2_num' => '60 km', 'stat2_lbl' => 'Jangkauan Misi',
+            'stat3_num' => '120 min', 'stat3_lbl' => 'Durasi Terbang Maks',
+            'stat4_num' => 'VTOL', 'stat4_lbl' => 'Lepas Landas Vertikal',
+        ],
+        'multipurpose' => [
+            'name'      => 'MULTIPURPOSE',
+            'kategori'  => 'Pemetaan & Inspeksi',
+            'badge'     => 'Modular UAV',
+            'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
+                ['Durasi Terbang', '15 – 30 menit'],
+                ['Sistem Daya (Baterai)', '8.000 mAh'],
+                ['Sensor Kompatibel', 'Kamera Termal IR, 20x Optical Zoom, LiDAR, Multispektral'],
+                ['Mode Penerbangan', 'Manual, Task Following, Semi-to-Fully Autonomous'],
+                ['Sistem Proteksi', 'Konstruksi tahan cuaca & sistem fail-safe mandiri'],
+                ['Software Pengendali', 'FDS STATION Real-Time Monitoring & AI Analytics'],
+                ['Aplikasi Utama', 'Inspeksi Jaringan Listrik 150kV, Solar PV, Pipa Migas, & Struktur'],
+            ],
+            'desc'      => 'MULTIPURPOSE dirancang sebagai platform UAV modular yang fleksibel untuk berbagai misi kustom. Mampu mengangkut payload hingga 5 kg dengan integrasi berbagai sensor canggih seperti kamera termal inframerah, optik zoom 20x, hingga sensor LiDAR. Sangat andal untuk inspeksi aset kritikal seperti jaringan transmisi listrik 150 kV, ladang panel surya, tangki minyak & gas, serta infrastruktur jembatan dan gedung tinggi tanpa risiko keselamatan kerja.',
+            'for'       => [
+                'Inspeksi transmisi listrik 150 kV — 5x lebih cepat tanpa perlu pemadaman listrik dan tanpa bekerja di ketinggian.',
+                'Inspeksi ladang energi surya (Solar PV) — Deteksi dini hotspot dan sel rusak berbasis AI untuk mencegah kehilangan energi.',
+                'Inspeksi migas & cerobong suar (Flare Stacks) — Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
+                'Inspeksi struktur jembatan & konstruksi — Pemeriksaan keretakan mikro struktur beton dan baja.',
+            ],
+            'stat1_num' => '5 kg', 'stat1_lbl' => 'Payload Maksimum',
+            'stat2_num' => '30 min', 'stat2_lbl' => 'Durasi Terbang Maks',
+            'stat3_num' => 'Termal/AI', 'stat3_lbl' => 'Sensor Kompatibel',
+            'stat4_num' => '150 kV', 'stat4_lbl' => 'Inspeksi Aset Kritikal',
+        ],
+        'delfro' => [
+            'name'      => 'DELFRO',
+            'kategori'  => 'Cargo & Logistik',
+            'badge'     => 'Logistics UAV',
+            'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '3 – 10 kg (Kotak Logistik)'],
+                ['Berat Lepas Landas (MTOW)', '15 kg'],
+                ['Dimensi Kotak Payload', '20 x 20 x 30 cm'],
+                ['Kecepatan Jelajah / Maks', '2 – 6 m/s'],
+                ['Waktu Terbang', '10 – 15 menit'],
+                ['Ukuran Propeller', '18-inch High-Efficiency Carbon Propeller'],
+                ['Mode Pengoperasian', 'Otonom (Waypoint Cargo Route) & Manual Fail-Safe'],
+                ['Ground Control Software', 'FDS STATION Logistics Management'],
+            ],
+            'desc'      => 'DELFRO adalah drone kargo otonom yang dikembangkan khusus untuk distribusi logistik ringan yang cepat, efisien, dan aman. Dengan kapasitas angkut 3 hingga 10 kg dan kompartemen kargo berukuran 20 x 20 x 30 cm, DELFRO menjadi solusi mutakhir untuk pengiriman sampel medis, pasokan darurat kebencanaan, suku cadang penting, dan logistik ekspres ke wilayah kepulauan atau daerah terisolir yang sulit dijangkau transportasi darat.',
+            'for'       => [
+                'Logistik medis & darurat bencana — Pengiriman cepat obat-obatan, kantong darah, dan sampel laboratorium ke lokasi terpencil.',
+                'Pengiriman suku cadang industri — Menghubungkan offshore platform atau site tambang dengan warehouse secara kilat.',
+                'Ekspedisi & kurir last-mile — Alternatif logistik ramah lingkungan untuk melintasi sungai, bukit, atau selat.',
+                'Manajemen rute otomatis — Pemantauan status kargo dan rute penerbangan real-time via FDS STATION.',
+            ],
+            'stat1_num' => '10 kg', 'stat1_lbl' => 'Payload Maksimum',
+            'stat2_num' => '15 kg', 'stat2_lbl' => 'MTOW Maksimum',
+            'stat3_num' => '18"', 'stat3_lbl' => 'Carbon Propeller',
+            'stat4_num' => 'Auto', 'stat4_lbl' => 'Waypoint Route',
+        ],
+        'rebo' => [
+            'name'      => 'REBO',
+            'kategori'  => 'Reboisasi & Konservasi',
+            'badge'     => 'Heavy-Duty Seedball',
+            'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
+            'color'     => '#0f808a',
+            'specs'     => [
+                ['Payload', '20 kg (Dispenser Seedball)'],
+                ['Durasi Terbang', '15 – 20 menit'],
+                ['Sistem Daya (Baterai)', '22.000 mAh'],
+                ['Mode Misi', 'Otonom Penuh (Auto Seedball Dispensing Grid)'],
+                ['Sistem Dispenser', 'Penyebar seedball otomatis terkalibrasi'],
+                ['Rangka & Proteksi', 'Komposit Karbon Tahan Cuaca Ekstrem'],
+                ['Software Perencanaan Misi', 'FDS STATION Reforestation Mission Planning'],
+                ['Kolaborasi Riset', 'Didukung riset bersama UGM & Mitra Swiss'],
+            ],
+            'desc'      => 'REBO adalah UAV heavy-duty khusus yang dirancang untuk mendukung misi reboisasi hutan, restorasi lahan kritis, dan reklamasi area pasca-tambang. Mampu mengangkut hingga 20 kg seedball (biji tanaman berkapsul nutrisi) dalam satu kali sorti, REBO menabur biji secara presisi mengikuti pola koordinat otonom pada lereng curam atau hutan lebat yang mustahil diakses penanam manual.',
+            'for'       => [
+                'Restorasi hutan lindung & lereng curam — Menghijaukan kembali tebing dan medan berbahaya tanpa membahayakan petugas.',
+                'Reklamasi lahan bekas tambang — Mempercepat pemulihan vegetasi lahan tambang sesuai regulasi lingkungan.',
+                'Konservasi daerah aliran sungai (DAS) — Penyebaran bibit pohon penyangga air secara masif dan terstruktur.',
+                'Riset kehutanan berkelanjutan — Dikembangkan berdasarkan riset lapangan kolaboratif UGM dan institusi internasional.',
+            ],
+            'stat1_num' => '20 kg', 'stat1_lbl' => 'Payload Seedball',
+            'stat2_num' => '22.000mAh', 'stat2_lbl' => 'Baterai Daya Tinggi',
+            'stat3_num' => 'Otonom', 'stat3_lbl' => 'Dispenser Presisi',
+            'stat4_num' => 'Riset', 'stat4_lbl' => 'UGM & Swiss',
+        ],
+    ];
+
+    // Aliases for clean URL variations
+    $catalog['ferto-5']  = &$catalog['ferto-5l'];
+    $catalog['ferto-10'] = &$catalog['ferto-10l'];
+    $catalog['ferto-15'] = &$catalog['ferto-15l'];
+    $catalog['ferto-22'] = &$catalog['ferto-22l'];
+    $catalog['ferto-30'] = &$catalog['ferto-30l'];
+    $catalog['ferto-50'] = &$catalog['ferto-50l'];
+
+    return $catalog;
+    }
+}
+

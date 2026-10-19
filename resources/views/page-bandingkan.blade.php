@@ -2,310 +2,15 @@
 
 @section('content')
 @php
-  // 1. DATA MASTER DRONE RESMI FDS (100% IDENTIK DENGAN SINGLE-DRONE.BLADE.PHP)
-  $drones = [
-    'ferto-5l' => [
-      'slug'      => 'ferto-5l',
-      'name'      => 'FERTO 5',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Kompak & Lincah',
-      'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '5 Liter'],
-        ['Durasi Terbang', '10 – 15 menit'],
-        ['Sistem Daya (Baterai)', '8.000 mAh'],
-        ['Produktivitas Semprot', '1 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 5 didesain sebagai platform multirotor modular dengan mobilitas tinggi untuk menjangkau area berbukit, terasering, dan lahan perkebunan dengan kontur ekstrem. Dilengkapi fitur terrain-following otomatis dan sistem kendali FDS STATION, drone ini menjamin presisi penyemprotan pupuk cair maupun pestisida secara merata dengan produktivitas 1 Ha per jam.',
-      'for'       => [
-        'Lahan berbukit & terasering — Bobot ringan dan dimensi ringkas mempermudah manuver di area sempit.',
-        'Petani hortikultura & kebun — Efisiensi bahan kimia >50% dengan penyemprotan droplet presisi.',
-        'Penyedia jasa semprot mandiri — Mobilitas tinggi mudah dibawa dengan sepeda motor ke pelosok sawah.',
-        'Dukungan purna jual resmi — Jaringan servis dan suku cadang asli lokal FDS siap pakai.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '100%', 'stat3_lbl' => 'FDS STATION GCS',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-10l' => [
-      'slug'      => 'ferto-10l',
-      'name'      => 'FERTO 10',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Terlaris',
-      'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '10 Liter'],
-        ['Durasi Terbang', '12 – 15 menit'],
-        ['Sistem Daya (Baterai)', '16.000 mAh'],
-        ['Produktivitas Semprot', '1 – 1,5 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 10 adalah varian terlaris FDS yang menawarkan keseimbangan optimal antara kapasitas muatan 10 liter, ketahanan baterai 16.000 mAh, dan produktivitas 1 - 1,5 Ha/jam. Menggunakan rangka karbon komposit buatan dalam negeri berstandar SNI 9199:2023, drone ini menjadi tulang punggung modernisasi pertanian di berbagai wilayah Indonesia.',
-      'for'       => [
-        'Kelompok tani & Gapoktan — Titik temu terbaik antara kapasitas operasional dan efisiensi investasi.',
-        'Koperasi pertanian — Mengurangi beban biaya tenaga kerja semprot manual hingga 60%.',
-        'Program ketahanan pangan Bank Indonesia & Bappenas — Terbukti andal di berbagai proyek percontohan nasional.',
-        'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Yogyakarta.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '100%', 'stat3_lbl' => 'FDS STATION GCS',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-15l' => [
-      'slug'      => 'ferto-15l',
-      'name'      => 'FERTO 15',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Profesional',
-      'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '17 Liter (15 – 17 Liter)'],
-        ['Durasi Terbang', '15 – 25 menit'],
-        ['Sistem Daya (Baterai)', '16.000 mAh'],
-        ['Produktivitas Semprot', '8 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 15 menghadirkan payload 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
-      'for'       => [
-        'Perkebunan tebu & jagung skala komersial — Menyemprot cepat 8 Ha/jam dengan cakupan merata.',
-        'Kontraktor jasa perlindungan tanaman — Durasi terbang hingga 25 menit untuk ritme kerja lapangan yang padat.',
-        'Dual mode Sprayer & Spreader — Kompatibel dengan tangki granule spreader untuk penyebaran pupuk butir.',
-        'Dukungan teknis pilot bersertifikat — Layanan pendampingan dan pelatihan pilot resmi FDS.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '8 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-22l' => [
-      'slug'      => 'ferto-22l',
-      'name'      => 'FERTO 22',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Enterprise',
-      'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '22 Liter'],
-        ['Durasi Terbang', '20 – 25 menit'],
-        ['Sistem Daya (Baterai)', '22.000 mAh'],
-        ['Produktivitas Semprot', '8,5 Ha / jam'],
-        ['Kecepatan Jelajah', '5,24 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 22 adalah varian enterprise andalan FDS untuk industri perkebunan sawit, tebu, dan tanaman industri berskala ribuan hektare. Ditenagai baterai 22.000 mAh dengan kecepatan jelajah 5,24 m/s, drone ini mampu menuntaskan 8,5 hektare per jam secara otonom dan terintegrasi penuh ke dalam sistem FDS STATION.',
-      'for'       => [
-        'Perkebunan sawit & tanaman industri — Mengatasi tantangan lahan luas dengan kecepatan semprot tinggi.',
-        'BUMN Perkebunan & Korporasi Agrikultur — Memenuhi syarat pengadaan pemerintah dengan TKDN+BMP resmi.',
-        'Manajemen armada perkebunan — Terintegrasi dengan analitik kesehatan tanaman berbasis multispektral & NDVI.',
-        'Purna jual resmi & garansi lokal — Layanan servis dan suku cadang asli tanpa ketergantungan impor.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '8,5 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-30l' => [
-      'slug'      => 'ferto-30l',
-      'name'      => 'FERTO 30',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Heavy Duty',
-      'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '30 Liter'],
-        ['Durasi Terbang', '20 – 30 menit'],
-        ['Sistem Daya (Baterai)', '28.000 mAh'],
-        ['Produktivitas Semprot', '15 Ha / jam'],
-        ['Kecepatan Jelajah', '5,24 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 30 menghadirkan lompatan payload 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
-      'for'       => [
-        'Mega perkebunan sawit & tebu — Produktivitas 15 Ha/jam mempercepat target penyemprotan harian.',
-        'Aplikasi pupuk & pestisida volume tinggi — Tangki 30L meminimalkan frekuensi pendaratan untuk isi ulang.',
-        'Pengendalian hama serentak — Menuntaskan ratusan hektare lahan dalam waktu singkat sebelum hama menyebar.',
-        'Konstruksi karbon komposit kokoh — Tahan cuaca ekstrem dengan rangka material terbaik.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '15 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-50l' => [
-      'slug'      => 'ferto-50l',
-      'name'      => 'FERTO 50',
-      'kategori'  => 'Agrikultur',
-      'cat_slug'  => 'agrikultur',
-      'badge'     => 'Ultra Capacity',
-      'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '50 Liter'],
-        ['Durasi Terbang', '20 – 30 menit'],
-        ['Sistem Daya (Baterai)', '28.000 mAh'],
-        ['Produktivitas Semprot', '15 Ha / jam'],
-        ['Kecepatan Jelajah', '6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 50 adalah platform UAV agrikultur dengan muatan tertinggi di lini FDS. Membawa tangki berkapasitas 50 Liter dengan sistem propulsi bertenaga raksasa dan kecepatan jelajah hingga 6 m/s, drone ini diciptakan untuk menjawab tantangan operasional perkebunan agrikultur terbesar di Indonesia dengan efisiensi maksimal.',
-      'for'       => [
-        'Perkebunan konglomerasi & agroindustri raksasa — Menangani area ribuan hektare dengan armada minimal.',
-        'Penyebaran pupuk & pestisida intensif — Muatan 50L memaksimalkan efisiensi setiap sorti penerbangan.',
-        'Misi otomatis skala besar — Perencanaan rute cerdas dan pemantauan real-time via FDS STATION.',
-        'Dukungan logistik & purna jual komprehensif — Paket perawatan berkala dan penyediaan suku cadang resmi.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Payload Maksimum',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'deltav' => [
-      'slug'      => 'deltav',
-      'name'      => 'DELTAV',
-      'kategori'  => 'Pemetaan & GIS',
-      'cat_slug'  => 'pemetaan-gis',
-      'badge'     => 'Hybrid VTOL',
-      'tagline'   => 'Platform UAV Pemetaan Fixed-Wing VTOL Hybrid — Jangkauan 60 km untuk akuisisi geospasial area luas.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Bentang Sayap (Wingspan)', '2.000 mm'],
-        ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
-        ['Berat Lepas Landas (MTOW)', '10 kg (10.000 g)'],
-        ['Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
-        ['Durasi Terbang', '60 – 120 menit'],
-        ['Kecepatan Jelajah', '15 – 22 m/s'],
-        ['Jangkauan Misi (Range)', 'Hingga 60 km'],
-        ['Material Rangka', 'Komposit Hibrida (Carbon Composite)'],
-        ['Sistem Kendali & Misi', 'Semi-to-Fully Autonomous, FDS STATION GCS'],
-      ],
-      'desc'      => 'DELTAV adalah pesawat UAV fixed-wing berteknologi Hybrid VTOL (Vertical Takeoff and Landing) yang menggabungkan kemudahan lepas landas tegak lurus tanpa landasan pacu dengan kecepatan jelajah serta efisiensi aerodinamis pesawat sayap tetap. Dengan jangkauan hingga 60 km dan durasi terbang 60-120 menit, DELTAV adalah solusi terbaik untuk survei topografi, ortofoto beresolusi tinggi, pemetaan kehutanan, dan akuisisi data geospasial area luas dalam sekali terbang.',
-      'for'       => [
-        'Survei topografi & konstruksi — Menghemat waktu 70-80% untuk pemodelan 3D, ortomozaik, dan perhitungan cut & fill.',
-        'Kehutanan & lingkungan — Pemetaan daerah aliran sungai (DAS), tutupan kanopi, dan progres reklamasi tambang 80% lebih cepat.',
-        'Pertambangan & kuari — Pemetaan kontur presisi dan pemantauan batas konsesi tambang.',
-        'Perencanaan tata ruang & GIS nasional — Akurasi data geospasial sub-sentimeter siap integrasi CAD & BIM.'
-      ],
-      'stat1_num' => '2.000mm', 'stat1_lbl' => 'Bentang Sayap',
-      'stat2_num' => '60 km', 'stat2_lbl' => 'Jangkauan Misi',
-      'stat3_num' => '120 min', 'stat3_lbl' => 'Durasi Terbang Maks',
-      'stat4_num' => 'VTOL', 'stat4_lbl' => 'Lepas Landas Vertikal',
-    ],
-    'multipurpose' => [
-      'slug'      => 'multipurpose',
-      'name'      => 'MULTIPURPOSE',
-      'kategori'  => 'Pemetaan & Inspeksi',
-      'cat_slug'  => 'pemetaan-gis',
-      'badge'     => 'Modular UAV',
-      'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
-        ['Durasi Terbang', '15 – 30 menit'],
-        ['Sistem Daya (Baterai)', '8.000 mAh'],
-        ['Sensor Kompatibel', 'Kamera Termal IR, 20x Optical Zoom, LiDAR, Multispektral'],
-        ['Mode Penerbangan', 'Manual, Task Following, Semi-to-Fully Autonomous'],
-        ['Sistem Proteksi', 'Konstruksi tahan cuaca & sistem fail-safe mandiri'],
-        ['Software Pengendali', 'FDS STATION Real-Time Monitoring & AI Analytics'],
-        ['Aplikasi Utama', 'Inspeksi Jaringan Listrik 150kV, Solar PV, Pipa Migas, & Struktur'],
-      ],
-      'desc'      => 'MULTIPURPOSE dirancang sebagai platform UAV modular yang fleksibel untuk berbagai misi kustom. Mampu mengangkut payload hingga 5 kg dengan integrasi berbagai sensor canggih seperti kamera termal inframerah, optik zoom 20x, hingga sensor LiDAR. Sangat andal untuk inspeksi aset kritikal seperti jaringan transmisi listrik 150 kV, ladang panel surya, tangki minyak & gas, serta infrastruktur jembatan dan gedung tinggi tanpa risiko keselamatan kerja.',
-      'for'       => [
-        'Inspeksi transmisi listrik 150 kV — 5x lebih cepat tanpa perlu pemadaman listrik dan tanpa bekerja di ketinggian.',
-        'Inspeksi ladang energi surya (Solar PV) — Deteksi dini hotspot dan sel rusak berbasis AI untuk mencegah kehilangan energi.',
-        'Inspeksi migas & cerobong suar (Flare Stacks) — Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
-        'Inspeksi struktur jembatan & konstruksi — Pemeriksaan keretakan mikro struktur beton dan baja.'
-      ],
-      'stat1_num' => '5 kg', 'stat1_lbl' => 'Payload Maksimum',
-      'stat2_num' => '30 min', 'stat2_lbl' => 'Durasi Terbang Maks',
-      'stat3_num' => 'Termal/AI', 'stat3_lbl' => 'Sensor Kompatibel',
-      'stat4_num' => '150 kV', 'stat4_lbl' => 'Inspeksi Aset Kritikal',
-    ],
-    'delfro' => [
-      'slug'      => 'delfro',
-      'name'      => 'DELFRO',
-      'kategori'  => 'Kargo & Logistik',
-      'cat_slug'  => 'kargo',
-      'badge'     => 'Logistics UAV',
-      'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '3 – 10 kg (Kotak Logistik)'],
-        ['Berat Lepas Landas (MTOW)', '15 kg'],
-        ['Dimensi Kotak Payload', '20 x 20 x 30 cm'],
-        ['Kecepatan Jelajah / Maks', '2 – 6 m/s'],
-        ['Waktu Terbang', '10 – 15 menit'],
-        ['Ukuran Propeller', '18-inch High-Efficiency Carbon Propeller'],
-        ['Mode Pengoperasian', 'Otonom (Waypoint Cargo Route) & Manual Fail-Safe'],
-        ['Ground Control Software', 'FDS STATION Logistics Management'],
-      ],
-      'desc'      => 'DELFRO adalah drone kargo otonom yang dikembangkan khusus untuk distribusi logistik ringan yang cepat, efisien, dan aman. Dengan kapasitas angkut 3 hingga 10 kg dan kompartemen kargo berukuran 20 x 20 x 30 cm, DELFRO menjadi solusi mutakhir untuk pengiriman sampel medis, pasokan darurat kebencanaan, suku cadang penting, dan logistik ekspres ke wilayah kepulauan atau daerah terisolir yang sulit dijangkau transportasi darat.',
-      'for'       => [
-        'Logistik medis & darurat bencana — Pengiriman cepat obat-obatan, kantong darah, dan sampel laboratorium ke lokasi terpencil.',
-        'Pengiriman suku cadang industri — Menghubungkan offshore platform atau site tambang dengan warehouse secara kilat.',
-        'Ekspedisi & kurir last-mile — Alternatif logistik ramah lingkungan untuk melintasi sungai, bukit, atau selat.',
-        'Manajemen rute otomatis — Pemantauan status kargo dan rute penerbangan real-time via FDS STATION.'
-      ],
-      'stat1_num' => '10 kg', 'stat1_lbl' => 'Payload Maksimum',
-      'stat2_num' => '15 kg', 'stat2_lbl' => 'MTOW Maksimum',
-      'stat3_num' => '18"', 'stat3_lbl' => 'Carbon Propeller',
-      'stat4_num' => 'Auto', 'stat4_lbl' => 'Waypoint Route',
-    ],
-    'rebo' => [
-      'slug'      => 'rebo',
-      'name'      => 'REBO',
-      'kategori'  => 'Reboisasi & Konservasi',
-      'cat_slug'  => 'reboisasi',
-      'badge'     => 'Heavy-Duty Seedball',
-      'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '20 kg (Dispenser Seedball)'],
-        ['Durasi Terbang', '15 – 20 menit'],
-        ['Sistem Daya (Baterai)', '22.000 mAh'],
-        ['Mode Misi', 'Otonom Penuh (Auto Seedball Dispensing Grid)'],
-        ['Sistem Dispenser', 'Penyebar seedball otomatis terkalibrasi'],
-        ['Rangka & Proteksi', 'Komposit Karbon Tahan Cuaca Ekstrem'],
-        ['Software Perencanaan Misi', 'FDS STATION Reforestation Mission Planning'],
-        ['Kolaborasi Riset', 'Didukung riset bersama UGM & Mitra Swiss'],
-      ],
-      'desc'      => 'REBO adalah UAV heavy-duty khusus yang dirancang untuk mendukung misi reboisasi hutan, restorasi lahan kritis, dan reklamasi area pasca-tambang. Mampu mengangkut hingga 20 kg seedball (biji tanaman berkapsul nutrisi) dalam satu kali sorti, REBO menabur biji secara presisi mengikuti pola koordinat otonom pada lereng curam atau hutan lebat yang mustahil diakses penanam manual.',
-      'for'       => [
-        'Restorasi hutan lindung & lereng curam — Menghijaukan kembali tebing dan medan berbahaya tanpa membahayakan petugas.',
-        'Reklamasi lahan bekas tambang — Mempercepat pemulihan vegetasi lahan tambang sesuai regulasi lingkungan.',
-        'Konservasi daerah aliran sungai (DAS) — Penyebaran bibit pohon penyangga air secara masif dan terstruktur.',
-        'Riset kehutanan berkelanjutan — Dikembangkan berdasarkan riset lapangan kolaboratif UGM dan institusi internasional.'
-      ],
-      'stat1_num' => '20 kg', 'stat1_lbl' => 'Payload Seedball',
-      'stat2_num' => '22.000mAh', 'stat2_lbl' => 'Baterai Daya Tinggi',
-      'stat3_num' => 'Otonom', 'stat3_lbl' => 'Dispenser Presisi',
-      'stat4_num' => 'Riset', 'stat4_lbl' => 'UGM & Swiss',
-    ],
-  ];
+  // 1. DATA MASTER DRONE RESMI FDS (Single Source of Truth)
+  $raw_catalog = function_exists('fds_get_default_drone_catalog') ? fds_get_default_drone_catalog() : \App\fds_get_default_drone_catalog();
+  $drones = [];
+  foreach ($raw_catalog as $s => $item) {
+    if (in_array($s, ['ferto-5', 'ferto-10', 'ferto-15', 'ferto-22', 'ferto-30', 'ferto-50'], true)) continue;
+    $item['slug'] = $s;
+    $item['cat_slug'] = sanitize_title($item['kategori'] ?? 'agrikultur');
+    $drones[$s] = $item;
+  }
 
   // 2. ENRICH WITH WORDPRESS CPT 'drone' DATABASE
   $db_drones = get_posts([
@@ -518,46 +223,34 @@
     ];
   }
 
-  // 5. DEEP DECODE SEMUA STRING AGAR BEBAS DARI KARAKTER ENTITAS HTML MENTAH
-  $fds_deep_decode = function($val) use (&$fds_deep_decode) {
-    if (is_array($val)) {
-      return array_map($fds_deep_decode, $val);
-    }
-    if (!is_string($val)) return $val;
-    $prev = '';
-    while ($prev !== $val) {
-      $prev = $val;
-      $val = wp_specialchars_decode($val, ENT_QUOTES);
-      $val = html_entity_decode($val, ENT_QUOTES | ENT_HTML5, 'UTF-8');
-    }
-    return $val;
-  };
-  $catalog = $fds_deep_decode($catalog);
-  $modal_categories = $fds_deep_decode($modal_categories);
+  // 5. DEEP DECODE SEMUA STRING VIA GLOBAL HELPER
+  $catalog = fds_deep_decode($catalog);
+  $modal_categories = fds_deep_decode($modal_categories);
 
   $json_catalog = json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 @endphp
 
 <div id="compare-page" class="w-full bg-[#f5f5f7] font-sans">
 
-  {{-- ── 1. HERO SECTION (WARNA ABU-ABU #f5f5f7 KHAS FDS) ── --}}
-  <section id="compare-hero" class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 pb-4 text-center">
+  {{-- ── 1. HERO SECTION VIA GLOBAL COMPONENT ── --}}
+  <x-page-hero
+    label="Komparasi Model UAV"
+    title="Bandingkan Model Drone."
+    description="Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan."
+  />
 
-      <p class="inline-block text-[13px] font-semibold text-[#0f808a] mb-4 tracking-wide">
-        Komparasi Model UAV
-      </p>
-
-      <h1 class="text-[44px] sm:text-[58px] lg:text-[72px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.05] max-w-[820px] mx-auto">
-        Bandingkan Model Drone.
-      </h1>
-
-      <p class="mt-5 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[640px] mx-auto leading-[1.55]">
-        Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.
-      </p>
-
+  {{-- STICKY MOBILE & COMPACT COMPARISON BAR --}}
+  <div id="sticky-compare-bar" class="fixed top-[52px] inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-black/[0.08] shadow-sm transform -translate-y-full transition-transform duration-300 pointer-events-none">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-2 flex items-center justify-between pointer-events-auto">
+      <div id="sticky-slot-1" class="flex-1 flex items-center gap-2 justify-center text-center">
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">Pilih Drone 1</span>
+      </div>
+      <div class="px-3 text-[11px] font-bold text-[#86868b] tracking-wider">vs</div>
+      <div id="sticky-slot-2" class="flex-1 flex items-center gap-2 justify-center text-center">
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">Pilih Drone 2</span>
+      </div>
     </div>
-  </section>
+  </div>
 
   {{-- ── 2. VISUAL PRODUCT CARDS / EMPTY (+) PLACEHOLDERS (WARNA ABU-ABU #f5f5f7) ── --}}
   <section id="product-cards-section" class="bg-[#f5f5f7] pt-8 pb-16 sm:pb-24">
@@ -598,9 +291,83 @@
     </div>
   </section>
 
-  {{-- ── 5. SECTION SASARAN PENGGUNA (DARK GRADIENT BG) ──────── --}}
-  <section id="section-usecases" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 border-b border-white/[0.08] overflow-hidden">
+  {{-- ── 5. SECTION SASARAN PENGGUNA (AERODYNAMIC FLOW STRATA VECTOR BACKGROUND) ──────── --}}
+  <section id="section-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 border-b border-white/[0.08] overflow-hidden">
 
+    {{-- Vector Background: Aerodynamic Flow Strata Lines (Identik dengan Hero Section Halaman Tentang Kami) --}}
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      <svg class="w-full h-full" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          {{-- Base Canvas Gradient --}}
+          <linearGradient id="cmp_flow_base" x1="720" y1="0" x2="720" y2="600" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#13abb9"/>
+            <stop offset="0.65" stop-color="#0f808a"/>
+            <stop offset="1" stop-color="#0a555c"/>
+          </linearGradient>
+
+          {{-- Wave Gradients --}}
+          <linearGradient id="cmp_flow_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0a555c" stop-opacity="0.22"/>
+            <stop offset="50%" stop-color="#0a555c" stop-opacity="0.10"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+          </linearGradient>
+
+          <linearGradient id="cmp_flow_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f808a" stop-opacity="0.28"/>
+            <stop offset="50%" stop-color="#0a555c" stop-opacity="0.14"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+          </linearGradient>
+
+          <linearGradient id="cmp_flow_grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#46deec" stop-opacity="0.34"/>
+            <stop offset="50%" stop-color="#0a555c" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+          </linearGradient>
+
+          <linearGradient id="cmp_flow_grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#13abb9" stop-opacity="0.40"/>
+            <stop offset="50%" stop-color="#0f808a" stop-opacity="0.18"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+          </linearGradient>
+
+          <linearGradient id="cmp_flow_grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.46"/>
+            <stop offset="50%" stop-color="#46deec" stop-opacity="0.22"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+          </linearGradient>
+
+          {{-- Bottom Dark Fade to seamlessly blend into section below --}}
+          <linearGradient id="cmp_bottom_fade" x1="0" y1="320" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#0a555c" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#0a555c" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="1"/>
+          </linearGradient>
+        </defs>
+
+        <g>
+          <!-- Base Canvas -->
+          <rect width="1440" height="600" fill="url(#cmp_flow_base)"/>
+
+          <!-- 1. Wave Layer 1 (U-Cradle: Kiri -50px, Tengah 360px, Kanan -50px) -->
+          <path d="M-50,-50 C250,40 500,360 720,360 C940,360 1190,40 1490,-50 L1490,700 L-50,700 Z" fill="url(#cmp_flow_grad1)"/>
+
+          <!-- 2. Wave Layer 2 (Samping +135px, Tengah +50px) -->
+          <path d="M-50,85 C250,160 500,410 720,410 C940,410 1190,160 1490,85 L1490,700 L-50,700 Z" fill="url(#cmp_flow_grad2)"/>
+
+          <!-- 3. Wave Layer 3 (Samping +135px, Tengah +50px) -->
+          <path d="M-50,220 C250,280 500,460 720,460 C940,460 1190,280 1490,220 L1490,700 L-50,700 Z" fill="url(#cmp_flow_grad3)"/>
+
+          <!-- 4. Wave Layer 4 (Samping +135px, Tengah +55px) -->
+          <path d="M-50,355 C250,400 500,515 720,515 C940,515 1190,400 1490,355 L1490,700 L-50,700 Z" fill="url(#cmp_flow_grad4)"/>
+
+          <!-- 5. Wave Layer 5 (Samping +135px, Tengah +55px, Inti Depan) -->
+          <path d="M-50,490 C250,510 500,570 720,570 C940,570 1190,510 1490,490 L1490,700 L-50,700 Z" fill="url(#cmp_flow_grad5)"/>
+
+          <!-- Bottom Blend Gradient Overlay -->
+          <rect y="320" width="1440" height="280" fill="url(#cmp_bottom_fade)"/>
+        </g>
+      </svg>
+    </div>
 
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
       
@@ -609,7 +376,7 @@
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3">
           Untuk Siapa Model Ini Diciptakan.
         </h2>
-        <p class="text-[15px] text-white/60 leading-relaxed">
+        <p class="text-[15px] text-white/80 leading-relaxed">
           Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.
         </p>
       </div>
@@ -618,7 +385,7 @@
         {{-- D1 FOR --}}
         <div id="d1-for-box" class="md:pr-8 lg:pr-14">
           <h3 id="d1-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#18d6e7]"></span>
             <span>Model 1</span>
           </h3>
           <div id="d1-for-list" class="grid grid-cols-1 gap-3.5"></div>
@@ -627,7 +394,7 @@
         {{-- D2 FOR --}}
         <div id="d2-for-box" class="md:pl-8 lg:pl-14">
           <h3 id="d2-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#18d6e7]"></span>
             <span>Model 2</span>
           </h3>
           <div id="d2-for-list" class="grid grid-cols-1 gap-3.5"></div>
@@ -668,27 +435,27 @@
     </div>
   </section>
 
-  {{-- ── 7. CLOSING CTA (SOFTWARE KENDALI / UNTUK SIAPA VECTOR BACKGROUND) ── --}}
-  <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.06] text-center">
+  {{-- ── 7. CLOSING CTA (VIBRANT BRAND TEAL GRADIENT BG) ── --}}
+  <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08] text-center">
     
-    {{-- Vector Background: Pure Organic Wave Fills (Matching Section Untuk Siapa) --}}
+    {{-- Vector Background: Pure Organic Wave Fills --}}
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
       <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="bandingkan-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
             <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
-            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
           </linearGradient>
           <linearGradient id="bandingkan-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
             <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
             <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
-            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
           </linearGradient>
           <linearGradient id="bandingkan-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
             <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
             <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
-            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
+            <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -708,7 +475,7 @@
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
         <a href="{{ home_url('/#kontak') }}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0c121e] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
+           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
           Hubungi Tim Sales FDS
         </a>
         <a href="{{ home_url('/blog') }}"
@@ -1220,7 +987,7 @@
     const d1Title = document.getElementById('d1-for-title');
     const d1List = document.getElementById('d1-for-list');
     if (d1) {
-      if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span> <span>${escapeHtml(d1.name)}</span>`;
+      if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#18d6e7]"></span> <span>${escapeHtml(d1.name)}</span>`;
       if (d1List) {
         d1List.innerHTML = (d1.for || []).map(uc => `
           <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
@@ -1240,7 +1007,7 @@
     const d2Title = document.getElementById('d2-for-title');
     const d2List = document.getElementById('d2-for-list');
     if (d2) {
-      if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span> <span>${escapeHtml(d2.name)}</span>`;
+      if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#18d6e7]"></span> <span>${escapeHtml(d2.name)}</span>`;
       if (d2List) {
         d2List.innerHTML = (d2.for || []).map(uc => `
           <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
@@ -1348,7 +1115,7 @@
       .replace(/'/g, '&#039;');
   }
 
-  // Close modal when clicking outside
+  // Modal Close on click outside & Escape key
   document.addEventListener('click', function(e) {
     const modal = document.getElementById('drone-picker-modal');
     if (e.target === modal) {
@@ -1356,7 +1123,51 @@
     }
   });
 
-  document.addEventListener('DOMContentLoaded', renderAll);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      closePickerModal();
+    }
+  });
+
+  // Sticky Comparison Bar on Scroll
+  function updateStickyBar() {
+    const bar = document.getElementById('sticky-compare-bar');
+    const cardsSection = document.getElementById('product-cards-section');
+    const slot1El = document.getElementById('sticky-slot-1');
+    const slot2El = document.getElementById('sticky-slot-2');
+    if (!bar || !cardsSection) return;
+
+    const d1 = state.slot1 ? catalog[state.slot1] : null;
+    const d2 = state.slot2 ? catalog[state.slot2] : null;
+
+    if (slot1El) {
+      slot1El.innerHTML = d1 
+        ? `<button type="button" onclick="openPickerModal(1)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d1.name)}</button>` 
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ Pilih Drone 1</button>`;
+    }
+
+    if (slot2El) {
+      slot2El.innerHTML = d2 
+        ? `<button type="button" onclick="openPickerModal(2)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d2.name)}</button>` 
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ Pilih Drone 2</button>`;
+    }
+
+    const rect = cardsSection.getBoundingClientRect();
+    if (rect.bottom < 60) {
+      bar.classList.remove('-translate-y-full', 'pointer-events-none');
+      bar.classList.add('translate-y-0', 'pointer-events-auto');
+    } else {
+      bar.classList.remove('translate-y-0', 'pointer-events-auto');
+      bar.classList.add('-translate-y-full', 'pointer-events-none');
+    }
+  }
+
+  window.addEventListener('scroll', updateStickyBar, { passive: true });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    renderAll();
+    updateStickyBar();
+  });
 })();
 </script>
 @endsection

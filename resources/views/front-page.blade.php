@@ -49,7 +49,7 @@
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap">
       <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" 
-         class="inline-flex items-center justify-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-xl shadow-[#0f808a]/40 hover:shadow-[#0f808a]/60 hover:-translate-y-0.5">
+         class="inline-flex items-center justify-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/25 hover:shadow-xl hover:shadow-black/35 hover:-translate-y-0.5">
         {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
       </a>
       <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" 
@@ -207,8 +207,11 @@
         }, { passive: true });
       }
 
-      // Start autoplay
-      startAutoPlay();
+      // Start autoplay if user has not requested reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if (!prefersReducedMotion || !prefersReducedMotion.matches) {
+        startAutoPlay();
+      }
     })();
   </script>
   @endif
@@ -1357,10 +1360,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
     <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left Side: Dark Teal Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
+      {{-- Left Side: Dark Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
       <div class="lg:col-span-5 bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
-        
-        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Teal Palette) --}}
+
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -1498,7 +1501,7 @@ document.addEventListener('DOMContentLoaded', function() {
           {{-- Submit Row (Docked to bottom, without divider line) --}}
           <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <button type="submit" id="fds-inquiry-btn"
-              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0f808a]/25 inline-flex items-center gap-1.5 cursor-pointer">
+              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center gap-1.5 cursor-pointer">
               <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') !!}</span>
               <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
             </button>
@@ -1516,13 +1519,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   @if($show_map_home && !empty($c_maps))
   <div class="w-full overflow-hidden border-t border-black/[0.08] relative mt-12" style="height: 320px;">
-    <iframe 
-      src="{{ esc_url($c_maps) }}" 
-      width="100%" 
-      height="100%" 
-      style="border:0;" 
-      allowfullscreen="" 
-      loading="lazy" 
+    <iframe
+      src="{{ esc_url($c_maps) }}"
+      width="100%"
+      height="100%"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
       referrerpolicy="strict-origin-when-cross-origin"
       title="Lokasi Full Drone Solutions Sleman Yogyakarta">
     </iframe>
@@ -1589,7 +1592,7 @@ function fdsSubmitInquiry(e) {
   var form = document.getElementById('fds-inquiry-form');
   var btn = document.getElementById('fds-inquiry-btn');
   var btnText = document.getElementById('fds-inquiry-btn-text');
-  
+
   if (!form || !btn) return;
 
   // Validasi Semua Field Wajib di Frontend
@@ -1611,7 +1614,7 @@ function fdsSubmitInquiry(e) {
     fdsShowSnackbar(false, 'Format Email Tidak Valid', 'Silakan masukkan alamat email yang benar (contoh: nama@perusahaan.com).');
     return;
   }
-  
+
   var formData = new FormData(form);
   formData.append('action', 'fds_submit_inquiry');
   formData.append('nonce', document.getElementById('fds_inquiry_nonce_val').value);
@@ -1646,5 +1649,7 @@ function fdsSubmitInquiry(e) {
 }
 </script>
 
-@endsection
 
+<x-snackbar />
+
+@endsection

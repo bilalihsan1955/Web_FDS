@@ -58,22 +58,26 @@ add_action('admin_menu', function () {
         return;
     }
 
-    $unread_query = new \WP_Query([
-        'post_type'      => 'fds_inquiry',
-        'post_status'    => 'publish',
-        'meta_key'       => '_fds_inquiry_status',
-        'meta_value'     => 'unread',
-        'posts_per_page' => -1,
-        'fields'         => 'ids',
-        'no_found_rows'  => false,
-    ]);
-    $unread_count = (int) $unread_query->found_posts;
+    $unread_count = get_transient('fds_unread_inquiry_count');
+    if ($unread_count === false) {
+        $unread_query = new \WP_Query([
+            'post_type'      => 'fds_inquiry',
+            'post_status'    => 'publish',
+            'meta_key'       => '_fds_inquiry_status',
+            'meta_value'     => 'unread',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'no_found_rows'  => false,
+        ]);
+        $unread_count = (int) $unread_query->found_posts;
+        set_transient('fds_unread_inquiry_count', $unread_count, 5 * MINUTE_IN_SECONDS);
+    }
 
     if ($unread_count > 0) {
         foreach ($menu as $key => $item) {
             if (isset($item[2]) && $item[2] === 'edit.php?post_type=fds_inquiry') {
                 $menu[$key][0] .= sprintf(
-                    ' <span class="update-plugins count-%d" style="background-color:#2563eb;"><span class="plugin-count">%d</span></span>',
+                    ' <span class="update-plugins count-%d" style="background-color:#0f808a;"><span class="plugin-count">%d</span></span>',
                     $unread_count,
                     $unread_count
                 );
@@ -273,7 +277,25 @@ add_action('save_post_fds_inquiry', function ($post_id) {
         $new_status = sanitize_text_field($_POST['fds_inquiry_status']);
         if (in_array($new_status, $allowed, true)) {
             update_post_meta($post_id, '_fds_inquiry_status', $new_status);
+            delete_transient('fds_unread_inquiry_count');
         }
+    }
+});
+
+// Invalidate cache saat inquiry dihapus/dipindahkan ke trash
+add_action('wp_trash_post', function ($post_id) {
+    if (get_post_type($post_id) === 'fds_inquiry') {
+        delete_transient('fds_unread_inquiry_count');
+    }
+});
+add_action('untrash_post', function ($post_id) {
+    if (get_post_type($post_id) === 'fds_inquiry') {
+        delete_transient('fds_unread_inquiry_count');
+    }
+});
+add_action('delete_post', function ($post_id) {
+    if (get_post_type($post_id) === 'fds_inquiry') {
+        delete_transient('fds_unread_inquiry_count');
     }
 });
 
@@ -296,15 +318,7 @@ function fds_handle_inquiry_submission() {
     }
 
     // Rate Limiting per IP (Maks 10 pengiriman per 10 menit untuk mencegah spam flooding)
-    $ip = '';
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    $ip = sanitize_text_field($ip);
+    $ip = function_exists('App\Security\fds_get_client_ip') ? \App\Security\fds_get_client_ip() : sanitize_text_field($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1');
 
     $rate_key = 'fds_inq_' . md5($ip);
     $attempts = (int) get_transient($rate_key);
@@ -387,6 +401,8 @@ function fds_handle_inquiry_submission() {
     if (is_wp_error($post_id)) {
         wp_send_json_error(['message' => 'Gagal menyimpan pesan. Silakan coba lagi.'], 500);
     }
+
+    delete_transient('fds_unread_inquiry_count');
 
     // 7. Opsional: Notifikasi Email ke Admin FDS
     $admin_email = get_option('admin_email');

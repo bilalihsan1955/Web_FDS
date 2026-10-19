@@ -12,297 +12,7 @@
   }
   $slug = get_post_field('post_name', $post_id);
 
-  $drones  = [
-    'ferto-5l' => [
-      'name'      => 'FERTO 5',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Kompak & Lincah',
-      'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '5 Liter'],
-        ['Durasi Terbang', '10 – 15 menit'],
-        ['Sistem Daya (Baterai)', '8.000 mAh'],
-        ['Produktivitas Semprot', '1 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 5 didesain sebagai platform multirotor modular dengan mobilitas tinggi untuk menjangkau area berbukit, terasering, dan lahan perkebunan dengan kontur ekstrem. Dilengkapi fitur terrain-following otomatis dan sistem kendali FDS STATION, drone ini menjamin presisi penyemprotan pupuk cair maupun pestisida secara merata dengan produktivitas 1 Ha per jam.',
-      'for'       => [
-        'Lahan berbukit & terasering — Bobot ringan dan dimensi ringkas mempermudah manuver di area sempit.',
-        'Petani hortikultura & kebun — Efisiensi bahan kimia >50% dengan penyemprotan droplet presisi.',
-        'Penyedia jasa semprot mandiri — Mobilitas tinggi mudah dibawa dengan sepeda motor ke pelosok sawah.',
-        'Dukungan purna jual resmi — Jaringan servis dan suku cadang asli lokal FDS siap pakai.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '100%', 'stat3_lbl' => 'FDS STATION GCS',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-10l' => [
-      'name'      => 'FERTO 10',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Terlaris',
-      'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '10 Liter'],
-        ['Durasi Terbang', '12 – 15 menit'],
-        ['Sistem Daya (Baterai)', '16.000 mAh'],
-        ['Produktivitas Semprot', '1 – 1,5 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 10 adalah varian terlaris FDS yang menawarkan keseimbangan optimal antara kapasitas muatan 10 liter, ketahanan baterai 16.000 mAh, dan produktivitas 1 - 1,5 Ha/jam. Menggunakan rangka karbon komposit buatan dalam negeri berstandar SNI 9199:2023, drone ini menjadi tulang punggung modernisasi pertanian di berbagai wilayah Indonesia.',
-      'for'       => [
-        'Kelompok tani & Gapoktan — Titik temu terbaik antara kapasitas operasional dan efisiensi investasi.',
-        'Koperasi pertanian — Mengurangi beban biaya tenaga kerja semprot manual hingga 60%.',
-        'Program ketahanan pangan Bank Indonesia & Bappenas — Terbukti andal di berbagai proyek percontohan nasional.',
-        'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Yogyakarta.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '100%', 'stat3_lbl' => 'FDS STATION GCS',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-15l' => [
-      'name'      => 'FERTO 15',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Profesional',
-      'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '17 Liter (15 – 17 Liter)'],
-        ['Durasi Terbang', '15 – 25 menit'],
-        ['Sistem Daya (Baterai)', '16.000 mAh'],
-        ['Produktivitas Semprot', '8 Ha / jam'],
-        ['Kecepatan Jelajah', '2 – 6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 15 menghadirkan payload 17 Liter dengan efisiensi tinggi, mampu menyelesaikan penyemprotan hingga 8 hektare per jam. Dilengkapi sistem propulsi berdaya tahan 15-25 menit dan radar terrain-following presisi, drone ini sangat cocok untuk operasional komersial menengah ke atas pada komoditas tebu, jagung, dan hortikultura luas.',
-      'for'       => [
-        'Perkebunan tebu & jagung skala komersial — Menyemprot cepat 8 Ha/jam dengan cakupan merata.',
-        'Kontraktor jasa perlindungan tanaman — Durasi terbang hingga 25 menit untuk ritme kerja lapangan yang padat.',
-        'Dual mode Sprayer & Spreader — Kompatibel dengan tangki granule spreader untuk penyebaran pupuk butir.',
-        'Dukungan teknis pilot bersertifikat — Layanan pendampingan dan pelatihan pilot resmi FDS.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '8 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-22l' => [
-      'name'      => 'FERTO 22',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Enterprise',
-      'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '22 Liter'],
-        ['Durasi Terbang', '20 – 25 menit'],
-        ['Sistem Daya (Baterai)', '22.000 mAh'],
-        ['Produktivitas Semprot', '8,5 Ha / jam'],
-        ['Kecepatan Jelajah', '5,24 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 22 adalah varian enterprise andalan FDS untuk industri perkebunan sawit, tebu, dan tanaman industri berskala ribuan hektare. Ditenagai baterai 22.000 mAh dengan kecepatan jelajah 5,24 m/s, drone ini mampu menuntaskan 8,5 hektare per jam secara otonom dan terintegrasi penuh ke dalam sistem FDS STATION.',
-      'for'       => [
-        'Perkebunan sawit & tanaman industri — Mengatasi tantangan lahan luas dengan kecepatan semprot tinggi.',
-        'BUMN Perkebunan & Korporasi Agrikultur — Memenuhi syarat pengadaan pemerintah dengan TKDN+BMP resmi.',
-        'Manajemen armada perkebunan — Terintegrasi dengan analitik kesehatan tanaman berbasis multispektral & NDVI.',
-        'Purna jual resmi & garansi lokal — Layanan servis dan suku cadang asli tanpa ketergantungan impor.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '8,5 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-30l' => [
-      'name'      => 'FERTO 30',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Heavy Duty',
-      'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '30 Liter'],
-        ['Durasi Terbang', '20 – 30 menit'],
-        ['Sistem Daya (Baterai)', '28.000 mAh'],
-        ['Produktivitas Semprot', '15 Ha / jam'],
-        ['Kecepatan Jelajah', '5,24 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 30 menghadirkan lompatan payload 30 Liter yang dirancang untuk kebutuhan agribisnis skala masif. Dengan sistem baterai high-capacity 28.000 mAh dan daya jangkau penerbangan hingga 30 menit, drone ini mampu menghasilkan produktivitas 15 Ha per jam, memangkas waktu kerja dan biaya operasional secara drastis.',
-      'for'       => [
-        'Mega perkebunan sawit & tebu — Produktivitas 15 Ha/jam mempercepat target penyemprotan harian.',
-        'Aplikasi pupuk & pestisida volume tinggi — Tangki 30L meminimalkan frekuensi pendaratan untuk isi ulang.',
-        'Pengendalian hama serentak — Menuntaskan ratusan hektare lahan dalam waktu singkat sebelum hama menyebar.',
-        'Konstruksi karbon komposit kokoh — Tahan cuaca ekstrem dengan rangka material terbaik.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '15 Ha/j', 'stat3_lbl' => 'Produktivitas Semprot',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'ferto-50l' => [
-      'name'      => 'FERTO 50',
-      'kategori'  => 'Agrikultur',
-      'badge'     => 'Ultra Capacity',
-      'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '50 Liter'],
-        ['Durasi Terbang', '20 – 30 menit'],
-        ['Sistem Daya (Baterai)', '28.000 mAh'],
-        ['Produktivitas Semprot', '15 Ha / jam'],
-        ['Kecepatan Jelajah', '6 m/s'],
-        ['Sistem Otonomi & Navigasi', 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe'],
-        ['Ground Control Station', 'FDS STATION (Bahasa Indonesia)'],
-        ['Sertifikasi & Standar', 'TKDN + BMP hingga 60,74% | SNI 9199:2023 | ISO 9001:2015'],
-      ],
-      'desc'      => 'FERTO 50 adalah platform UAV agrikultur dengan muatan tertinggi di lini FDS. Membawa tangki berkapasitas 50 Liter dengan sistem propulsi bertenaga raksasa dan kecepatan jelajah hingga 6 m/s, drone ini diciptakan untuk menjawab tantangan operasional perkebunan agrikultur terbesar di Indonesia dengan efisiensi maksimal.',
-      'for'       => [
-        'Perkebunan konglomerasi & agroindustri raksasa — Menangani area ribuan hektare dengan armada minimal.',
-        'Penyebaran pupuk & pestisida intensif — Muatan 50L memaksimalkan efisiensi setiap sorti penerbangan.',
-        'Misi otomatis skala besar — Perencanaan rute cerdas dan pemantauan real-time via FDS STATION.',
-        'Dukungan logistik & purna jual komprehensif — Paket perawatan berkala dan penyediaan suku cadang resmi.'
-      ],
-      'stat1_num' => 'SNI', 'stat1_lbl' => 'SNI 9199:2023',
-      'stat2_num' => '60,74%', 'stat2_lbl' => 'TKDN + BMP',
-      'stat3_num' => '50 Liter', 'stat3_lbl' => 'Payload Maksimum',
-      'stat4_num' => 'Garansi', 'stat4_lbl' => 'Purna Jual Resmi',
-    ],
-    'deltav' => [
-      'name'      => 'DELTAV',
-      'kategori'  => 'Pemetaan & GIS',
-      'badge'     => 'Hybrid VTOL',
-      'tagline'   => 'Platform UAV Pemetaan Fixed-Wing VTOL Hybrid — Jangkauan 60 km untuk akuisisi geospasial area luas.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Bentang Sayap (Wingspan)', '2.000 mm'],
-        ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
-        ['Berat Lepas Landas (MTOW)', '10 kg (10.000 g)'],
-        ['Payload', '1 – 2 kg (Kamera RGB, LiDAR, Multispektral)'],
-        ['Durasi Terbang', '60 – 120 menit'],
-        ['Kecepatan Jelajah', '15 – 22 m/s'],
-        ['Jangkauan Misi (Range)', 'Hingga 60 km'],
-        ['Material Rangka', 'Komposit Hibrida (Carbon Composite)'],
-        ['Sistem Kendali & Misi', 'Semi-to-Fully Autonomous, FDS STATION GCS'],
-      ],
-      'desc'      => 'DELTAV adalah pesawat UAV fixed-wing berteknologi Hybrid VTOL (Vertical Takeoff and Landing) yang menggabungkan kemudahan lepas landas tegak lurus tanpa landasan pacu dengan kecepatan jelajah serta efisiensi aerodinamis pesawat sayap tetap. Dengan jangkauan hingga 60 km dan durasi terbang 60-120 menit, DELTAV adalah solusi terbaik untuk survei topografi, ortofoto beresolusi tinggi, pemetaan kehutanan, dan akuisisi data geospasial area luas dalam sekali terbang.',
-      'for'       => [
-        'Survei topografi & konstruksi — Menghemat waktu 70-80% untuk pemodelan 3D, ortomozaik, dan perhitungan cut & fill.',
-        'Kehutanan & lingkungan — Pemetaan daerah aliran sungai (DAS), tutupan kanopi, dan progres reklamasi tambang 80% lebih cepat.',
-        'Pertambangan & kuari — Pemetaan kontur presisi dan pemantauan batas konsesi tambang.',
-        'Perencanaan tata ruang & GIS nasional — Akurasi data geospasial sub-sentimeter siap integrasi CAD & BIM.'
-      ],
-      'stat1_num' => '2.000mm', 'stat1_lbl' => 'Bentang Sayap',
-      'stat2_num' => '60 km', 'stat2_lbl' => 'Jangkauan Misi',
-      'stat3_num' => '120 min', 'stat3_lbl' => 'Durasi Terbang Maks',
-      'stat4_num' => 'VTOL', 'stat4_lbl' => 'Lepas Landas Vertikal',
-    ],
-    'multipurpose' => [
-      'name'      => 'MULTIPURPOSE',
-      'kategori'  => 'Pemetaan & Inspeksi',
-      'badge'     => 'Modular UAV',
-      'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
-        ['Durasi Terbang', '15 – 30 menit'],
-        ['Sistem Daya (Baterai)', '8.000 mAh'],
-        ['Sensor Kompatibel', 'Kamera Termal IR, 20x Optical Zoom, LiDAR, Multispektral'],
-        ['Mode Penerbangan', 'Manual, Task Following, Semi-to-Fully Autonomous'],
-        ['Sistem Proteksi', 'Konstruksi tahan cuaca & sistem fail-safe mandiri'],
-        ['Software Pengendali', 'FDS STATION Real-Time Monitoring & AI Analytics'],
-        ['Aplikasi Utama', 'Inspeksi Jaringan Listrik 150kV, Solar PV, Pipa Migas, & Struktur'],
-      ],
-      'desc'      => 'MULTIPURPOSE dirancang sebagai platform UAV modular yang fleksibel untuk berbagai misi kustom. Mampu mengangkut payload hingga 5 kg dengan integrasi berbagai sensor canggih seperti kamera termal inframerah, optik zoom 20x, hingga sensor LiDAR. Sangat andal untuk inspeksi aset kritikal seperti jaringan transmisi listrik 150 kV, ladang panel surya, tangki minyak & gas, serta infrastruktur jembatan dan gedung tinggi tanpa risiko keselamatan kerja.',
-      'for'       => [
-        'Inspeksi transmisi listrik 150 kV — 5x lebih cepat tanpa perlu pemadaman listrik dan tanpa bekerja di ketinggian.',
-        'Inspeksi ladang energi surya (Solar PV) — Deteksi dini hotspot dan sel rusak berbasis AI untuk mencegah kehilangan energi.',
-        'Inspeksi migas & cerobong suar (Flare Stacks) — Deteksi kebocoran dan korosi tanpa mematikan operasi kilang.',
-        'Inspeksi struktur jembatan & konstruksi — Pemeriksaan keretakan mikro struktur beton dan baja.'
-      ],
-      'stat1_num' => '5 kg', 'stat1_lbl' => 'Payload Maksimum',
-      'stat2_num' => '30 min', 'stat2_lbl' => 'Durasi Terbang Maks',
-      'stat3_num' => 'Termal/AI', 'stat3_lbl' => 'Sensor Kompatibel',
-      'stat4_num' => '150 kV', 'stat4_lbl' => 'Inspeksi Aset Kritikal',
-    ],
-    'delfro' => [
-      'name'      => 'DELFRO',
-      'kategori'  => 'Cargo & Logistik',
-      'badge'     => 'Logistics UAV',
-      'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '3 – 10 kg (Kotak Logistik)'],
-        ['Berat Lepas Landas (MTOW)', '15 kg'],
-        ['Dimensi Kotak Payload', '20 x 20 x 30 cm'],
-        ['Kecepatan Jelajah / Maks', '2 – 6 m/s'],
-        ['Waktu Terbang', '10 – 15 menit'],
-        ['Ukuran Propeller', '18-inch High-Efficiency Carbon Propeller'],
-        ['Mode Pengoperasian', 'Otonom (Waypoint Cargo Route) & Manual Fail-Safe'],
-        ['Ground Control Software', 'FDS STATION Logistics Management'],
-      ],
-      'desc'      => 'DELFRO adalah drone kargo otonom yang dikembangkan khusus untuk distribusi logistik ringan yang cepat, efisien, dan aman. Dengan kapasitas angkut 3 hingga 10 kg dan kompartemen kargo berukuran 20 x 20 x 30 cm, DELFRO menjadi solusi mutakhir untuk pengiriman sampel medis, pasokan darurat kebencanaan, suku cadang penting, dan logistik ekspres ke wilayah kepulauan atau daerah terisolir yang sulit dijangkau transportasi darat.',
-      'for'       => [
-        'Logistik medis & darurat bencana — Pengiriman cepat obat-obatan, kantong darah, dan sampel laboratorium ke lokasi terpencil.',
-        'Pengiriman suku cadang industri — Menghubungkan offshore platform atau site tambang dengan warehouse secara kilat.',
-        'Ekspedisi & kurir last-mile — Alternatif logistik ramah lingkungan untuk melintasi sungai, bukit, atau selat.',
-        'Manajemen rute otomatis — Pemantauan status kargo dan rute penerbangan real-time via FDS STATION.'
-      ],
-      'stat1_num' => '10 kg', 'stat1_lbl' => 'Payload Maksimum',
-      'stat2_num' => '15 kg', 'stat2_lbl' => 'MTOW Maksimum',
-      'stat3_num' => '18"', 'stat3_lbl' => 'Carbon Propeller',
-      'stat4_num' => 'Auto', 'stat4_lbl' => 'Waypoint Route',
-    ],
-    'rebo' => [
-      'name'      => 'REBO',
-      'kategori'  => 'Reboisasi & Konservasi',
-      'badge'     => 'Heavy-Duty Seedball',
-      'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
-      'color'     => '#0f808a',
-      'specs'     => [
-        ['Payload', '20 kg (Dispenser Seedball)'],
-        ['Durasi Terbang', '15 – 20 menit'],
-        ['Sistem Daya (Baterai)', '22.000 mAh'],
-        ['Mode Misi', 'Otonom Penuh (Auto Seedball Dispensing Grid)'],
-        ['Sistem Dispenser', 'Penyebar seedball otomatis terkalibrasi'],
-        ['Rangka & Proteksi', 'Komposit Karbon Tahan Cuaca Ekstrem'],
-        ['Software Perencanaan Misi', 'FDS STATION Reforestation Mission Planning'],
-        ['Kolaborasi Riset', 'Didukung riset bersama UGM & Mitra Swiss'],
-      ],
-      'desc'      => 'REBO adalah UAV heavy-duty khusus yang dirancang untuk mendukung misi reboisasi hutan, restorasi lahan kritis, dan reklamasi area pasca-tambang. Mampu mengangkut hingga 20 kg seedball (biji tanaman berkapsul nutrisi) dalam satu kali sorti, REBO menabur biji secara presisi mengikuti pola koordinat otonom pada lereng curam atau hutan lebat yang mustahil diakses penanam manual.',
-      'for'       => [
-        'Restorasi hutan lindung & lereng curam — Menghijaukan kembali tebing dan medan berbahaya tanpa membahayakan petugas.',
-        'Reklamasi lahan bekas tambang — Mempercepat pemulihan vegetasi lahan tambang sesuai regulasi lingkungan.',
-        'Konservasi daerah aliran sungai (DAS) — Penyebaran bibit pohon penyangga air secara masif dan terstruktur.',
-        'Riset kehutanan berkelanjutan — Dikembangkan berdasarkan riset lapangan kolaboratif UGM dan institusi internasional.'
-      ],
-      'stat1_num' => '20 kg', 'stat1_lbl' => 'Payload Seedball',
-      'stat2_num' => '22.000mAh', 'stat2_lbl' => 'Baterai Daya Tinggi',
-      'stat3_num' => 'Otonom', 'stat3_lbl' => 'Dispenser Presisi',
-      'stat4_num' => 'Riset', 'stat4_lbl' => 'UGM & Swiss',
-    ],
-  ];
-
-  // Aliases for clean URL variations
-  $drones['ferto-5']  = &$drones['ferto-5l'];
-  $drones['ferto-10'] = &$drones['ferto-10l'];
-  $drones['ferto-15'] = &$drones['ferto-15l'];
-  $drones['ferto-22'] = &$drones['ferto-22l'];
-  $drones['ferto-30'] = &$drones['ferto-30l'];
-  $drones['ferto-50'] = &$drones['ferto-50l'];
+  $drones = function_exists('fds_get_default_drone_catalog') ? fds_get_default_drone_catalog() : \App\fds_get_default_drone_catalog();
 
   $drone = $drones[$slug] ?? null;
   $droneImgKey      = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
@@ -520,7 +230,7 @@
   <div class="bg-white pt-[52px]">
 
     {{-- ── HERO — Dark split layout (ORIGINAL HERO STRUCTURE WITH ENHANCED BACKGROUND VECTOR) ─── --}}
-    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] flex flex-col justify-between overflow-hidden">
+    <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] flex flex-col justify-between overflow-hidden">
 
       {{-- Vector Background: Lekukan Gelombang Organik Fluida dengan Gradasi ke Gelap di Sisi Kanan --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -530,28 +240,28 @@
             <linearGradient id="hero-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
               <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.16" />
               <stop offset="45%" stop-color="#0a555c" stop-opacity="0.08" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.95" />
             </linearGradient>
 
             {{-- Lapisan 2 (Sedang-Luar) — Bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
               <stop offset="0%" stop-color="#46deec" stop-opacity="0.25" />
               <stop offset="50%" stop-color="#0a555c" stop-opacity="0.12" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.85" />
             </linearGradient>
 
             {{-- Lapisan 3 (Tengah) — Bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
               <stop offset="0%" stop-color="#13abb9" stop-opacity="0.36" />
               <stop offset="55%" stop-color="#0f808a" stop-opacity="0.18" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.75" />
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.75" />
             </linearGradient>
 
             {{-- Lapisan 4 (Inti) — Biru Vibrant di awal, bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill4" x1="0%" y1="20%" x2="100%" y2="80%">
               <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.52" />
               <stop offset="55%" stop-color="#18d6e7" stop-opacity="0.26" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.65" />
             </linearGradient>
           </defs>
 
@@ -591,7 +301,7 @@
         {{-- CTAs --}}
         <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10">
           <a href="{{ home_url('/#kontak') }}"
-             class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0f808a]/30">
+             class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-black/15">
             Minta Penawaran
           </a>
           <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
@@ -706,290 +416,118 @@
     @if($brochure_enable === '1')
     <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 border-t border-black/[0.08] relative z-10">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        
-        @if($brochure_layout === 'centered')
-        {{-- VARIAN 2: CENTERED / RATA TENGAH (PROPORTIONAL & PROMINENT) --}}
-        <div class="max-w-3xl mx-auto text-center flex flex-col items-center">
-          
-          {{-- Heading & Subtitle Centered --}}
-          <h3 class="text-[30px] sm:text-[38px] lg:text-[44px] font-bold text-[#1d1d1f] tracking-tight leading-[1.15]">
-            {!! esc_html($brochure_title) !!}
-          </h3>
-          <p class="fds-brochure-desc-text text-[16px] sm:text-[18px] lg:text-[19px] text-[#6e6e73] mt-3 sm:mt-4 leading-relaxed max-w-xl mx-auto transition-all duration-200"
-             data-desc-initial="{!! esc_attr(wp_specialchars_decode($brochure_desc_initial)) !!}"
-             data-desc-ready="{!! esc_attr(wp_specialchars_decode($brochure_desc_ready)) !!}">
-            {!! esc_html(wp_specialchars_decode($brochure_desc_initial)) !!}
-          </p>
-
-          {{-- Action Area Centered --}}
-          <div class="w-full mt-8 sm:mt-10 flex flex-col items-center justify-center">
-            
-            {{-- STATE 1: FORM INPUT EMAIL --}}
-            <form id="fds-brochure-form" class="w-full max-w-xl flex flex-col sm:flex-row items-center justify-center gap-3.5">
-              <input type="hidden" name="action" value="fds_download_brochure">
-              <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
-              <input type="hidden" name="drone_id" value="{{ $post_id }}">
-              <input type="hidden" name="drone_name" value="{{ esc_attr(wp_specialchars_decode($drone['name'])) }}">
-
-              <div class="relative w-full sm:w-[340px]">
-                <input type="email" 
-                       id="brochure_email" 
-                       name="email" 
-                       required 
-                       placeholder="{{ esc_attr($brochure_ph) }}" 
-                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all text-center sm:text-left">
-              </div>
-
-              <button type="submit" 
-                      id="fds-brochure-submit-btn" 
-                      class="w-full sm:w-auto h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap">
-                <span>Kirim Email</span>
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-              </button>
-            </form>
-
-            {{-- STATE 2: TOMBOL DOWNLOAD AKTIF --}}
-            <div id="fds-brochure-download-ready" class="hidden items-center justify-center">
-              <a id="fds-brochure-download-link" 
-                 href="{{ esc_url($brochure_file_url ?: '#') }}" 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                <span>{!! esc_html(wp_specialchars_decode($brochure_btn)) !!}</span>
-              </a>
-            </div>
-
-            {{-- Status & Error Feedback Only --}}
-            <div id="fds-brochure-msg" class="hidden text-[13px] mt-3 px-2 text-center"></div>
-          </div>
-
-        </div>
-
-        @else
-        {{-- VARIAN 1: HORIZONTAL / SPLIT (KIRI-KANAN) --}}
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
-          
-          {{-- Left: Big Heading & Subtitle --}}
-          <div class="max-w-2xl">
-            <h3 class="text-[28px] sm:text-[36px] lg:text-[40px] font-bold text-[#1d1d1f] tracking-tight leading-[1.18]">
-              {!! esc_html($brochure_title) !!}
-            </h3>
-            <p class="fds-brochure-desc-text text-[16px] sm:text-[18px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
-               data-desc-initial="{!! esc_attr(wp_specialchars_decode($brochure_desc_initial)) !!}"
-               data-desc-ready="{!! esc_attr(wp_specialchars_decode($brochure_desc_ready)) !!}">
-              {!! esc_html(wp_specialchars_decode($brochure_desc_initial)) !!}
-            </p>
-          </div>
-
-          {{-- Right: Big Action Area --}}
-          <div class="w-full lg:w-auto">
-            
-            {{-- STATE 1: FORM INPUT EMAIL (SEBELUM KIRIM EMAIL) --}}
-            <form id="fds-brochure-form" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-              <input type="hidden" name="action" value="fds_download_brochure">
-              <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
-              <input type="hidden" name="drone_id" value="{{ $post_id }}">
-              <input type="hidden" name="drone_name" value="{{ esc_attr(wp_specialchars_decode($drone['name'])) }}">
-
-              <div class="relative w-full sm:w-[320px] lg:w-[340px]">
-                <input type="email" 
-                       id="brochure_email" 
-                       name="email" 
-                       required 
-                       placeholder="{{ esc_attr($brochure_ph) }}" 
-                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
-              </div>
-
-              <button type="submit" 
-                      id="fds-brochure-submit-btn" 
-                      class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap">
-                <span>Kirim Email</span>
-                <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-              </button>
-            </form>
-
-            {{-- STATE 2: TOMBOL DOWNLOAD AKTIF (BERSIH TANPA CLUTTER) --}}
-            <div id="fds-brochure-download-ready" class="hidden items-center">
-              <a id="fds-brochure-download-link" 
-                 href="{{ esc_url($brochure_file_url ?: '#') }}" 
-                 target="_blank" 
-                 rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                <span>{!! esc_html(wp_specialchars_decode($brochure_btn)) !!}</span>
-              </a>
-            </div>
-
-            {{-- Status & Error Feedback Only --}}
-            <div id="fds-brochure-msg" class="hidden text-[13px] mt-2.5 px-2 text-center sm:text-left"></div>
-          </div>
-
-        </div>
-        @endif
+        <x-modal-brochure
+          :drone-id="$post_id"
+          :drone-name="$drone['name']"
+          :title="$brochure_title"
+          :desc-initial="$brochure_desc_initial"
+          :desc-ready="$brochure_desc_ready"
+          :placeholder="$brochure_ph"
+          :btn-text="$brochure_btn"
+          :file-url="$brochure_file_url"
+        />
       </div>
     </section>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('fds-brochure-form');
-      const readyBox = document.getElementById('fds-brochure-download-ready');
-      const downloadLink = document.getElementById('fds-brochure-download-link');
-      const submitBtn = document.getElementById('fds-brochure-submit-btn');
-      const msgBox = document.getElementById('fds-brochure-msg');
-      const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
-      const initialPdf = '{{ esc_js($brochure_file_url) }}';
-
-      if (!form || !readyBox) return;
-
-      function updateDescToReady() {
-        descTexts.forEach(el => {
-          if (el.dataset.descReady) {
-            el.textContent = el.dataset.descReady;
-          }
-        });
-      }
-
-      // 1. CEK STATE CLIENT LOCAL STORAGE (Jika user sudah pernah input email, langsung buka tombol & update deskripsi)
-      const isUnlocked = localStorage.getItem('fds_brochure_unlocked') === '1';
-      if (isUnlocked) {
-        form.classList.add('hidden');
-        readyBox.classList.remove('hidden');
-        readyBox.classList.add('flex');
-        updateDescToReady();
-        if (initialPdf && downloadLink) {
-          downloadLink.href = initialPdf;
-        }
-      }
-
-      // 2. FORM SUBMIT HANDLER
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const emailInput = document.getElementById('brochure_email');
-        const emailVal = emailInput ? emailInput.value.trim() : '';
-
-        if (!emailVal || (emailInput && !emailInput.validity.valid)) {
-          if (msgBox) {
-            msgBox.textContent = 'Silakan masukkan alamat email yang valid.';
-            msgBox.className = 'text-[13px] mt-2.5 font-medium text-rose-600 block text-center sm:text-left';
-            msgBox.classList.remove('hidden');
-          }
-          return;
-        }
-
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = `
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <span>Memproses...</span>
-          `;
-        }
-        if (msgBox) msgBox.classList.add('hidden');
-
-        const formData = new FormData(form);
-
-        fetch('{{ admin_url('admin-ajax.php') }}', {
-          method: 'POST',
-          body: formData,
-        })
-        .then(res => res.json())
-        .then(data => {
-          // Simpan status unlock ke localStorage user
-          localStorage.setItem('fds_brochure_email', emailVal);
-          localStorage.setItem('fds_brochure_unlocked', '1');
-
-          if (data && data.success && data.data && data.data.download_url) {
-            if (downloadLink) downloadLink.href = data.data.download_url;
-          } else if (initialPdf && downloadLink) {
-            downloadLink.href = initialPdf;
-          }
-
-          // Langsung ganti tampilan ke tombol download biru & update kalimat deskripsi
-          form.classList.add('hidden');
-          readyBox.classList.remove('hidden');
-          readyBox.classList.add('flex');
-          updateDescToReady();
-        })
-        .catch(() => {
-          // Fallback jika offline/error: tetap unlock tombol
-          localStorage.setItem('fds_brochure_email', emailVal);
-          localStorage.setItem('fds_brochure_unlocked', '1');
-          form.classList.add('hidden');
-          readyBox.classList.remove('hidden');
-          readyBox.classList.add('flex');
-          updateDescToReady();
-        })
-        .finally(() => {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = `
-              <span>Kirim Email</span>
-              <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-              </svg>
-            `;
-          }
-        });
-      });
-    });
-    </script>
     @endif
 
-    {{-- ── FOR WHOM (SOFTWARE KENDALI ORGANIC WAVE BACKGROUND) ─────── --}}
-    @if(!empty($drone['for']))
-    <section class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
+    {{-- ── APLIKASI & USE-CASES (AERODYNAMIC FLOW STRATA VECTOR BACKGROUND) ─────── --}}
+    @php
+      $usecases_list = !empty($drone['for']) && is_array($drone['for']) ? $drone['for'] : [
+        'Kelompok tani & Gapoktan — Titik temu terbaik antara kapasitas operasional dan efisiensi investasi.',
+        'Koperasi pertanian — Mengurangi beban biaya tenaga kerja semprot manual hingga 60%.',
+        'Program ketahanan pangan Bappenas & BI — Terbukti andal di berbagai proyek percontohan nasional.',
+        'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Yogyakarta.',
+      ];
+    @endphp
+
+    <section id="aplikasi-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
       
-      {{-- Vector Background: Pure Organic Wave Fills --}}
+      {{-- Vector Background: Aerodynamic Flow Strata Lines (Identik dengan Hero Section Halaman Tentang Kami) --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-        <svg class="w-full h-full opacity-80" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <svg class="w-full h-full" viewBox="0 0 1440 600" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <linearGradient id="forwhom-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
-              <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+            {{-- Base Canvas Gradient --}}
+            <linearGradient id="sd_flow_base" x1="720" y1="0" x2="720" y2="600" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#13abb9"/>
+              <stop offset="0.65" stop-color="#0f808a"/>
+              <stop offset="1" stop-color="#0a555c"/>
             </linearGradient>
-            <linearGradient id="forwhom-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
-              <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+
+            {{-- Wave Gradients --}}
+            <linearGradient id="sd_flow_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0a555c" stop-opacity="0.22"/>
+              <stop offset="50%" stop-color="#0a555c" stop-opacity="0.10"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
             </linearGradient>
-            <linearGradient id="forwhom-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
-              <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
-              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+
+            <linearGradient id="sd_flow_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0f808a" stop-opacity="0.28"/>
+              <stop offset="50%" stop-color="#0a555c" stop-opacity="0.14"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+            </linearGradient>
+
+            <linearGradient id="sd_flow_grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#46deec" stop-opacity="0.34"/>
+              <stop offset="50%" stop-color="#0a555c" stop-opacity="0.16"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+            </linearGradient>
+
+            <linearGradient id="sd_flow_grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#13abb9" stop-opacity="0.40"/>
+              <stop offset="50%" stop-color="#0f808a" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+            </linearGradient>
+
+            <linearGradient id="sd_flow_grad5" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.46"/>
+              <stop offset="50%" stop-color="#46deec" stop-opacity="0.22"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0"/>
+            </linearGradient>
+
+            {{-- Bottom Dark Fade to seamlessly blend into section below --}}
+            <linearGradient id="sd_bottom_fade" x1="0" y1="320" x2="0" y2="600" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#0a555c" stop-opacity="0"/>
+              <stop offset="50%" stop-color="#0a555c" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#0a555c" stop-opacity="1"/>
             </linearGradient>
           </defs>
 
-          <!-- Pure Fluid Wave Fills: Sedikit di kiri bawah, mengalir elegan naik ke kanan -->
-          <path d="M0,340 C280,320 470,220 780,150 C900,120 960,100 1000,80 L1000,400 L0,400 Z" fill="url(#forwhom-wave-fill1)" />
-          <path d="M0,380 C360,370 580,280 860,190 C930,160 970,140 1000,120 L1000,400 L0,400 Z" fill="url(#forwhom-wave-fill2)" />
-          <path d="M440,400 C590,340 780,300 1000,220 L1000,400 Z" fill="url(#forwhom-wave-fill3)" />
+          <g>
+            <!-- Base Canvas -->
+            <rect width="1440" height="600" fill="url(#sd_flow_base)"/>
+
+            <!-- 1. Wave Layer 1 (U-Cradle: Kiri -50px, Tengah 360px, Kanan -50px) -->
+            <path d="M-50,-50 C250,40 500,360 720,360 C940,360 1190,40 1490,-50 L1490,700 L-50,700 Z" fill="url(#sd_flow_grad1)"/>
+
+            <!-- 2. Wave Layer 2 (Samping +135px, Tengah +50px) -->
+            <path d="M-50,85 C250,160 500,410 720,410 C940,410 1190,160 1490,85 L1490,700 L-50,700 Z" fill="url(#sd_flow_grad2)"/>
+
+            <!-- 3. Wave Layer 3 (Samping +135px, Tengah +50px) -->
+            <path d="M-50,220 C250,280 500,460 720,460 C940,460 1190,280 1490,220 L1490,700 L-50,700 Z" fill="url(#sd_flow_grad3)"/>
+
+            <!-- 4. Wave Layer 4 (Samping +135px, Tengah +55px) -->
+            <path d="M-50,355 C250,400 500,515 720,515 C940,515 1190,400 1490,355 L1490,700 L-50,700 Z" fill="url(#sd_flow_grad4)"/>
+
+            <!-- 5. Wave Layer 5 (Samping +135px, Tengah +55px, Inti Depan) -->
+            <path d="M-50,490 C250,510 500,570 720,570 C940,570 1190,510 1490,490 L1490,700 L-50,700 Z" fill="url(#sd_flow_grad5)"/>
+
+            <!-- Bottom Blend Gradient Overlay -->
+            <rect y="320" width="1440" height="280" fill="url(#sd_bottom_fade)"/>
+          </g>
         </svg>
       </div>
 
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <div>
-            <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Untuk Siapa</span>
+            <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Aplikasi &amp; Use-Cases</span>
             <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
               {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} cocok untuk Anda.
             </h2>
           </div>
           <div class="relative">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
-              @foreach($drone['for'] as $usecase)
+              @foreach($usecases_list as $usecase)
               <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
                 {{-- Top Specular Edge Sheen --}}
                 <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/50 to-transparent pointer-events-none opacity-60 group-hover:opacity-100 transition-opacity"></div>
@@ -1004,7 +542,6 @@
         </div>
       </div>
     </section>
-    @endif
 
     {{-- ── STATS BAR ────────────────────────────────────────────── --}}
     @php
@@ -1042,7 +579,7 @@
     @endif
 
     {{-- ── CTA (EKOSISTEM VECTOR BACKGROUND) ─────────────────────── --}}
-    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08]">
+    <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08]">
       
       {{-- Organic Wave Geometry Vector Background (Matching Ekosistem Bento Card) --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -1056,7 +593,7 @@
           <defs>
             <linearGradient id="paint0_drone_cta_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
               <stop stop-color="#0a555c"/>
-              <stop offset="0.915" stop-color="#0a0c10"/>
+              <stop offset="0.915" stop-color="#0a555c"/>
             </linearGradient>
             <linearGradient id="paint1_drone_cta_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
               <stop stop-color="#18d6e7" stop-opacity="0.40"/>
@@ -1065,12 +602,12 @@
             <linearGradient id="paint2_drone_cta_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
               <stop stop-color="#46deec" stop-opacity="0.35"/>
               <stop offset="0.49" stop-color="#0f808a" stop-opacity="0.22"/>
-              <stop offset="0.9999" stop-color="#031e20"/>
+              <stop offset="0.9999" stop-color="#0a555c"/>
             </linearGradient>
             <linearGradient id="paint3_drone_cta_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
               <stop stop-color="#75e6f0" stop-opacity="0.40"/>
               <stop offset="0.49" stop-color="#18d6e7" stop-opacity="0.25"/>
-              <stop offset="0.9999" stop-color="#031e20"/>
+              <stop offset="0.9999" stop-color="#0a555c"/>
             </linearGradient>
           </defs>
         </svg>
