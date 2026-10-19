@@ -28,9 +28,27 @@
   $c_phone   = $clean_str($c_phone);
   $c_email   = $clean_str($c_email);
   $c_address = $clean_str($c_address);
+  $c_company = $clean_str($global_c['company_name'] ?? 'PT Karya Solusi Angkasa');
+
+  // Kustomisasi Narasi Halaman Kontak Dinamis
+  $p_badge       = $clean_str($global_c['page_kontak_badge'] ?? 'Pusat Kontak');
+  $p_title       = $clean_str($global_c['page_kontak_title'] ?? 'Hubungi Kami.');
+  $p_desc        = $clean_str($global_c['page_kontak_desc'] ?? 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.');
+  $p_panel_label = $clean_str($global_c['page_kontak_panel_label'] ?? 'Kantor & Workshop Resmi');
+  $p_panel_desc  = $clean_str($global_c['page_kontak_panel_desc'] ?? 'Produsen UAV nasional bersertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berlokasi di Sleman, Yogyakarta.');
+  $p_hours_wd    = $clean_str($global_c['page_kontak_hours_wd'] ?? 'Senin – Jumat: 08:30 – 17:00 WIB');
+  $p_hours_sat   = $clean_str($global_c['page_kontak_hours_sat'] ?? 'Sabtu: 08:30 – 13:00 WIB');
+  $p_wa_btn      = $clean_str($global_c['page_kontak_wa_btn'] ?? 'Chat WhatsApp Kami');
+  $p_form_title  = $clean_str($global_c['page_kontak_form_title'] ?? 'Kirim Pesan atau Permintaan Penawaran');
+  $p_form_desc   = $clean_str($global_c['page_kontak_form_desc'] ?? 'Lengkapi formulir di bawah ini, tim kami akan merespons dalam 1×24 jam kerja:');
+  $p_form_btn    = $clean_str($global_c['page_kontak_form_btn'] ?? 'Kirim Pesan');
+  $p_form_note   = $clean_str($global_c['page_kontak_form_note'] ?? 'Respons 1×24 jam kerja. Data terjamin aman.');
+  $p_map_title   = $clean_str($global_c['page_kontak_map_title'] ?? 'Lokasi Workshop');
+  $p_map_btn     = $clean_str($global_c['page_kontak_map_btn'] ?? 'Buka di Google Maps');
+  $p_map_link    = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman';
 @endphp
 
-<div id="contact-page" class="w-full bg-[#f5f5f7] font-sans selection:bg-[#0066cc]/20">
+<div id="contact-page" class="w-full bg-[#f5f5f7] font-sans">
 
   {{-- ============================================================ --}}
   {{-- 1. HERO SECTION — Apple Minimalist & Ringkas                --}}
@@ -38,16 +56,16 @@
   <section class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-20 pb-8 sm:pb-12 text-center">
 
-      <p class="inline-block text-[13px] font-semibold text-[#0066cc] mb-3 tracking-wide">
-        Pusat Kontak
+      <p class="inline-block text-[13px] font-semibold text-[#0f808a] mb-3 tracking-wide">
+        {!! esc_html($p_badge) !!}
       </p>
 
       <h1 class="text-[38px] sm:text-[50px] lg:text-[58px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.08] max-w-[800px] mx-auto">
-        Hubungi Kami.
+        {!! esc_html($p_title) !!}
       </h1>
 
       <p class="mt-3.5 text-[16px] sm:text-[18px] text-[#515154] font-normal max-w-[620px] mx-auto leading-relaxed">
-        Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.
+        {!! nl2br(esc_html($p_desc)) !!}
       </p>
 
     </div>
@@ -63,23 +81,23 @@
       {{-- Unified Master Card: Seamless Dual-Surface --}}
       <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-        {{-- Left Side: Dark Blue Architectural Panel (5 cols) --}}
-        <div class="lg:col-span-5 bg-gradient-to-br from-[#0d2342] via-[#09182d] to-[#050f1d] py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+        {{-- Left Side: Dark Teal Architectural Panel (5 cols) matching Homepage Contact Section --}}
+        <div class="lg:col-span-5 bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
           
-          {{-- Ambient Dual-Orb Gradient Glow --}}
+          {{-- Ambient Dual-Orb Gradient Glow (Teal Palette matching Homepage) --}}
           <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
             <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <linearGradient id="orb1-kontak-page" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
-                  <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                  <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                  <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.15"/>
+                  <stop offset="1" stop-color="#18d6e7" stop-opacity="0.8"/>
                 </linearGradient>
                 <linearGradient id="orb2-kontak-page" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
-                  <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                  <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                  <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.15"/>
+                  <stop offset="1" stop-color="#18d6e7" stop-opacity="0.8"/>
                 </linearGradient>
               </defs>
-              <g opacity="0.55">
+              <g opacity="0.45">
                 <circle cx="286" cy="5" r="75" fill="url(#orb1-kontak-page)"/>
                 <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-kontak-page)"/>
               </g>
@@ -89,13 +107,13 @@
           {{-- Top Header Section --}}
           <div class="relative z-10">
             <span class="text-[12px] font-semibold text-white/80 tracking-wide block mb-1.5">
-              Kantor &amp; Workshop Resmi
+              {!! esc_html($p_panel_label) !!}
             </span>
             <h2 class="text-[23px] sm:text-[26px] font-semibold tracking-tight text-white leading-tight mb-2">
-              PT Karya Solusi Angkasa
+              {!! esc_html($c_company) !!}
             </h2>
             <p class="text-[13px] text-white/65 leading-relaxed max-w-[380px]">
-              Produsen UAV nasional bersertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berlokasi di Sleman, Yogyakarta.
+              {!! nl2br(esc_html($p_panel_desc)) !!}
             </p>
           </div>
 
@@ -104,7 +122,7 @@
             <div>
               <p class="text-[11px] font-medium text-white/40 mb-1">Telepon / WhatsApp</p>
               <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
-                 class="text-[15.5px] sm:text-[16px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">
+                 class="text-[15.5px] sm:text-[16px] font-semibold text-white hover:text-[#75e6f0] transition-colors">
                 {!! esc_html($c_phone) !!}
               </a>
             </div>
@@ -112,7 +130,7 @@
             <div>
               <p class="text-[11px] font-medium text-white/40 mb-1">Email Resmi</p>
               <a href="mailto:{{ esc_attr($c_email) }}"
-                 class="text-[14px] sm:text-[14.5px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">
+                 class="text-[14px] sm:text-[14.5px] font-semibold text-white hover:text-[#75e6f0] transition-colors break-all">
                 {!! esc_html($c_email) !!}
               </a>
             </div>
@@ -127,8 +145,12 @@
             <div class="pt-2 border-t border-white/10">
               <p class="text-[11px] font-medium text-white/40 mb-1">Jam Operasional</p>
               <div class="text-[12px] text-white/70 space-y-0.5">
-                <p>Senin &ndash; Jumat: 08:30 &ndash; 17:00 WIB</p>
-                <p>Sabtu: 08:30 &ndash; 13:00 WIB</p>
+                @if(!empty($p_hours_wd))
+                  <p>{!! esc_html($p_hours_wd) !!}</p>
+                @endif
+                @if(!empty($p_hours_sat))
+                  <p>{!! esc_html($p_hours_sat) !!}</p>
+                @endif
               </div>
             </div>
           </div>
@@ -138,7 +160,7 @@
             <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
                class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.97] text-white font-semibold text-[13px] px-5 py-2.5 rounded-full transition-all duration-150 shadow-sm">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              <span>Chat WhatsApp Kami</span>
+              <span>{!! esc_html($p_wa_btn) !!}</span>
             </a>
           </div>
         </div>
@@ -147,9 +169,9 @@
         <div class="lg:col-span-7 py-9 px-8 sm:px-10 lg:px-12 bg-white flex flex-col justify-between">
           <div class="mb-5">
             <h3 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
-              Kirim Pesan atau Permintaan Penawaran
+              {!! esc_html($p_form_title) !!}
             </h3>
-            <p class="text-[13px] text-[#64748b]">Lengkapi formulir di bawah ini, tim kami akan merespons dalam 1×24 jam kerja:</p>
+            <p class="text-[13px] text-[#64748b]">{!! nl2br(esc_html($p_form_desc)) !!}</p>
           </div>
 
           {{-- Form Body --}}
@@ -162,56 +184,56 @@
               <input type="text" id="fds_website_url_hp" name="website_url_hp" value="" tabindex="-1" autocomplete="off">
             </div>
 
-            <div class="space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="space-y-3.5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
                   <input type="text" name="first_name" required maxlength="60" placeholder="Ahmad"
-                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
                 </div>
                 <div>
                   <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
                   <input type="text" name="last_name" required maxlength="60" placeholder="Fauzi"
-                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
                 </div>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
                   <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
-                  <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia / Instansi"
-                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia"
+                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
                 </div>
                 <div>
                   <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
                   <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.co.id"
-                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                    class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
                 </div>
               </div>
 
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
                 <input type="tel" name="phone" required maxlength="30" placeholder="+62 812-XXXX-XXXX"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
 
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Drone / Pertanyaan Anda <span class="text-red-500">*</span></label>
                 <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan pengadaan armada, demo uji terbang, atau pertanyaan teknis..."
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
               </div>
             </div>
 
             {{-- Submit Row --}}
             <div class="pt-3 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <button type="submit" id="fds-inquiry-btn"
-                class="bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0066cc]/25 inline-flex items-center gap-1.5 cursor-pointer">
-                <span id="fds-inquiry-btn-text">Kirim Pesan</span>
+                class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0f808a]/25 inline-flex items-center gap-1.5 cursor-pointer">
+                <span id="fds-inquiry-btn-text">{!! esc_html($p_form_btn) !!}</span>
                 <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
               </button>
               <div class="flex items-center gap-1.5 text-[11.5px] text-[#86868b] whitespace-nowrap">
                 <svg class="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                <span>Respons 1×24 jam kerja. Data terjamin aman.</span>
+                <span>{!! esc_html($p_form_note) !!}</span>
               </div>
             </div>
 
@@ -236,16 +258,16 @@
         <div class="px-6 sm:px-8 py-5 border-b border-black/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
           <div>
             <h3 class="text-[16px] sm:text-[17px] font-semibold text-[#1d1d1f] leading-snug">
-              Lokasi Workshop
+              {!! esc_html($p_map_title) !!}
             </h3>
             <p class="text-[12.5px] text-[#515154] mt-0.5">
               {!! esc_html($c_address) !!}
             </p>
           </div>
           <div class="flex-shrink-0">
-            <a href="https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman" target="_blank" rel="noopener"
-               class="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#0066cc] hover:text-[#0052a3] bg-[#0066cc]/10 hover:bg-[#0066cc]/15 px-3.5 py-1.5 rounded-full transition-colors">
-              <span>Buka di Google Maps</span>
+            <a href="{{ esc_url($p_map_link) }}" target="_blank" rel="noopener"
+               class="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#0f808a] hover:text-[#0a555c] bg-[#0f808a]/10 hover:bg-[#0f808a]/15 px-3.5 py-1.5 rounded-full transition-colors">
+              <span>{!! esc_html($p_map_btn) !!}</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
             </a>
           </div>
@@ -370,7 +392,7 @@ function fdsSubmitInquiry(e) {
   .then(function(data) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = 'Kirim Pesan';
+    btnText.textContent = {!! json_encode($p_form_btn) !!};
 
     if (data.success) {
       fdsShowSnackbar(true, 'Pesan Berhasil Terkirim', data.data.message || 'Pesan Anda telah berhasil disimpan di sistem kami.');
@@ -382,7 +404,7 @@ function fdsSubmitInquiry(e) {
   .catch(function(err) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = 'Kirim Pesan';
+    btnText.textContent = {!! json_encode($p_form_btn) !!};
     fdsShowSnackbar(false, 'Gangguan Jaringan', 'Gagal terhubung ke server. Silakan coba lagi atau hubungi kami via WhatsApp.');
   });
 }

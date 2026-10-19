@@ -18,7 +18,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Kompak & Lincah',
       'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '5 Liter'],
         ['Durasi Terbang', '10 – 15 menit'],
@@ -46,7 +46,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Terlaris',
       'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '10 Liter'],
         ['Durasi Terbang', '12 – 15 menit'],
@@ -74,7 +74,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Profesional',
       'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '17 Liter (15 – 17 Liter)'],
         ['Durasi Terbang', '15 – 25 menit'],
@@ -102,7 +102,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Enterprise',
       'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '22 Liter'],
         ['Durasi Terbang', '20 – 25 menit'],
@@ -130,7 +130,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Heavy Duty',
       'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '30 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
@@ -158,7 +158,7 @@
       'kategori'  => 'Agrikultur',
       'badge'     => 'Ultra Capacity',
       'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '50 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
@@ -186,7 +186,7 @@
       'kategori'  => 'Pemetaan & GIS',
       'badge'     => 'Hybrid VTOL',
       'tagline'   => 'Platform UAV Pemetaan Fixed-Wing VTOL Hybrid — Jangkauan 60 km untuk akuisisi geospasial area luas.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Bentang Sayap (Wingspan)', '2.000 mm'],
         ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
@@ -215,7 +215,7 @@
       'kategori'  => 'Pemetaan & Inspeksi',
       'badge'     => 'Modular UAV',
       'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
         ['Durasi Terbang', '15 – 30 menit'],
@@ -243,7 +243,7 @@
       'kategori'  => 'Cargo & Logistik',
       'badge'     => 'Logistics UAV',
       'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '3 – 10 kg (Kotak Logistik)'],
         ['Berat Lepas Landas (MTOW)', '15 kg'],
@@ -271,7 +271,7 @@
       'kategori'  => 'Reboisasi & Konservasi',
       'badge'     => 'Heavy-Duty Seedball',
       'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '20 kg (Dispenser Seedball)'],
         ['Durasi Terbang', '15 – 20 menit'],
@@ -329,7 +329,7 @@
           'kategori'  => $get_meta('drone_kategori') ?: 'Agrikultur',
           'badge'     => $get_meta('drone_badge'),
           'tagline'   => $get_meta('drone_tagline') ?: get_the_excerpt($preview_id),
-          'color'     => '#0066cc',
+          'color'     => '#0f808a',
           'specs'     => [],
           'desc'      => $get_meta('drone_desc') ?: get_the_content(null, false, $preview_id),
           'for'       => [],
@@ -528,29 +528,29 @@
           <defs>
             {{-- Lapisan 1 (Terluar) — Biru di sisi kurva, bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill1" x1="0%" y1="20%" x2="100%" y2="80%">
-              <stop offset="0%" stop-color="#0071e3" stop-opacity="0.16" />
-              <stop offset="45%" stop-color="#004080" stop-opacity="0.08" />
+              <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.16" />
+              <stop offset="45%" stop-color="#0a555c" stop-opacity="0.08" />
               <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
             </linearGradient>
 
             {{-- Lapisan 2 (Sedang-Luar) — Bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill2" x1="0%" y1="20%" x2="100%" y2="80%">
-              <stop offset="0%" stop-color="#0077ed" stop-opacity="0.25" />
-              <stop offset="50%" stop-color="#0052a3" stop-opacity="0.12" />
+              <stop offset="0%" stop-color="#46deec" stop-opacity="0.25" />
+              <stop offset="50%" stop-color="#0a555c" stop-opacity="0.12" />
               <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
             </linearGradient>
 
             {{-- Lapisan 3 (Tengah) — Bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill3" x1="0%" y1="20%" x2="100%" y2="80%">
-              <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.36" />
-              <stop offset="55%" stop-color="#0066cc" stop-opacity="0.18" />
+              <stop offset="0%" stop-color="#13abb9" stop-opacity="0.36" />
+              <stop offset="55%" stop-color="#0f808a" stop-opacity="0.18" />
               <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.75" />
             </linearGradient>
 
             {{-- Lapisan 4 (Inti) — Biru Vibrant di awal, bergradasi ke gelap di sisi kanan --}}
             <linearGradient id="hero-curve-fill4" x1="0%" y1="20%" x2="100%" y2="80%">
-              <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
-              <stop offset="55%" stop-color="#0071e3" stop-opacity="0.26" />
+              <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.52" />
+              <stop offset="55%" stop-color="#18d6e7" stop-opacity="0.26" />
               <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.65" />
             </linearGradient>
           </defs>
@@ -571,7 +571,7 @@
             {!! wp_specialchars_decode($drone['kategori'] ?? 'Agrikultur') !!}
           </span>
           @if(!empty($drone['badge']))
-          <span class="inline-flex items-center text-[12px] font-semibold text-[#60a5fa] tracking-wide bg-[#0066cc]/20 border border-blue-400/30 rounded-full px-3.5 py-1 backdrop-blur-sm">
+          <span class="inline-flex items-center text-[12px] font-semibold text-[#18d6e7] tracking-wide bg-[#0f808a]/20 border border-[#46deec]/30 rounded-full px-3.5 py-1 backdrop-blur-sm">
             {!! wp_specialchars_decode($drone['badge']) !!}
           </span>
           @endif
@@ -591,7 +591,7 @@
         {{-- CTAs --}}
         <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10">
           <a href="{{ home_url('/#kontak') }}"
-             class="inline-flex items-center bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0066cc]/30">
+             class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-[#0f808a]/30">
             Minta Penawaran
           </a>
           <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
@@ -631,8 +631,8 @@
           <div class="lg:col-span-6 flex flex-col relative overflow-visible">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide">Spesifikasi</p>
-                <a href="{{ home_url('/bandingkan?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0066cc] hover:underline flex items-center gap-1">
+                <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">Spesifikasi</p>
+                <a href="{{ home_url('/bandingkan?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1">
                   Bandingkan spesifikasi &rsaquo;
                 </a>
               </div>
@@ -737,7 +737,7 @@
                        name="email" 
                        required 
                        placeholder="{{ esc_attr($brochure_ph) }}" 
-                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/20 transition-all text-center sm:text-left">
+                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all text-center sm:text-left">
               </div>
 
               <button type="submit" 
@@ -756,7 +756,7 @@
                  href="{{ esc_url($brochure_file_url ?: '#') }}" 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-3 bg-[#0066cc] hover:bg-[#0055b3] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
+                 class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                 </svg>
@@ -802,7 +802,7 @@
                        name="email" 
                        required 
                        placeholder="{{ esc_attr($brochure_ph) }}" 
-                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/20 transition-all">
+                       class="w-full h-[54px] sm:h-[58px] px-6 bg-[#f5f5f7] border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
               </div>
 
               <button type="submit" 
@@ -821,7 +821,7 @@
                  href="{{ esc_url($brochure_file_url ?: '#') }}" 
                  target="_blank" 
                  rel="noopener noreferrer"
-                 class="inline-flex items-center justify-center gap-3 bg-[#0066cc] hover:bg-[#0055b3] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
+                 class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                 </svg>
@@ -956,19 +956,19 @@
         <svg class="w-full h-full opacity-80" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs>
             <linearGradient id="forwhom-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
-              <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
+              <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
             </linearGradient>
             <linearGradient id="forwhom-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
-              <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
+              <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
             </linearGradient>
             <linearGradient id="forwhom-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
-              <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
-              <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+              <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
+              <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
+              <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
             </linearGradient>
           </defs>
 
@@ -1042,7 +1042,7 @@
     @endif
 
     {{-- ── CTA (EKOSISTEM VECTOR BACKGROUND) ─────────────────────── --}}
-    <section class="relative bg-[#0c1018] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.06]">
+    <section class="relative bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08]">
       
       {{-- Organic Wave Geometry Vector Background (Matching Ekosistem Bento Card) --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -1055,22 +1055,22 @@
           </g>
           <defs>
             <linearGradient id="paint0_drone_cta_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#1b2434"/>
-              <stop offset="0.915" stop-color="#0c121e"/>
+              <stop stop-color="#0a555c"/>
+              <stop offset="0.915" stop-color="#0a0c10"/>
             </linearGradient>
             <linearGradient id="paint1_drone_cta_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#2563eb" stop-opacity="0.40"/>
-              <stop offset="0.915" stop-color="#1d4ed8" stop-opacity="0.15"/>
+              <stop stop-color="#18d6e7" stop-opacity="0.40"/>
+              <stop offset="0.915" stop-color="#0f808a" stop-opacity="0.15"/>
             </linearGradient>
             <linearGradient id="paint2_drone_cta_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#3b82f6" stop-opacity="0.35"/>
-              <stop offset="0.49" stop-color="#1d4ed8" stop-opacity="0.22"/>
-              <stop offset="0.9999" stop-color="#080c14"/>
+              <stop stop-color="#46deec" stop-opacity="0.35"/>
+              <stop offset="0.49" stop-color="#0f808a" stop-opacity="0.22"/>
+              <stop offset="0.9999" stop-color="#031e20"/>
             </linearGradient>
             <linearGradient id="paint3_drone_cta_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#60a5fa" stop-opacity="0.40"/>
-              <stop offset="0.49" stop-color="#2563eb" stop-opacity="0.25"/>
-              <stop offset="0.9999" stop-color="#060910"/>
+              <stop stop-color="#75e6f0" stop-opacity="0.40"/>
+              <stop offset="0.49" stop-color="#18d6e7" stop-opacity="0.25"/>
+              <stop offset="0.9999" stop-color="#031e20"/>
             </linearGradient>
           </defs>
         </svg>
@@ -1085,7 +1085,7 @@
         </p>
         <div class="flex flex-wrap gap-4 items-center justify-center">
           <a href="{{ home_url('/#kontak') }}"
-             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0c121e] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
+             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
             Hubungi Tim Sales
           </a>
           <a href="{{ home_url('/blog') }}"

@@ -49,7 +49,7 @@
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap">
       <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" 
-         class="inline-flex items-center justify-center bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-xl shadow-[#0066cc]/40 hover:shadow-[#0066cc]/60 hover:-translate-y-0.5">
+         class="inline-flex items-center justify-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-xl shadow-[#0f808a]/40 hover:shadow-[#0f808a]/60 hover:-translate-y-0.5">
         {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
       </a>
       <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" 
@@ -81,7 +81,7 @@
         {{-- Dot Indicators --}}
         <div class="flex items-center gap-2">
           @foreach($hero_slides as $i => $slide)
-          <button type="button" class="fds-slider-dot h-2 rounded-full transition-all duration-300 {{ $i === 0 ? 'w-8 bg-[#0066cc]' : 'w-2 bg-white/40 hover:bg-white/70' }}" data-dot-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}"></button>
+          <button type="button" class="fds-slider-dot h-2 rounded-full transition-all duration-300 {{ $i === 0 ? 'w-8 bg-[#0f808a]' : 'w-2 bg-white/40 hover:bg-white/70' }}" data-dot-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}"></button>
           @endforeach
         </div>
 
@@ -137,9 +137,9 @@
         dots.forEach((dot, i) => {
           if (i === current) {
             dot.classList.remove('w-2', 'bg-white/40');
-            dot.classList.add('w-8', 'bg-[#0066cc]');
+            dot.classList.add('w-8', 'bg-[#0f808a]');
           } else {
-            dot.classList.remove('w-8', 'bg-[#0066cc]');
+            dot.classList.remove('w-8', 'bg-[#0f808a]');
             dot.classList.add('w-2', 'bg-white/40');
           }
         });
@@ -290,52 +290,52 @@
     'cards' => [],
   ];
 @endphp
-<section id="solusi" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 overflow-hidden border-t border-b border-white/[0.06]">
+<section id="solusi" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-t border-b border-white/10">
   
-  {{-- Vector Background: Lekukan Gelombang Organik Fluida (4 Lapisan Halus, Luwes & Gradasi Gelap di Bawah) --}}
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
     <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         {{-- Ambient Bottom-Left Glow --}}
         <radialGradient id="solusi-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
         </radialGradient>
 
-        {{-- Dark Gradient Fade di Bagian Bawah --}}
+        {{-- Gradient Fade di Bagian Bawah --}}
         <linearGradient id="solusi-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#0a0c10" stop-opacity="0.0" />
-          <stop offset="50%" stop-color="#0a0c10" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.65" />
         </linearGradient>
 
         {{-- Lapisan 1 (Terluar - Lekukan Halus, Menukik Anggun & Mengangkat di Ujung Kanan) --}}
         <linearGradient id="solusi-wave-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.35" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.60" />
         </linearGradient>
 
-        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Gelap di Bawah) --}}
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Lembut) --}}
         <linearGradient id="solusi-wave-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.45" />
-          <stop offset="45%" stop-color="#0066cc" stop-opacity="0.20" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.70" />
         </linearGradient>
 
         {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
         <linearGradient id="solusi-wave-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.55" />
-          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.25" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.90" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.80" />
         </linearGradient>
 
         {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
         <linearGradient id="solusi-wave-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.38" />
-          <stop offset="45%" stop-color="#1d4ed8" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.25" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.85" />
         </linearGradient>
       </defs>
 
@@ -348,7 +348,7 @@
       <path d="M0,390 C250,420 500,500 740,580 C980,640 1200,645 1440,620 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill3)" />
       <path d="M0,510 C180,520 380,580 600,630 C840,670 1100,675 1440,655 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill4)" />
 
-      <!-- Dark Gradient Overlay di Bagian Bawah untuk Transisi Gelap Mulus -->
+      <!-- Gradient Overlay di Bagian Bawah untuk Transisi Halus -->
       <rect y="420" width="1440" height="280" fill="url(#solusi-bottom-dark)" />
     </svg>
   </div>
@@ -357,12 +357,12 @@
   <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14 relative z-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
           {!! esc_html($solusi_data['title']) !!}
         </h2>
       </div>
-      <p class="text-[16px] text-white/50 max-w-[460px] leading-relaxed">
+      <p class="text-[16px] text-white/80 max-w-[460px] leading-relaxed">
         {!! nl2br(esc_html($solusi_data['desc'])) !!}
       </p>
     </div>
@@ -375,17 +375,17 @@
          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
 
       @foreach($solusi_data['cards'] as $card)
-      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#16181f] rounded-[1.5rem] overflow-hidden group hover:bg-[#1d202a] transition-all duration-300 flex flex-col justify-between select-none shadow-xl hover:shadow-2xl hover:shadow-[#0066cc]/15">
+      <div class="solusi-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#052b2e] rounded-[1.5rem] overflow-hidden group hover:bg-[#0a555c] transition-all duration-300 flex flex-col justify-between select-none shadow-xl hover:shadow-2xl hover:shadow-black/25 border border-white/15">
         <div>
           {{-- Image Box --}}
-          <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#1e293b]">
+          <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#031e20]">
             <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#101216]/80 via-transparent to-transparent pointer-events-none"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#052b2e]/80 via-transparent to-transparent pointer-events-none"></div>
             @if(!empty($card['tag']))
               <div class="absolute top-3.5 left-3.5 z-10">
-                <span class="text-[10px] font-bold text-white bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/15 uppercase tracking-wider">
+                <span class="text-[10px] font-bold text-white bg-black/40 backdrop-blur-md px-3 py-1 rounded-full border border-white/20 tracking-wider">
                   {!! esc_html($card['tag']) !!}
                 </span>
               </div>
@@ -394,10 +394,10 @@
 
           {{-- Body --}}
           <div class="p-5 sm:p-6 pb-3">
-            <h3 class="text-[17px] sm:text-[19px] font-semibold text-white mb-2 leading-snug group-hover:text-[#6e9fd4] transition-colors">
+            <h3 class="text-[17px] sm:text-[19px] font-semibold text-white mb-2 leading-snug group-hover:text-[#75e6f0] transition-colors">
               {!! esc_html($card['title']) !!}
             </h3>
-            <p class="text-[13px] sm:text-[13.5px] text-white/70 leading-relaxed">
+            <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed">
               {!! nl2br(esc_html($card['desc'])) !!}
             </p>
           </div>
@@ -405,8 +405,8 @@
 
         {{-- Footer Link --}}
         <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
-          <div class="pt-3.5 border-t border-white/[0.08] flex items-center justify-between">
-            <span class="text-[11px] font-bold text-white/80 tracking-wide uppercase">{!! esc_html($card['tag'] ?? 'FDS DRONE') !!}</span>
+          <div class="pt-3.5 border-t border-white/[0.12] flex items-center justify-between">
+            <span class="text-[11px] font-bold text-white/90 tracking-wide">{!! esc_html($card['tag'] ?? 'FDS Drone') !!}</span>
             <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-white/80 inline-flex items-center gap-1.5 transition-colors group-hover:translate-x-0.5 duration-200">
               <span>{!! esc_html($card['link_text'] ?: 'Pelajari') !!}</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -423,11 +423,11 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="solusi-prev-btn" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
-              class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/10">
+              class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/20">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
       <button id="solusi-next-btn" onclick="scrollSolusiCarousel(1)" aria-label="Berikutnya"
-              class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/10">
+              class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/20">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
@@ -534,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     {{-- Section header --}}
     <div class="mb-12 sm:mb-14">
-      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
+      <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
         {!! esc_html($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[700px]">
@@ -570,9 +570,9 @@ document.addEventListener('DOMContentLoaded', function() {
         $card2_default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
         $card2_img = !empty($hp['keunggulan_card2_img']) ? $hp['keunggulan_card2_img'] : $card2_default_img;
       @endphp
-      <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0066cc] via-[#0052a3] to-[#002d66] rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(0,102,204,0.06)]">
+      <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
         
-        {{-- Concentric Wave Circles (Biru Sistem #0066cc) --}}
+        {{-- Concentric Wave Circles (Teal Sistem #0f808a) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute -bottom-10 -left-10 w-[550px] h-[550px]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
             <!-- Lingkaran 5 (Paling Luar) -->
@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         {{-- Bottom Dark Gradient Overlay --}}
-        <div class="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#00142b]/90 via-[#00224a]/45 to-transparent pointer-events-none z-0"></div>
+        <div class="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#031e20]/90 via-[#052b2e]/45 to-transparent pointer-events-none z-0"></div>
 
         {{-- Bagian Atas / Kiri: Stat & Teks Deskripsi (Di Mobile & Tablet: Deskripsi Langsung di Samping/Bawah Stat Tanpa Divider) --}}
         <div class="relative z-10 flex-1 md:max-w-[58%] lg:max-w-full">
@@ -622,27 +622,27 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
 
-      {{-- Card 3: Tengah Kiri (md:col-span-1 lg:col-span-1) — Pure Organic Wave Curves (Tanpa Garis/Titik) --}}
-      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#1c1f26] via-[#12141a] to-[#0a0c10] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+      {{-- Card 3: Tengah Kiri (md:col-span-1 lg:col-span-1) — Pure Organic Wave Curves (Teal Palette) --}}
+      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
         
-        {{-- Vector Background: Pure Organic Wave Fills (Persis Filosofi CONTOH.svg, Tanpa Garis/Titik) --}}
+        {{-- Vector Background: Pure Organic Wave Fills (Teal Palette) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="w-full h-full" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <defs>
               <linearGradient id="gcs-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#2563eb" stop-opacity="0.38" />
-                <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.16" />
-                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
+                <stop offset="60%" stop-color="#75e6f0" stop-opacity="0.16" />
+                <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
               </linearGradient>
               <linearGradient id="gcs-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.28" />
-                <stop offset="70%" stop-color="#2563eb" stop-opacity="0.12" />
-                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+                <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.22" />
+                <stop offset="70%" stop-color="#46deec" stop-opacity="0.12" />
+                <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
               </linearGradient>
               <linearGradient id="gcs-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
-                <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.32" />
-                <stop offset="50%" stop-color="#2563eb" stop-opacity="0.18" />
-                <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.20" />
+                <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.15" />
+                <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
               </linearGradient>
             </defs>
 
@@ -669,17 +669,17 @@ document.addEventListener('DOMContentLoaded', function() {
       {{-- Card 4: Tengah Kanan (md:col-span-1 lg:col-span-1) — Lingkaran Konsentris Terbalik (Natural Inverted Circles) --}}
       <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] rounded-3xl p-6 sm:p-7 flex flex-col justify-end min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
         
-        {{-- Vector Background: Lingkaran Konsentris Terbalik (Proporsi Sedang / Golden Ratio di Pojok Kanan Atas, Biru Sistem #0066cc) --}}
+        {{-- Vector Background: Lingkaran Konsentris Terbalik (Proporsi Sedang / Golden Ratio di Pojok Kanan Atas, Teal Sistem #0f808a) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute -top-6 -right-6 w-[400px] sm:w-[440px] h-[400px] sm:h-[440px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Lingkaran 4 (Luar) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="320" fill="#0066cc" fill-opacity="0.05" />
-            <!-- Lingkaran 3 (Sedang) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="220" fill="#0066cc" fill-opacity="0.10" />
-            <!-- Lingkaran 2 (Tengah) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="130" fill="#0066cc" fill-opacity="0.18" />
-            <!-- Lingkaran 1 (Inti) — Biru Sistem #0066cc -->
-            <circle cx="370" cy="30" r="60" fill="#0066cc" fill-opacity="0.30" />
+            <!-- Lingkaran 4 (Luar) — Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="320" fill="#0f808a" fill-opacity="0.06" />
+            <!-- Lingkaran 3 (Sedang) — Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="220" fill="#0f808a" fill-opacity="0.12" />
+            <!-- Lingkaran 2 (Tengah) — Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="130" fill="#0f808a" fill-opacity="0.20" />
+            <!-- Lingkaran 1 (Inti) — Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="60" fill="#0f808a" fill-opacity="0.35" />
           </svg>
         </div>
 
@@ -728,22 +728,22 @@ document.addEventListener('DOMContentLoaded', function() {
             </g>
             <defs>
               <linearGradient id="paint0_dark_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#1b2434"/>
-                <stop offset="0.915" stop-color="#0c121e"/>
+                <stop stop-color="#0a555c" stop-opacity="0.30"/>
+                <stop offset="0.915" stop-color="#052b2e"/>
               </linearGradient>
               <linearGradient id="paint1_dark_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#2563eb" stop-opacity="0.40"/>
-                <stop offset="0.915" stop-color="#1d4ed8" stop-opacity="0.15"/>
+                <stop stop-color="#13abb9" stop-opacity="0.40"/>
+                <stop offset="0.915" stop-color="#0f808a" stop-opacity="0.15"/>
               </linearGradient>
               <linearGradient id="paint2_dark_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#3b82f6" stop-opacity="0.35"/>
-                <stop offset="0.49" stop-color="#1d4ed8" stop-opacity="0.22"/>
-                <stop offset="0.9999" stop-color="#080c14"/>
+                <stop stop-color="#46deec" stop-opacity="0.35"/>
+                <stop offset="0.49" stop-color="#0f808a" stop-opacity="0.22"/>
+                <stop offset="0.9999" stop-color="#031e20"/>
               </linearGradient>
               <linearGradient id="paint3_dark_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#60a5fa" stop-opacity="0.40"/>
-                <stop offset="0.49" stop-color="#2563eb" stop-opacity="0.25"/>
-                <stop offset="0.9999" stop-color="#060910"/>
+                <stop stop-color="#75e6f0" stop-opacity="0.40"/>
+                <stop offset="0.49" stop-color="#13abb9" stop-opacity="0.25"/>
+                <stop offset="0.9999" stop-color="#031e20"/>
               </linearGradient>
             </defs>
           </svg>
@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {{-- Right: Sector Badges (Wrap Rapi Tanpa Terpotong) --}}
         <div class="flex flex-wrap gap-2 max-w-full sm:max-w-[320px] flex-shrink-0 relative z-10">
           @foreach(['Agri', 'Mapping', 'Inspeksi', 'Tambang', 'Hutan', 'BUMN'] as $sector)
-            <span class="bg-white/10 hover:bg-white/20 text-white rounded-full px-3.5 py-1 text-[11px] font-medium border border-white/15 hover:border-blue-400/40 transition-all backdrop-blur-md cursor-default shadow-sm">
+            <span class="bg-white/10 hover:bg-white/20 text-white rounded-full px-3.5 py-1 text-[11px] font-medium border border-white/15 hover:border-[#46deec]/40 transition-all backdrop-blur-md cursor-default shadow-sm">
               {{ $sector }}
             </span>
           @endforeach
@@ -782,7 +782,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">{!! esc_html($hp['produk_badge'] ?? 'Lini Produk Drone') !!}</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{!! esc_html($hp['produk_badge'] ?? 'Lini Produk Drone') !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
           {!! esc_html($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') !!}
         </h2>
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', function() {
               // Extract first 2-3 lines of specs for row preview
               $spec_summary = '';
               if ($d_specs) {
-                  $lines = array_slice(array_filter(array_map('trim', explode("\n", $d_specs))), 0, 3);
+                  $lines = array_slice(array_filter(map_deep(explode("\n", $d_specs), 'trim')) ?: array_filter(array_map('trim', explode("\n", $d_specs))), 0, 3);
                   $parts = [];
                   foreach ($lines as $l) {
                       $sp = explode(':', $l, 2);
@@ -887,15 +887,15 @@ document.addEventListener('DOMContentLoaded', function() {
         color: #515154;
       }
       .drone-tab:hover {
-        border-color: #0066cc;
-        color: #0066cc;
+        border-color: #0f808a;
+        color: #0f808a;
       }
       .drone-tab.active,
       .drone-tab.active:hover,
       .drone-tab.active:focus {
-        background-color: #0066cc !important;
+        background-color: #0f808a !important;
         color: #ffffff !important;
-        border-color: #0066cc !important;
+        border-color: #0f808a !important;
       }
     </style>
 
@@ -914,9 +914,11 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="col-span-1 hidden sm:flex">
             <div class="w-11 h-11 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
               @if(!empty($global_drone_icon))
-                <img src="{{ esc_url($global_drone_icon) }}" alt="Drone Icon" style="width: 26px !important; height: 26px !important; min-width: 26px !important; max-width: 26px !important; max-height: 26px !important; object-fit: contain !important;" class="block">
+                <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
+                     style="-webkit-mask-image: url('{{ esc_url($global_drone_icon) }}'); mask-image: url('{{ esc_url($global_drone_icon) }}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
+                     role="img" aria-label="Drone Icon"></div>
               @else
-                <svg class="w-6 h-6 text-[#0066cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
               @endif
             </div>
           </div>
@@ -925,7 +927,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="col-span-7 sm:col-span-3">
             <div class="flex items-center gap-2 mb-0.5">
               <p class="text-[11px] font-semibold text-[#86868b] tracking-wide">{!! $p['cat'] !!}</p>
-              <span class="text-[10px] font-semibold text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{!! $p['badge'] !!}</span>
+              <span class="text-[10px] font-semibold text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{!! $p['badge'] !!}</span>
             </div>
             <h3 class="text-[20px] font-semibold text-[#1d1d1f] tracking-tight">{!! $p['name'] !!}</h3>
           </div>
@@ -939,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
             <p class="hidden lg:block text-[13px] text-[#86868b]">{!! $p['specs'] !!}</p>
             <a href="{{ $p['url'] }}"
-               class="text-[13px] font-semibold text-[#0066cc] hover:underline whitespace-nowrap"
+               class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap"
                onclick="event.stopPropagation()">
               Detail &rsaquo;
             </a>
@@ -952,7 +954,7 @@ document.addEventListener('DOMContentLoaded', function() {
       {{-- Empty state untuk kategori yang belum ada produk --}}
       <div id="drone-empty" class="hidden py-16 text-center border-b border-black/[0.06]">
         <p class="text-[15px] text-[#86868b]">Produk kategori ini akan segera hadir.</p>
-        <a href="{{ home_url('/#kontak') }}" class="mt-4 inline-block text-[14px] font-semibold text-[#0066cc] hover:underline">Daftar notifikasi &rsaquo;</a>
+        <a href="{{ home_url('/#kontak') }}" class="mt-4 inline-block text-[14px] font-semibold text-[#0f808a] hover:underline">Daftar notifikasi &rsaquo;</a>
       </div>
 
     </div>
@@ -1025,52 +1027,52 @@ function filterDrones(btn) {
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
 @if(!empty($layanan_items) || !empty($hp['layanan_title']))
-<section id="layanan" class="relative bg-gradient-to-br from-[#181a20] via-[#101216] to-[#0a0c10] py-24 sm:py-32 border-t border-white/[0.06]">
+<section id="layanan" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 border-t border-white/10">
   
-  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Top Wave Halus & Gradasi Gelap di Bawah) --}}
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
     <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         {{-- Ambient Bottom-Left Glow --}}
         <radialGradient id="layanan-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
         </radialGradient>
 
-        {{-- Dark Gradient Fade di Bagian Bawah --}}
+        {{-- Gradient Fade di Bagian Bawah --}}
         <linearGradient id="layanan-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#0a0c10" stop-opacity="0.0" />
-          <stop offset="50%" stop-color="#0a0c10" stop-opacity="0.45" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.65" />
         </linearGradient>
 
         {{-- Lapisan 1 (Terluar - Lekukan Lebih Dalam, Halus, Alami & Tidak Datar) --}}
         <linearGradient id="layanan-curve-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.35" />
-          <stop offset="45%" stop-color="#004080" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.80" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.60" />
         </linearGradient>
 
-        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Gelap di Bawah) --}}
+        {{-- Lapisan 2 (Tengah - Aksen Teal Hidup dengan Gradasi Lembut) --}}
         <linearGradient id="layanan-curve-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.45" />
-          <stop offset="45%" stop-color="#0066cc" stop-opacity="0.20" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.85" />
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.70" />
         </linearGradient>
 
         {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
         <linearGradient id="layanan-curve-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.55" />
-          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.25" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.90" />
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.80" />
         </linearGradient>
 
         {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
         <linearGradient id="layanan-curve-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.38" />
-          <stop offset="45%" stop-color="#1d4ed8" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.95" />
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.25" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.85" />
         </linearGradient>
       </defs>
 
@@ -1083,7 +1085,7 @@ function filterDrones(btn) {
       <path d="M0,430 C240,450 480,530 720,610 C940,660 1180,670 1440,650 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill3)" />
       <path d="M0,540 C180,550 360,610 560,650 C780,680 1060,685 1440,670 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill4)" />
 
-      <!-- Dark Gradient Overlay di Bagian Bawah untuk Transisi Gelap yang Menyatu Mulus -->
+      <!-- Gradient Overlay di Bagian Bawah untuk Transisi Halus -->
       <rect y="420" width="1440" height="280" fill="url(#layanan-bottom-dark)" />
     </svg>
   </div>
@@ -1094,7 +1096,7 @@ function filterDrones(btn) {
 
       <div class="lg:sticky lg:top-28">
         @if(!empty($hp['layanan_badge']))
-        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
         @endif
         @if(!empty($hp['layanan_title']))
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
@@ -1102,32 +1104,32 @@ function filterDrones(btn) {
         </h2>
         @endif
         @if(!empty($hp['layanan_desc']))
-        <p class="text-[18px] text-white/50 leading-relaxed max-w-[380px] mb-8">
+        <p class="text-[18px] text-white/80 leading-relaxed max-w-[380px] mb-8">
           {!! nl2br(esc_html($hp['layanan_desc'])) !!}
         </p>
         @endif
         @if(!empty($hp['layanan_cta_text']))
         <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
+           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#0f808a] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
           {!! esc_html($hp['layanan_cta_text']) !!}
         </a>
         @endif
       </div>
 
       @if(!empty($layanan_items))
-      <div class="divide-y divide-white/[0.08]">
+      <div class="divide-y divide-white/15">
         @foreach($layanan_items as $lItem)
         <div class="py-7 group">
           <h3 class="text-[17px] font-semibold text-white mb-1.5 flex items-center justify-between">
             <span>{!! esc_html(wp_specialchars_decode($lItem['title'])) !!}</span>
             @if(!empty($lItem['url']) && $lItem['url'] !== '#')
-            <a href="{{ esc_url($lItem['url']) }}" class="text-[12px] font-medium text-[#6e9fd4] group-hover:text-white transition-colors inline-flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
+            <a href="{{ esc_url($lItem['url']) }}" class="text-[12px] font-medium text-[#a3eef5] group-hover:text-white transition-colors inline-flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
               Lihat Detail &rsaquo;
             </a>
             @endif
           </h3>
           @if(!empty($lItem['desc']))
-          <p class="text-[15px] text-white/50 leading-relaxed">
+          <p class="text-[15px] text-white/80 leading-relaxed">
             {!! nl2br(esc_html(wp_specialchars_decode($lItem['desc']))) !!}
           </p>
           @endif
@@ -1158,13 +1160,13 @@ function filterDrones(btn) {
   <div id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[640px]">
           {!! esc_html($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') !!}
         </h2>
       </div>
       <a href="{{ home_url('/blog') }}"
-         class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0066cc] hover:underline flex-shrink-0">
+         class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline flex-shrink-0">
         {!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </a>
@@ -1190,8 +1192,8 @@ function filterDrones(btn) {
               @if(has_post_thumbnail($post->ID))
                 {!! get_the_post_thumbnail($post->ID, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) !!}
               @else
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8f0fe] to-[#dbeafe]">
-                  <svg class="w-10 h-10 text-[#0066cc]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8fbfd] to-[#d1f7fa]">
+                  <svg class="w-10 h-10 text-[#0f808a]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
               @endif
             </div>
@@ -1200,13 +1202,13 @@ function filterDrones(btn) {
             <div class="p-6 sm:p-7 pb-4">
               {{-- Category & Date Inline Meta --}}
               <div class="flex items-center gap-2 text-[12px] mb-2.5">
-                <span class="font-semibold text-[#0066cc]">{!! esc_html($cat_name) !!}</span>
+                <span class="font-semibold text-[#0f808a]">{!! esc_html($cat_name) !!}</span>
                 <span class="text-[#cbd5e1]">&bull;</span>
                 <span class="text-[#86868b]">{{ get_the_date('d M Y', $post->ID) }}</span>
               </div>
 
               {{-- Article Title --}}
-              <h3 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] mb-2.5 leading-snug group-hover:text-[#0066cc] transition-colors line-clamp-2 min-h-[46px]">
+              <h3 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] mb-2.5 leading-snug group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
                 <a href="{{ get_permalink($post->ID) }}">{!! esc_html(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) !!}</a>
               </h3>
 
@@ -1219,7 +1221,7 @@ function filterDrones(btn) {
 
           {{-- Clean Editorial Read More Action (No Divider Bar) --}}
           <div class="px-6 sm:px-7 pb-6 pt-0">
-            <a href="{{ get_permalink($post->ID) }}" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] group-hover:text-[#0055b3] transition-colors">
+            <a href="{{ get_permalink($post->ID) }}" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
               <span>Baca selengkapnya</span>
               <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
             </a>
@@ -1355,23 +1357,23 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
     <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left Side: Dark Blue Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
-      <div class="lg:col-span-5 bg-gradient-to-br from-[#0d2342] via-[#09182d] to-[#050f1d] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
+      {{-- Left Side: Dark Teal Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
+      <div class="lg:col-span-5 bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
         
-        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg - Richer Blue) --}}
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Teal Palette) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="orb1-kontak" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.15"/>
+                <stop offset="1" stop-color="#18d6e7" stop-opacity="0.8"/>
               </linearGradient>
               <linearGradient id="orb2-kontak" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
-                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.15"/>
+                <stop offset="1" stop-color="#18d6e7" stop-opacity="0.8"/>
               </linearGradient>
             </defs>
-            <g opacity="0.55">
+            <g opacity="0.45">
               <circle cx="286" cy="5" r="75" fill="url(#orb1-kontak)"/>
               <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-kontak)"/>
             </g>
@@ -1400,7 +1402,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div>
             <p class="text-[11px] font-medium text-white/40 mb-1">Telepon / WhatsApp</p>
             <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener"
-               class="text-[15.5px] sm:text-[16.5px] font-semibold text-white hover:text-[#6e9fd4] transition-colors">
+               class="text-[15.5px] sm:text-[16.5px] font-semibold text-white hover:text-[#75e6f0] transition-colors">
               {!! esc_html($c_phone) !!}
             </a>
           </div>
@@ -1409,7 +1411,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div>
             <p class="text-[11px] font-medium text-white/40 mb-1">Email Bisnis</p>
             <a href="mailto:{{ esc_attr($c_email) }}"
-               class="text-[14px] sm:text-[15px] font-semibold text-white hover:text-[#6e9fd4] transition-colors break-all">
+               class="text-[14px] sm:text-[15px] font-semibold text-white hover:text-[#75e6f0] transition-colors break-all">
               {!! esc_html($c_email) !!}
             </a>
           </div>
@@ -1458,12 +1460,12 @@ document.addEventListener('DOMContentLoaded', function() {
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
                 <input type="text" name="first_name" required maxlength="60" placeholder="Ahmad"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
                 <input type="text" name="last_name" required maxlength="60" placeholder="Fauzi"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
 
@@ -1471,32 +1473,32 @@ document.addEventListener('DOMContentLoaded', function() {
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
                 <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
                 <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.co.id"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
               <input type="tel" name="phone" required maxlength="30" placeholder="+62 812-XXXX-XXXX"
-                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Anda <span class="text-red-500">*</span></label>
               <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
-                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0066cc] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
             </div>
           </div>
 
           {{-- Submit Row (Docked to bottom, without divider line) --}}
           <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <button type="submit" id="fds-inquiry-btn"
-              class="bg-[#0066cc] hover:bg-[#0052a3] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0066cc]/25 inline-flex items-center gap-1.5 cursor-pointer">
+              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-[#0f808a]/25 inline-flex items-center gap-1.5 cursor-pointer">
               <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') !!}</span>
               <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
             </button>

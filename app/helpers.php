@@ -37,7 +37,7 @@ if (!function_exists('fds_posts_pagination')) {
         // Prev Button
         if ($current_page > 1) {
             $prev_url = esc_url(get_pagenum_link($current_page - 1));
-            $html .= '<a href="' . $prev_url . '" aria-label="Halaman Sebelumnya" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0066cc]/40 text-[#1d1d1f] hover:text-[#0066cc] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">
+            $html .= '<a href="' . $prev_url . '" aria-label="Halaman Sebelumnya" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0f808a]/40 text-[#1d1d1f] hover:text-[#0f808a] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">
                 <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             </a>';
         } else {
@@ -51,10 +51,10 @@ if (!function_exists('fds_posts_pagination')) {
         for ($i = 1; $i <= $total_pages; $i++) {
             if ($i == 1 || $i == $total_pages || ($i >= $current_page - $range && $i <= $current_page + $range)) {
                 if ($i == $current_page) {
-                    $html .= '<span aria-current="page" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0066cc] text-white font-semibold text-[13.5px] flex items-center justify-center shadow-md select-none">' . $i . '</span>';
+                    $html .= '<span aria-current="page" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#0f808a] text-white font-semibold text-[13.5px] flex items-center justify-center shadow-md select-none">' . $i . '</span>';
                 } else {
                     $page_url = esc_url(get_pagenum_link($i));
-                    $html .= '<a href="' . $page_url . '" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0066cc]/40 text-[#1d1d1f] hover:text-[#0066cc] font-medium text-[13.5px] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">' . $i . '</a>';
+                    $html .= '<a href="' . $page_url . '" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0f808a]/40 text-[#1d1d1f] hover:text-[#0f808a] font-medium text-[13.5px] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">' . $i . '</a>';
                 }
             } elseif ($i == 2 && $current_page - $range > 2) {
                 $html .= '<span class="w-6 sm:w-8 h-10 text-[#86868b] font-medium text-[14px] flex items-center justify-center select-none">&hellip;</span>';
@@ -66,7 +66,7 @@ if (!function_exists('fds_posts_pagination')) {
         // Next Button
         if ($current_page < $total_pages) {
             $next_url = esc_url(get_pagenum_link($current_page + 1));
-            $html .= '<a href="' . $next_url . '" aria-label="Halaman Berikutnya" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0066cc]/40 text-[#1d1d1f] hover:text-[#0066cc] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">
+            $html .= '<a href="' . $next_url . '" aria-label="Halaman Berikutnya" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-[#f5f5f7] hover:border-[#0f808a]/40 text-[#1d1d1f] hover:text-[#0f808a] border border-black/[0.08] shadow-sm flex items-center justify-center transition-all duration-150 active:scale-95">
                 <svg class="w-4 h-4 text-current" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </a>';
         } else {

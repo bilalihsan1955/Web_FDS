@@ -27,7 +27,7 @@
     </div>
 
     @if(comments_open())
-      <a href="#respond" class="text-[13.5px] font-medium text-[#0066cc] hover:underline inline-flex items-center gap-1">
+      <a href="#respond" class="text-[13.5px] font-medium text-[#0f808a] hover:underline inline-flex items-center gap-1">
         <span>Tulis Komentar</span>
         <span>&darr;</span>
       </a>
@@ -55,7 +55,7 @@
         @endphp
         <div class="bg-[#f9f9fb] border border-black/[0.05] rounded-2xl p-5 sm:p-6 transition-all duration-150 hover:border-black/[0.09]">
           <div class="flex items-center gap-3.5 mb-3.5">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#0066cc] to-[#3b82f6] text-white flex items-center justify-center font-bold text-[15px] shadow-sm flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#0f808a] to-[#18d6e7] text-white flex items-center justify-center font-bold text-[15px] shadow-sm flex-shrink-0">
               {{ $initial }}
             </div>
             <div>
@@ -107,7 +107,7 @@
         @if(is_user_logged_in())
           <div class="text-[13px] text-[#64748b] pb-1">
             Masuk sebagai <strong class="text-[#1d1d1f]">{{ $current_user->display_name }}</strong>. 
-            <a href="{{ wp_logout_url(get_permalink()) }}" class="text-[#0066cc] hover:underline ml-1">Keluar?</a>
+            <a href="{{ wp_logout_url(get_permalink()) }}" class="text-[#0f808a] hover:underline ml-1">Keluar?</a>
           </div>
         @else
           {{-- Field Nama & Email untuk Tamu --}}
@@ -117,14 +117,14 @@
                 Nama Lengkap <span class="text-red-500">*</span>
               </label>
               <input type="text" name="author" required maxlength="60" placeholder="Contoh: Budi Santoso"
-                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/10 outline-none transition-all">
+                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
             </div>
             <div>
               <label class="block text-[12px] font-semibold text-[#334155] mb-1.5">
                 Alamat Email <span class="text-red-500">*</span>
               </label>
               <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
-                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/10 outline-none transition-all">
+                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
             </div>
           </div>
         @endif
@@ -135,7 +135,7 @@
             Komentar Anda <span class="text-red-500">*</span>
           </label>
           <textarea name="comment" rows="4" required maxlength="2000" placeholder="Tulis tanggapan, pertanyaan, atau pandangan Anda terkait artikel ini..."
-                    class="w-full px-4 py-3 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0066cc] focus:ring-2 focus:ring-[#0066cc]/10 outline-none transition-all leading-relaxed"></textarea>
+                    class="w-full px-4 py-3 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all leading-relaxed"></textarea>
         </div>
 
         {{-- Hidden Fields WordPress Comments --}}
@@ -145,7 +145,7 @@
         {{-- Submit Button --}}
         <div class="pt-2">
           <button type="submit"
-                  class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm cursor-pointer">
+                  class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm cursor-pointer">
             <span>Kirim Komentar</span>
             <span>&rsaquo;</span>
           </button>

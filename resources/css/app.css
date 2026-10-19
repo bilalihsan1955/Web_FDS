@@ -3,6 +3,44 @@
 @source "../**/*.blade.php";
 @source "../**/*.js";
 
+@theme {
+  --color-teal-50: #e8fbfd;
+  --color-teal-100: #d1f7fa;
+  --color-teal-200: #a3eef5;
+  --color-teal-300: #75e6f0;
+  --color-teal-400: #46deec;
+  --color-teal-500: #18d6e7;
+  --color-teal-600: #13abb9;
+  --color-teal-700: #0f808a;
+  --color-teal-800: #0a555c;
+  --color-teal-900: #052b2e;
+  --color-teal-950: #031e20;
+
+  --color-primary: #0f808a;
+  --color-primary-hover: #0a555c;
+  --color-primary-dark: #052b2e;
+  --color-primary-light: #e8fbfd;
+}
+
+:root {
+  --color-teal-50: #e8fbfd;
+  --color-teal-100: #d1f7fa;
+  --color-teal-200: #a3eef5;
+  --color-teal-300: #75e6f0;
+  --color-teal-400: #46deec;
+  --color-teal-500: #18d6e7;
+  --color-teal-600: #13abb9;
+  --color-teal-700: #0f808a;
+  --color-teal-800: #0a555c;
+  --color-teal-900: #052b2e;
+  --color-teal-950: #031e20;
+
+  --color-primary: #0f808a;
+  --color-primary-hover: #0a555c;
+  --color-primary-dark: #052b2e;
+  --color-primary-light: #e8fbfd;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -74,7 +112,7 @@ input[type="search"]::-webkit-search-results-decoration {
       inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.58),
       inset 0 0 24px 0 rgba(255, 255, 255, 0.05),
       0 24px 48px -12px rgba(0, 0, 0, 0.55),
-      0 0 20px 0 rgba(0, 102, 204, 0.15) !important;
+      0 0 20px 0 rgba(15, 128, 138, 0.20) !important;
     transform: translateY(-3px) !important;
   }
 

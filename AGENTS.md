@@ -35,9 +35,10 @@ Every agent working on this repository **MUST** strictly obey these 11 rules:
 ### Rule 3: No Decorative Embellishments Beside Text
 - **NEVER** place pulse dots, decorative circles, bullet dots, or emojis directly beside badges or typography headings. Text must remain clean and uncluttered.
 
-### Rule 4: System Brand Blue is Inflexible: `#0066cc`
-- All primary buttons, vector graphics, concentric circles, borders, and active highlights **MUST** use brand blue: `#0066cc` (`rgb(0, 102, 204)`).
-- **NEVER** replace it with cyan/sky blue (`#38bdf8`) or uncalibrated tints.
+### Rule 4: System Brand Primary Color is Teal: `#0f808a`
+- All primary buttons, vector graphics, concentric circles, borders, and active highlights **MUST** use brand primary teal: `#0f808a` (`rgb(15, 128, 138)` / `--color-teal-700`).
+- Hover accents use `#0a555c` (`--color-teal-800`), dark surfaces use `#052b2e` (`--color-teal-900`) and `#031e20` (`--color-teal-950`).
+- Light accents use the calibrated Teal palette (`--color-teal-50` through `--color-teal-600`).
 
 ### Rule 5: 100% Logo Background Transparency via Multiply
 - Certification & partner logos must blend seamlessly over backgrounds without white bounding boxes:
@@ -70,7 +71,7 @@ Every agent working on this repository **MUST** strictly obey these 11 rules:
 
 ### Rule 11: Two-State Gated Brochure Download Flow
 - State 1: Business email input field + "Kirim Email" button (download locked).
-- State 2: Smooth AJAX transition into an active "Download Brosur PDF" button in `#0066cc`.
+- State 2: Smooth AJAX transition into an active "Download Brosur PDF" button in `#0f808a`.
 - Leads stored in database table/option and exportable to CSV in WP Admin.
 
 ---

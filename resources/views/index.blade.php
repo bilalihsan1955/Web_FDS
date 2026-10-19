@@ -18,7 +18,7 @@
 {{-- ========================================================== --}}
 <section class="pt-[52px] bg-white border-b border-black/[0.06]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-16 pb-10 sm:pb-12">
-    <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-3">Newsroom</p>
+    <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Newsroom</p>
     
     <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
       <div>
@@ -49,9 +49,9 @@
             </svg>
           </div>
           <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
-                 class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0066cc] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
+                 class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0f808a] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
           <button type="submit"
-                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
+                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
             Cari
           </button>
         </div>
@@ -114,7 +114,7 @@
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
         @if(is_category() || is_tag())
           <a href="{{ esc_url($blog_url) }}"
-             class="inline-flex items-center gap-1.5 bg-[#1d1d1f] hover:bg-[#0066cc] text-white text-[13px] font-semibold px-5 py-2.5 rounded-full transition-colors shadow-sm">
+             class="inline-flex items-center gap-1.5 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5 py-2.5 rounded-full transition-colors shadow-sm">
             <span>Lihat Semua Topik</span>
             <span>&rsaquo;</span>
           </a>
@@ -137,7 +137,7 @@
                 {!! $featured['thumb'] !!}
               @else
                 <div class="w-full h-full min-h-[320px] flex items-center justify-center bg-gradient-to-br from-[#e8f0fe] to-[#dbeafe]">
-                  <svg class="w-14 h-14 text-[#0066cc]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  <svg class="w-14 h-14 text-[#0f808a]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
               @endif
             </div>
@@ -145,12 +145,12 @@
             <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
               <div>
                 <div class="flex items-center gap-2 text-[12px] mb-3">
-                  <span class="bg-[#0066cc] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">Terbaru</span>
-                  <span class="font-semibold text-[#0066cc] ml-1">{!! esc_html($featured['cat']) !!}</span>
+                  <span class="bg-[#0f808a] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">Terbaru</span>
+                  <span class="font-semibold text-[#0f808a] ml-1">{!! esc_html($featured['cat']) !!}</span>
                   <span class="text-[#cbd5e1]">&bull;</span>
                   <span class="text-[#86868b]">{{ $featured['date'] }}</span>
                 </div>
-                <h2 class="text-[24px] sm:text-[30px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.25] mb-3.5 group-hover:text-[#0066cc] transition-colors">
+                <h2 class="text-[24px] sm:text-[30px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.25] mb-3.5 group-hover:text-[#0f808a] transition-colors">
                   <a href="{{ $featured['permalink'] }}">{!! esc_html(wp_specialchars_decode($featured['title'], ENT_QUOTES)) !!}</a>
                 </h2>
                 <p class="text-[14px] sm:text-[15px] text-[#515154] leading-relaxed line-clamp-3 mb-6">
@@ -160,7 +160,7 @@
 
               <div>
                 <a href="{{ $featured['permalink'] }}"
-                   class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0066cc] group-hover:text-[#0055b3] hover:underline">
+                   class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] hover:underline">
                   <span>Baca artikel lengkap</span>
                   <span class="text-[16px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
                 </a>
@@ -184,18 +184,18 @@
                     {!! $post['thumb_med'] !!}
                   @else
                     <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8f0fe] to-[#dbeafe]">
-                      <svg class="w-10 h-10 text-[#0066cc]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                      <svg class="w-10 h-10 text-[#0f808a]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </div>
                   @endif
                 </div>
 
                 <div class="p-6 sm:p-7 pb-4">
                   <div class="flex items-center gap-2 text-[12px] mb-2.5">
-                    <span class="font-semibold text-[#0066cc]">{!! esc_html($post['cat']) !!}</span>
+                    <span class="font-semibold text-[#0f808a]">{!! esc_html($post['cat']) !!}</span>
                     <span class="text-[#cbd5e1]">&bull;</span>
                     <span class="text-[#86868b]">{{ $post['date'] }}</span>
                   </div>
-                  <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0066cc] transition-colors line-clamp-2 min-h-[46px]">
+                  <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
                     <a href="{{ $post['permalink'] }}">{!! esc_html(wp_specialchars_decode($post['title'], ENT_QUOTES)) !!}</a>
                   </h2>
                   <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
@@ -206,7 +206,7 @@
 
               <div class="px-6 sm:px-7 pb-6 pt-0">
                 <a href="{{ $post['permalink'] }}"
-                   class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] group-hover:text-[#0055b3] transition-colors">
+                   class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
                   <span>Baca selengkapnya</span>
                   <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
                 </a>

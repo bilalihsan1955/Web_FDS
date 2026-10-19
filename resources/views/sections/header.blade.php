@@ -4,21 +4,23 @@
       
       <!-- Brand Logo -->
       <a href="{{ home_url('/') }}" class="flex items-center gap-3 group">
-        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:border-blue-400 group-hover:bg-blue-500/20 transition-all">
+        <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#0f808a]/10 border border-[#0f808a]/30 flex items-center justify-center text-[#0f808a] group-hover:border-[#0f808a] group-hover:bg-[#0f808a]/20 transition-all">
           @php
             $hdr_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
           @endphp
           @if(!empty($hdr_drone_icon))
-            <img src="{{ esc_url($hdr_drone_icon) }}" alt="Drone Icon" style="width: 26px !important; height: 26px !important; min-width: 26px !important; max-width: 26px !important; max-height: 26px !important; object-fit: contain !important;" class="block">
+            <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
+                 style="-webkit-mask-image: url('{{ esc_url($hdr_drone_icon) }}'); mask-image: url('{{ esc_url($hdr_drone_icon) }}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
+                 role="img" aria-label="Drone Icon"></div>
           @else
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
             </svg>
           @endif
         </div>
         <div class="flex flex-col">
-          <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 uppercase group-hover:text-blue-400 transition-colors">
-            FULL DRONE <span class="text-blue-500">SOLUTIONS</span>
+          <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 uppercase group-hover:text-[#0f808a] transition-colors">
+            FULL DRONE <span class="text-[#0f808a]">SOLUTIONS</span>
           </span>
           <span class="text-[10px] tracking-widest text-slate-400 uppercase font-mono -mt-1">
             TKDN + BMP Hingga 60,74%
@@ -28,15 +30,15 @@
 
       <!-- Desktop Navigation Links -->
       <nav class="hidden lg:flex items-center gap-7 text-xs font-semibold tracking-wider uppercase text-slate-300">
-        <a href="{{ home_url('/') }}" class="hover:text-blue-400 transition-colors py-2">
+        <a href="{{ home_url('/') }}" class="hover:text-[#0f808a] transition-colors py-2">
           Beranda
         </a>
 
         <!-- ── MEGA DROPDOWN: PRODUK ──────────────────────────── -->
         <div class="group py-6">
-          <div class="hover:text-blue-400 transition-colors flex items-center gap-1.5 cursor-pointer py-1">
+          <div class="hover:text-[#0f808a] transition-colors flex items-center gap-1.5 cursor-pointer py-1">
             <span>Produk</span>
-            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180 text-slate-400 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180 text-slate-400 group-hover:text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
             </svg>
           </div>
@@ -53,7 +55,7 @@
                     <span class="w-2 h-2 rounded-full bg-blue-500"></span>
                     <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">UAV Agrikultur &middot; Seri FERTO</span>
                   </div>
-                  <span class="text-[10px] font-mono font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">TKDN &middot; SNI</span>
+                  <span class="text-[10px] font-mono font-medium text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded border border-[#0f808a]/20">TKDN &middot; SNI</span>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2.5">
@@ -69,13 +71,13 @@
                   @endphp
                   @foreach($ferto_list as $f)
                   <a href="{{ home_url('/' . $f['slug'] . '/') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0 text-blue-400 font-mono text-[10px] font-bold group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-[#0f808a]/10 border border-[#0f808a]/20 flex items-center justify-center flex-shrink-0 text-[#0f808a] font-mono text-[10px] font-bold group-hover/item:bg-[#0f808a] group-hover/item:text-white transition-colors">
                       {{ str_replace(' Liter', 'L', $f['cap']) }}
                     </div>
                     <div class="min-w-0">
-                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-blue-400 transition-colors flex items-center gap-1.5">
+                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-[#0f808a] transition-colors flex items-center gap-1.5">
                         {{ $f['name'] }}
-                        <svg class="w-3 h-3 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="w-3 h-3 opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
                       </div>
                       <p class="text-[11px] text-slate-400 font-normal truncate mt-0.5">{{ $f['desc'] }}</p>
                     </div>
@@ -135,9 +137,9 @@
                     <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">FDS Station &amp; Sertifikasi</span>
                   </div>
 
-                  <div class="p-4 rounded-xl bg-gradient-to-br from-blue-900/30 via-slate-900/40 to-slate-950/80 border border-blue-500/20">
+                  <div class="p-4 rounded-xl bg-gradient-to-br from-[#052b2e]/30 via-slate-900/40 to-slate-950/80 border border-[#0f808a]/20">
                     <div class="flex items-center gap-2 mb-2">
-                      <span class="text-[11px] font-bold text-blue-400 uppercase tracking-wider font-mono">FDS STATION GCS</span>
+                      <span class="text-[11px] font-bold text-[#0f808a] uppercase tracking-wider font-mono">FDS STATION GCS</span>
                     </div>
                     <p class="text-[12px] text-slate-300 font-normal leading-relaxed normal-case">
                       Ground Control Station berbahasa Indonesia untuk perencanaan misi otomatis &amp; telemetri *real-time*.
@@ -150,7 +152,7 @@
                 </div>
 
                 <div class="pt-4">
-                  <a href="#kontak" class="block w-full text-center bg-blue-600 hover:bg-blue-500 text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-blue-600/20 transition-all normal-case">
+                  <a href="#kontak" class="block w-full text-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-lg shadow-[#0f808a]/20 transition-all normal-case">
                     Jadwalkan Demo Produk &rarr;
                   </a>
                 </div>
@@ -162,7 +164,7 @@
             <!-- Bottom Sub-Bar -->
             <div class="bg-white/[0.02] border-t border-white/[0.06] px-8 py-3.5 flex items-center justify-between text-[12px] normal-case text-slate-400">
               <span>Semua produk drone FDS dirakit di Indonesia dengan dukungan servis &amp; suku cadang resmi.</span>
-              <a href="{{ home_url('/#solusi') }}" class="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1">
+              <a href="{{ home_url('/#solusi') }}" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
                 Bandingkan Semua Spesifikasi
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </a>
@@ -173,9 +175,9 @@
 
         <!-- ── MEGA DROPDOWN: LAYANAN ─────────────────────────── -->
         <div class="group py-6">
-          <div class="hover:text-blue-400 transition-colors flex items-center gap-1.5 cursor-pointer py-1">
+          <div class="hover:text-[#0f808a] transition-colors flex items-center gap-1.5 cursor-pointer py-1">
             <span>Layanan</span>
-            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180 text-slate-400 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:rotate-180 text-slate-400 group-hover:text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
             </svg>
           </div>
@@ -194,31 +196,31 @@
 
                 <div class="space-y-2">
                   <a href="{{ home_url('/#layanan') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-[#0f808a]/10 border border-[#0f808a]/20 text-[#0f808a] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#0f808a] group-hover/item:text-white transition-colors">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     </div>
                     <div>
-                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-blue-400 transition-colors">Pelatihan &amp; Sertifikasi Pilot</div>
+                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-[#0f808a] transition-colors">Pelatihan &amp; Sertifikasi Pilot</div>
                       <p class="text-[11px] text-slate-400 font-normal mt-0.5">Sertifikasi pilot drone resmi &amp; training lapangan intensif.</p>
                     </div>
                   </a>
 
                   <a href="{{ home_url('/#layanan') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-[#0f808a]/10 border border-[#0f808a]/20 text-[#0f808a] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#0f808a] group-hover/item:text-white transition-colors">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                     </div>
                     <div>
-                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-blue-400 transition-colors">Sewa Armada Drone Agrikultur</div>
+                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-[#0f808a] transition-colors">Sewa Armada Drone Agrikultur</div>
                       <p class="text-[11px] text-slate-400 font-normal mt-0.5">Sewa drone sprayer &amp; spreader lengkap pilot berpengalaman.</p>
                     </div>
                   </a>
 
                   <a href="{{ home_url('/#layanan') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0 group-hover/item:bg-blue-600 group-hover/item:text-white transition-colors">
+                    <div class="w-8 h-8 rounded-lg bg-[#0f808a]/10 border border-[#0f808a]/20 text-[#0f808a] flex items-center justify-center flex-shrink-0 group-hover/item:bg-[#0f808a] group-hover/item:text-white transition-colors">
                       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </div>
                     <div>
-                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-blue-400 transition-colors">After-Sales &amp; Maintenance</div>
+                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-[#0f808a] transition-colors">After-Sales &amp; Maintenance</div>
                       <p class="text-[11px] text-slate-400 font-normal mt-0.5">Garansi resmi, servis berkala &amp; ketersediaan suku cadang lokal.</p>
                     </div>
                   </a>
@@ -270,7 +272,7 @@
             <!-- Bottom Sub-Bar -->
             <div class="bg-white/[0.02] border-t border-white/[0.06] px-8 py-3.5 flex items-center justify-between text-[12px] normal-case text-slate-400">
               <span>Konsultasi kebutuhan survei &amp; demo armada gratis untuk korporasi &amp; instansi.</span>
-              <a href="#kontak" class="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1">
+              <a href="#kontak" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
                 Hubungi Spesialis Layanan &rarr;
               </a>
             </div>
@@ -278,17 +280,17 @@
           </div>
         </div>
 
-        <a href="{{ home_url('/tentang-kami/') }}" class="hover:text-blue-400 transition-colors py-2">
+        <a href="{{ home_url('/tentang-kami/') }}" class="hover:text-[#0f808a] transition-colors py-2">
           Tentang Kami
         </a>
-        <a href="#kontak" class="hover:text-blue-400 transition-colors py-2">
+        <a href="#kontak" class="hover:text-[#0f808a] transition-colors py-2">
           Kontak
         </a>
       </nav>
 
       <!-- CTA Button & Mobile Menu Button -->
       <div class="flex items-center gap-3 sm:gap-4">
-        <a href="#kontak" class="bg-blue-600 hover:bg-blue-500 active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2">
+        <a href="#kontak" class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-lg shadow-[#0f808a]/20 transition-all flex items-center gap-2">
           <span>Jadwalkan Demo</span>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -312,11 +314,11 @@
   <!-- Mobile Menu Dropdown -->
   <div id="mobile-menu" class="hidden lg:hidden border-t border-white/[0.08] bg-[#0b0f17] px-4 py-6 space-y-4 max-h-[85vh] overflow-y-auto">
     <nav class="flex flex-col space-y-3 text-xs uppercase tracking-wider font-semibold text-slate-300">
-      <a href="{{ home_url('/') }}" class="mobile-nav-link hover:text-blue-400 py-2 border-b border-white/[0.06]">Beranda</a>
+      <a href="{{ home_url('/') }}" class="mobile-nav-link hover:text-[#0f808a] py-2 border-b border-white/[0.06]">Beranda</a>
       
       <!-- Mobile Accordion: Produk -->
       <div class="border-b border-white/[0.06] py-2">
-        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-blue-400 uppercase text-slate-300 text-xs font-semibold tracking-wider">
+        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] uppercase text-slate-300 text-xs font-semibold tracking-wider">
           <span>Semua Produk Drone (10 Model)</span>
           <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -324,29 +326,29 @@
         </button>
         <div class="hidden flex-col pl-3 mt-3 space-y-2 text-xs normal-case text-slate-400 transition-all duration-150">
           <div class="text-[10px] font-bold tracking-widest text-slate-500 uppercase font-mono mt-1">UAV Agrikultur</div>
-          <a href="{{ home_url('/ferto-5l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-5l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 5L</span>
-            <span class="text-[10px] font-mono text-blue-400">5L</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">5L</span>
           </a>
-          <a href="{{ home_url('/ferto-10l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-10l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 10L</span>
-            <span class="text-[10px] font-mono text-blue-400">10L &middot; Terlaris</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">10L &middot; Terlaris</span>
           </a>
-          <a href="{{ home_url('/ferto-15l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-15l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 15L</span>
-            <span class="text-[10px] font-mono text-blue-400">17L</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">17L</span>
           </a>
-          <a href="{{ home_url('/ferto-22l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-22l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 22L</span>
-            <span class="text-[10px] font-mono text-blue-400">22L</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">22L</span>
           </a>
-          <a href="{{ home_url('/ferto-30l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-30l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 30L</span>
-            <span class="text-[10px] font-mono text-blue-400">30L</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">30L</span>
           </a>
-          <a href="{{ home_url('/ferto-50l/') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/ferto-50l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 50L</span>
-            <span class="text-[10px] font-mono text-blue-400">50L</span>
+            <span class="text-[10px] font-mono text-[#0f808a]">50L</span>
           </a>
 
           <div class="text-[10px] font-bold tracking-widest text-slate-500 uppercase font-mono pt-2 border-t border-white/[0.04]">Enterprise &amp; GIS</div>
@@ -371,23 +373,23 @@
 
       <!-- Mobile Accordion: Layanan -->
       <div class="border-b border-white/[0.06] py-2">
-        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-blue-400 uppercase text-slate-300 text-xs font-semibold tracking-wider">
+        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] uppercase text-slate-300 text-xs font-semibold tracking-wider">
           <span>Layanan FDS</span>
           <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
         <div class="hidden flex-col pl-3 mt-3 space-y-2 text-xs normal-case text-slate-400 transition-all duration-150">
-          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 block text-slate-200">Pelatihan &amp; Sertifikasi Pilot</a>
-          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 block text-slate-200">Sewa Armada Drone Sprayer</a>
-          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 block text-slate-200">Pemetaan Aerial &amp; GIS Topografi</a>
-          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 block text-slate-200">Inspeksi Termal &amp; Infrastruktur</a>
-          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-blue-400 py-1.5 block text-slate-200">Purna Jual &amp; Suku Cadang Resmi</a>
+          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 block text-slate-200">Pelatihan &amp; Sertifikasi Pilot</a>
+          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 block text-slate-200">Sewa Armada Drone Sprayer</a>
+          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 block text-slate-200">Pemetaan Aerial &amp; GIS Topografi</a>
+          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 block text-slate-200">Inspeksi Termal &amp; Infrastruktur</a>
+          <a href="{{ home_url('/#layanan') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 block text-slate-200">Purna Jual &amp; Suku Cadang Resmi</a>
         </div>
       </div>
 
-      <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link hover:text-blue-400 py-2 border-b border-white/[0.06]">Tentang FDS &amp; TKDN</a>
-      <a href="#kontak" class="mobile-nav-link hover:text-blue-400 py-2">Hubungi Sales &amp; Demo</a>
+      <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link hover:text-[#0f808a] py-2 border-b border-white/[0.06]">Tentang FDS &amp; TKDN</a>
+      <a href="#kontak" class="mobile-nav-link hover:text-[#0f808a] py-2">Hubungi Sales &amp; Demo</a>
     </nav>
   </div>
 </header>

@@ -29,7 +29,7 @@
 
         {{-- Share --}}
         <div class="mt-16 pt-8 border-t border-black/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
-          <a href="{{ home_url('/blog') }}" class="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#0066cc] hover:underline">
+          <a href="{{ home_url('/blog') }}" class="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#0f808a] hover:underline">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
             Kembali ke Newsroom
           </a>
@@ -57,7 +57,7 @@
   .prose p { margin-bottom: 1.5em; }
   .prose h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin: 2em 0 0.75em; color: #1d1d1f; }
   .prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5em 0 0.75em; color: #1d1d1f; }
-  .prose a { color: #0066cc; text-decoration: none; }
+  .prose a { color: #0f808a; text-decoration: none; }
   .prose a:hover { text-decoration: underline; }
   .prose blockquote { border-left: 3px solid #d2d2d7; padding-left: 1.25rem; color: #515154; font-style: normal; margin: 2em 0; font-size: 1.1em; line-height: 1.6; }
   .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.5em; }

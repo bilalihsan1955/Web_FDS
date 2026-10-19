@@ -11,7 +11,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Kompak & Lincah',
       'tagline'   => 'Drone Pertanian FERTO 5 — Platform UAV Agrikultur modular dengan mobilitas tinggi.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '5 Liter'],
         ['Durasi Terbang', '10 – 15 menit'],
@@ -41,7 +41,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Terlaris',
       'tagline'   => 'Drone Pertanian FERTO 10 — Pilihan terbaik kelompok tani dengan produktivitas andal.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '10 Liter'],
         ['Durasi Terbang', '12 – 15 menit'],
@@ -71,7 +71,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Profesional',
       'tagline'   => 'Drone Pertanian FERTO 15 — Kapasitas 17 Liter dengan produktivitas tinggi 8 Ha/jam.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '17 Liter (15 – 17 Liter)'],
         ['Durasi Terbang', '15 – 25 menit'],
@@ -101,7 +101,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Enterprise',
       'tagline'   => 'Drone Pertanian FERTO 22 — Kapasitas enterprise 22L untuk perkebunan skala besar.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '22 Liter'],
         ['Durasi Terbang', '20 – 25 menit'],
@@ -131,7 +131,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Heavy Duty',
       'tagline'   => 'Drone Pertanian FERTO 30 — Kapasitas muat masif 30L dengan produktivitas 15 Ha/jam.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '30 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
@@ -161,7 +161,7 @@
       'cat_slug'  => 'agrikultur',
       'badge'     => 'Ultra Capacity',
       'tagline'   => 'Drone Pertanian FERTO 50 — Kapasitas puncak 50L untuk produktivitas agrikultur tanpa tanding.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '50 Liter'],
         ['Durasi Terbang', '20 – 30 menit'],
@@ -191,7 +191,7 @@
       'cat_slug'  => 'pemetaan-gis',
       'badge'     => 'Hybrid VTOL',
       'tagline'   => 'Platform UAV Pemetaan Fixed-Wing VTOL Hybrid — Jangkauan 60 km untuk akuisisi geospasial area luas.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Bentang Sayap (Wingspan)', '2.000 mm'],
         ['Konfigurasi Motor', '4 Rotor VTOL + 1 Rotor Jelajah (Cruise)'],
@@ -222,7 +222,7 @@
       'cat_slug'  => 'pemetaan-gis',
       'badge'     => 'Modular UAV',
       'tagline'   => 'Platform UAV Modular Serbaguna — Integrasi payload termal, optical zoom, & sensor inspeksi.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '5 kg (Sensor Termal, LiDAR, Optical Zoom)'],
         ['Durasi Terbang', '15 – 30 menit'],
@@ -252,7 +252,7 @@
       'cat_slug'  => 'kargo',
       'badge'     => 'Logistics UAV',
       'tagline'   => 'Platform UAV Kargo Logistik Ringan — Distribusi logistik cepat dan aman ke area sulit dijangkau.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '3 – 10 kg (Kotak Logistik)'],
         ['Berat Lepas Landas (MTOW)', '15 kg'],
@@ -282,7 +282,7 @@
       'cat_slug'  => 'reboisasi',
       'badge'     => 'Heavy-Duty Seedball',
       'tagline'   => 'Platform UAV Reboisasi & Restorasi Hutan — Penyebaran biji seedball presisi tinggi secara otonom.',
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [
         ['Payload', '20 kg (Dispenser Seedball)'],
         ['Durasi Terbang', '15 – 20 menit'],
@@ -363,7 +363,7 @@
       'cat_slug'  => $cat_slug,
       'badge'     => get_post_meta($post_id, 'drone_badge', true),
       'tagline'   => get_post_meta($post_id, 'drone_tagline', true) ?: get_the_excerpt($post_id),
-      'color'     => '#0066cc',
+      'color'     => '#0f808a',
       'specs'     => [],
       'desc'      => get_post_meta($post_id, 'drone_desc', true) ?: get_the_content(null, false, $post_id),
       'for'       => [],
@@ -538,13 +538,13 @@
   $json_catalog = json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 @endphp
 
-<div id="compare-page" class="w-full bg-[#f5f5f7] font-sans selection:bg-[#0066cc]/20">
+<div id="compare-page" class="w-full bg-[#f5f5f7] font-sans">
 
   {{-- ── 1. HERO SECTION (WARNA ABU-ABU #f5f5f7 KHAS FDS) ── --}}
   <section id="compare-hero" class="pt-[52px] bg-[#f5f5f7] overflow-hidden">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 pb-4 text-center">
 
-      <p class="inline-block text-[13px] font-semibold text-[#0066cc] mb-4 tracking-wide">
+      <p class="inline-block text-[13px] font-semibold text-[#0f808a] mb-4 tracking-wide">
         Komparasi Model UAV
       </p>
 
@@ -583,7 +583,7 @@
       
       {{-- Section Header --}}
       <div class="text-center max-w-2xl mx-auto mb-14">
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-2">Spesifikasi</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-2">Spesifikasi</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-3">
           Direkayasa untuk performa nyata.
         </h2>
@@ -618,7 +618,7 @@
         {{-- D1 FOR --}}
         <div id="d1-for-box" class="md:pr-8 lg:pr-14">
           <h3 id="d1-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span>
             <span>Model 1</span>
           </h3>
           <div id="d1-for-list" class="grid grid-cols-1 gap-3.5"></div>
@@ -627,7 +627,7 @@
         {{-- D2 FOR --}}
         <div id="d2-for-box" class="md:pl-8 lg:pl-14">
           <h3 id="d2-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span>
             <span>Model 2</span>
           </h3>
           <div id="d2-for-list" class="grid grid-cols-1 gap-3.5"></div>
@@ -676,19 +676,19 @@
       <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="bandingkan-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
-            <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
+            <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
           </linearGradient>
           <linearGradient id="bandingkan-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
-            <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
+            <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
+            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
           </linearGradient>
           <linearGradient id="bandingkan-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
-            <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
-            <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+            <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
+            <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
           </linearGradient>
         </defs>
 
@@ -727,8 +727,8 @@
       <div class="p-6 pb-4 border-b border-black/[0.08] flex items-center justify-between bg-[#fbfbfd]">
         <div>
           <div class="flex items-center gap-2 mb-0.5">
-            <p class="text-[12px] font-semibold text-[#0066cc]">Katalog Produk</p>
-            <span id="modal-category-badge" class="hidden text-[11px] font-medium text-[#0066cc] bg-[#0066cc]/10 px-2.5 py-0.5 rounded-full"></span>
+            <p class="text-[12px] font-semibold text-[#0f808a]">Katalog Produk</p>
+            <span id="modal-category-badge" class="hidden text-[11px] font-medium text-[#0f808a] bg-[#0f808a]/10 px-2.5 py-0.5 rounded-full"></span>
           </div>
           <h3 id="modal-heading-text" class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
             Pilih Model Drone
@@ -744,7 +744,7 @@
 
       {{-- Modal Filter Tabs (Dinamis dari Taksonomi kategori_drone WP Admin) --}}
       <div id="modal-cat-tabs-container" class="px-6 py-3 border-b border-black/[0.06] bg-white flex flex-wrap gap-1.5">
-        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0066cc] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">Semua</button>
+        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0f808a] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">Semua</button>
         @foreach($modal_categories as $mSlug => $mName)
         <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer" data-tab-cat="{{ $mSlug }}">
           {!! esc_html(wp_specialchars_decode($mName, ENT_QUOTES)) !!}
@@ -755,7 +755,7 @@
       {{-- Modal Body: Drone Cards Grid --}}
       <div id="modal-drones-grid" class="p-6 overflow-y-auto max-h-[60vh] grid grid-cols-1 sm:grid-cols-2 gap-4">
         @foreach($catalog as $slugKey => $dItem)
-        <div class="modal-drone-card group border border-black/[0.08] hover:border-[#0066cc] rounded-2xl p-4 bg-white hover:bg-[#fbfbfd] transition-all cursor-pointer flex items-center gap-4 relative"
+        <div class="modal-drone-card group border border-black/[0.08] hover:border-[#0f808a] rounded-2xl p-4 bg-white hover:bg-[#fbfbfd] transition-all cursor-pointer flex items-center gap-4 relative"
              data-slug="{{ $slugKey }}"
              data-cat-slug="{{ $dItem['cat_slug'] ?? sanitize_title($dItem['kategori']) }}"
              onclick="selectDroneForActiveSlot('{{ $slugKey }}')">
@@ -765,19 +765,19 @@
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center gap-1.5 mb-1">
               @if(!empty($dItem['badge']))
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0066cc]/10 text-[#0066cc]">
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0f808a]/10 text-[#0f808a]">
                 {!! esc_html(wp_specialchars_decode($dItem['badge'], ENT_QUOTES)) !!}
               </span>
               @endif
             </div>
-            <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight mb-1 truncate">
+            <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight mb-1 truncate">
               {!! esc_html(wp_specialchars_decode($dItem['name'], ENT_QUOTES)) !!}
             </h4>
             <p class="text-[12px] text-[#86868b] truncate">
               {!! esc_html(wp_specialchars_decode($dItem['kategori'], ENT_QUOTES)) !!}
             </p>
           </div>
-          <div class="w-8 h-8 rounded-full bg-[#f5f5f7] group-hover:bg-[#0066cc] group-hover:text-white flex items-center justify-center text-[#86868b] transition-colors flex-shrink-0">
+          <div class="w-8 h-8 rounded-full bg-[#f5f5f7] group-hover:bg-[#0f808a] group-hover:text-white flex items-center justify-center text-[#86868b] transition-colors flex-shrink-0">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
           </div>
         </div>
@@ -850,9 +850,9 @@
       document.querySelectorAll('.modal-cat-tab').forEach(b => {
         if (b.getAttribute('data-tab-cat') === 'all') {
           b.classList.remove('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
-          b.classList.add('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+          b.classList.add('bg-[#0f808a]', 'text-white', 'font-semibold', 'shadow-sm');
         } else {
-          b.classList.remove('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+          b.classList.remove('bg-[#0f808a]', 'text-white', 'font-semibold', 'shadow-sm');
           b.classList.add('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
         }
       });
@@ -938,12 +938,12 @@
   window.filterModalCategory = function(catSlug, btn) {
     activeCatFilter = catSlug;
     document.querySelectorAll('.modal-cat-tab').forEach(b => {
-      b.classList.remove('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+      b.classList.remove('bg-[#0f808a]', 'text-white', 'font-semibold', 'shadow-sm');
       b.classList.add('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
     });
     if (btn) {
       btn.classList.remove('bg-[#f5f5f7]', 'text-[#515154]', 'font-medium');
-      btn.classList.add('bg-[#0066cc]', 'text-white', 'font-semibold', 'shadow-sm');
+      btn.classList.add('bg-[#0f808a]', 'text-white', 'font-semibold', 'shadow-sm');
     }
 
     const otherSlug = (activePickingSlot === 1) ? d2Key : d1Key;
@@ -1030,7 +1030,7 @@
               <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/[0.05] group-hover:bg-black/[0.1] text-[#1d1d1f] flex items-center justify-center transition-colors mb-4">
                 <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
               </div>
-              <span class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors mb-1">
+              <span class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors mb-1">
                 Pilih Model Drone
               </span>
               <span class="text-[13px] text-[#86868b] max-w-xs leading-relaxed">
@@ -1058,7 +1058,7 @@
                  class="max-w-full max-h-full object-contain select-none drop-shadow-[0_12px_24px_rgba(0,0,0,0.1)] transition-all duration-300">
           </div>
           
-          <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-1.5">
+          <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-1.5">
             ${escapeHtml(drone.badge || '')}
           </p>
 
@@ -1067,7 +1067,7 @@
           </h2>
 
           <div class="mb-4 flex items-center gap-3">
-            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0066cc] hover:underline cursor-pointer">
+            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] hover:underline cursor-pointer">
               <span>Ganti model</span>
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
             </button>
@@ -1082,7 +1082,7 @@
           </p>
 
           <div class="flex flex-wrap gap-2.5 justify-center">
-            <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
+            <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
               Minta Penawaran
             </a>
             <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all border border-black/10 shadow-sm">
@@ -1187,11 +1187,11 @@
 
       const val1 = rawVal1 !== null 
         ? escapeHtml(rawVal1) 
-        : `<button type="button" onclick="openPickerModal(1)" class="text-[#0066cc] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
 
       const val2 = rawVal2 !== null 
         ? escapeHtml(rawVal2) 
-        : `<button type="button" onclick="openPickerModal(2)" class="text-[#0066cc] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
 
       html += `
         <div class="py-7 transition-colors hover:bg-black/[0.01]">
@@ -1220,7 +1220,7 @@
     const d1Title = document.getElementById('d1-for-title');
     const d1List = document.getElementById('d1-for-list');
     if (d1) {
-      if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span> <span>${escapeHtml(d1.name)}</span>`;
+      if (d1Title) d1Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span> <span>${escapeHtml(d1.name)}</span>`;
       if (d1List) {
         d1List.innerHTML = (d1.for || []).map(uc => `
           <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
@@ -1240,7 +1240,7 @@
     const d2Title = document.getElementById('d2-for-title');
     const d2List = document.getElementById('d2-for-list');
     if (d2) {
-      if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0066cc]"></span> <span>${escapeHtml(d2.name)}</span>`;
+      if (d2Title) d2Title.innerHTML = `<span class="w-2.5 h-2.5 rounded-full bg-[#0f808a]"></span> <span>${escapeHtml(d2.name)}</span>`;
       if (d2List) {
         d2List.innerHTML = (d2.for || []).map(uc => `
           <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">

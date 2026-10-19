@@ -118,7 +118,7 @@ foreach ($dummy_posts as $data) {
   .skip { color: #9a6700; }
   .err  { color: #cf222e; }
   .summary { font-size: 18px; margin-bottom: 20px; }
-  a   { color: #0066cc; text-decoration: none; font-weight: 600; }
+  a   { color: #0f808a; text-decoration: none; font-weight: 600; }
   a:hover { text-decoration: underline; }
   .warning { background: #fff8e1; border-radius: 12px; padding: 14px 18px; font-size: 14px; color: #7a5c00; margin-top: 16px; }
 </style>

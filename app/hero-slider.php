@@ -100,7 +100,7 @@ function render_hero_slider_admin_page() {
     ?>
     <div class="wrap" style="max-width: 100%; margin-top: 20px; box-sizing: border-box;">
         <h1 style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px;">
-            <span class="dashicons dashicons-images-alt2" style="font-size: 32px; width: 32px; height: 32px; color: #0066cc;"></span>
+            <span class="dashicons dashicons-images-alt2" style="font-size: 32px; width: 32px; height: 32px; color: #0f808a;"></span>
             Pengaturan Hero Slider Homepage
         </h1>
         <p style="color: #64748b; font-size: 14px; margin-bottom: 24px;">
@@ -108,7 +108,7 @@ function render_hero_slider_admin_page() {
         </p>
 
         <?php if (!empty($message)): ?>
-            <div class="notice notice-success is-dismissible" style="padding: 12px 16px; margin-bottom: 20px; border-left-color: #0066cc;">
+            <div class="notice notice-success is-dismissible" style="padding: 12px 16px; margin-bottom: 20px; border-left-color: #0f808a;">
                 <p style="font-size: 14px; font-weight: 600; color: #0f172a; margin: 0;"><?php echo esc_html($message); ?></p>
             </div>
         <?php endif; ?>
@@ -119,7 +119,7 @@ function render_hero_slider_admin_page() {
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 24px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9;">
                     <h2 style="font-size: 16px; font-weight: 700; margin: 0; color: #1e293b;">Daftar Gambar Slide</h2>
-                    <button type="button" id="fds-add-slide-btn" class="button button-primary" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 4px 16px; height: auto;">
+                    <button type="button" id="fds-add-slide-btn" class="button button-primary" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 4px 16px; height: auto;">
                         + Tambah Gambar Slide
                     </button>
                 </div>
@@ -163,7 +163,7 @@ function render_hero_slider_admin_page() {
             </div>
 
             <div style="display: flex; gap: 12px; align-items: center;">
-                <input type="submit" name="fds_hero_slider_save" class="button button-primary button-large" value="Simpan Perubahan Slider" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 0 24px;">
+                <input type="submit" name="fds_hero_slider_save" class="button button-primary button-large" value="Simpan Perubahan Slider" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 0 24px;">
                 <span style="font-size: 13px; color: #64748b;">Perubahan akan langsung tampil di halaman depan.</span>
             </div>
         </form>

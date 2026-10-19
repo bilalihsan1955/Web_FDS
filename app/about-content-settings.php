@@ -319,7 +319,7 @@ function render_about_content_admin_page() {
       </p>
 
       <?php if ($saved): ?>
-        <div class="notice notice-success is-dismissible" style="border-left-color: #0066cc; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+        <div class="notice notice-success is-dismissible" style="border-left-color: #0f808a; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
           <p><strong>✅ Perubahan Konten Halaman Tentang Kami berhasil disimpan!</strong></p>
         </div>
       <?php endif; ?>
@@ -330,7 +330,7 @@ function render_about_content_admin_page() {
         .fds-tabs-nav { display: flex; gap: 8px; border-bottom: 1px solid #d2d2d7; margin-bottom: 24px; overflow-x: auto; padding-bottom: 4px; }
         .fds-tab-btn { background: none; border: none; padding: 10px 18px; font-size: 14px; font-weight: 600; color: #6e6e73; border-radius: 8px 8px 0 0; cursor: pointer; transition: all .15s; border-bottom: 2px solid transparent; }
         .fds-tab-btn:hover { color: #1d1d1f; background: #f5f5f7; }
-        .fds-tab-btn.active { color: #0066cc; border-bottom: 2px solid #0066cc; background: #fff; }
+        .fds-tab-btn.active { color: #0f808a; border-bottom: 2px solid #0f808a; background: #fff; }
         
         .fds-card { background: #fff; border: 1px solid #e5e5ea; border-radius: 12px; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
         .fds-card h2 { margin-top: 0; font-size: 17px; font-weight: 700; color: #1d1d1f; border-bottom: 1px solid #f0f0f2; padding-bottom: 12px; margin-bottom: 18px; }
@@ -342,7 +342,7 @@ function render_about_content_admin_page() {
           width: 100%; border: 1px solid #d2d2d7; border-radius: 8px; padding: 9px 12px; font-size: 14px; color: #1d1d1f; box-sizing: border-box; transition: border-color .15s;
         }
         .fds-field input[type="text"]:focus, .fds-field input[type="url"]:focus, .fds-field textarea:focus {
-          border-color: #0066cc; outline: none; box-shadow: 0 0 0 3px rgba(0,102,204,0.15);
+          border-color: #0f808a; outline: none; box-shadow: 0 0 0 3px rgba(15,128,138,0.15);
         }
         .fds-field p.description { font-size: 12px; color: #86868b; margin-top: 4px; }
         .fds-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -601,7 +601,7 @@ function render_about_content_admin_page() {
                   Tambah, edit, urutkan (▲/▼), atau hapus item aktivitas kemitraan yang tampil di halaman Tentang Kami.
                 </p>
               </div>
-              <button type="button" class="button button-primary" onclick="fdsAddActivityItem()" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 4px 16px; border-radius: 6px;">
+              <button type="button" class="button button-primary" onclick="fdsAddActivityItem()" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 4px 16px; border-radius: 6px;">
                 ➕ Tambah Aktivitas Baru
               </button>
             </div>
@@ -613,7 +613,7 @@ function render_about_content_admin_page() {
               ?>
               <div class="fds-activity-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
-                  <span style="font-size: 13px; font-weight: 700; color: #0066cc;">Aktivitas #<span class="activity-number"><?php echo $idx + 1; ?></span></span>
+                  <span style="font-size: 13px; font-weight: 700; color: #0f808a;">Aktivitas #<span class="activity-number"><?php echo $idx + 1; ?></span></span>
                   <div style="display: flex; gap: 6px;">
                     <button type="button" class="button button-small" onclick="fdsMoveActivity(this, -1)" title="Pindah ke atas">▲</button>
                     <button type="button" class="button button-small" onclick="fdsMoveActivity(this, 1)" title="Pindah ke bawah">▼</button>
@@ -776,7 +776,7 @@ function render_about_content_admin_page() {
             </div>
 
             <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 14px;">
-              <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+              <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
               <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                 <input type="checkbox" name="fds_show_map_about" value="1" <?php checked($data['show_map_about'], true); ?>>
                 Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Tentang Kami
@@ -792,7 +792,7 @@ function render_about_content_admin_page() {
             Semua perubahan akan langsung diterapkan ke halaman <strong>Tentang Kami</strong>.
           </div>
           <div>
-            <button type="submit" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 0 24px; border-radius: 8px;">
+            <button type="submit" class="button button-primary button-large" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 0 24px; border-radius: 8px;">
               💾 Simpan Perubahan
             </button>
           </div>
@@ -851,7 +851,7 @@ function render_about_content_admin_page() {
           var count = $('#fds-activity-repeater-container .fds-activity-row').length + 1;
           var html = '<div class="fds-activity-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
             '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
-              '<span style="font-size: 13px; font-weight: 700; color: #0066cc;">Aktivitas #<span class="activity-number">' + count + '</span></span>' +
+              '<span style="font-size: 13px; font-weight: 700; color: #0f808a;">Aktivitas #<span class="activity-number">' + count + '</span></span>' +
               '<div style="display: flex; gap: 6px;">' +
                 '<button type="button" class="button button-small" onclick="fdsMoveActivity(this, -1)" title="Pindah ke atas">▲</button>' +
                 '<button type="button" class="button button-small" onclick="fdsMoveActivity(this, 1)" title="Pindah ke bawah">▼</button>' +

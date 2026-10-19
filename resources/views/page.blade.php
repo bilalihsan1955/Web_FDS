@@ -29,7 +29,7 @@
   .prose p { margin-bottom: 1.5em; color: #515154; }
   .prose h2 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; margin: 2.5em 0 0.75em; color: #1d1d1f; }
   .prose h3 { font-size: 1.375rem; font-weight: 600; margin: 2em 0 0.75em; color: #1d1d1f; }
-  .prose a { color: #0066cc; text-decoration: none; }
+  .prose a { color: #0f808a; text-decoration: none; }
   .prose a:hover { text-decoration: underline; }
   .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
   .prose ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 1.5em; }

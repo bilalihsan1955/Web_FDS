@@ -8,7 +8,7 @@
     <p class="text-[17px] text-[#515154] mb-10 max-w-[380px] mx-auto leading-relaxed">
       Halaman yang Anda cari mungkin telah dihapus atau dipindahkan.
     </p>
-    <a href="{{ home_url('/') }}" class="inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[15px] font-semibold px-6 py-3 rounded-full transition-all duration-150">
+    <a href="{{ home_url('/') }}" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-6 py-3 rounded-full transition-all duration-150">
       Kembali ke Beranda
     </a>
   </div>

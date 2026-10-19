@@ -165,14 +165,14 @@
                        style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
                        class="transition-transform duration-200 group-hover:scale-[1.03]">
                 @else
-                  <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                  <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                     <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
                   </svg>
                 @endif
               @endif
 
               @if($nb_brand['display_mode'] !== 'logo_only' && !empty($nb_brand['brand_text']))
-                <span class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors tracking-tight">
+                <span class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors tracking-tight">
                   {!! esc_html($nb_brand['brand_text']) !!}
                 </span>
               @endif
@@ -189,43 +189,43 @@
             @endphp
             <nav class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
               <a href="{{ home_url('/') }}" 
-                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_home ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_home ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Beranda
               </a>
 
               <!-- Produk dropdown trigger -->
-              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_produk ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : '' }}">
-                <span class="{{ $is_active_produk ? 'text-[#0066cc] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Produk</span>
-                <svg id="produk-chevron" class="w-3 h-3 {{ $is_active_produk ? 'text-[#0066cc]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_produk ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
+                <span class="{{ $is_active_produk ? 'text-[#0f808a] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Produk</span>
+                <svg id="produk-chevron" class="w-3 h-3 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
 
               <!-- Layanan dropdown trigger -->
-              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_layanan ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : '' }}">
-                <span class="{{ $is_active_layanan ? 'text-[#0066cc] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Layanan</span>
-                <svg id="layanan-chevron" class="w-3 h-3 {{ $is_active_layanan ? 'text-[#0066cc]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_layanan ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
+                <span class="{{ $is_active_layanan ? 'text-[#0f808a] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Layanan</span>
+                <svg id="layanan-chevron" class="w-3 h-3 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
               </div>
 
               <a href="{{ home_url('/tentang-kami') }}" 
-                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_about ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_about ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Tentang Kami
               </a>
               <a href="{{ home_url('/blog') }}" 
-                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_blog ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_blog ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Blog
               </a>
               <a href="{{ home_url('/kontak') }}" 
-                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_kontak ? 'text-[#0066cc] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0066cc] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
+                 class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_kontak ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Kontak
               </a>
             </nav>
 
             <!-- CTA -->
             <div class="flex items-center gap-4">
-              <a href="{{ esc_url($nb_brand['cta_url'] ?? home_url('/#kontak')) }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0066cc] hover:bg-[#0055b0] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
+              <a href="{{ esc_url($nb_brand['cta_url'] ?? home_url('/#kontak')) }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
                 {!! esc_html($nb_brand['cta_text'] ?? 'Konsultasi Drone') !!}
               </a>
               <button id="mobile-menu-toggle" type="button" class="lg:hidden w-8 h-8 flex flex-col gap-1.5 items-center justify-center" aria-label="Menu">
@@ -283,7 +283,7 @@
                         {!! !empty($agri_cat['term']->name) ? wp_specialchars_decode($agri_cat['term']->name) : 'UAV Agrikultur' !!} (Seri FERTO)
                       </p>
                       @if($agri_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0066cc] hover:underline">
+                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline">
                         + Lihat {{ $agri_remaining }} lainnya &rsaquo;
                       </a>
                       @endif
@@ -293,7 +293,7 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($agri_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
                         <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
@@ -315,7 +315,7 @@
                         {!! wp_specialchars_decode($pemetaan_cat['term']->name) !!}
                       </p>
                       @if($pemetaan_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0066cc] hover:underline">
+                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline">
                         + Lihat {{ $pemetaan_remaining }} lainnya &rsaquo;
                       </a>
                       @endif
@@ -324,7 +324,7 @@
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($pemetaan_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
                         <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
@@ -350,7 +350,7 @@
                     <div class="space-y-2.5">
                       @foreach($kargo_drones as $item)
                       <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
                         <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
@@ -359,7 +359,7 @@
                       </a>
                       @endforeach
                       @if($kargo_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-0.5">
+                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5">
                         + Lihat {{ $kargo_remaining }} lainnya &rsaquo;
                       </a>
                       @endif
@@ -376,7 +376,7 @@
                     <div class="space-y-2.5">
                       @foreach($rebo_drones as $item)
                       <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
                         <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
@@ -385,7 +385,7 @@
                       </a>
                       @endforeach
                       @if($rebo_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0066cc] hover:underline pt-0.5">
+                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5">
                         + Lihat {{ $rebo_remaining }} lainnya &rsaquo;
                       </a>
                       @endif
@@ -419,7 +419,7 @@
                   </div>
 
                   <div class="pt-5 border-t border-black/[0.06]">
-                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan')) }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1 group">
                       {!! esc_html($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone') !!}
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
@@ -463,7 +463,7 @@
                   <div class="space-y-4">
                     @foreach($layanan_grp1 as $lItem)
                     <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                         {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
                       </div>
                       @if(!empty($lItem['desc']))
@@ -483,7 +483,7 @@
                   <div class="space-y-4">
                     @foreach($layanan_grp2 as $lItem)
                     <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0066cc] transition-colors leading-tight">
+                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                         {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
                       </div>
                       @if(!empty($lItem['desc']))
@@ -515,7 +515,7 @@
                   </div>
 
                   <div class="pt-6 border-t border-black/[0.06]">
-                    <a href="{{ esc_url($nb_brand['menu_layanan_cta_url'] ?? home_url('/#kontak')) }}" class="inline-flex items-center text-[#0066cc] text-[13px] font-semibold hover:underline gap-1 group">
+                    <a href="{{ esc_url($nb_brand['menu_layanan_cta_url'] ?? home_url('/#kontak')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1 group">
                       {!! esc_html($nb_brand['menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi') !!}
                       <svg class="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
@@ -531,11 +531,11 @@
         <!-- Mobile nav — 100% Dinamis dari WordPress -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6 max-h-[85vh] overflow-y-auto">
           <nav class="flex flex-col gap-4 text-[16px] font-medium text-[#1d1d1f]">
-            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0066cc] font-semibold' : '' }}">Beranda</a>
+            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0f808a] font-semibold' : '' }}">Beranda</a>
             
             <details class="border-b border-[#f5f5f7]" {{ $is_active_produk ? 'open' : '' }}>
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0066cc]' : '' }}">Produk Drone
-                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0066cc]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">Produk Drone
+                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
                 @foreach($drones_by_cat_slug as $cslug => $cdata)
@@ -545,16 +545,16 @@
                       @php
                         $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
                       @endphp
-                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1.5 flex items-center justify-between {{ $is_this_drone ? 'text-[#0066cc] font-semibold' : '' }}">
+                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1.5 flex items-center justify-between {{ $is_this_drone ? 'text-[#0f808a] font-semibold' : '' }}">
                         <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
-                        <span class="text-[10px] text-[#0066cc] bg-[#0066cc]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
+                        <span class="text-[10px] text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
                         @endif
                       </a>
                     @endforeach
                   @endif
                 @endforeach
-                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0066cc] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0066cc]/10 px-2.5 rounded-lg' : '' }}">
+                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0f808a] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0f808a]/10 px-2.5 rounded-lg' : '' }}">
                   <span>Bandingkan Semua Model</span>
                   <span class="text-xs">&rsaquo;</span>
                 </a>
@@ -562,8 +562,8 @@
             </details>
 
             <details class="border-b border-[#f5f5f7]" {{ $is_active_layanan ? 'open' : '' }}>
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0066cc]' : '' }}">Layanan
-                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0066cc]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">Layanan
+                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
                 @foreach($all_layanan as $lItem)
@@ -573,9 +573,9 @@
                 @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0066cc] font-semibold' : '' }}">Tentang Kami</a>
-            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0066cc] font-semibold' : '' }}">Blog</a>
-            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-1.5 {{ $is_active_kontak ? 'text-[#0066cc] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
+            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
+            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
+            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-1.5 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
           </nav>
         </div>
       </header>
@@ -704,13 +704,13 @@
               </div>
               <div class="flex flex-wrap items-center gap-4 mt-3 text-[12px] text-[#515154]">
                 @if(!empty($footer_data['phone']))
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $footer_data['phone']) }}" class="hover:text-[#0066cc] font-medium transition-colors">Tel: {!! esc_html($footer_data['phone']) !!}</a>
+                <a href="tel:{{ preg_replace('/[^0-9+]/', '', $footer_data['phone']) }}" class="hover:text-[#0f808a] font-medium transition-colors">Tel: {!! esc_html($footer_data['phone']) !!}</a>
                 @endif
                 @if(!empty($footer_data['phone']) && !empty($footer_data['email']))
                 <span class="text-black/20">&middot;</span>
                 @endif
                 @if(!empty($footer_data['email']))
-                <a href="mailto:{{ esc_attr($footer_data['email']) }}" class="hover:text-[#0066cc] font-medium transition-colors">Email: {!! esc_html($footer_data['email']) !!}</a>
+                <a href="mailto:{{ esc_attr($footer_data['email']) }}" class="hover:text-[#0f808a] font-medium transition-colors">Email: {!! esc_html($footer_data['email']) !!}</a>
                 @endif
               </div>
             </div>
@@ -721,7 +721,7 @@
                 @if(!empty($footer_data['instagram']) && !empty($footer_data['instagram_active']))
                 <!-- Instagram -->
                 <a href="{{ esc_url($footer_data['instagram']) }}" target="_blank" rel="noopener" aria-label="Instagram FDS"
-                   class="w-8 h-8 rounded-full bg-white hover:bg-[#0066cc] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#0066cc] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
+                   class="w-8 h-8 rounded-full bg-white hover:bg-[#0f808a] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#0f808a] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
                   <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
                 @endif

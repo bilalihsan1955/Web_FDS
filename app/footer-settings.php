@@ -77,6 +77,23 @@ function fds_get_global_contact() {
         'copyright'    => get_option('fds_footer_copyright', 'Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.'),
         'privacy_url'  => get_option('fds_footer_privacy_url', '#'),
         'terms_url'    => get_option('fds_footer_terms_url', '#'),
+
+        // KUSTOMISASI NARASI HALAMAN KONTAK (/kontak/)
+        'page_kontak_badge'       => get_option('fds_page_kontak_badge', 'Pusat Kontak'),
+        'page_kontak_title'       => get_option('fds_page_kontak_title', 'Hubungi Kami.'),
+        'page_kontak_desc'        => get_option('fds_page_kontak_desc', 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.'),
+        'page_kontak_panel_label' => get_option('fds_page_kontak_panel_label', 'Kantor & Workshop Resmi'),
+        'page_kontak_panel_desc'  => get_option('fds_page_kontak_panel_desc', 'Produsen UAV nasional bersertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berlokasi di Sleman, Yogyakarta.'),
+        'page_kontak_hours_wd'    => get_option('fds_page_kontak_hours_wd', 'Senin – Jumat: 08:30 – 17:00 WIB'),
+        'page_kontak_hours_sat'   => get_option('fds_page_kontak_hours_sat', 'Sabtu: 08:30 – 13:00 WIB'),
+        'page_kontak_wa_btn'      => get_option('fds_page_kontak_wa_btn', 'Chat WhatsApp Kami'),
+        'page_kontak_form_title'  => get_option('fds_page_kontak_form_title', 'Kirim Pesan atau Permintaan Penawaran'),
+        'page_kontak_form_desc'   => get_option('fds_page_kontak_form_desc', 'Lengkapi formulir di bawah ini, tim kami akan merespons dalam 1×24 jam kerja:'),
+        'page_kontak_form_btn'    => get_option('fds_page_kontak_form_btn', 'Kirim Pesan'),
+        'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Respons 1×24 jam kerja. Data terjamin aman.'),
+        'page_kontak_map_title'   => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
+        'page_kontak_map_btn'     => get_option('fds_page_kontak_map_btn', 'Buka di Google Maps'),
+        'page_kontak_map_link'    => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman'),
     ];
 
     // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
@@ -189,7 +206,24 @@ function render_global_contact_admin_page() {
         update_option('fds_footer_privacy_url', esc_url_raw($_POST['fds_footer_privacy_url'] ?? '#'));
         update_option('fds_footer_terms_url', esc_url_raw($_POST['fds_footer_terms_url'] ?? '#'));
 
-        $message = 'Pengaturan Kontak Global, Sosial Media &amp; Hak Cipta berhasil diperbarui!';
+        // 4. Simpan Kustomisasi Narasi Halaman Kontak (/kontak/)
+        update_option('fds_page_kontak_badge', sanitize_text_field($_POST['fds_page_kontak_badge'] ?? ''));
+        update_option('fds_page_kontak_title', sanitize_text_field($_POST['fds_page_kontak_title'] ?? ''));
+        update_option('fds_page_kontak_desc', sanitize_textarea_field($_POST['fds_page_kontak_desc'] ?? ''));
+        update_option('fds_page_kontak_panel_label', sanitize_text_field($_POST['fds_page_kontak_panel_label'] ?? ''));
+        update_option('fds_page_kontak_panel_desc', sanitize_textarea_field($_POST['fds_page_kontak_panel_desc'] ?? ''));
+        update_option('fds_page_kontak_hours_wd', sanitize_text_field($_POST['fds_page_kontak_hours_wd'] ?? ''));
+        update_option('fds_page_kontak_hours_sat', sanitize_text_field($_POST['fds_page_kontak_hours_sat'] ?? ''));
+        update_option('fds_page_kontak_wa_btn', sanitize_text_field($_POST['fds_page_kontak_wa_btn'] ?? ''));
+        update_option('fds_page_kontak_form_title', sanitize_text_field($_POST['fds_page_kontak_form_title'] ?? ''));
+        update_option('fds_page_kontak_form_desc', sanitize_textarea_field($_POST['fds_page_kontak_form_desc'] ?? ''));
+        update_option('fds_page_kontak_form_btn', sanitize_text_field($_POST['fds_page_kontak_form_btn'] ?? ''));
+        update_option('fds_page_kontak_form_note', sanitize_text_field($_POST['fds_page_kontak_form_note'] ?? ''));
+        update_option('fds_page_kontak_map_title', sanitize_text_field($_POST['fds_page_kontak_map_title'] ?? ''));
+        update_option('fds_page_kontak_map_btn', sanitize_text_field($_POST['fds_page_kontak_map_btn'] ?? ''));
+        update_option('fds_page_kontak_map_link', esc_url_raw($_POST['fds_page_kontak_map_link'] ?? ''));
+
+        $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak &amp; Hak Cipta berhasil diperbarui!';
     }
 
     $c = fds_get_global_contact();
@@ -199,7 +233,7 @@ function render_global_contact_admin_page() {
         <!-- HEADER CARD -->
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0f808a; display: flex; align-items: center; justify-content: center; color: #fff;">
                     <span class="dashicons dashicons-share" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
@@ -224,7 +258,7 @@ function render_global_contact_admin_page() {
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                     <div>
                         <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
-                            <span class="dashicons dashicons-location" style="color: #0066cc;"></span> Informasi Kontak Terpusat (Global)
+                            <span class="dashicons dashicons-location" style="color: #0f808a;"></span> Informasi Kontak Terpusat (Global)
                         </h2>
                         <p style="font-size: 13px; color: #64748b; margin: 4px 0 0;">Otomatis tersinkronisasi ke Beranda (#kontak), Tentang Kami (Workshop Section), dan Footer website.</p>
                     </div>
@@ -263,7 +297,7 @@ function render_global_contact_admin_page() {
                 </div>
 
                 <div style="padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; gap: 10px;">
-                    <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                    <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px;">🗺️ Pengaturan Tampilan Google Maps</span>
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                         <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
                         Tampilkan Google Maps di Halaman Beranda (Home)
@@ -275,10 +309,123 @@ function render_global_contact_admin_page() {
                 </div>
             </div>
 
-            <!-- CARD 2: AKUN SOSIAL MEDIA (DENGAN TOGGLE AKTIF/NONAKTIF) -->
+            <!-- CARD 2: KUSTOMISASI TEKS & NARASI HALAMAN KONTAK (/kontak/) -->
+            <div style="background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <div>
+                        <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin: 0; display: flex; align-items: center; gap: 8px;">
+                            <span class="dashicons dashicons-edit" style="color: #0f808a;"></span> Kustomisasi Teks &amp; Narasi Halaman Kontak (/kontak/)
+                        </h2>
+                        <p style="font-size: 13px; color: #64748b; margin: 4px 0 0;">Ubah teks judul, deskripsi hero, info operasional, narasi formulir, dan tombol di halaman kontak tanpa mengubah kodingan.</p>
+                    </div>
+                    <span style="font-size: 11px; font-weight: 600; background: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 20px;">Halaman /kontak/</span>
+                </div>
+
+                <!-- 1. HERO / HEADER -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">1. Bagian Header / Hero Atas</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 240px 1fr; gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Kecil Atas (Badge)</label>
+                            <input type="text" name="fds_page_kontak_badge" value="<?php echo esc_attr($c['page_kontak_badge']); ?>" placeholder="Pusat Kontak" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Judul Utama Halaman (H1)</label>
+                            <input type="text" name="fds_page_kontak_title" value="<?php echo esc_attr($c['page_kontak_title']); ?>" placeholder="Hubungi Kami." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Deskripsi / Subjudul Header</label>
+                        <textarea name="fds_page_kontak_desc" rows="2" placeholder="Diskusikan pengadaan armada drone..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_desc']); ?></textarea>
+                    </div>
+                </div>
+
+                <!-- 2. PANEL INFORMASI WORKSHOP & JAM KERJA -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">2. Panel Informasi Workshop &amp; Jam Operasional (Kiri)</h3>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Panel Fasilitas</label>
+                        <input type="text" name="fds_page_kontak_panel_label" value="<?php echo esc_attr($c['page_kontak_panel_label']); ?>" placeholder="Kantor &amp; Workshop Resmi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Narasi / Deskripsi Sertifikasi Panel</label>
+                        <textarea name="fds_page_kontak_panel_desc" rows="2" placeholder="Produsen UAV nasional bersertifikasi TKDN 60,74%..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_panel_desc']); ?></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Jam Kerja (Hari Kerja / Weekdays)</label>
+                            <input type="text" name="fds_page_kontak_hours_wd" value="<?php echo esc_attr($c['page_kontak_hours_wd']); ?>" placeholder="Senin – Jumat: 08:30 – 17:00 WIB" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Jam Kerja (Hari Sabtu / Weekend)</label>
+                            <input type="text" name="fds_page_kontak_hours_sat" value="<?php echo esc_attr($c['page_kontak_hours_sat']); ?>" placeholder="Sabtu: 08:30 – 13:00 WIB" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol WhatsApp</label>
+                        <input type="text" name="fds_page_kontak_wa_btn" value="<?php echo esc_attr($c['page_kontak_wa_btn']); ?>" placeholder="Chat WhatsApp Kami" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+                </div>
+
+                <!-- 3. FORMULIR INQUIRY KANAN -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">3. Panel Formulir Penawaran &amp; Pesan (Kanan)</h3>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Judul Formulir</label>
+                        <input type="text" name="fds_page_kontak_form_title" value="<?php echo esc_attr($c['page_kontak_form_title']); ?>" placeholder="Kirim Pesan atau Permintaan Penawaran" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Petunjuk / Panduan Formulir</label>
+                        <textarea name="fds_page_kontak_form_desc" rows="2" placeholder="Lengkapi formulir di bawah ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_form_desc']); ?></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Kirim Pesan</label>
+                            <input type="text" name="fds_page_kontak_form_btn" value="<?php echo esc_attr($c['page_kontak_form_btn']); ?>" placeholder="Kirim Pesan" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Catatan Jaminan &amp; Keamanan Data</label>
+                            <input type="text" name="fds_page_kontak_form_note" value="<?php echo esc_attr($c['page_kontak_form_note']); ?>" placeholder="Respons 1×24 jam kerja. Data terjamin aman." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. KARTU GOOGLE MAPS -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">4. Kartu Google Maps Bawah</h3>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Judul Kartu Peta</label>
+                            <input type="text" name="fds_page_kontak_map_title" value="<?php echo esc_attr($c['page_kontak_map_title']); ?>" placeholder="Lokasi Workshop" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Buka Peta</label>
+                            <input type="text" name="fds_page_kontak_map_btn" value="<?php echo esc_attr($c['page_kontak_map_btn']); ?>" placeholder="Buka di Google Maps" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Tautan Eksternal Google Maps</label>
+                        <input type="text" name="fds_page_kontak_map_link" value="<?php echo esc_attr($c['page_kontak_map_link']); ?>" placeholder="https://maps.google.com/?q=..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CARD 3: AKUN SOSIAL MEDIA (DENGAN TOGGLE AKTIF/NONAKTIF) -->
             <div style="background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
                 <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin-top: 0; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-networking" style="color: #0066cc;"></span> Akun Sosial Media &amp; Kontrol Tampilan
+                    <span class="dashicons dashicons-networking" style="color: #0f808a;"></span> Akun Sosial Media &amp; Kontrol Tampilan
                 </h2>
                 <p style="font-size: 13px; color: #64748b; margin-top: 0; margin-bottom: 20px;">Centang <strong>Aktif</strong> untuk menampilkan ikon sosial media di footer. Hapus centang untuk menyembunyikan tanpa menghapus tautan URL.</p>
 
@@ -362,7 +509,7 @@ function render_global_contact_admin_page() {
             <!-- CARD 3: HAK CIPTA & KETENTUAN HUKUM -->
             <div style="background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
                 <h2 style="font-size: 16px; font-weight: 600; color: #0f172a; margin-top: 0; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
-                    <span class="dashicons dashicons-media-document" style="color: #0066cc;"></span> Hak Cipta &amp; Ketentuan Hukum Footer
+                    <span class="dashicons dashicons-media-document" style="color: #0f808a;"></span> Hak Cipta &amp; Ketentuan Hukum Footer
                 </h2>
                 <p style="font-size: 13px; color: #64748b; margin-top: 0; margin-bottom: 20px;">Baris hak cipta dan tautan hukum di bagian paling dasar website.</p>
 
@@ -385,7 +532,7 @@ function render_global_contact_admin_page() {
 
             <!-- SAVE BUTTON -->
             <div style="display: flex; justify-content: flex-end;">
-                <button type="submit" name="fds_global_contact_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 6px 28px; border-radius: 8px; font-size: 14px;">
+                <button type="submit" name="fds_global_contact_save" class="button button-primary button-large" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 6px 28px; border-radius: 8px; font-size: 14px;">
                     💾 Simpan Seluruh Pengaturan Kontak &amp; Sosmed
                 </button>
             </div>

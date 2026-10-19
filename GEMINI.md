@@ -8,7 +8,7 @@
 1. **Never use ALL-CAPS (`uppercase`)** on any UI elements.
 2. **Never create nested container slop** ("card inside card", unnecessary pill wrappers).
 3. **Never place decorative dots/pulses** beside typography.
-4. **Brand Blue is strictly `#0066cc`**.
+4. **Brand Color is strictly `#0f808a`** (Teal Palette: primary `#0f808a`, hover `#0a555c`, dark `#052b2e` / `#031e20`).
 5. **Logo transparency** must use `mix-blend-mode: multiply !important; background-color: transparent !important;` without parent opacity or transform wrappers.
 6. **Footer Layout:** Column 4 (Dukungan) has partner logos locked in the bottom-right corner flowing to the left; middle row has PT info on left (col-span-8) and Social Media on right (col-span-4).
 7. **Always follow SOP:** After editing views or styles, run `npm run build`, copy to active theme, and clear Acorn cache (`wp-content/cache/acorn/framework/views/*`).

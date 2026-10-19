@@ -368,9 +368,9 @@ function render_drone_pure_form_metabox($post) {
             box-sizing: border-box;
         }
         .fds-field input:focus, .fds-field select:focus, .fds-field textarea:focus {
-            border-color: #0066cc;
+            border-color: #0f808a;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0,102,204,0.15);
+            box-shadow: 0 0 0 3px rgba(15,128,138,0.15);
         }
         .fds-field .fds-subtext { font-size: 11px; color: #64748b; margin-top: 4px; display: block; }
         
@@ -379,7 +379,7 @@ function render_drone_pure_form_metabox($post) {
         .fds-stat-card input { width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 12px; margin-bottom: 6px; box-sizing: border-box; }
         
         .fds-uc-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 14px; margin-bottom: 12px; }
-        .fds-uc-card h5 { margin: 0 0 8px 0; font-size: 12px; font-weight: 700; color: #0066cc; }
+        .fds-uc-card h5 { margin: 0 0 8px 0; font-size: 12px; font-weight: 700; color: #0f808a; }
     </style>
 
     <!-- 1. INFORMASI UTAMA & RINGKASAN PRODUK -->

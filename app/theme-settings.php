@@ -521,7 +521,7 @@ function render_navbar_settings_admin_page() {
     <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0f808a; display: flex; align-items: center; justify-content: center; color: #fff;">
                     <span class="dashicons dashicons-art" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
@@ -570,7 +570,7 @@ function render_navbar_settings_admin_page() {
 
                         <!-- Dummy Navigation Elements -->
                         <div style="display: flex; align-items: center; gap: 20px; color: #64748b; font-size: 13px; font-weight: 500;">
-                            <span style="color: #0066cc; font-weight: 600;">Beranda</span>
+                            <span style="color: #0f808a; font-weight: 600;">Beranda</span>
                             <span>Produk</span>
                             <span>Layanan</span>
                             <span>Tentang Kami</span>
@@ -597,7 +597,7 @@ function render_navbar_settings_admin_page() {
                                style="flex: 1; font-size: 13px; padding: 8px 12px; border-radius: 6px; border: 1px solid #cbd5e1;" 
                                placeholder="https://domain.com/wp-content/uploads/.../logo.png">
                         
-                        <button type="button" id="fds_upload_logo_btn" class="button button-primary" style="padding: 6px 16px; font-size: 13px; font-weight: 600; background: #0066cc; border-color: #0066cc;">
+                        <button type="button" id="fds_upload_logo_btn" class="button button-primary" style="padding: 6px 16px; font-size: 13px; font-weight: 600; background: #0f808a; border-color: #0f808a;">
                             Pilih / Unggah Logo
                         </button>
                         
@@ -643,19 +643,19 @@ function render_navbar_settings_admin_page() {
                 <!-- 3b. UPLOAD DRONE ICON (1 UNTUK SEMUA) -->
                 <div>
                     <label style="display: block; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
-                        <span class="dashicons dashicons-airplane" style="color: #0066cc; margin-right: 4px; vertical-align: text-bottom;"></span> Icon Drone Website (1 untuk Semua: Section Drone, Tentang Kami &amp; Navbar)
+                        <span class="dashicons dashicons-airplane" style="color: #0f808a; margin-right: 4px; vertical-align: text-bottom;"></span> Icon Drone Website (1 untuk Semua: Section Drone, Tentang Kami &amp; Navbar)
                     </label>
                     <p style="margin: 0 0 12px; color: #64748b; font-size: 13px;">
-                        Unggah 1 icon drone untuk menggantikan icon drone bawaan (segitiga/pesawat biru) secara seragam di seluruh website, termasuk di <strong>Section Drone Beranda</strong>, <strong>Halaman Tentang Kami</strong>, dan <strong>Navbar</strong>. Rekomendasi: format <strong>SVG</strong> atau <strong>PNG transparan</strong> (ukuran 32×32 atau 64×64 piksel).
+                        Unggah 1 icon drone untuk menggantikan icon drone bawaan secara seragam di seluruh website, termasuk di <strong>Section Drone Beranda</strong>, <strong>Halaman Tentang Kami</strong>, dan <strong>Navbar</strong>. Rekomendasi: format <strong>SVG</strong> atau <strong>PNG transparan</strong> (ukuran 32×32 atau 64×64 piksel).
                     </p>
 
                     <div style="display: flex; align-items: center; gap: 16px;">
                         <div id="fds_drone_icon_wrapper" style="width: 42px; height: 42px; min-width: 42px; max-width: 42px; max-height: 42px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; overflow: hidden; display: flex; align-items: center; justify-content: center; padding: 4px; box-sizing: border-box; flex-shrink: 0;">
                             <?php if (!empty($brand_data['drone_icon_url'])): ?>
-                                <img id="fds_drone_icon_preview" src="<?php echo esc_url($brand_data['drone_icon_url']); ?>" style="width: 100% !important; height: 100% !important; max-width: 34px !important; max-height: 34px !important; object-fit: contain !important; display: block !important;">
+                                <div id="fds_drone_icon_preview" style="width: 32px; height: 32px; background-color: #0f808a; -webkit-mask-image: url('<?php echo esc_url($brand_data['drone_icon_url']); ?>'); mask-image: url('<?php echo esc_url($brand_data['drone_icon_url']); ?>'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; display: block;"></div>
                             <?php else: ?>
                                 <div id="fds_drone_icon_preview">
-                                    <svg style="width: 22px; height: 22px; color: #0066cc; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                                    <svg style="width: 22px; height: 22px; color: #0f808a; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -682,7 +682,7 @@ function render_navbar_settings_admin_page() {
                 <!-- 4. PENGATURAN NAMA TAB BROWSER (TITLE TAG UNTUK SEMUA HALAMAN) -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
                     <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                        <span class="dashicons dashicons-admin-site-alt3" style="color: #0066cc;"></span> Pengaturan Nama Tab Browser (Title Tag)
+                        <span class="dashicons dashicons-admin-site-alt3" style="color: #0f808a;"></span> Pengaturan Nama Tab Browser (Title Tag)
                     </h2>
                     <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Kustomisasi teks judul yang tampil pada tab browser saat pengunjung membuka halaman-halaman utama website Anda.</p>
 
@@ -808,7 +808,7 @@ function render_navbar_settings_admin_page() {
                             </div>
                         </div>
 
-                        <div style="background: #eff6ff; border-left: 3px solid #3b82f6; padding: 10px 14px; border-radius: 4px; font-size: 12px; color: #1e40af;">
+                        <div style="background: #eff6ff; border-left: 3px solid #18d6e7; padding: 10px 14px; border-radius: 4px; font-size: 12px; color: #1e40af;">
                             💡 <strong>Kustomisasi Spesifik Tiap Halaman:</strong> Anda juga tetap dapat mengedit nama tab khusus untuk masing-masing Halaman/Post/Drone secara individual langsung di layar edit halaman (kotak <em>"Pengaturan Nama Tab Browser (SEO Title)"</em> di bawah editor).
                         </div>
 
@@ -822,7 +822,7 @@ function render_navbar_settings_admin_page() {
                     <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px;">
                         <div>
                             <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                                <span class="dashicons dashicons-search" style="color: #0066cc;"></span> Kata Kunci Pencarian Google (Drone SEO Keywords Engine)
+                                <span class="dashicons dashicons-search" style="color: #0f808a;"></span> Kata Kunci Pencarian Google (Drone SEO Keywords Engine)
                             </h2>
                             <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.5;">
                                 Sistem tema Full Drone Solutions telah dilengkapi kata kunci bawaan berperingkat tinggi untuk memaksimalkan visibilitas di Google Search, Googlebot, dan mesin pencari AI cerdas (ChatGPT Search, Perplexity AI, Claude, Google Gemini). Anda juga dapat menambahkan kata kunci kustom tambahan di bawah ini.
@@ -1009,7 +1009,7 @@ function render_navbar_settings_admin_page() {
                 <!-- 8. TOMBOL CTA NAVBAR UTAMA -->
                 <div>
                     <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                        <span class="dashicons dashicons-button" style="color: #0066cc;"></span> Tombol Aksi Kanan Navbar (CTA Button)
+                        <span class="dashicons dashicons-button" style="color: #0f808a;"></span> Tombol Aksi Kanan Navbar (CTA Button)
                     </h2>
                     <p style="margin: 0 0 16px; color: #64748b; font-size: 13px;">Tombol menonjol di sebelah kanan navbar (Desktop &amp; Mobile).</p>
 
@@ -1030,7 +1030,7 @@ function render_navbar_settings_admin_page() {
                 <!-- 9. PENGATURAN TEKS KARTU MEGA MENU DROPDOWN -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
                     <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
-                        <span class="dashicons dashicons-menu" style="color: #0066cc;"></span> Pengaturan Teks &amp; Kartu Mega Menu Dropdown
+                        <span class="dashicons dashicons-menu" style="color: #0f808a;"></span> Pengaturan Teks &amp; Kartu Mega Menu Dropdown
                     </h2>
                     <p style="margin: 0 0 20px; color: #64748b; font-size: 13px;">Kustomisasi teks kartu sidebar yang tampil di sisi kanan dropdown <strong>Produk</strong> dan <strong>Layanan</strong>.</p>
 
@@ -1210,7 +1210,7 @@ function render_navbar_settings_admin_page() {
                 </div>
 
                 <div style="padding-top: 10px; border-top: 1px solid #f1f5f9;">
-                    <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
+                    <button type="submit" name="fds_navbar_save" class="button button-primary button-large" style="background: #0f808a; border-color: #0f808a; font-size: 14px; font-weight: 600; padding: 8px 24px; border-radius: 6px; height: auto;">
                         💾 Simpan Perubahan Logo, Navbar &amp; Logo Footer
                     </button>
                 </div>
@@ -1437,7 +1437,7 @@ function render_navbar_settings_admin_page() {
         $('#fds_remove_drone_icon_btn').on('click', function(e) {
             e.preventDefault();
             $('#fds_navbar_drone_icon_url').val('');
-            $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview"><svg style="width: 22px; height: 22px; color: #0066cc; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>');
+            $('#fds_drone_icon_wrapper').html('<div id="fds_drone_icon_preview"><svg style="width: 22px; height: 22px; color: #0f808a; display: block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>');
             updateLivePreview();
         });
 

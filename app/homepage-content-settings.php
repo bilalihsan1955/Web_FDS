@@ -347,7 +347,7 @@ function render_homepage_content_admin_page() {
     <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
         <div style="background: #fff; padding: 24px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 8px;">
-                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0066cc; display: flex; align-items: center; justify-content: center; color: #fff;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: #0f808a; display: flex; align-items: center; justify-content: center; color: #fff;">
                     <span class="dashicons dashicons-admin-page" style="font-size: 24px; width: 24px; height: 24px;"></span>
                 </div>
                 <div>
@@ -368,7 +368,7 @@ function render_homepage_content_admin_page() {
 
             <!-- NAVIGATION TABS -->
             <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;" id="fds-content-tabs">
-                <button type="button" class="tab-btn active" data-tab="tab-hero" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #0066cc; background: #0066cc; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">1. Hero &amp; Slider</button>
+                <button type="button" class="tab-btn active" data-tab="tab-hero" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #0f808a; background: #0f808a; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer;">1. Hero &amp; Slider</button>
                 <button type="button" class="tab-btn" data-tab="tab-mitra" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">2. Mitra</button>
                 <button type="button" class="tab-btn" data-tab="tab-solusi" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">3. Solusi Industri</button>
                 <button type="button" class="tab-btn" data-tab="tab-keunggulan" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">4. Keunggulan (Bento)</button>
@@ -503,7 +503,7 @@ function render_homepage_content_admin_page() {
                     <?php foreach ($solusi_cards as $idx => $card): ?>
                     <div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
-                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0066cc;">Kartu Solusi #<span class="solusi-number"><?php echo ($idx + 1); ?></span></h4>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0f808a;">Kartu Solusi #<span class="solusi-number"><?php echo ($idx + 1); ?></span></h4>
                             <div style="display: flex; gap: 6px;">
                                 <button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, -1)" title="Pindah ke atas">▲</button>
                                 <button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, 1)" title="Pindah ke bawah">▼</button>
@@ -580,7 +580,7 @@ function render_homepage_content_admin_page() {
                 <div style="display: grid; gap: 16px;">
                     <!-- Card 1 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
-                        <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #0066cc;">Card 1: Manufaktur Lokal &amp; Desain Aerodinamis (Kartu Hero Besar Bento)</h4>
+                        <h4 style="margin: 0 0 10px; font-size: 14px; font-weight: 700; color: #0f808a;">Card 1: Manufaktur Lokal &amp; Desain Aerodinamis (Kartu Hero Besar Bento)</h4>
                         
                         <!-- GAMBAR BACKGROUND BENTO HERO -->
                         <div style="margin-bottom: 14px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
@@ -589,7 +589,7 @@ function render_homepage_content_admin_page() {
                                 <img id="bento-card1-preview" src="<?php echo esc_url($c['keunggulan_card1_img']); ?>" style="width: 140px; height: 75px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
                                 <div>
                                     <input type="hidden" id="fds_keunggulan_card1_img" name="fds_keunggulan_card1_img" value="<?php echo esc_attr($c['keunggulan_card1_img']); ?>">
-                                    <button type="button" id="btn-upload-bento-card1" class="button button-primary" style="font-size: 12px; background: #0066cc; border-color: #0066cc;">Pilih / Unggah Gambar</button>
+                                    <button type="button" id="btn-upload-bento-card1" class="button button-primary" style="font-size: 12px; background: #0f808a; border-color: #0f808a;">Pilih / Unggah Gambar</button>
                                     <button type="button" id="btn-remove-bento-card1" class="button" style="font-size: 12px; color: #dc2626; border-color: #fca5a5; margin-left: 6px;">Reset Default</button>
                                     <p style="margin: 4px 0 0; font-size: 11px; color: #64748b;">Rekomendasi rasio 16:9 / 1200×600 px. Foto akan tampil dengan efek gradasi gelap elegan.</p>
                                 </div>
@@ -614,7 +614,7 @@ function render_homepage_content_admin_page() {
 
                     <!-- Card 2 -->
                     <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 2: TKDN &amp; Bangga Buatan Indonesia (Kanan - Tinggi)</h4>
+                        <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 2: TKDN &amp; Bangga Buatan Indonesia (Kanan - Tinggi)</h4>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
                             <div>
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge</label>
@@ -645,7 +645,7 @@ function render_homepage_content_admin_page() {
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <!-- Card 3 -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 3: Software GCS (Tengah Kiri)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 3: Software GCS (Tengah Kiri)</h4>
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge</label>
                                 <input type="text" name="fds_keunggulan_card3_badge" value="<?php echo esc_attr($c['keunggulan_card3_badge']); ?>" style="width: 100%;">
@@ -662,7 +662,7 @@ function render_homepage_content_admin_page() {
 
                         <!-- Card 4 -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 4: Standar ISO &amp; SNI (Tengah Kanan)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 4: Standar ISO &amp; SNI (Tengah Kanan)</h4>
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Stat (ISO &amp; SNI)</label>
                                 <input type="text" name="fds_keunggulan_card4_stat" value="<?php echo esc_attr($c['keunggulan_card4_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
@@ -678,7 +678,7 @@ function render_homepage_content_admin_page() {
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <!-- Card 2012 -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 5: Pengalaman Industri (2012) — (Bawah Kiri)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 5: Pengalaman Industri (2012) — (Bawah Kiri)</h4>
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat (2012)</label>
                                 <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
@@ -701,7 +701,7 @@ function render_homepage_content_admin_page() {
 
                         <!-- Card Satu Ekosistem -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0066cc;">Card 6: Ekosistem Multi-Sektor (Bawah Kanan - Lebar)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 6: Ekosistem Multi-Sektor (Bawah Kanan - Lebar)</h4>
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Utama</label>
                                 <input type="text" name="fds_keunggulan_card7_title" value="<?php echo esc_attr($c['keunggulan_card7_title']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
@@ -758,7 +758,7 @@ function render_homepage_content_admin_page() {
                     <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">
                         6. Section Layanan Enterprise &amp; Dropdown Menu
                     </h2>
-                    <span style="font-size: 12px; color: #0066cc; font-weight: 600; background: #e0f2fe; padding: 4px 10px; border-radius: 20px;">
+                    <span style="font-size: 12px; color: #0f808a; font-weight: 600; background: #e0f2fe; padding: 4px 10px; border-radius: 20px;">
                         ✨ Dinamis: Item Dapat Ditambah &amp; Dihapus
                     </span>
                 </div>
@@ -801,7 +801,7 @@ function render_homepage_content_admin_page() {
                     ?>
                     <div class="fds-layanan-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; position: relative;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="font-size: 12px; font-weight: 700; color: #0066cc;">Item Layanan #<span class="layanan-number"><?php echo ($lIdx + 1); ?></span></span>
+                            <span style="font-size: 12px; font-weight: 700; color: #0f808a;">Item Layanan #<span class="layanan-number"><?php echo ($lIdx + 1); ?></span></span>
                             <div style="display: flex; gap: 6px;">
                                 <button type="button" class="button button-small" onclick="fdsMoveLayanan(this, -1)" title="Pindah ke atas">▲</button>
                                 <button type="button" class="button button-small" onclick="fdsMoveLayanan(this, 1)" title="Pindah ke bawah">▼</button>
@@ -917,7 +917,7 @@ function render_homepage_content_admin_page() {
                     </div>
 
                     <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px;">
-                        <span style="font-size: 12px; font-weight: 700; color: #0066cc; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                        <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                             <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
                             Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Beranda
@@ -930,7 +930,7 @@ function render_homepage_content_admin_page() {
             <!-- TOMBOL SIMPAN GLOBAL -->
             <div style="position: sticky; bottom: 20px; background: #fff; padding: 16px 24px; border-radius: 10px; box-shadow: 0 -4px 20px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; z-index: 100;">
                 <span style="font-size: 13px; color: #64748b;">Perubahan akan langsung tampil di halaman depan website.</span>
-                <button type="submit" name="fds_content_save" class="button button-primary button-large" style="background: #0066cc; border-color: #0066cc; font-weight: 600; padding: 4px 24px;">
+                <button type="submit" name="fds_content_save" class="button button-primary button-large" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 4px 24px;">
                     💾 Simpan Seluruh Konten Beranda
                 </button>
             </div>
@@ -950,9 +950,9 @@ function render_homepage_content_admin_page() {
                 'border-color': '#e2e8f0'
             }).removeClass('active');
             $(this).css({
-                'background': '#0066cc',
+                'background': '#0f808a',
                 'color': '#fff',
-                'border-color': '#0066cc'
+                'border-color': '#0f808a'
             }).addClass('active');
 
             $('.tab-content').hide();
@@ -1049,7 +1049,7 @@ function render_homepage_content_admin_page() {
             var count = $('#fds-layanan-repeater-container .fds-layanan-row').length + 1;
             var html = '<div class="fds-layanan-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; position: relative;">' +
                 '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">' +
-                    '<span style="font-size: 12px; font-weight: 700; color: #0066cc;">Item Layanan #<span class="layanan-number">' + count + '</span></span>' +
+                    '<span style="font-size: 12px; font-weight: 700; color: #0f808a;">Item Layanan #<span class="layanan-number">' + count + '</span></span>' +
                     '<div style="display: flex; gap: 6px;">' +
                         '<button type="button" class="button button-small" onclick="fdsMoveLayanan(this, -1)" title="Pindah ke atas">▲</button>' +
                         '<button type="button" class="button button-small" onclick="fdsMoveLayanan(this, 1)" title="Pindah ke bawah">▼</button>' +
@@ -1122,7 +1122,7 @@ function render_homepage_content_admin_page() {
             var count = $('#fds-solusi-cards-container .fds-solusi-card-item').length + 1;
             var html = '<div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
                 '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
-                    '<h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0066cc;">Kartu Solusi #<span class="solusi-number">' + count + '</span></h4>' +
+                    '<h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0f808a;">Kartu Solusi #<span class="solusi-number">' + count + '</span></h4>' +
                     '<div style="display: flex; gap: 6px;">' +
                         '<button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, -1)" title="Pindah ke atas">▲</button>' +
                         '<button type="button" class="button button-small" onclick="fdsMoveSolusiCard(this, 1)" title="Pindah ke bawah">▼</button>' +

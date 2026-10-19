@@ -37,40 +37,40 @@
 
         {{-- Wave Gradients --}}
         <linearGradient id="tk_flow_grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0052a3" stop-opacity="0.22"/>
-          <stop offset="50%" stop-color="#003366" stop-opacity="0.10"/>
+          <stop offset="0%" stop-color="#0a555c" stop-opacity="0.22"/>
+          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.10"/>
           <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.28"/>
-          <stop offset="50%" stop-color="#004080" stop-opacity="0.14"/>
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.28"/>
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.14"/>
           <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0077ed" stop-opacity="0.34"/>
-          <stop offset="50%" stop-color="#0052a3" stop-opacity="0.16"/>
+          <stop offset="0%" stop-color="#46deec" stop-opacity="0.34"/>
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.16"/>
           <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad4" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.40"/>
-          <stop offset="50%" stop-color="#0066cc" stop-opacity="0.18"/>
+          <stop offset="0%" stop-color="#13abb9" stop-opacity="0.40"/>
+          <stop offset="50%" stop-color="#0f808a" stop-opacity="0.18"/>
           <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
         <linearGradient id="tk_flow_grad5" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.46"/>
-          <stop offset="50%" stop-color="#0077ed" stop-opacity="0.22"/>
+          <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.46"/>
+          <stop offset="50%" stop-color="#46deec" stop-opacity="0.22"/>
           <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0"/>
         </linearGradient>
 
         {{-- Bottom Dark Fade to seamlessly blend into section below --}}
         <linearGradient id="tk_bottom_fade" x1="0" y1="320" x2="0" y2="600" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stop-color="#080a0e" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#0e1118" stop-opacity="0.6"/>
-          <stop offset="100%" stop-color="#141720" stop-opacity="1"/>
+          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.6"/>
+          <stop offset="100%" stop-color="#031e20" stop-opacity="1"/>
         </linearGradient>
       </defs>
 
@@ -174,7 +174,7 @@
 
       {{-- Left: headline sticky --}}
       <div class="lg:sticky lg:top-28">
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-5">
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-5">
           {!! esc_html($about['story_badge'] ?? 'Cerita Kami') !!}
         </p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
@@ -199,7 +199,7 @@
         @endif
         
         <div class="pt-4 border-t border-black/[0.06]">
-          <a href="{{ $about['story_cta_url'] ?? '#mitra' }}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0066cc] hover:underline">
+          <a href="{{ $about['story_cta_url'] ?? '#mitra' }}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0f808a] hover:underline">
             {!! esc_html($about['story_cta_text'] ?? 'Lihat kemitraan strategis & portofolio klien') !!}
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </a>
@@ -218,34 +218,34 @@
   
   {{-- Vector Background: Diagonal Sweeping Fluid Horizon with Linear Bottom Gradient (Tanpa Lingkaran) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-    <div class="absolute inset-0 bg-gradient-to-t from-[#0066cc]/20 via-[#004080]/05 to-transparent pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-[#0f808a]/20 via-[#0a555c]/05 to-transparent pointer-events-none"></div>
 
     <svg class="absolute inset-0 w-full h-full object-cover opacity-80" viewBox="0 0 1440 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
       <defs>
         {{-- Ambient Linear Gradient dari Bawah ke Atas (Bukan Lingkaran) --}}
         <linearGradient id="spektrum-ambient-bottom" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.18" />
-          <stop offset="50%" stop-color="#004080" stop-opacity="0.06" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.18" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.06" />
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
         </linearGradient>
 
         {{-- Diagonal Wave Layers (Desain Asli Spektrum) --}}
         <linearGradient id="spektrum-wave-diag1" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#0066cc" stop-opacity="0.30" />
-          <stop offset="50%" stop-color="#003388" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.30" />
+          <stop offset="50%" stop-color="#080a0e" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
         </linearGradient>
 
         <linearGradient id="spektrum-wave-diag2" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#1a85ff" stop-opacity="0.42" />
-          <stop offset="60%" stop-color="#0066cc" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#13abb9" stop-opacity="0.42" />
+          <stop offset="60%" stop-color="#0f808a" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
         </linearGradient>
 
         <linearGradient id="spektrum-wave-diag3" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#2997ff" stop-opacity="0.52" />
-          <stop offset="45%" stop-color="#0071e3" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#0a0c10" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#18d6e7" stop-opacity="0.52" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#080a0e" stop-opacity="0.0" />
         </linearGradient>
       </defs>
 
@@ -316,7 +316,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
       <div class="lg:col-span-4 lg:sticky lg:top-28">
-        <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
           {!! esc_html($about['mitra_badge'] ?? 'Aktivitas Kami') !!}
         </p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-6">
@@ -360,7 +360,7 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     <div class="mb-14">
-      <p class="text-[13px] font-semibold text-[#0066cc] tracking-wide mb-4">
+      <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
         {!! esc_html($about['certs_badge'] ?? 'Sertifikasi & Standar Mutu') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[600px]">
@@ -371,7 +371,7 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
       {{-- Card 1: TKDN 60,74% (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-[#0066cc] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_32px_rgba(0,102,204,0.25)]">
+      <div class="relative overflow-hidden bg-[#0f808a] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_32px_rgba(15,128,138,0.25)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -410,12 +410,12 @@
           <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="orb1-iso" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0.28" stop-color="#0066cc" stop-opacity="0"/>
-                <stop offset="1" stop-color="#0066cc" stop-opacity="1"/>
+                <stop offset="0.28" stop-color="#0f808a" stop-opacity="0"/>
+                <stop offset="1" stop-color="#0f808a" stop-opacity="1"/>
               </linearGradient>
               <linearGradient id="orb2-iso" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
-                <stop offset="0.28" stop-color="#0066cc" stop-opacity="0"/>
-                <stop offset="1" stop-color="#0066cc" stop-opacity="1"/>
+                <stop offset="0.28" stop-color="#0f808a" stop-opacity="0"/>
+                <stop offset="1" stop-color="#0f808a" stop-opacity="1"/>
               </linearGradient>
             </defs>
             <g opacity="0.14">
@@ -435,19 +435,19 @@
       </div>
 
       {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#0d2342] via-[#09182d] to-[#050f1d] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div class="relative overflow-hidden bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] rounded-[2rem] p-8 lg:p-9 flex flex-col justify-between min-h-[260px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
           <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="orb1-srv" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
-                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
               </linearGradient>
               <linearGradient id="orb2-srv" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
-                <stop offset="0.15" stop-color="#0066cc" stop-opacity="0.1"/>
-                <stop offset="1" stop-color="#0077ed" stop-opacity="1"/>
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
               </linearGradient>
             </defs>
             <g opacity="0.65">
@@ -491,19 +491,19 @@
     <svg class="w-full h-full" viewBox="0 0 1000 400" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
       <defs>
         <linearGradient id="about-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#2563eb" stop-opacity="0.48" />
-          <stop offset="60%" stop-color="#1d4ed8" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#46deec" stop-opacity="0.48" />
+          <stop offset="60%" stop-color="#18d6e7" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
         </linearGradient>
         <linearGradient id="about-wave-fill2" x1="0%" y1="100%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.38" />
-          <stop offset="70%" stop-color="#2563eb" stop-opacity="0.16" />
-          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.38" />
+          <stop offset="70%" stop-color="#13abb9" stop-opacity="0.16" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
         </linearGradient>
         <linearGradient id="about-wave-fill3" x1="100%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.42" />
-          <stop offset="50%" stop-color="#2563eb" stop-opacity="0.22" />
-          <stop offset="100%" stop-color="#0f172a" stop-opacity="0.0" />
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.42" />
+          <stop offset="50%" stop-color="#18d6e7" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.0" />
         </linearGradient>
       </defs>
 

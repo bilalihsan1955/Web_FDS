@@ -185,8 +185,8 @@ if ($post_inserted > 0) {
   .icon-ok   { color: #1a7f37; flex-shrink: 0; font-size: 16px; }
   .icon-skip { color: #9a6700; flex-shrink: 0; font-size: 16px; }
   .actions { margin-top: 28px; padding-top: 24px; border-top: 1px solid #e8e8ed; display: flex; flex-wrap: wrap; gap: 12px; }
-  .btn { display: inline-flex; align-items: center; gap-6px; background: #0066cc; color: white; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 100px; text-decoration: none; }
-  .btn:hover { background: #0055b0; }
+  .btn { display: inline-flex; align-items: center; gap-6px; background: #0f808a; color: white; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 100px; text-decoration: none; }
+  .btn:hover { background: #0a555c; }
   .btn-ghost { background: #f5f5f7; color: #1d1d1f; }
   .btn-ghost:hover { background: #e8e8ed; }
   .warning { background: #fff3cd; border-radius: 12px; padding: 14px 18px; font-size: 13px; color: #664d03; margin-top: 20px; }
