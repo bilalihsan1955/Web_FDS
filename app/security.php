@@ -139,3 +139,63 @@ function fds_safe_filename(string $filename): string {
     $clean = str_replace(['../', '..\\', '%00'], '', $clean);
     return $clean;
 }
+
+// 8. NONAKTIFKAN XML-RPC & PINGBACK (OWASP A01/A05:2021)
+// Mencegah serangan Brute Force via multicall XML-RPC dan DDoS Pingback Amplification
+add_filter('xmlrpc_enabled', '__return_false');
+add_filter('wp_headers', function (array $headers): array {
+    unset($headers['X-Pingback']);
+    return $headers;
+});
+
+// 9. OBFUSKASI PESAN ERROR LOGIN (MENCEGAH USER ENUMERATION PADA WP-LOGIN)
+// Menyamarkan apakah username atau password yang salah agar attacker tidak bisa menebak username yang valid
+add_filter('login_errors', function (): string {
+    return 'Username atau password yang Anda masukkan tidak valid. Silakan coba lagi.';
+});
+
+// 10. NONAKTIFKAN APPLICATION PASSWORDS (JIKA TIDAK DIPAKAI MOBILE APP RESMI)
+// Menutup celah bypass otentikasi via REST API Application Passwords
+add_filter('wp_is_application_passwords_available', '__return_false');
+
+// 11. MATIKAN EDITOR FILE THEME & PLUGIN DI WP ADMIN
+// Mencegah eksekusi kode arbiter jika kredensial admin sempat terkompromi
+add_filter('map_meta_cap', function (array $caps, string $cap): array {
+    if (in_array($cap, ['edit_themes', 'edit_plugins', 'edit_files'], true)) {
+        $caps[] = 'do_not_allow';
+    }
+    return $caps;
+}, 10, 2);
+
+// Sembunyikan language switcher di halaman login (mempersempit antarmuka)
+add_filter('login_display_language_dropdown', '__return_false');
+
+// 12. LIGHTWEIGHT LOGIN RATE LIMITER (ANTI BRUTE-FORCE)
+// Membatasi percobaan login maksimal 5x per 15 menit per alamat IP
+add_action('wp_login_failed', function (string $username): void {
+    $ip = fds_get_client_ip();
+    $transient_key = 'fds_login_attempts_' . md5($ip);
+    $attempts = (int) get_transient($transient_key);
+    $attempts++;
+    set_transient($transient_key, $attempts, 15 * MINUTE_IN_SECONDS);
+});
+
+add_filter('authenticate', function ($user, string $username, string $password) {
+    if (empty($username) && empty($password)) {
+        return $user;
+    }
+
+    $ip = fds_get_client_ip();
+    $transient_key = 'fds_login_attempts_' . md5($ip);
+    $attempts = (int) get_transient($transient_key);
+
+    if ($attempts >= 5) {
+        return new \WP_Error(
+            'too_many_attempts',
+            '<strong>Terlalu Banyak Percobaan:</strong> Akses login ditangguhkan sementara demi keamanan. Silakan coba lagi dalam 15 menit.'
+        );
+    }
+
+    return $user;
+}, 30, 3);
+

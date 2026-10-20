@@ -6,17 +6,8 @@
 
 @section('content')
 @php
-  // Ambil data lengkap halaman Tentang Kami dari Admin WP
+  // Ambil data lengkap halaman Tentang Kami dari Admin WP (Satu Pintu via Konten Tentang Kami)
   $about = function_exists('\App\fds_get_about_content') ? \App\fds_get_about_content() : [];
-
-  // Baca content editor bawaan jika ada konten khusus di editor halaman
-  $page_content = '';
-  if (have_posts()) {
-      while (have_posts()) {
-          the_post();
-          $page_content = get_the_content();
-      }
-  }
 @endphp
 
 {{-- ========================================================== --}}
@@ -180,22 +171,28 @@
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
           {!! $about['story_title'] ?? 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.' !!}
         </h2>
-        <div class="mt-8">
-          <img src="{{ !empty($about['story_img']) ? $about['story_img'] : fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}"
+        @if (!empty($about['story_img']))
+        <div class="mt-8 rounded-2xl overflow-hidden shadow-sm">
+          <img src="{{ $about['story_img'] }}"
                alt="Perjalanan dan Sejarah PT Karya Solusi Angkasa (FDS)"
-               class="w-full h-auto block">
+               class="w-full h-auto block object-cover">
         </div>
+        @endif
       </div>
 
-      {{-- Right: story text --}}
+      {{-- Right: story text (Dikelola terpusat satu pintu via menu Konten Tentang Kami / About FDS) --}}
       <div class="space-y-8 text-[18px] text-[#515154] leading-[1.7]">
-        @if (!empty($page_content))
-          {!! apply_filters('the_content', $page_content) !!}
-        @else
-          <p>{!! $about['story_p1'] ?? '' !!}</p>
-          <p>{!! $about['story_p2'] ?? '' !!}</p>
-          <p>{!! $about['story_p3'] ?? '' !!}</p>
-          <p>{!! $about['story_p4'] ?? '' !!}</p>
+        @if (!empty($about['story_p1']))
+          <p>{!! $about['story_p1'] !!}</p>
+        @endif
+        @if (!empty($about['story_p2']))
+          <p>{!! $about['story_p2'] !!}</p>
+        @endif
+        @if (!empty($about['story_p3']))
+          <p>{!! $about['story_p3'] !!}</p>
+        @endif
+        @if (!empty($about['story_p4']))
+          <p>{!! $about['story_p4'] !!}</p>
         @endif
         
         <div class="pt-4 border-t border-black/[0.06]">

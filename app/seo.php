@@ -936,55 +936,26 @@ add_action('template_redirect', function () {
 add_filter('robots_txt', function ($output, $public) {
     if ('1' === (string) $public) {
         $home = trailingslashit(home_url());
-        
-        $rm_sitemap = $home . 'sitemap_index.xml';
-        $wp_sitemap = $home . 'wp-sitemap.xml';
-        $custom_sitemap = $home . 'sitemap.xml';
-
         $rules = [];
         $rules[] = "# ============================================================";
         $rules[] = "# FDS ENTERPRISE SEO & GEO DIRECTIVES (PT KARYA SOLUSI ANGKASA)";
         $rules[] = "# ============================================================";
-        $rules[] = "Sitemap: {$rm_sitemap}";
-        $rules[] = "Sitemap: {$wp_sitemap}";
-        $rules[] = "Sitemap: {$custom_sitemap}";
+        $rules[] = "Sitemap: {$home}sitemap_index.xml";
+        $rules[] = "Sitemap: {$home}wp-sitemap.xml";
+        $rules[] = "Sitemap: {$home}sitemap.xml";
         $rules[] = "";
         $rules[] = "# Standard Search Engine Bots";
         $rules[] = "User-agent: *";
         $rules[] = "Allow: /";
         $rules[] = "Disallow: /wp-admin/";
-        $rules[] = "Disallow: /wp-includes/";
-        $rules[] = "Disallow: /wp-content/plugins/";
-        $rules[] = "Allow: /wp-content/uploads/";
+        $rules[] = "Allow: /wp-admin/admin-ajax.php";
         $rules[] = "";
-        $rules[] = "# Tier Mythic AI Crawlers & LLM Indexers (GEO Optimization)";
-        $rules[] = "User-agent: GPTBot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: OAI-SearchBot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: ClaudeBot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: Claude-SearchBot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: PerplexityBot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: Google-Extended";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: Applebot-Extended";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: Amazonbot";
-        $rules[] = "Allow: /";
-        $rules[] = "";
-        $rules[] = "User-agent: CCBot";
-        $rules[] = "Allow: /";
-
+        $rules[] = "# Tier Mythic AI Crawlers & LLM Indexers";
+        $rules[] = "User-agent: GPTBot\nAllow: /";
+        $rules[] = "User-agent: OAI-SearchBot\nAllow: /";
+        $rules[] = "User-agent: ClaudeBot\nAllow: /";
+        $rules[] = "User-agent: PerplexityBot\nAllow: /";
+        $rules[] = "User-agent: Google-Extended\nAllow: /";
         return implode("\n", $rules) . "\n";
     }
     return $output;

@@ -83,8 +83,9 @@ Tabel ini memetakan setiap bagian tampilan di website company profile dengan lok
   3. Klik tombol **"Ekspor Data ke CSV"** untuk mengunduh rekap calon pembeli dalam format Excel/Spreadsheet.
 
 ### 3.5 Halaman Tentang Kami (`/tentang-kami/`)
-* **Pengaturan Konten:** Di **Pengaturan FDS &rarr; Tentang Kami**.
-* **Elemen:** Sejarah riset mandiri sejak 2012, peresmian PT pada 2019, visi kemandirian teknologi dirgantara nasional, fasilitas riset Sleman, dan peta workshop Google Maps.
+* **Pengaturan Konten (Satu Pintu):** Dikelola penuh di menu sidebar **Konten Tentang Kami** (About FDS) di WP-Admin (Hero banner, 4 angka statistik, narasi Cerita Kami, Spektrum Teknologi, Kemitraan Klien, dan Fasilitas).
+* **Pemisahan dengan Menu Pages (SEO Only):** Menu standar WordPress **Pages &rarr; Edit (Tentang Kami)** difungsikan murni untuk keperluan SEO on-page (target kata kunci Rank Math, snippet preview, dan meta deskripsi). Teks dari editor Pages sengaja tidak menimpa layout UI agar tampilan desain B2B tetap rapi dan terpusat.
+* **Gambar Cerita Kami (Opsional):** Pada Tab 2 ("Cerita Kami & Narasi"), field gambar bersifat opsional. Jika dikosongkan atau dihapus via tombol *"Hapus Gambar"*, section Cerita Kami akan bersih murni berupa judul dan teks narasi tanpa memaksakan gambar placeholder apapun.
 
 ### 3.6 Footer Global & Penataan Logo Sertifikasi
 * **Informasi Kontak:** Di **Pengaturan FDS &rarr; Pengaturan Footer** (Alamat kantor Sleman, nomor WhatsApp sales, email inquiry, jam operasional).

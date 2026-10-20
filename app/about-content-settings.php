@@ -472,13 +472,13 @@ function render_about_content_admin_page() {
             </div>
 
             <div class="fds-field">
-              <label>Gambar Cerita Kami (Workshop FDS)</label>
+              <label>Gambar Cerita Kami (Workshop FDS) — <span style="font-weight: normal; color: #6e6e73;">Opsional (Kosongkan jika tidak ingin ada gambar di section Cerita Kami)</span></label>
               <div class="fds-img-preview-box">
-                <img id="preview_story_img" class="fds-img-preview" src="<?php echo esc_url($data['story_img'] ?: fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80')); ?>">
+                <img id="preview_story_img" class="fds-img-preview" src="<?php echo esc_url($data['story_img'] ?: ''); ?>" style="<?php echo empty($data['story_img']) ? 'display:none;' : ''; ?>">
                 <div>
                   <input type="hidden" name="fds_about_story_img" id="input_story_img" value="<?php echo esc_attr($data['story_img']); ?>">
                   <button type="button" class="button fds-upload-btn" data-input="input_story_img" data-preview="preview_story_img">Pilih / Ganti Gambar</button>
-                  <button type="button" class="button fds-clear-btn" data-input="input_story_img" data-preview="preview_story_img" data-default="<?php echo esc_url(fds_img('tk_story', 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80')); ?>" style="margin-left: 6px;">Reset</button>
+                  <button type="button" class="button fds-clear-btn" data-input="input_story_img" data-preview="preview_story_img" data-default="" style="margin-left: 6px;">Hapus Gambar</button>
                 </div>
               </div>
             </div>
@@ -828,22 +828,26 @@ function render_about_content_admin_page() {
           customUploader.on('select', function() {
             var attachment = customUploader.state().get('selection').first().toJSON();
             $('#' + inputId).val(attachment.url);
-            $('#' + previewId).attr('src', attachment.url);
+            $('#' + previewId).attr('src', attachment.url).show();
           });
 
           customUploader.open();
         });
 
-        // Reset Button
+        // Reset / Clear Button
         $('.fds-clear-btn').on('click', function(e) {
           e.preventDefault();
           var btn = $(this);
           var inputId = btn.data('input');
           var previewId = btn.data('preview');
-          var defaultUrl = btn.data('default');
+          var defaultUrl = btn.data('default') || '';
 
-          $('#' + inputId).val('');
-          $('#' + previewId).attr('src', defaultUrl);
+          $('#' + inputId).val(defaultUrl);
+          if (defaultUrl) {
+            $('#' + previewId).attr('src', defaultUrl).show();
+          } else {
+            $('#' + previewId).attr('src', '').hide();
+          }
         });
 
         // Dynamic Repeater untuk Aktivitas & Kemitraan
