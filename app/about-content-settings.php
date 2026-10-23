@@ -76,6 +76,73 @@ function fds_get_about_activities() {
     return $items;
 }
 
+// Default Galeri Dokumentasi Foto (Simpel: Hanya Judul, Kategori & Gambar — Variasi Rasio untuk Pinterest Masonry)
+function fds_get_default_about_gallery() {
+    return [
+        [
+            'cat'   => 'workshop',
+            'title' => 'Fasilitas Workshop & Manufaktur Presisi FDS Sleman',
+            'img'   => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&h=1000&q=80',
+        ],
+        [
+            'cat'   => 'lapangan',
+            'title' => 'Uji Ketahanan & Jelajah DELTAV VTOL',
+            'img'   => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&h=600&q=80',
+        ],
+        [
+            'cat'   => 'lapangan',
+            'title' => 'Implementasi Presisi Drone Sprayer Ferto di Perkebunan',
+            'img'   => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&h=800&q=80',
+        ],
+        [
+            'cat'   => 'pelatihan',
+            'title' => 'Pelatihan & Sertifikasi Pilot Drone Korporasi B2B',
+            'img'   => 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&h=480&q=80',
+        ],
+        [
+            'cat'   => 'workshop',
+            'title' => 'Riset Komposit Karbon & Pemodelan CFD Wahana Udara',
+            'img'   => 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&h=1000&q=80',
+        ],
+        [
+            'cat'   => 'lapangan',
+            'title' => 'Pemetaan LiDAR & Fotogrametri Kawasan Tambang',
+            'img'   => 'https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?auto=format&fit=crop&w=800&h=600&q=80',
+        ],
+        [
+            'cat'   => 'workshop',
+            'title' => 'Perakitan Avionik Presisi & Sistem Telemetri GCS',
+            'img'   => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=800&h=800&q=80',
+        ],
+        [
+            'cat'   => 'pelatihan',
+            'title' => 'Simulasi Misi Terbang & Analisis Data Geospasial',
+            'img'   => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&h=480&q=80',
+        ],
+    ];
+}
+
+function fds_get_about_gallery() {
+    $saved = get_option('fds_about_gallery_items', null);
+    if ($saved === null || !is_array($saved) || empty($saved)) {
+        return fds_get_default_about_gallery();
+    }
+    
+    $items = [];
+    foreach ($saved as $item) {
+        $title = trim($item['title'] ?? '');
+        $img   = trim($item['img'] ?? '');
+        if (!empty($title) && !empty($img)) {
+            $items[] = [
+                'cat'   => sanitize_text_field($item['cat'] ?? 'workshop'),
+                'title' => wp_specialchars_decode($title, ENT_QUOTES),
+                'img'   => esc_url_raw($img),
+            ];
+        }
+    }
+    return !empty($items) ? $items : fds_get_default_about_gallery();
+}
+
 // 2. HELPER GET ABOUT CONTENT
 function fds_get_about_content() {
     $data = [
@@ -151,6 +218,11 @@ function fds_get_about_content() {
         'mitra_item7_cat' => get_option('fds_about_mitra_item7_cat', ''),
         'mitra_item7_name'=> get_option('fds_about_mitra_item7_name', ''),
         'mitra_item7_desc'=> get_option('fds_about_mitra_item7_desc', ''),
+
+        // GALERI DOKUMENTASI
+        'gallery_badge'   => get_option('fds_about_gallery_badge', ''),
+        'gallery_title'   => get_option('fds_about_gallery_title', 'Galeri Dokumentasi'),
+        'gallery_desc'    => get_option('fds_about_gallery_desc', 'Dokumentasi rekam jejak kegiatan operasional, uji terbang, dan implementasi teknologi drone FDS.'),
 
         // SERTIFIKASI & MUTU
         'certs_badge'     => get_option('fds_about_certs_badge', 'Sertifikasi & Standar Mutu'),
@@ -233,6 +305,8 @@ function render_about_content_admin_page() {
             'fds_about_mitra_item5_cat', 'fds_about_mitra_item5_name', 'fds_about_mitra_item5_desc',
             'fds_about_mitra_item6_cat', 'fds_about_mitra_item6_name', 'fds_about_mitra_item6_desc',
             'fds_about_mitra_item7_cat', 'fds_about_mitra_item7_name', 'fds_about_mitra_item7_desc',
+            // GALERI DOKUMENTASI
+            'fds_about_gallery_badge', 'fds_about_gallery_title', 'fds_about_gallery_desc',
             // SERTIFIKASI
             'fds_about_certs_badge', 'fds_about_certs_title',
             'fds_about_cert1_badge', 'fds_about_cert1_val', 'fds_about_cert1_desc',
@@ -277,6 +351,25 @@ function render_about_content_admin_page() {
                 ];
             }
             update_option('fds_about_activity_items', $activity_items);
+        }
+
+        // Simpan Dynamic Repeater Galeri Dokumentasi (Ultra Sederhana: Hanya Judul & Gambar)
+        if (isset($_POST['fds_about_gallery_title_item']) && is_array($_POST['fds_about_gallery_title_item'])) {
+            $gallery_items = [];
+            $titles = $_POST['fds_about_gallery_title_item'];
+            $imgs   = $_POST['fds_about_gallery_img'] ?? [];
+
+            foreach ($titles as $idx => $title) {
+                $title_clean = sanitize_text_field($title);
+                $img_clean   = esc_url_raw($imgs[$idx] ?? '');
+                if (empty($title_clean) && empty($img_clean)) continue;
+
+                $gallery_items[] = [
+                    'title' => $title_clean,
+                    'img'   => $img_clean,
+                ];
+            }
+            update_option('fds_about_gallery_items', $gallery_items);
         }
 
         // Sinkronisasi otomatis ke Kontak Global
@@ -364,8 +457,9 @@ function render_about_content_admin_page() {
           <button type="button" class="fds-tab-btn" data-tab="tab-cerita">2. Cerita Kami &amp; Narasi</button>
           <button type="button" class="fds-tab-btn" data-tab="tab-spektrum">3. Spektrum Teknologi</button>
           <button type="button" class="fds-tab-btn" data-tab="tab-mitra">4. Kemitraan &amp; Klien</button>
-          <button type="button" class="fds-tab-btn" data-tab="tab-sertifikasi">5. Sertifikasi &amp; Mutu</button>
-          <button type="button" class="fds-tab-btn" data-tab="tab-cta">6. CTA &amp; Workshop</button>
+          <button type="button" class="fds-tab-btn" data-tab="tab-galeri">5. Galeri Dokumentasi</button>
+          <button type="button" class="fds-tab-btn" data-tab="tab-sertifikasi">6. Sertifikasi &amp; Mutu</button>
+          <button type="button" class="fds-tab-btn" data-tab="tab-cta">7. CTA &amp; Workshop</button>
         </div>
 
         <!-- ========================================================= -->
@@ -649,7 +743,83 @@ function render_about_content_admin_page() {
         </div>
 
         <!-- ========================================================= -->
-        <!-- TAB 5: SERTIFIKASI & STANDAR MUTU -->
+        <!-- TAB 5: GALERI DOKUMENTASI & FASILITAS                     -->
+        <!-- ========================================================= -->
+        <div class="fds-tab-pane" id="tab-galeri" style="display:none;">
+          <div class="fds-card">
+            <h2>📷 Pengaturan Header Section Galeri Dokumentasi</h2>
+            <div class="fds-grid-2">
+              <div class="fds-field">
+                <label>Judul Section</label>
+                <input type="text" name="fds_about_gallery_title" value="<?php echo esc_attr($data['gallery_title']); ?>">
+              </div>
+              <div class="fds-field">
+                <label>Deskripsi Pengantar (Ringkas &amp; Padat)</label>
+                <textarea name="fds_about_gallery_desc" rows="2"><?php echo esc_textarea($data['gallery_desc']); ?></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="fds-card">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; border-bottom: 1px solid #f0f0f2; padding-bottom: 12px;">
+              <div>
+                <h2 style="margin: 0; border-bottom: none; padding-bottom: 0;">🖼️ Item Galeri &amp; Dokumentasi Foto</h2>
+                <p style="margin: 4px 0 0 0; font-size: 13px; color: #64748b;">
+                  Kelola foto kegiatan workshop, uji terbang, dan implementasi lapangan. Urutkan dengan tombol (▲/▼).
+                </p>
+              </div>
+              <button type="button" class="button button-primary" onclick="fdsAddGalleryItem()" style="background: #0f808a; border-color: #0f808a; font-weight: 600; padding: 4px 16px; border-radius: 6px;">
+                ➕ Tambah Foto Galeri Baru
+              </button>
+            </div>
+
+            <div id="fds-gallery-repeater-container" style="display: flex; flex-direction: column; gap: 16px;">
+              <?php
+                $gallery_list = \App\fds_get_about_gallery();
+                foreach ($gallery_list as $g_idx => $g_item):
+                  $g_input_id = 'input_gallery_img_' . $g_idx;
+                  $g_prev_id  = 'preview_gallery_img_' . $g_idx;
+              ?>
+              <div class="fds-gallery-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                  <span style="font-size: 13px; font-weight: 700; color: #0f808a;">Foto #<span class="gallery-number"><?php echo $g_idx + 1; ?></span></span>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="button button-small" onclick="fdsMoveGallery(this, -1)" title="Pindah ke atas">▲</button>
+                    <button type="button" class="button button-small" onclick="fdsMoveGallery(this, 1)" title="Pindah ke bawah">▼</button>
+                    <button type="button" class="button button-small button-link-delete" onclick="fdsDeleteGallery(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>
+                  </div>
+                </div>
+
+                <div class="fds-field" style="margin-bottom: 12px;">
+                  <label style="font-size: 12px; font-weight: 700; color: #475569;">Judul Foto</label>
+                  <input type="text" name="fds_about_gallery_title_item[]" value="<?php echo esc_attr($g_item['title'] ?? ''); ?>" required placeholder="Contoh: Perakitan Karbon Komposit di Sleman">
+                </div>
+
+                <div class="fds-field" style="margin-bottom: 0;">
+                  <label style="font-size: 12px; font-weight: 700; color: #475569;">File Foto Dokumentasi</label>
+                  <div class="fds-img-preview-box">
+                    <img id="<?php echo esc_attr($g_prev_id); ?>" class="fds-img-preview" src="<?php echo esc_url($g_item['img'] ?? ''); ?>" style="<?php echo empty($g_item['img']) ? 'display:none;' : ''; ?>">
+                    <div>
+                      <input type="hidden" name="fds_about_gallery_img[]" id="<?php echo esc_attr($g_input_id); ?>" value="<?php echo esc_attr($g_item['img'] ?? ''); ?>">
+                      <button type="button" class="button fds-upload-btn" data-input="<?php echo esc_attr($g_input_id); ?>" data-preview="<?php echo esc_attr($g_prev_id); ?>">Pilih / Upload Gambar</button>
+                      <button type="button" class="button fds-clear-btn" data-input="<?php echo esc_attr($g_input_id); ?>" data-preview="<?php echo esc_attr($g_prev_id); ?>" data-default="" style="margin-left: 6px;">Hapus Gambar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <?php endforeach; ?>
+            </div>
+
+            <div style="margin-top: 18px; text-align: center;">
+              <button type="button" class="button button-secondary" onclick="fdsAddGalleryItem()" style="padding: 6px 20px; font-weight: 600; border-radius: 6px;">
+                ➕ Tambah Foto Galeri Baru
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========================================================= -->
+        <!-- TAB 6: SERTIFIKASI & STANDAR MUTU -->
         <!-- ========================================================= -->
         <div class="fds-tab-pane" id="tab-sertifikasi" style="display:none;">
           <div class="fds-card">
@@ -718,7 +888,7 @@ function render_about_content_admin_page() {
         </div>
 
         <!-- ========================================================= -->
-        <!-- TAB 6: CTA & WORKSHOP -->
+        <!-- TAB 7: CTA & WORKSHOP -->
         <!-- ========================================================= -->
         <div class="fds-tab-pane" id="tab-cta" style="display:none;">
           <div class="fds-card">
@@ -812,8 +982,8 @@ function render_about_content_admin_page() {
           $('#' + $(this).data('tab')).show();
         });
 
-        // Media Uploader
-        $('.fds-upload-btn').on('click', function(e) {
+        // Media Uploader (Delegated event untuk menangani baris repeater dinamis)
+        $(document).on('click', '.fds-upload-btn', function(e) {
           e.preventDefault();
           var btn = $(this);
           var inputId = btn.data('input');
@@ -834,8 +1004,8 @@ function render_about_content_admin_page() {
           customUploader.open();
         });
 
-        // Reset / Clear Button
-        $('.fds-clear-btn').on('click', function(e) {
+        // Reset / Clear Button (Delegated event)
+        $(document).on('click', '.fds-clear-btn', function(e) {
           e.preventDefault();
           var btn = $(this);
           var inputId = btn.data('input');
@@ -912,6 +1082,77 @@ function render_about_content_admin_page() {
         window.fdsRenumberActivity = function() {
           $('#fds-activity-repeater-container .fds-activity-row').each(function(idx) {
             $(this).find('.activity-number').text(idx + 1);
+          });
+        };
+
+        // Dynamic Repeater untuk Galeri Dokumentasi Foto
+        window.fdsAddGalleryItem = function() {
+          var count = $('#fds-gallery-repeater-container .fds-gallery-row').length + 1;
+          var uniq = Date.now();
+          var inputId = 'input_gallery_img_' + uniq;
+          var prevId = 'preview_gallery_img_' + uniq;
+
+          var html = '<div class="fds-gallery-row" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
+            '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
+              '<span style="font-size: 13px; font-weight: 700; color: #0f808a;">Foto #<span class="gallery-number">' + count + '</span></span>' +
+              '<div style="display: flex; gap: 6px;">' +
+                '<button type="button" class="button button-small" onclick="fdsMoveGallery(this, -1)" title="Pindah ke atas">▲</button>' +
+                '<button type="button" class="button button-small" onclick="fdsMoveGallery(this, 1)" title="Pindah ke bawah">▼</button>' +
+                '<button type="button" class="button button-small button-link-delete" onclick="fdsDeleteGallery(this)" style="color: #dc2626; margin-left: 6px;">🗑️ Hapus</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="fds-field" style="margin-bottom: 12px;">' +
+              '<label style="font-size: 12px; font-weight: 700; color: #475569;">Judul Foto</label>' +
+              '<input type="text" name="fds_about_gallery_title_item[]" value="" required placeholder="Contoh: Perakitan Karbon Komposit di Sleman">' +
+            '</div>' +
+            '<div class="fds-field" style="margin-bottom: 0;">' +
+              '<label style="font-size: 12px; font-weight: 700; color: #475569;">File Foto Dokumentasi</label>' +
+              '<div class="fds-img-preview-box">' +
+                '<img id="' + prevId + '" class="fds-img-preview" src="" style="display:none;">' +
+                '<div>' +
+                  '<input type="hidden" name="fds_about_gallery_img[]" id="' + inputId + '" value="">' +
+                  '<button type="button" class="button fds-upload-btn" data-input="' + inputId + '" data-preview="' + prevId + '">Pilih / Upload Gambar</button>' +
+                  '<button type="button" class="button fds-clear-btn" data-input="' + inputId + '" data-preview="' + prevId + '" data-default="" style="margin-left: 6px;">Hapus Gambar</button>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+
+          $('#fds-gallery-repeater-container').append(html);
+          fdsRenumberGallery();
+        };
+
+        window.fdsDeleteGallery = function(btn) {
+          if ($('#fds-gallery-repeater-container .fds-gallery-row').length <= 1) {
+            alert('Minimal harus ada 1 item galeri dokumentasi.');
+            return;
+          }
+          if (confirm('Yakin ingin menghapus item galeri ini?')) {
+            $(btn).closest('.fds-gallery-row').remove();
+            fdsRenumberGallery();
+          }
+        };
+
+        window.fdsMoveGallery = function(btn, direction) {
+          var row = $(btn).closest('.fds-gallery-row');
+          if (direction === -1) {
+            var prev = row.prev('.fds-gallery-row');
+            if (prev.length) {
+              row.insertBefore(prev);
+              fdsRenumberGallery();
+            }
+          } else if (direction === 1) {
+            var next = row.next('.fds-gallery-row');
+            if (next.length) {
+              row.insertAfter(next);
+              fdsRenumberGallery();
+            }
+          }
+        };
+
+        window.fdsRenumberGallery = function() {
+          $('#fds-gallery-repeater-container .fds-gallery-row').each(function(idx) {
+            $(this).find('.gallery-number').text(idx + 1);
           });
         };
       });

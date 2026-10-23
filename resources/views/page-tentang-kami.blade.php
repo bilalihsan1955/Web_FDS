@@ -351,6 +351,305 @@
 
 
 {{-- ========================================================== --}}
+{{-- DOKUMENTASI & FASILITAS — Asymmetric Bento Gallery         --}}
+{{-- ========================================================== --}}
+@php
+  $gallery_items = function_exists('App\fds_get_about_gallery') ? \App\fds_get_about_gallery() : [];
+  $raw_gallery_title = $about['gallery_title'] ?? '';
+  $gallery_heading = (!empty($raw_gallery_title) && $raw_gallery_title !== 'Rekam jejak operasional, rekayasa manufaktur, dan uji terbang FDS.' && $raw_gallery_title !== 'Dokumentasi & Fasilitas')
+    ? $raw_gallery_title
+    : 'Galeri Dokumentasi';
+    
+  $raw_gallery_desc = $about['gallery_desc'] ?? '';
+  $gallery_desc = (!empty($raw_gallery_desc) && $raw_gallery_desc !== 'Dokumentasi visual fasilitas perakitan Sleman, pengujian performa wahana udara, serta implementasi teknologi drone di lapangan.' && $raw_gallery_desc !== 'Rekam jejak fasilitas perakitan, uji terbang, dan implementasi teknologi drone FDS.')
+    ? $raw_gallery_desc
+    : 'Dokumentasi rekam jejak kegiatan operasional, uji terbang, dan implementasi teknologi drone FDS.';
+@endphp
+@if(!empty($gallery_items))
+<section id="galeri-dokumentasi" class="bg-[#f8fafc] py-20 sm:py-28 border-t border-black/[0.06] relative">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    
+    {{-- Header Sederhana & Bersih (Tanpa Kategori) --}}
+    <div class="mb-10 sm:mb-14 max-w-[680px]">
+      <h2 class="text-[32px] sm:text-[42px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.15]">
+        {!! esc_html($gallery_heading) !!}
+      </h2>
+      @if(!empty($gallery_desc))
+      <p class="text-[16px] sm:text-[17px] text-[#515154] leading-relaxed mt-3">
+        {!! esc_html($gallery_desc) !!}
+      </p>
+      @endif
+    </div>
+
+    {{-- Pinterest-Style Masonry Grid (Urutan Murni dari Kiri ke Kanan) --}}
+    @php
+      $columns_data = [[], [], []];
+      foreach ($gallery_items as $g_i => $g_val) {
+        $g_val['_orig_idx'] = $g_i;
+        $columns_data[$g_i % 3][] = $g_val;
+      }
+    @endphp
+
+    <div id="fds-gallery-masonry" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 items-start" data-total="{{ count($gallery_items) }}">
+      @for($c = 0; $c < 3; $c++)
+        <div class="fds-masonry-col flex flex-col gap-6" data-col="{{ $c }}">
+          @foreach($columns_data[$c] as $g_val)
+            @php
+              $g_i = $g_val['_orig_idx'];
+              $g_title = esc_attr($g_val['title'] ?? 'Dokumentasi FDS');
+              $g_img = esc_url($g_val['img'] ?? '');
+            @endphp
+            <div 
+              class="fds-gallery-card w-full rounded-2xl overflow-hidden group relative cursor-pointer bg-slate-200 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.14)] transition-all duration-300 hover:-translate-y-1 block"
+              data-idx="{{ $g_i }}"
+              data-title="{{ $g_title }}"
+              data-img="{{ $g_img }}"
+            >
+              <div class="relative overflow-hidden w-full">
+                {{-- Foto Dokumentasi (Tinggi Alami / Rasio Beragam Khas Pinterest) --}}
+                <img 
+                  src="{{ $g_img }}" 
+                  alt="{{ $g_title }}" 
+                  class="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105 block"
+                  loading="lazy"
+                >
+
+                {{-- Ambient Scrim Gradient di Dasar Foto --}}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent pointer-events-none"></div>
+
+                {{-- Top Right Expand Icon Button --}}
+                <div class="absolute top-3.5 right-3.5 w-9 h-9 rounded-full bg-black/45 backdrop-blur-md border border-white/25 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-all duration-200 transform translate-y-1 group-hover:translate-y-0 shadow-lg pointer-events-none">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                  </svg>
+                </div>
+
+                {{-- Judul Foto (Hanya Judul Saja) --}}
+                <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10 pointer-events-none">
+                  <h3 class="text-white font-semibold text-[15px] sm:text-[17px] leading-snug tracking-tight drop-shadow-sm group-hover:text-[#46deec] transition-colors duration-200">
+                    {!! esc_html($g_val['title'] ?? '') !!}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          @endforeach
+        </div>
+      @endfor
+    </div>
+
+  </div>
+
+  {{-- Apple-Grade Fullscreen Lightbox Modal (Pure Vanilla JS) --}}
+  <div 
+    id="fds-lightbox-modal"
+    class="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 md:p-10 bg-black/92 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300"
+    style="display: none;"
+  >
+    {{-- Tombol Tutup --}}
+    <button 
+      id="fds-lightbox-close-btn"
+      type="button"
+      class="absolute top-5 right-5 sm:top-8 sm:right-8 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 active:scale-95 text-white flex items-center justify-center transition-all duration-150 z-50 cursor-pointer"
+      title="Tutup (Esc)"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+
+    {{-- Tombol Navigasi Kiri / Prev --}}
+    <button 
+      id="fds-lightbox-prev-btn"
+      type="button"
+      class="absolute left-3 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 active:scale-95 text-white flex items-center justify-center transition-all duration-150 z-50 cursor-pointer"
+      title="Sebelumnya (Panah Kiri)"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+
+    {{-- Tombol Navigasi Kanan / Next --}}
+    <button 
+      id="fds-lightbox-next-btn"
+      type="button"
+      class="absolute right-3 sm:right-6 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/10 hover:bg-white/25 active:scale-95 text-white flex items-center justify-center transition-all duration-150 z-50 cursor-pointer"
+      title="Selanjutnya (Panah Kanan)"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+    </button>
+
+    {{-- Konten Modal di Tengah --}}
+    <div id="fds-lightbox-inner" class="relative max-w-5xl w-full max-h-[92vh] flex flex-col items-center select-none">
+      <div class="relative w-full flex items-center justify-center overflow-hidden rounded-2xl bg-black/40">
+        <img 
+          id="fds-lightbox-img"
+          src="" 
+          alt="" 
+          class="max-h-[75vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl transition-all duration-300"
+        >
+      </div>
+      
+      {{-- Modal Caption: Hanya Judul Saja & Counter --}}
+      <div class="mt-4 text-center max-w-2xl px-4 flex flex-col items-center gap-1.5">
+        <h3 id="fds-lightbox-title" class="text-white text-[18px] sm:text-[22px] font-semibold tracking-tight"></h3>
+        <p id="fds-lightbox-counter" class="text-white/60 text-[13px] font-medium"></p>
+      </div>
+    </div>
+  </div>
+
+  {{-- Script Interaksi Galeri & Modal Lightbox (Pure Vanilla JS) --}}
+  <script>
+  (function() {
+    function initFdsGallery() {
+      var container = document.getElementById('fds-gallery-masonry');
+      if (!container) return;
+
+      var modal = document.getElementById('fds-lightbox-modal');
+      var modalImg = document.getElementById('fds-lightbox-img');
+      var modalTitle = document.getElementById('fds-lightbox-title');
+      var modalCounter = document.getElementById('fds-lightbox-counter');
+      var closeBtn = document.getElementById('fds-lightbox-close-btn');
+      var prevBtn = document.getElementById('fds-lightbox-prev-btn');
+      var nextBtn = document.getElementById('fds-lightbox-next-btn');
+
+      // Ambil seluruh kartu dan urutkan berdasarkan index asli (0, 1, 2, 3...)
+      var initialCards = Array.prototype.slice.call(container.querySelectorAll('.fds-gallery-card'));
+      initialCards.sort(function(a, b) {
+        return parseInt(a.getAttribute('data-idx') || 0, 10) - parseInt(b.getAttribute('data-idx') || 0, 10);
+      });
+
+      var totalCards = initialCards.length;
+      var currentIndex = 0;
+      var currentCols = -1;
+
+      // Distribusi Kolom Dinamis: Menjamin urutan mengalir murni DARI KIRI KE KANAN
+      function updateColumnsLayout() {
+        var width = window.innerWidth;
+        var neededCols = 1;
+        if (width >= 1024) {
+          neededCols = 3;
+        } else if (width >= 640) {
+          neededCols = 2;
+        }
+
+        if (neededCols === currentCols) return;
+        currentCols = neededCols;
+
+        // Kosongkan dan buat ulang wadah kolom
+        container.innerHTML = '';
+        var colElements = [];
+        for (var c = 0; c < neededCols; c++) {
+          var col = document.createElement('div');
+          col.className = 'fds-masonry-col flex flex-col gap-6';
+          container.appendChild(col);
+          colElements.push(col);
+        }
+
+        // Distribusi kartu secara round-robin:
+        // Baris 1: Kartu 0 (Kiri) -> Kartu 1 (Tengah) -> Kartu 2 (Kanan)
+        // Baris 2: Kartu 3 (Kiri) -> Kartu 4 (Tengah) -> Kartu 5 (Kanan)
+        initialCards.forEach(function(card, idx) {
+          colElements[idx % neededCols].appendChild(card);
+        });
+      }
+
+      // Jalankan penyesuaian awal
+      updateColumnsLayout();
+
+      // Debounce window resize
+      var resizeTimer = null;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(updateColumnsLayout, 150);
+      });
+
+      // Fungsi Modal Lightbox
+      function openModal(index) {
+        if (!totalCards) return;
+        currentIndex = (index + totalCards) % totalCards;
+        var targetCard = initialCards[currentIndex];
+        var imgUrl = targetCard.getAttribute('data-img') || '';
+        var titleText = targetCard.getAttribute('data-title') || '';
+
+        modalImg.src = imgUrl;
+        modalImg.alt = titleText;
+        modalTitle.textContent = titleText;
+        modalCounter.textContent = 'Foto ' + (currentIndex + 1) + ' dari ' + totalCards;
+
+        modal.style.display = 'flex';
+        void modal.offsetWidth;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100', 'pointer-events-auto');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        modal.classList.remove('opacity-100', 'pointer-events-auto');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(function() {
+          if (modal.classList.contains('opacity-0')) {
+            modal.style.display = 'none';
+          }
+        }, 300);
+        document.body.style.overflow = '';
+      }
+
+      function nextPhoto() {
+        openModal(currentIndex + 1);
+      }
+
+      function prevPhoto() {
+        openModal(currentIndex - 1);
+      }
+
+      // Pasang event klik pada semua kartu
+      initialCards.forEach(function(card) {
+        card.addEventListener('click', function(e) {
+          e.preventDefault();
+          var idx = parseInt(this.getAttribute('data-idx') || 0, 10);
+          openModal(idx);
+        });
+      });
+
+      // Kontrol Modal
+      if (closeBtn) closeBtn.addEventListener('click', closeModal);
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          prevPhoto();
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          nextPhoto();
+        });
+      }
+
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeModal();
+        }
+      });
+
+      document.addEventListener('keydown', function(e) {
+        if (modal.style.display !== 'none' && !modal.classList.contains('opacity-0')) {
+          if (e.key === 'Escape') closeModal();
+          if (e.key === 'ArrowRight') nextPhoto();
+          if (e.key === 'ArrowLeft') prevPhoto();
+        }
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFdsGallery);
+    } else {
+      initFdsGallery();
+    }
+  })();
+  </script>
+</section>
+@endif
+
+
+{{-- ========================================================== --}}
 {{-- CERTIFICATIONS — Light gray bento                         --}}
 {{-- ========================================================== --}}
 <section class="bg-[#f5f5f7] py-24 sm:py-32 border-t border-black/[0.06]">
