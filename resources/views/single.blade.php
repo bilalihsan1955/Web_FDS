@@ -7,13 +7,13 @@
 
       {{-- Header --}}
       <header class="max-w-[1100px] mx-auto px-6 lg:px-12 pt-14 pb-10 text-center">
-        <p class="text-[13px] font-medium text-[#86868b] mb-4">{{ get_the_date('j F Y') }}</p>
-        <h1 class="text-[38px] sm:text-[54px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">{!! get_the_title() !!}</h1>
+        <p class="text-[13px] font-medium text-[#86868b] mb-4 fds-hero-entrance fds-hero-delay-1">{{ get_the_date('j F Y') }}</p>
+        <h1 class="text-[38px] sm:text-[54px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] fds-hero-entrance fds-hero-delay-2">{!! get_the_title() !!}</h1>
       </header>
 
       {{-- Featured image --}}
       @if(has_post_thumbnail())
-        <div class="max-w-[1100px] mx-auto px-6 lg:px-12 mb-14">
+        <div class="max-w-[1100px] mx-auto px-6 lg:px-12 mb-14 fds-hero-entrance fds-hero-delay-3">
           <div class="rounded-[1.5rem] overflow-hidden aspect-video bg-[#f5f5f7]">
             {!! get_the_post_thumbnail(null, 'full', ['class' => 'w-full h-full object-cover']) !!}
           </div>
@@ -21,7 +21,7 @@
       @endif
 
       {{-- Article body --}}
-      <div class="max-w-[1100px] mx-auto px-6 lg:px-12">
+      <x-reveal :delay="200" class="max-w-[1100px] mx-auto px-6 lg:px-12">
         <div class="prose max-w-none"
              style="font-family: inherit; font-size: 18px; line-height: 1.8; color: #1d1d1f;">
           @php(the_content())
@@ -47,7 +47,7 @@
 
         {{-- Komentar Artikel --}}
         @include('partials.comments')
-      </div>
+      </x-reveal>
 
     </article>
   @endwhile

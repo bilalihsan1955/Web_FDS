@@ -120,3 +120,51 @@ if (!function_exists('fds_get_default_drone_catalog')) {
     }
 }
 
+if (!function_exists('fds_aos')) {
+    /**
+     * Generate HTML attributes for AOS animation
+     *
+     * @param string $type fade-up, fade-down, fade-left, fade-right, zoom-in, etc.
+     * @param int $delay delay in milliseconds
+     * @param int|null $offset trigger offset in pixels
+     * @param int|null $duration animation duration in milliseconds
+     * @return string
+     */
+    function fds_aos($type = 'fade-up', $delay = 0, $offset = null, $duration = null) {
+        $attrs = 'data-aos="' . esc_attr($type) . '"';
+        if ($delay > 0) {
+            $attrs .= ' data-aos-delay="' . intval($delay) . '"';
+        }
+        if ($offset !== null) {
+            $attrs .= ' data-aos-offset="' . intval($offset) . '"';
+        }
+        if ($duration !== null) {
+            $attrs .= ' data-aos-duration="' . intval($duration) . '"';
+        }
+        return $attrs;
+    }
+}
+
+if (!function_exists('fds_stagger')) {
+    /**
+     * Generate staggered AOS attributes for looped items
+     *
+     * @param int $index current loop index (0-based)
+     * @param int $step step interval in milliseconds (default 100)
+     * @param int $base base delay in milliseconds (default 0)
+     * @param string $type animation type (default fade-up)
+     * @param int $modulo optional modulo for row-based staggering (e.g. 3 for 3 columns)
+     * @return string
+     */
+    function fds_stagger($index = 0, $step = 100, $base = 0, $type = 'fade-up', $modulo = 0) {
+        $idx = intval($index);
+        $st = intval($step);
+        $bs = intval($base);
+        $mod = intval($modulo);
+
+        $delay = ($mod > 0) ? (($idx % $mod) * $st + $bs) : ($idx * $st + $bs);
+        return fds_aos($type, $delay);
+    }
+}
+
+

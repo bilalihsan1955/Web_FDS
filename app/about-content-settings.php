@@ -125,22 +125,39 @@ function fds_get_default_about_gallery() {
 function fds_get_about_gallery() {
     $saved = get_option('fds_about_gallery_items', null);
     if ($saved === null || !is_array($saved) || empty($saved)) {
-        return fds_get_default_about_gallery();
-    }
-    
-    $items = [];
-    foreach ($saved as $item) {
-        $title = trim($item['title'] ?? '');
-        $img   = trim($item['img'] ?? '');
-        if (!empty($title) && !empty($img)) {
-            $items[] = [
-                'cat'   => sanitize_text_field($item['cat'] ?? 'workshop'),
-                'title' => wp_specialchars_decode($title, ENT_QUOTES),
-                'img'   => esc_url_raw($img),
-            ];
+        $items = fds_get_default_about_gallery();
+    } else {
+        $items = [];
+        foreach ($saved as $item) {
+            $title = trim($item['title'] ?? '');
+            $img   = trim($item['img'] ?? '');
+            if (!empty($title) && !empty($img)) {
+                $items[] = [
+                    'cat'   => sanitize_text_field($item['cat'] ?? 'workshop'),
+                    'title' => $title,
+                    'img'   => esc_url_raw($img),
+                ];
+            }
         }
     }
-    return !empty($items) ? $items : fds_get_default_about_gallery();
+
+    if (empty($items)) {
+        $items = fds_get_default_about_gallery();
+    }
+
+    // Recursively decode all HTML entities (e.g. &amp;amp; -> &)
+    foreach ($items as &$it) {
+        if (!empty($it['title']) && is_string($it['title'])) {
+            $prev = '';
+            while ($prev !== $it['title'] && strpos($it['title'], '&') !== false) {
+                $prev = $it['title'];
+                $it['title'] = wp_specialchars_decode($it['title'], ENT_QUOTES);
+            }
+        }
+    }
+    unset($it);
+
+    return $items;
 }
 
 // 2. HELPER GET ABOUT CONTENT
@@ -361,6 +378,11 @@ function render_about_content_admin_page() {
 
             foreach ($titles as $idx => $title) {
                 $title_clean = sanitize_text_field($title);
+                $prev = '';
+                while ($prev !== $title_clean && strpos($title_clean, '&') !== false) {
+                    $prev = $title_clean;
+                    $title_clean = wp_specialchars_decode($title_clean, ENT_QUOTES);
+                }
                 $img_clean   = esc_url_raw($imgs[$idx] ?? '');
                 if (empty($title_clean) && empty($img_clean)) continue;
 

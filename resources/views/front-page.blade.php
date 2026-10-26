@@ -34,29 +34,30 @@
   <div class="relative z-20 max-w-[1400px] w-full mx-auto px-6 lg:px-12 flex-1 flex flex-col justify-center items-center text-center py-6 sm:py-10 my-auto">
     
     @if(!empty($hp['hero_badge']))
-    <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all animate-fade-in">
+    <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all fds-hero-entrance fds-hero-delay-1">
       <span>{!! esc_html($hp['hero_badge'] ?? 'Teknologi UAV Indonesia') !!}</span>
     </div>
     @endif
 
-    <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]">
+    <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] fds-hero-entrance fds-hero-delay-2">
       {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Industrial\nuntuk Setiap Sektor.")) !!}
     </h1>
 
-    <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+    <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] fds-hero-entrance fds-hero-delay-3">
       {!! nl2br(esc_html($hp['hero_desc'] ?? 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.')) !!}
     </p>
 
-    <div class="mt-9 flex items-center justify-center gap-4 flex-wrap">
+    <div class="mt-9 flex items-center justify-center gap-4 flex-wrap fds-hero-entrance fds-hero-delay-4">
       <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" 
          class="inline-flex items-center justify-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/25 hover:shadow-xl hover:shadow-black/35 hover:-translate-y-0.5">
         {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
       </a>
       <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" 
-         class="inline-flex items-center justify-center bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/30 text-[15px] sm:text-[16px] font-medium px-8 py-4 rounded-full transition-all duration-200 gap-2 hover:-translate-y-0.5 shadow-lg">
-        {!! esc_html($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') !!}
-        <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+         class="group inline-flex items-center justify-center bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/30 text-[15px] sm:text-[16px] font-medium px-8 py-4 rounded-full transition-all duration-200 gap-2.5 leading-none hover:-translate-y-0.5 shadow-lg">
+        <span>{!! esc_html($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') !!}</span>
+        <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 6h12v12"/>
+          <path d="M6 18 18 6"/>
         </svg>
       </a>
     </div>
@@ -84,10 +85,10 @@
         {{-- Arrows --}}
         <div class="flex items-center gap-2">
           <button type="button" id="fds-slider-prev" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/15 hover:bg-[#0f808a] active:scale-95 text-white flex items-center justify-center border border-white/25 hover:border-[#0f808a] backdrop-blur-md transition-all duration-200 cursor-pointer shadow-md group" aria-label="Slide Sebelumnya">
-            <svg class="w-4 h-4 transition-transform group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
+            <svg class="w-4.5 h-4.5 transition-transform group-hover:-translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
           </button>
           <button type="button" id="fds-slider-next" class="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/15 hover:bg-[#0f808a] active:scale-95 text-white flex items-center justify-center border border-white/25 hover:border-[#0f808a] backdrop-blur-md transition-all duration-200 cursor-pointer shadow-md group" aria-label="Slide Selanjutnya">
-            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+            <svg class="w-4.5 h-4.5 transition-transform group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
           </button>
         </div>
 
@@ -219,8 +220,8 @@
 @endphp
 
 @if(!empty($mitra_with_logo))
-<section class="bg-white border-b border-black/[0.06] py-14 overflow-hidden">
-  <div class="text-center mb-10">
+<section class="bg-white py-14 overflow-hidden">
+  <div class="text-center mb-10" data-aos="fade-up">
     @php
       $mitra_title = $hp['mitra_heading'] ?? 'Dipercaya oleh Lembaga Nasional & Internasional';
       if (mb_strtoupper($mitra_title) === $mitra_title && mb_strlen($mitra_title) > 5) {
@@ -244,7 +245,7 @@
     <div class="flex" style="animation: fds-marquee 35s linear infinite;">
       @foreach($mitra_with_logo as $mitra)
         @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
-        <div class="flex-shrink-0 flex items-center justify-center px-10">
+        <div class="flex-shrink-0 flex items-center justify-center px-10" data-aos="fade-up" data-aos-delay="{{ min($loop->index * 100, 700) }}">
           <img src="{{ $logo }}"
                alt="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}"
                class="h-24 w-auto object-contain"
@@ -285,7 +286,7 @@
     'cards' => [],
   ];
 @endphp
-<section id="solusi" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-t border-b border-white/10">
+<section id="solusi" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden">
   
   {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -349,7 +350,7 @@
   </div>
 
   {{-- Header inside 1400px Container --}}
-  <div id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14 relative z-10">
+  <x-reveal id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-14 relative z-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
@@ -361,12 +362,12 @@
         {!! nl2br(esc_html($solusi_data['desc'])) !!}
       </p>
     </div>
-  </div>
+  </x-reveal>
 
   {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, No Padding Cut-off) --}}
   @if(!empty($solusi_data['cards']))
   <div class="w-full relative z-10">
-    <div id="solusi-carousel-track"
+    <x-reveal-group :step="120" :modulo="4" id="solusi-carousel-track"
          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
 
       @foreach($solusi_data['cards'] as $card)
@@ -402,31 +403,34 @@
         <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
           <div class="pt-3.5 border-t border-white/[0.12] flex items-center justify-between">
             <span class="text-[11px] font-bold text-white/90 tracking-wide">{!! esc_html($card['tag'] ?? 'FDS Drone') !!}</span>
-            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-white/80 inline-flex items-center gap-1.5 transition-colors group-hover:translate-x-0.5 duration-200">
+            <a href="{{ esc_url($card['link_url'] ?: '#kontak') }}" class="text-[12.5px] font-semibold text-white hover:text-white/80 inline-flex items-center gap-1.5 transition-colors group">
               <span>{!! esc_html($card['link_text'] ?: 'Pelajari') !!}</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
             </a>
           </div>
         </div>
       </div>
       @endforeach
 
-    </div>
+    </x-reveal-group>
   </div>
 
   {{-- Bottom Right Circular Arrow Buttons (Flush to 1400px Right Padding) --}}
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+  <x-reveal :delay="150" class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="solusi-prev-btn" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
               class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/20">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
       <button id="solusi-next-btn" onclick="scrollSolusiCarousel(1)" aria-label="Berikutnya"
               class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-white/20">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
-  </div>
+  </x-reveal>
   @endif
 </section>
 
@@ -524,21 +528,21 @@ document.addEventListener('DOMContentLoaded', function() {
 {{-- ========================================================== --}}
 {{-- 4. KEUNGGULAN — Bento grid (Masonry Reference Architecture) --}}
 {{-- ========================================================== --}}
-<section class="bg-white pt-20 pb-24 sm:pt-28 sm:pb-32 border-b border-black/[0.04]">
+<section id="keunggulan" class="bg-[#f5f5f7] pt-20 pb-24 sm:pt-28 sm:pb-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     {{-- Section header --}}
-    <div class="mb-12 sm:mb-14">
+    <x-reveal class="mb-12 sm:mb-14">
       <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
         {!! esc_html($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[700px]">
         {!! $hp['keunggulan_title'] ?? 'Mengapa Memilih Produsen Drone Lokal?' !!}
       </h2>
-    </div>
+    </x-reveal>
 
     {{-- Bento Grid (Sesuai Referensi: Kiri Atas Lebar, Kanan Tinggi 2 Baris TKDN, Tengah 2 Kotak, & Bawah Lebar) --}}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <x-reveal-group :step="90" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
       {{-- Card 1: Kiri Atas Lebar (md:col-span-2 lg:col-span-2) — Manufaktur Sleman --}}
       <div class="md:col-span-2 lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[340px] sm:min-h-[280px] lg:min-h-[240px] group flex flex-col justify-end p-5 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
@@ -764,7 +768,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
       </div>
 
-    </div>
+    </x-reveal-group>
   </div>
 </section>
 
@@ -772,10 +776,10 @@ document.addEventListener('DOMContentLoaded', function() {
 {{-- ========================================================== --}}
 {{-- 5. PRODUCT LINEUP — Header Dinamis, List dari CPT Drone   --}}
 {{-- ========================================================== --}}
-<section id="produk" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
+<section id="produk" class="bg-white py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+    <x-reveal class="mb-12 flex flex-wrap items-end justify-between gap-6">
       <div>
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{!! esc_html($hp['produk_badge'] ?? 'Lini Produk Drone') !!}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
@@ -785,7 +789,7 @@ document.addEventListener('DOMContentLoaded', function() {
           {!! nl2br(esc_html($hp['produk_desc'] ?? 'TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.')) !!}
         </p>
       </div>
-    </div>
+    </x-reveal>
 
     @php
       // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT
@@ -858,7 +862,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @endphp
 
     {{-- Category filter tabs (Dinamis dari WordPress) --}}
-    <div class="flex flex-wrap gap-2 mb-10" id="drone-cat-tabs">
+    <div class="flex flex-wrap gap-2 mb-10" id="drone-cat-tabs" data-aos="fade-up" data-aos-delay="100">
       @foreach($categories as $cat)
       <button
         data-cat="{!! esc_attr(strip_tags($cat)) !!}"
@@ -895,7 +899,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </style>
 
     {{-- Product rows (Dinamis dari WordPress) --}}
-    <div class="space-y-0 border-t border-black/[0.06]" id="drone-list">
+    <x-reveal-group :step="50" class="space-y-0 border-t border-black/[0.06]" id="drone-list">
       @php
         $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
       @endphp
@@ -936,9 +940,13 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
             <p class="hidden lg:block text-[13px] text-[#86868b]">{!! $p['specs'] !!}</p>
             <a href="{{ $p['url'] }}"
-               class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap"
+               class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 leading-none group"
                onclick="event.stopPropagation()">
-              Detail &rsaquo;
+              <span>Detail</span>
+              <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
             </a>
           </div>
 
@@ -949,10 +957,16 @@ document.addEventListener('DOMContentLoaded', function() {
       {{-- Empty state untuk kategori yang belum ada produk --}}
       <div id="drone-empty" class="hidden py-16 text-center border-b border-black/[0.06]">
         <p class="text-[15px] text-[#86868b]">Produk kategori ini akan segera hadir.</p>
-        <a href="{{ home_url('/#kontak') }}" class="mt-4 inline-block text-[14px] font-semibold text-[#0f808a] hover:underline">Daftar notifikasi &rsaquo;</a>
+        <a href="{{ home_url('/#kontak') }}" class="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group">
+          <span>Daftar notifikasi</span>
+          <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
+        </a>
       </div>
 
-    </div>
+    </x-reveal-group>
 
     {{-- USP strip (Dinamis & Adaptif: Otomatis Sembunyi Jika Dikosongkan) --}}
     @php
@@ -971,7 +985,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @endphp
 
     @if($total_usp_stats > 0)
-    <div class="mt-14 grid grid-cols-2 {{ $total_usp_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_usp_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_usp_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-6">
+    <x-reveal-group :step="100" class="mt-14 grid grid-cols-2 {{ $total_usp_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_usp_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_usp_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-6">
       @foreach($usp_stats_list as $ust)
       <div class="text-center">
         @if(!empty($ust['num']))
@@ -982,7 +996,7 @@ document.addEventListener('DOMContentLoaded', function() {
         @endif
       </div>
       @endforeach
-    </div>
+    </x-reveal-group>
     @endif
 
   </div>
@@ -1022,7 +1036,7 @@ function filterDrones(btn) {
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
 @if(!empty($layanan_items) || !empty($hp['layanan_title']))
-<section id="layanan" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 border-t border-white/10">
+<section id="layanan" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32">
   
   {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -1089,7 +1103,7 @@ function filterDrones(btn) {
 
     <div class="grid grid-cols-1 {{ !empty($layanan_items) ? 'lg:grid-cols-2' : 'max-w-2xl' }} gap-16 items-start">
 
-      <div class="lg:sticky lg:top-28">
+      <x-reveal-group :step="100" class="lg:sticky lg:top-28">
         @if(!empty($hp['layanan_badge']))
         <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
         @endif
@@ -1104,22 +1118,25 @@ function filterDrones(btn) {
         </p>
         @endif
         @if(!empty($hp['layanan_cta_text']))
-        <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#0f808a] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
-          {!! esc_html($hp['layanan_cta_text']) !!}
-        </a>
+        <div>
+          <a href="{{ esc_url($hp['layanan_cta_url'] ?? '#kontak') }}"
+             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#0f808a] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
+            {!! esc_html($hp['layanan_cta_text']) !!}
+          </a>
+        </div>
         @endif
-      </div>
+      </x-reveal-group>
 
       @if(!empty($layanan_items))
-      <div class="divide-y divide-white/15">
+      <x-reveal-group :step="100" class="divide-y divide-white/15">
         @foreach($layanan_items as $lItem)
         <div class="py-7 group">
           <h3 class="text-[17px] font-semibold text-white mb-1.5 flex items-center justify-between">
             <span>{!! esc_html(wp_specialchars_decode($lItem['title'])) !!}</span>
             @if(!empty($lItem['url']) && $lItem['url'] !== '#')
-            <a href="{{ esc_url($lItem['url']) }}" class="text-[12px] font-medium text-[#a3eef5] group-hover:text-white transition-colors inline-flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
-              Lihat Detail &rsaquo;
+            <a href="{{ esc_url($lItem['url']) }}" class="text-[12px] font-medium text-[#a3eef5] group-hover:text-white transition-colors inline-flex items-center gap-1 opacity-0 group-hover:opacity-100">
+              <span>Lihat Detail</span>
+              <svg class="w-5 h-5 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M17 7H7M17 7V17"/></svg>
             </a>
             @endif
           </h3>
@@ -1130,7 +1147,7 @@ function filterDrones(btn) {
           @endif
         </div>
         @endforeach
-      </div>
+      </x-reveal-group>
       @endif
 
     </div>
@@ -1150,9 +1167,9 @@ function filterDrones(btn) {
     'order'        => 'DESC',
   ]);
 @endphp
-<section id="blog" class="bg-white py-24 sm:py-32 border-t border-black/[0.06] overflow-hidden">
+<section id="blog" class="bg-[#f5f5f7] py-24 sm:py-32 overflow-hidden">
   {{-- Header inside 1400px Container --}}
-  <div id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
+  <x-reveal id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
@@ -1161,17 +1178,20 @@ function filterDrones(btn) {
         </h2>
       </div>
       <a href="{{ home_url('/blog') }}"
-         class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline flex-shrink-0">
-        {!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+         class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline flex-shrink-0 group leading-none">
+        <span>{!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}</span>
+        <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 6h12v12"/>
+          <path d="M6 18 18 6"/>
+        </svg>
       </a>
     </div>
-  </div>
+  </x-reveal>
 
   {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, Aligns to 1400px Left Padding) --}}
   @if(!empty($recent_posts))
   <div class="w-full">
-    <div id="news-carousel-track"
+    <x-reveal-group :step="120" :modulo="4" id="news-carousel-track"
          class="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-6 pt-2 hide-scrollbar w-full news-track-padding">
 
       @foreach($recent_posts as $post)
@@ -1180,7 +1200,7 @@ function filterDrones(btn) {
           $categories = get_the_category($post->ID);
           $cat_name = !empty($categories) ? $categories[0]->name : 'Berita';
         @endphp
-        <div class="news-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:bg-[#ececee] transition-all duration-300 flex flex-col justify-between select-none">
+        <div class="news-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col justify-between select-none shadow-sm border border-black/[0.04]">
           <div>
             {{-- Image Box (Clean without covering tags) --}}
             <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
@@ -1216,31 +1236,34 @@ function filterDrones(btn) {
 
           {{-- Clean Editorial Read More Action (No Divider Bar) --}}
           <div class="px-6 sm:px-7 pb-6 pt-0">
-            <a href="{{ get_permalink($post->ID) }}" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
+            <a href="{{ get_permalink($post->ID) }}" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none group">
               <span>Baca selengkapnya</span>
-              <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
+              <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
             </a>
           </div>
         </div>
       @endforeach
       @php wp_reset_postdata(); @endphp
 
-    </div>
+    </x-reveal-group>
   </div>
 
   {{-- Bottom Controls (Arrow Buttons Flush to 1400px Right Padding) --}}
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+  <x-reveal :delay="150" class="max-w-[1400px] mx-auto px-6 lg:px-12">
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="news-prev-btn" onclick="scrollNewsCarousel(-1)" aria-label="Sebelumnya"
-              class="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/10 active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-black/[0.08]">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+              class="w-10 h-10 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06]">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
       <button id="news-next-btn" onclick="scrollNewsCarousel(1)" aria-label="Berikutnya"
-              class="w-10 h-10 rounded-full bg-black/[0.05] hover:bg-black/10 active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-black/[0.08]">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+              class="w-10 h-10 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06]">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
-  </div>
+  </x-reveal>
   @else
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
     <div class="bg-[#f5f5f7] rounded-[1.5rem] p-12 text-center">
@@ -1346,11 +1369,11 @@ document.addEventListener('DOMContentLoaded', function() {
   $c_maps        = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_home = isset($global_c['show_map_home']) ? (bool) $global_c['show_map_home'] : (isset($hp['show_map_home']) ? (bool) $hp['show_map_home'] : (bool) get_option('fds_show_map_home', 1));
 @endphp
-<section id="kontak" class="bg-[#f5f5f7] py-12 sm:py-16 border-t border-black/[0.06] overflow-hidden">
+<section id="kontak" class="bg-white py-16 sm:py-24 overflow-hidden">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
 
     {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
-    <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
+    <x-reveal class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
       {{-- Left Side: Vibrant Teal Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
       <div class="lg:col-span-5 bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
@@ -1431,13 +1454,13 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
 
       {{-- Right Side: Streamlined Inquiry Form (7 cols) --}}
-      <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-white flex flex-col justify-between">
+      <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-[#f5f5f7] flex flex-col justify-between">
         {{-- Form Header --}}
         <div class="mb-4 sm:mb-5">
           <h3 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
             {!! esc_html($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') !!}
           </h3>
-          <p class="text-[12.5px] text-[#64748b]">Silakan lengkapi detail kontak dan kebutuhan operasional drone Anda:</p>
+          <p class="text-[12.5px] text-[#64748b]">{!! esc_html($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') !!}</p>
         </div>
 
         {{-- Form Body (Flex-1 to fill space evenly and balance with left panel) --}}
@@ -1454,63 +1477,70 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
-                <input type="text" name="first_name" required maxlength="60" placeholder="Ahmad"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <input type="text" name="first_name" required maxlength="60" placeholder="Nama depan"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
-                <input type="text" name="last_name" required maxlength="60" placeholder="Fauzi"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <input type="text" name="last_name" required maxlength="60" placeholder="Nama belakang"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
-                <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <input type="text" name="company" required maxlength="100" placeholder="Nama perusahaan / instansi"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
               <div>
                 <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
-                <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.co.id"
-                  class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
               </div>
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
-              <input type="tel" name="phone" required maxlength="30" placeholder="+62 812-XXXX-XXXX"
-                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              <input type="tel" name="phone" required maxlength="30" placeholder="Nomor telepon / WhatsApp"
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
             </div>
 
             <div>
               <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Anda <span class="text-red-500">*</span></label>
-              <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
-                class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+              <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan armada drone, layanan, atau pertanyaan teknis Anda..."
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
             </div>
           </div>
 
           {{-- Submit Row (Docked to bottom, without divider line) --}}
-          <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div class="pt-2 mt-auto">
             <button type="submit" id="fds-inquiry-btn"
-              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center gap-1.5 cursor-pointer">
+              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-6 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center justify-center gap-2 leading-none cursor-pointer group">
               <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') !!}</span>
-              <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
+              <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0">
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 6h12v12"/>
+                  <path d="M6 18 18 6"/>
+                </svg>
+              </span>
             </button>
-            <div class="flex items-center gap-1.5 text-[11.5px] text-[#86868b] whitespace-nowrap">
-              <svg class="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              <span>{!! esc_html(trim(preg_replace('/\s+/', ' ', str_replace(['Data Anda tidak akan dibagikan ke pihak ketiga.', 'Data Anda tidak akan dibagikan ke pihak ketiga'], '', $hp['kontak_form_note'] ?? 'Kami merespons dalam 1×24 jam kerja. Data terjamin aman.')))) !!}</span>
-            </div>
+            @if(!empty($hp['kontak_form_note']))
+            <p class="text-[11.5px] text-[#64748b] mt-2.5 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <span>{!! esc_html($hp['kontak_form_note']) !!}</span>
+            </p>
+            @endif
           </div>
 
         </form>
       </div>
 
-    </div>
+    </x-reveal>
   </div>
 
   @if($show_map_home && !empty($c_maps))
-  <div class="w-full overflow-hidden border-t border-black/[0.08] relative mt-12" style="height: 320px;">
+  <x-reveal :delay="100" class="w-full overflow-hidden border-t border-black/[0.08] relative mt-12" style="height: 320px;">
     <iframe
       src="{{ esc_url($c_maps) }}"
       width="100%"
@@ -1521,7 +1551,7 @@ document.addEventListener('DOMContentLoaded', function() {
       referrerpolicy="strict-origin-when-cross-origin"
       title="Lokasi Full Drone Solutions Sleman Yogyakarta">
     </iframe>
-  </div>
+  </x-reveal>
   @endif
 </section>
 

@@ -189,6 +189,7 @@ function fds_get_homepage_content() {
         'kontak_desc'            => get_option('fds_kontak_desc', 'Diskusikan kebutuhan armada drone, estimasi biaya operasional, atau jadwal uji terbang bersama tim engineer PT Karya Solusi Angkasa.'),
         'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Hubungi via WhatsApp'),
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Formulir Permintaan Penawaran / Jadwal Demo'),
+        'kontak_form_desc'       => get_option('fds_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Permintaan Konsultasi'),
         'kontak_form_note'       => get_option('fds_kontak_form_note', 'Tim engineer kami akan merespons dalam 1×24 jam kerja. Data perusahaan Anda terjamin aman.'),
         'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
@@ -233,7 +234,7 @@ function render_homepage_content_admin_page() {
             'fds_produk_desc',
             'fds_keunggulan_card1_title', 'fds_keunggulan_card1_desc', 'fds_keunggulan_card2_desc', 'fds_keunggulan_card3_title', 'fds_keunggulan_card3_desc', 'fds_keunggulan_card4_desc', 'fds_keunggulan_card5_desc', 'fds_keunggulan_card6_desc', 'fds_keunggulan_card7_desc',
             'fds_layanan_desc',
-            'fds_kontak_title', 'fds_kontak_desc', 'fds_kontak_form_note',
+            'fds_kontak_title', 'fds_kontak_desc', 'fds_kontak_form_desc', 'fds_kontak_form_note',
         ];
 
         foreach ($fields_text as $f) {
@@ -910,6 +911,10 @@ function render_homepage_content_admin_page() {
                             <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol Submit Form</label>
                             <input type="text" name="fds_kontak_form_btn_text" value="<?php echo esc_attr($c['kontak_form_btn_text']); ?>" style="width: 100%; font-size: 13px;">
                         </div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Panduan / Deskripsi Form Inquiry</label>
+                        <input type="text" name="fds_kontak_form_desc" value="<?php echo esc_attr($c['kontak_form_desc']); ?>" style="width: 100%; font-size: 13px;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Catatan Disclaimer Bawah Form</label>

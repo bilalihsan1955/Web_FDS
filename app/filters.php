@@ -37,9 +37,9 @@ add_action('pre_get_posts', function ($query) {
                 $query->set('s', $clean_s);
             }
             $query->set('post_type', 'post');
-            $query->set('posts_per_page', 7);
+            $query->set('posts_per_page', 9);
         } elseif ($query->is_home() || $query->is_archive()) {
-            $query->set('posts_per_page', 7);
+            $query->set('posts_per_page', 10);
         }
     }
 });

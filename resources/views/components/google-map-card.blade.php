@@ -8,7 +8,7 @@
 
 <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-lg overflow-hidden">
   {{-- Map Top Bar Header --}}
-  <div class="px-6 sm:px-8 py-5 border-b border-black/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white">
+  <div class="px-6 sm:px-8 py-5 border-b border-black/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#f5f5f7]">
     <div>
       <h3 class="text-[16px] sm:text-[17px] font-semibold text-[#1d1d1f] leading-snug">
         {!! esc_html($title) !!}
@@ -19,9 +19,12 @@
     </div>
     <div class="flex-shrink-0">
       <a href="{{ esc_url($btnUrl) }}" target="_blank" rel="noopener noreferrer"
-         class="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-[#0f808a] hover:text-[#0a555c] bg-[#0f808a]/10 hover:bg-[#0f808a]/15 px-4 py-2 rounded-full transition-colors min-h-[38px]">
-        <span>{!! esc_html($btnText) !!}</span>
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+         class="inline-flex items-center gap-2 text-[13px] font-semibold text-[#0f808a] hover:text-[#0a555c] bg-[#0f808a]/10 hover:bg-[#0f808a]/15 px-4.5 py-2 rounded-full transition-colors min-h-[38px] leading-none group">
+        <span class="leading-none">{!! esc_html($btnText) !!}</span>
+        <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 6h12v12"/>
+          <path d="M6 18 18 6"/>
+        </svg>
       </a>
     </div>
   </div>

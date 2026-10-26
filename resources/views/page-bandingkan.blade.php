@@ -255,7 +255,7 @@
   {{-- ── 2. VISUAL PRODUCT CARDS / EMPTY (+) PLACEHOLDERS (WARNA ABU-ABU #f5f5f7) ── --}}
   <section id="product-cards-section" class="bg-[#f5f5f7] pt-8 pb-16 sm:pb-24">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <div class="relative grid grid-cols-2 items-stretch">
+      <x-reveal-group :step="120" class="relative grid grid-cols-2 items-stretch">
         
         {{-- SLOT 1 CONTAINER (Card or Plus Placeholder) --}}
         <div id="slot-1-card-container" class="flex flex-col items-center text-center px-3 sm:px-8 lg:px-12"></div>
@@ -266,16 +266,16 @@
         {{-- CENTER VERTICAL DIVIDER --}}
         <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-black/[0.08] -translate-x-1/2 pointer-events-none"></div>
 
-      </div>
+      </x-reveal-group>
     </div>
   </section>
 
   {{-- ── 4. SECTION SPESIFIKASI TEKNIS (WHITE — 100% DATA RESMI) ── --}}
-  <section class="bg-white py-20 border-b border-black/[0.06]">
+  <section class="bg-white py-20">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
       
       {{-- Section Header --}}
-      <div class="text-center max-w-2xl mx-auto mb-14">
+      <x-reveal class="text-center max-w-2xl mx-auto mb-14">
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-2">Spesifikasi</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-3">
           Direkayasa untuk performa nyata.
@@ -283,16 +283,16 @@
         <p class="text-[15px] text-[#515154] leading-relaxed">
           Tabel perbandingan data teknis resmi dari lembar spesifikasi masing-masing unit drone FDS.
         </p>
-      </div>
+      </x-reveal>
 
       {{-- Direct Specs Comparison Table --}}
-      <div id="specs-compare-table-container" class="divide-y divide-black/[0.06] border-t border-b border-black/[0.06]"></div>
+      <x-reveal :delay="120" id="specs-compare-table-container" class="divide-y divide-black/[0.06] border-t border-b border-black/[0.06]"></x-reveal>
 
     </div>
   </section>
 
   {{-- ── 5. SECTION SASARAN PENGGUNA (AERODYNAMIC FLOW STRATA VECTOR BACKGROUND) ──────── --}}
-  <section id="section-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 border-b border-white/[0.08] overflow-hidden">
+  <section id="section-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 overflow-hidden">
 
     {{-- Vector Background: Aerodynamic Flow Strata Lines (Identik dengan Hero Section Halaman Tentang Kami) --}}
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -371,7 +371,7 @@
 
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
       
-      <div class="text-center max-w-2xl mx-auto mb-14">
+      <x-reveal class="text-center max-w-2xl mx-auto mb-14">
         <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-2">Aplikasi &amp; Use-Cases</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3">
           Untuk Siapa Model Ini Diciptakan.
@@ -379,9 +379,9 @@
         <p class="text-[15px] text-white/80 leading-relaxed">
           Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.
         </p>
-      </div>
+      </x-reveal>
 
-      <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 items-start">
+      <x-reveal-group :step="100" class="relative grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-0 items-start">
         {{-- D1 FOR --}}
         <div id="d1-for-box" class="md:pr-8 lg:pr-14">
           <h3 id="d1-for-title" class="text-[18px] font-bold text-white mb-4 pb-3 border-b border-white/10 flex items-center gap-2">
@@ -402,15 +402,15 @@
 
         {{-- CENTER VERTICAL DIVIDER --}}
         <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-white/[0.08] -translate-x-1/2 pointer-events-none"></div>
-      </div>
+      </x-reveal-group>
 
     </div>
   </section>
 
   {{-- ── 6. SECTION STATS BAR (WHITE) ──────────────────────────── --}}
-  <section id="section-stats" class="bg-white py-16 sm:py-20 border-b border-black/[0.06]">
+  <section id="section-stats" class="bg-white py-16 sm:py-20">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-      <div class="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 items-start">
+      <x-reveal-group :step="100" class="relative grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-0 items-start">
         
         {{-- D1 STATS --}}
         <div class="md:pr-10 lg:pr-16">
@@ -431,12 +431,12 @@
         {{-- CENTER VERTICAL DIVIDER --}}
         <div class="hidden md:block absolute inset-y-0 left-1/2 w-px bg-black/[0.08] -translate-x-1/2 pointer-events-none"></div>
 
-      </div>
+      </x-reveal-group>
     </div>
   </section>
 
   {{-- ── 7. CLOSING CTA (VIBRANT BRAND TEAL GRADIENT BG) ── --}}
-  <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08] text-center">
+  <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden text-center">
     
     {{-- Vector Background: Pure Organic Wave Fills --}}
     <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -466,7 +466,7 @@
       </svg>
     </div>
 
-    <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+    <x-reveal-group :step="90" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
       <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
         Siap menentukan pilihan armada Anda?
       </h2>
@@ -479,11 +479,15 @@
           Hubungi Tim Sales FDS
         </a>
         <a href="{{ home_url('/blog') }}"
-           class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-1 px-4 py-3">
-          Baca studi kasus operasional &rsaquo;
+           class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
+          <span class="leading-none">Baca studi kasus operasional</span>
+          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
       </div>
-    </div>
+    </x-reveal-group>
   </section>
 
   {{-- ── 8. CUSTOM APPLE-STYLE DRONE PICKER MODAL ── --}}
@@ -834,9 +838,9 @@
           </h2>
 
           <div class="mb-4 flex items-center gap-3">
-            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] hover:underline cursor-pointer">
+            <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] hover:underline cursor-pointer">
               <span>Ganti model</span>
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+              <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <span class="text-black/20">|</span>
             <button type="button" onclick="clearSlot(${slotNum})" class="text-[13px] text-[#86868b] hover:text-red-600 transition-colors cursor-pointer">

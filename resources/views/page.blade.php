@@ -7,7 +7,7 @@
       {{-- Page Hero --}}
       <header class="bg-white border-b border-black/[0.06]">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 sm:py-20">
-          <h1 class="text-[40px] sm:text-[56px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
+          <h1 class="text-[40px] sm:text-[56px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] fds-hero-entrance">
             {!! get_the_title() !!}
           </h1>
         </div>

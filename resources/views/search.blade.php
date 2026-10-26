@@ -26,18 +26,68 @@
 @endphp
 
 {{-- ========================================================== --}}
-{{-- SEARCH RESULTS HEADER                                      --}}
+{{-- SEARCH RESULTS HEADER: Solusi Industri Wave Vector         --}}
 {{-- ========================================================== --}}
-<section class="pt-[52px] bg-white border-b border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-16 pb-10 sm:pb-12">
-    <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Hasil Pencarian Artikel</p>
-    
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6">
-      <div>
-        <h1 class="text-[32px] sm:text-[44px] lg:text-[50px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-[52px] overflow-hidden text-white">
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Sesuai Section Solusi Industri FDS Halaman Home) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="search-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
+        </radialGradient>
+
+        {{-- Lapisan 1 (Terluar - Lekukan Halus Menukik Anggun) --}}
+        <linearGradient id="search-wave-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Lembut) --}}
+        <linearGradient id="search-wave-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.18" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="search-wave-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="search-wave-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#search-ambient-bl)" />
+
+      <!-- 4 Lapisan Vektor Organik: Mengalir Luwes, Elegan & Mengangkat di Sisi Kanan -->
+      <path d="M0,110 C280,130 580,270 860,420 C1120,550 1300,570 1440,520 L1440,700 L0,700 Z" fill="url(#search-wave-fill1)" />
+      <path d="M0,250 C280,290 560,410 820,530 C1060,610 1260,620 1440,580 L1440,700 L0,700 Z" fill="url(#search-wave-fill2)" />
+      <path d="M0,390 C250,420 500,500 740,580 C980,640 1200,645 1440,620 L1440,700 L0,700 Z" fill="url(#search-wave-fill3)" />
+      <path d="M0,510 C180,520 380,580 600,630 C840,670 1100,675 1440,655 L1440,700 L0,700 Z" fill="url(#search-wave-fill4)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-14 sm:py-16 lg:py-20 relative z-10">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
+      <div class="max-w-[680px]">
+        <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">Hasil Pencarian Artikel</p>
+        <h1 class="text-[32px] sm:text-[44px] lg:text-[50px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3 fds-hero-entrance fds-hero-delay-2">
           &ldquo;{{ get_search_query() }}&rdquo;
         </h1>
-        <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed mt-2.5">
+        <p class="text-[15px] sm:text-[16px] text-white/85 leading-relaxed fds-hero-entrance fds-hero-delay-3">
           @if($found_count > 0)
             Ditemukan <strong>{{ $found_count }}</strong> artikel yang relevan dengan kata kunci Anda.
           @else
@@ -46,8 +96,8 @@
         </p>
       </div>
 
-      {{-- Search Bar to Refine --}}
-      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
+      {{-- Search Bar to Refine: Centered Vertically --}}
+      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
         <div class="relative flex items-center">
           <div class="absolute left-4 pointer-events-none text-[#86868b]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,18 +105,18 @@
             </svg>
           </div>
           <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
-                 class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0f808a] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
+                 class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
           <button type="submit"
-                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
+                  class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
             Cari
           </button>
         </div>
       </form>
     </div>
 
-    <div>
+    <div class="pt-4">
       <a href="{{ esc_url($blog_url) }}"
-         class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] hover:underline">
+         class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         <span>Kembali ke semua artikel</span>
       </a>
@@ -78,7 +128,7 @@
 {{-- ========================================================== --}}
 {{-- SEARCH RESULTS LIST                                       --}}
 {{-- ========================================================== --}}
-<section class="bg-[#f5f5f7] pt-12 sm:pt-14 pb-8 sm:pb-10 min-h-[50vh]">
+<section class="bg-white pt-12 sm:pt-14 pb-16 sm:pb-20 min-h-[50vh]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     @if(empty($all_posts))
@@ -92,15 +142,18 @@
           Silakan coba kata kunci lain yang lebih umum atau jelajahi seluruh topik di ruang berita kami.
         </p>
         <a href="{{ esc_url($blog_url) }}"
-           class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm">
-          <span>Lihat Semua Berita</span>
-          <span>&rsaquo;</span>
+           class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm leading-none group">
+          <span class="leading-none">Lihat Semua Berita</span>
+          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
       </div>
     @else
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach($all_posts as $post)
-          <article class="bg-white rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-md">
+          <article class="bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between border border-black/[0.05] hover:bg-[#ededf0]">
             <div>
               <div class="aspect-[16/9] overflow-hidden bg-[#e8e8ed] relative">
                 @if($post['thumb_med'])
@@ -129,9 +182,12 @@
 
             <div class="px-6 sm:px-7 pb-6 pt-0">
               <a href="{{ $post['permalink'] }}"
-                 class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
-                <span>Baca selengkapnya</span>
-                <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
+                 class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none group">
+                <span class="leading-none">Baca selengkapnya</span>
+                <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 6h12v12"/>
+                  <path d="M6 18 18 6"/>
+                </svg>
               </a>
             </div>
           </article>

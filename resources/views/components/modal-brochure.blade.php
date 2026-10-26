@@ -45,10 +45,11 @@
 
         <button type="submit" 
                 id="fds-brochure-submit-btn" 
-                class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap min-h-[44px]">
-          <span>Kirim Email</span>
-          <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap min-h-[44px] leading-none group">
+          <span class="leading-none">Kirim Email</span>
+          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
           </svg>
         </button>
       </form>
@@ -168,9 +169,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = `
-          <span>Kirim Email</span>
-          <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+          <span class="leading-none">Kirim Email</span>
+          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
           </svg>
         `;
       }

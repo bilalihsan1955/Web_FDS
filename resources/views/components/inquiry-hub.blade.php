@@ -8,7 +8,7 @@
   'waLink'     => 'https://wa.me/628112748882',
   'waBtn'      => 'Chat via WhatsApp',
   'formTitle'  => 'Kirim pesan inquiry',
-  'formDesc'   => 'Silakan lengkapi detail kontak dan kebutuhan operasional drone Anda:',
+  'formDesc'   => 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:',
   'formBtn'    => 'Kirim Permintaan Konsultasi',
   'formNote'   => 'Kami merespons dalam 1×24 jam kerja. Data terjamin aman.',
 ])
@@ -95,7 +95,7 @@
   </div>
 
   {{-- Right Side: Streamlined Inquiry Form (7 cols) --}}
-  <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-white flex flex-col justify-between">
+  <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-[#f5f5f7] flex flex-col justify-between">
     {{-- Form Header --}}
     <div class="mb-4 sm:mb-5">
       <h3 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
@@ -118,57 +118,58 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
-            <input type="text" name="first_name" required maxlength="60" placeholder="Ahmad"
-              class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+            <input type="text" name="first_name" required maxlength="60" placeholder="Nama depan"
+              class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
           </div>
           <div>
             <label class="block text-[11px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
-            <input type="text" name="last_name" required maxlength="60" placeholder="Fauzi"
-              class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+            <input type="text" name="last_name" required maxlength="60" placeholder="Nama belakang"
+              class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label class="block text-[11px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
-            <input type="text" name="company" required maxlength="100" placeholder="PT. Contoh Indonesia"
-              class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+            <input type="text" name="company" required maxlength="100" placeholder="Nama perusahaan / instansi"
+              class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
           </div>
           <div>
             <label class="block text-[11px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
-            <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.co.id"
-              class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+            <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
+              class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
           </div>
         </div>
 
         <div>
           <label class="block text-[11px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
-          <input type="tel" name="phone" required maxlength="30" placeholder="+62 812-XXXX-XXXX"
-            class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+          <input type="tel" name="phone" required maxlength="30" placeholder="Nomor telepon / WhatsApp"
+            class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
         </div>
 
         <div>
           <label class="block text-[11px] font-medium text-[#475569] mb-1">Kebutuhan Anda <span class="text-red-500">*</span></label>
-          <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan drone, layanan, atau pertanyaan teknis Anda..."
-            class="w-full bg-[#f8fafc] border border-[#e2e8f0] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+          <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan armada drone, layanan, atau pertanyaan teknis Anda..."
+            class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
         </div>
       </div>
 
       {{-- Submit Row (Docked to bottom, without divider line) --}}
-      <div class="pt-2 mt-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+      <div class="pt-2 mt-auto">
         <button type="submit" id="fds-inquiry-btn"
-          class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-7 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center gap-1.5 cursor-pointer min-h-[44px]">
+          class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-5.5 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center gap-2 cursor-pointer min-h-[44px] group">
           <svg id="fds-inquiry-spinner" class="hidden animate-spin -ml-0.5 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
           <span id="fds-inquiry-btn-text">{!! esc_html($formBtn) !!}</span>
-          <span id="fds-inquiry-btn-arrow" class="text-[15px]">&rsaquo;</span>
+          <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
+          </span>
         </button>
-        <div class="flex items-center gap-1.5 text-[11.5px] text-[#86868b] whitespace-nowrap">
-          <svg class="w-3.5 h-3.5 text-[#86868b] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          <span>{!! esc_html($formNote) !!}</span>
-        </div>
       </div>
 
     </form>

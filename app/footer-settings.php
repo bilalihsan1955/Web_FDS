@@ -88,7 +88,7 @@ function fds_get_global_contact() {
         'page_kontak_hours_sat'   => get_option('fds_page_kontak_hours_sat', 'Sabtu: 08:30 – 13:00 WIB'),
         'page_kontak_wa_btn'      => get_option('fds_page_kontak_wa_btn', 'Chat WhatsApp Kami'),
         'page_kontak_form_title'  => get_option('fds_page_kontak_form_title', 'Kirim Pesan atau Permintaan Penawaran'),
-        'page_kontak_form_desc'   => get_option('fds_page_kontak_form_desc', 'Lengkapi formulir di bawah ini, tim kami akan merespons dalam 1×24 jam kerja:'),
+        'page_kontak_form_desc'   => get_option('fds_page_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
         'page_kontak_form_btn'    => get_option('fds_page_kontak_form_btn', 'Kirim Pesan'),
         'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Respons 1×24 jam kerja. Data terjamin aman.'),
         'page_kontak_map_title'   => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
@@ -342,19 +342,9 @@ function render_global_contact_admin_page() {
                     </div>
                 </div>
 
-                <!-- 2. PANEL INFORMASI WORKSHOP & JAM KERJA -->
+                <!-- 2. INFORMASI JAM OPERASIONAL & FASILITAS -->
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
-                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">2. Panel Informasi Workshop &amp; Jam Operasional (Kiri)</h3>
-
-                    <div style="margin-bottom: 14px;">
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Panel Fasilitas</label>
-                        <input type="text" name="fds_page_kontak_panel_label" value="<?php echo esc_attr($c['page_kontak_panel_label']); ?>" placeholder="Kantor &amp; Workshop Resmi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
-                    </div>
-
-                    <div style="margin-bottom: 14px;">
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Narasi / Deskripsi Sertifikasi Panel</label>
-                        <textarea name="fds_page_kontak_panel_desc" rows="2" placeholder="Produsen UAV nasional bersertifikasi TKDN 60,74%..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_panel_desc']); ?></textarea>
-                    </div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">2. Informasi Jam Operasional &amp; Fasilitas Workshop</h3>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
                         <div>
@@ -367,9 +357,19 @@ function render_global_contact_admin_page() {
                         </div>
                     </div>
 
-                    <div>
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol WhatsApp</label>
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol WhatsApp (Hero Halaman Kontak)</label>
                         <input type="text" name="fds_page_kontak_wa_btn" value="<?php echo esc_attr($c['page_kontak_wa_btn']); ?>" placeholder="Chat WhatsApp Kami" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Sub-Judul Seksi Peta / Workshop</label>
+                        <input type="text" name="fds_page_kontak_panel_label" value="<?php echo esc_attr($c['page_kontak_panel_label']); ?>" placeholder="Fasilitas Produksi &amp; Workshop Resmi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Narasi / Deskripsi Sertifikasi Fasilitas (Di Bawah Alamat Peta)</label>
+                        <textarea name="fds_page_kontak_panel_desc" rows="2" placeholder="Produsen UAV nasional bersertifikasi TKDN 60,74%..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_panel_desc']); ?></textarea>
                     </div>
                 </div>
 

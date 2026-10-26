@@ -41,6 +41,10 @@
   --color-primary-light: #e8fbfd;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -159,5 +163,67 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 }
 
+/* ========================================================== */
+/* Lenis Smooth Scrolling Optimization                        */
+/* ========================================================== */
+html.lenis, html.lenis body {
+  height: auto;
+}
 
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
 
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* ========================================================== */
+/* Hero Section Cinematic Page Load Entrance Animations      */
+/* ========================================================== */
+@keyframes fdsHeroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fds-hero-entrance {
+  opacity: 0;
+  animation: fdsHeroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.fds-hero-delay-1 { animation-delay: 80ms; }
+.fds-hero-delay-2 { animation-delay: 200ms; }
+.fds-hero-delay-3 { animation-delay: 340ms; }
+.fds-hero-delay-4 { animation-delay: 480ms; }
+.fds-hero-delay-5 { animation-delay: 620ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fds-hero-entrance {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* ========================================================== */
+/* Gallery Masonry Performance (Zero Jank / No Reflow Lag)   */
+/* ========================================================== */
+.fds-gallery-card {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 300px;
+}

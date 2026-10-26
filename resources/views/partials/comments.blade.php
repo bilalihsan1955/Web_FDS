@@ -27,9 +27,8 @@
     </div>
 
     @if(comments_open())
-      <a href="#respond" class="text-[13.5px] font-medium text-[#0f808a] hover:underline inline-flex items-center gap-1">
-        <span>Tulis Komentar</span>
-        <span>&darr;</span>
+      <a href="#respond" class="text-[13.5px] font-semibold text-[#0f808a] hover:underline transition-colors">
+        Tulis Komentar
       </a>
     @endif
   </div>
@@ -87,7 +86,7 @@
 
   {{-- Formulir Kirim Komentar --}}
   @if(comments_open())
-    <div id="respond" class="bg-[#f9f9fb] border border-black/[0.06] rounded-[1.5rem] p-6 sm:p-8">
+    <div id="respond" class="scroll-mt-28 bg-[#f9f9fb] border border-black/[0.06] rounded-[1.5rem] p-6 sm:p-8">
       <h3 class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] mb-2 tracking-tight">
         Tinggalkan Komentar
       </h3>
@@ -116,7 +115,7 @@
               <label class="block text-[12px] font-semibold text-[#334155] mb-1.5">
                 Nama Lengkap <span class="text-red-500">*</span>
               </label>
-              <input type="text" name="author" required maxlength="60" placeholder="Contoh: Budi Santoso"
+              <input type="text" name="author" required maxlength="60" placeholder="Nama lengkap Anda"
                      class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
             </div>
             <div>
@@ -145,9 +144,12 @@
         {{-- Submit Button --}}
         <div class="pt-2">
           <button type="submit"
-                  class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm cursor-pointer">
+                  class="inline-flex items-center justify-center gap-2 leading-none bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm cursor-pointer group">
             <span>Kirim Komentar</span>
-            <span>&rsaquo;</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </button>
         </div>
       </form>

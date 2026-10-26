@@ -276,7 +276,7 @@
       {{-- Top: text block (STRUKTUR ASLI TIDAK DIUBAH) --}}
       <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
         {{-- Badge chips --}}
-        <div class="flex flex-wrap items-start gap-3 mb-8">
+        <div class="flex flex-wrap items-start gap-3 mb-8 fds-hero-entrance fds-hero-delay-1">
           <span class="inline-flex items-center text-[12px] font-semibold text-white/70 tracking-wide border border-white/[0.15] bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm">
             {!! wp_specialchars_decode($drone['kategori'] ?? 'Agrikultur') !!}
           </span>
@@ -288,31 +288,35 @@
         </div>
 
         {{-- Nama produk --}}
-        <h1 class="text-[72px] sm:text-[100px] lg:text-[128px] font-semibold tracking-[-0.05em] text-white leading-[0.9] mb-8 drop-shadow-sm">
+        <h1 class="text-[72px] sm:text-[100px] lg:text-[128px] font-semibold tracking-[-0.05em] text-white leading-[0.9] mb-8 drop-shadow-sm fds-hero-entrance fds-hero-delay-2">
           {!! wp_specialchars_decode($drone['name']) !!}
         </h1>
 
         @if(!empty($drone['tagline']))
-        <p class="text-[18px] sm:text-[20px] text-white/75 max-w-[580px] leading-[1.6] mb-10">
+        <p class="text-[18px] sm:text-[20px] text-white/75 max-w-[580px] leading-[1.6] mb-10 fds-hero-entrance fds-hero-delay-3">
           {!! wp_specialchars_decode($drone['tagline']) !!}
         </p>
         @endif
 
         {{-- CTAs --}}
-        <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10">
+        <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10 fds-hero-entrance fds-hero-delay-4">
           <a href="{{ home_url('/#kontak') }}"
              class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-black/15">
             Minta Penawaran
           </a>
           <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
-             class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-1.5 px-3 py-3">
-            Bandingkan model &rsaquo;
+             class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-2 px-3 py-3 leading-none group">
+            <span class="leading-none">Bandingkan model</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
       </div>
 
       {{-- Hero image (STRUKTUR ASLI TIDAK DIUBAH) --}}
-      <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
+      <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px] fds-hero-entrance fds-hero-delay-5">
         @php
           $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
@@ -328,7 +332,7 @@
 
     {{-- ── SPECS ─────────────────────────────────────────────────── --}}
     @if(!empty($drone['specs']) || !empty($drone['desc']))
-    <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 border-t border-black/[0.06] relative z-10 overflow-visible">
+    <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 relative z-10 overflow-visible">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative overflow-visible">
         @php
           $specs_img_meta = $get_meta('drone_specs_img');
@@ -338,12 +342,16 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start relative overflow-visible">
           
           {{-- Left Column: Header, Desc, & Big Transparent Product Image (Col 6) --}}
-          <div class="lg:col-span-6 flex flex-col relative overflow-visible">
+          <x-reveal type="fade-right" class="lg:col-span-6 flex flex-col relative overflow-visible">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">Spesifikasi</p>
-                <a href="{{ home_url('/bandingkan?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1">
-                  Bandingkan spesifikasi &rsaquo;
+                <a href="{{ home_url('/bandingkan?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1.5 leading-none group">
+                  <span class="leading-none">Bandingkan spesifikasi</span>
+                  <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 6h12v12"/>
+                    <path d="M6 18 18 6"/>
+                  </svg>
                 </a>
               </div>
               <h2 class="text-[32px] sm:text-[40px] lg:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-5">
@@ -366,10 +374,10 @@
               </div>
             </div>
             @endif
-          </div>
+          </x-reveal>
 
           {{-- Right Column: Specifications Table (Col 6) --}}
-          <div class="lg:col-span-6 divide-y divide-black/[0.06] pt-2 lg:pt-8 relative z-10">
+          <x-reveal-group :step="50" class="lg:col-span-6 divide-y divide-black/[0.06] pt-2 lg:pt-8 relative z-10">
             @if(!empty($drone['specs']))
               @foreach($drone['specs'] as [$label, $value])
               @php
@@ -393,7 +401,7 @@
             @else
               <div class="py-4 text-[#86868b] text-[14px]">Spesifikasi detail akan segera diperbarui.</div>
             @endif
-          </div>
+          </x-reveal-group>
 
         </div>
       </div>
@@ -414,8 +422,8 @@
     @endphp
 
     @if($brochure_enable === '1')
-    <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 border-t border-black/[0.08] relative z-10">
-      <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 relative z-10">
+      <x-reveal class="max-w-[1400px] mx-auto px-6 lg:px-12">
         <x-modal-brochure
           :drone-id="$post_id"
           :drone-name="$drone['name']"
@@ -426,7 +434,7 @@
           :btn-text="$brochure_btn"
           :file-url="$brochure_file_url"
         />
-      </div>
+      </x-reveal>
     </section>
     @endif
 
@@ -440,7 +448,7 @@
       ];
     @endphp
 
-    <section id="aplikasi-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden border-t border-white/[0.06] z-10">
+    <section id="aplikasi-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden z-10">
       
       {{-- Vector Background: Aerodynamic Flow Strata Lines (Identik dengan Hero Section Halaman Tentang Kami) --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -519,14 +527,14 @@
 
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div>
+          <x-reveal type="fade-right">
             <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Aplikasi &amp; Use-Cases</span>
             <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
               {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} cocok untuk Anda.
             </h2>
-          </div>
+          </x-reveal>
           <div class="relative">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
+            <x-reveal-group :step="70" class="grid grid-cols-1 sm:grid-cols-2 gap-4 relative z-10">
               @foreach($usecases_list as $usecase)
               <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-2xl p-5 flex items-start gap-3.5 transition-all duration-200 shadow-[0_10px_24px_-6px_rgba(0,0,0,0.35),inset_0_1px_1px_0_rgba(255,255,255,0.3)] hover:shadow-[0_16px_32px_-8px_rgba(0,0,0,0.45),inset_0_1px_1.2px_0_rgba(255,255,255,0.45)] hover:-translate-y-0.5 overflow-hidden">
                 {{-- Top Specular Edge Sheen --}}
@@ -537,7 +545,7 @@
                 <p class="text-[14px] font-medium text-white/90 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
               </div>
               @endforeach
-            </div>
+            </x-reveal-group>
           </div>
         </div>
       </div>
@@ -560,9 +568,9 @@
     @endphp
 
     @if($total_stats > 0)
-    <section class="bg-white py-16 border-t border-black/[0.06]">
+    <section class="bg-white py-16">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div class="grid grid-cols-2 {{ $total_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
+        <x-reveal-group :step="100" class="grid grid-cols-2 {{ $total_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
           @foreach($stats_list as $st)
           <div>
             @if(!empty($st['num']))
@@ -573,13 +581,13 @@
             @endif
           </div>
           @endforeach
-        </div>
+        </x-reveal-group>
       </div>
     </section>
     @endif
 
     {{-- ── CTA (EKOSISTEM VECTOR BACKGROUND) ─────────────────────── --}}
-    <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden border-t border-white/[0.08]">
+    <section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 lg:py-36 overflow-hidden">
       
       {{-- Organic Wave Geometry Vector Background (Matching Ekosistem Bento Card) --}}
       <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -613,7 +621,7 @@
         </svg>
       </div>
 
-      <div class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
+      <x-reveal-group :step="90" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
         <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
           Siap mengoperasikan {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!}?
         </h2>
@@ -626,11 +634,15 @@
             Hubungi Tim Sales
           </a>
           <a href="{{ home_url('/blog') }}"
-             class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-1 px-4 py-3">
-            Baca studi kasus &rsaquo;
+             class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
+            <span class="leading-none">Baca studi kasus</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
-      </div>
+      </x-reveal-group>
     </section>
 
   </div>

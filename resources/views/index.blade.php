@@ -4,25 +4,79 @@
 
 @php
   $paged = max(1, get_query_var('paged'), get_query_var('page'));
-  $categories = get_categories([
-    'hide_empty' => true,
-    'orderby'    => 'count',
-    'order'      => 'DESC',
-  ]);
   $current_cat_id = is_category() ? get_queried_object_id() : 0;
   $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog');
 @endphp
 
 {{-- ========================================================== --}}
-{{-- BLOG HEADER: Title, Search Bar & Category Filter Pills    --}}
 {{-- ========================================================== --}}
-<section class="pt-[52px] bg-white border-b border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-16 pb-10 sm:pb-12">
-    <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Newsroom</p>
-    
-    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
-      <div>
-        <h1 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.08]">
+{{-- BLOG HEADER: Brand Teal with Solusi Industri Wave Vector   --}}
+{{-- ========================================================== --}}
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-[52px] overflow-hidden text-white">
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Sesuai Section Solusi Industri FDS Halaman Home) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="newsroom-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
+        </radialGradient>
+
+        {{-- Lapisan 1 (Terluar - Lekukan Halus Menukik Anggun) --}}
+        <linearGradient id="newsroom-wave-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Lembut) --}}
+        <linearGradient id="newsroom-wave-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.18" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="newsroom-wave-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="newsroom-wave-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.14" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#newsroom-ambient-bl)" />
+
+      <!-- 4 Lapisan Vektor Organik: Mengalir Luwes, Elegan & Mengangkat di Sisi Kanan -->
+      <path d="M0,110 C280,130 580,270 860,420 C1120,550 1300,570 1440,520 L1440,700 L0,700 Z" fill="url(#newsroom-wave-fill1)" />
+      <path d="M0,250 C280,290 560,410 820,530 C1060,610 1260,620 1440,580 L1440,700 L0,700 Z" fill="url(#newsroom-wave-fill2)" />
+      <path d="M0,390 C250,420 500,500 740,580 C980,640 1200,645 1440,620 L1440,700 L0,700 Z" fill="url(#newsroom-wave-fill3)" />
+      <path d="M0,510 C180,520 380,580 600,630 C840,670 1100,675 1440,655 L1440,700 L0,700 Z" fill="url(#newsroom-wave-fill4)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-14 sm:py-16 lg:py-20 relative z-10">
+    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
+      <div class="max-w-[680px]">
+        <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">
+          @if(is_category())
+            Kategori Artikel
+          @elseif(is_tag())
+            Tag Artikel
+          @else
+            Newsroom
+          @endif
+        </p>
+        <h1 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.08] mb-3 fds-hero-entrance fds-hero-delay-2">
           @if(is_category())
             {{ single_cat_title('', false) }}
           @elseif(is_tag())
@@ -31,7 +85,7 @@
             Berita &amp; Artikel Terkini.
           @endif
         </h1>
-        <p class="text-[15px] sm:text-[17px] text-[#515154] max-w-[560px] leading-relaxed mt-2.5">
+        <p class="text-[15px] sm:text-[17px] text-white/85 max-w-[580px] leading-relaxed fds-hero-entrance fds-hero-delay-3">
           @if(is_category() && category_description())
             {!! category_description() !!}
           @else
@@ -40,37 +94,33 @@
         </p>
       </div>
 
-      {{-- Search Form --}}
-      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0">
-        <div class="relative flex items-center">
-          <div class="absolute left-4 pointer-events-none text-[#86868b]">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+      {{-- Search Form: Centered Vertically --}}
+      <div class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
+        <form action="{{ home_url('/') }}" method="get" class="relative w-full">
+          <div class="relative flex items-center">
+            <div class="absolute left-4 pointer-events-none text-[#86868b]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+            <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
+                   class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
+            <button type="submit"
+                    class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
+              Cari
+            </button>
           </div>
-          <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
-                 class="w-full pl-11 pr-20 py-2.5 sm:py-3 bg-[#f5f5f7] focus:bg-white border border-black/[0.08] focus:border-[#0f808a] rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150">
-          <button type="submit"
-                  class="absolute right-1.5 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[12px] font-semibold px-4 py-2 rounded-full transition-colors duration-150 cursor-pointer">
-            Cari
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
 
-    {{-- Category Pills Filter (Clean character entity decoding, no numbers) --}}
-    @if(!empty($categories))
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 -mx-2 px-2 hide-scrollbar">
+    @if(is_category() || is_tag())
+    <div class="pt-4">
       <a href="{{ esc_url($blog_url) }}"
-         class="px-4 py-2 rounded-full text-[13px] font-semibold transition-all duration-150 whitespace-nowrap {{ !$current_cat_id && !is_search() ? 'bg-[#1d1d1f] text-white shadow-sm' : 'bg-[#f5f5f7] hover:bg-[#e8e8ed] text-[#515154] hover:text-[#1d1d1f]' }}">
-        Semua Topik
+         class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <span>Lihat semua berita</span>
       </a>
-      @foreach($categories as $cat)
-        <a href="{{ esc_url(get_category_link($cat->term_id)) }}"
-           class="px-4 py-2 rounded-full text-[13px] transition-all duration-150 whitespace-nowrap {{ $current_cat_id === $cat->term_id ? 'bg-[#1d1d1f] text-white font-semibold shadow-sm' : 'bg-[#f5f5f7] hover:bg-[#e8e8ed] text-[#515154] hover:text-[#1d1d1f] font-medium' }}">
-          {!! esc_html(wp_specialchars_decode($cat->name, ENT_QUOTES)) !!}
-        </a>
-      @endforeach
     </div>
     @endif
   </div>
@@ -80,7 +130,7 @@
 {{-- ========================================================== --}}
 {{-- ARTICLES LIST & PAGINATION                                 --}}
 {{-- ========================================================== --}}
-<section class="bg-[#f5f5f7] pt-12 sm:pt-14 pb-8 sm:pb-10 min-h-[50vh]">
+<section class="bg-white pt-12 sm:pt-14 pb-16 sm:pb-20 min-h-[50vh]">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     @php
@@ -114,9 +164,12 @@
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
         @if(is_category() || is_tag())
           <a href="{{ esc_url($blog_url) }}"
-             class="inline-flex items-center gap-1.5 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5 py-2.5 rounded-full transition-colors shadow-sm">
-            <span>Lihat Semua Topik</span>
-            <span>&rsaquo;</span>
+             class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5.5 py-2.5 rounded-full transition-colors shadow-sm leading-none group">
+            <span class="leading-none">Lihat Semua Topik</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         @endif
       </div>
@@ -129,7 +182,7 @@
           $grid_posts = array_slice($all_posts, 1);
         @endphp
 
-        <article class="bg-white rounded-[2rem] overflow-hidden mb-8 group hover:-translate-y-0.5 transition-all duration-300 shadow-sm hover:shadow-md">
+        <x-reveal :delay="100" as="article" class="bg-[#f5f5f7] rounded-[2rem] overflow-hidden mb-8 group hover:-translate-y-0.5 transition-all duration-300 border border-black/[0.05] hover:bg-[#ededf0]">
           <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
             <div class="lg:col-span-7 aspect-[16/10] lg:aspect-auto lg:min-h-[380px] bg-[#e8e8ed] overflow-hidden relative">
@@ -160,24 +213,27 @@
 
               <div>
                 <a href="{{ $featured['permalink'] }}"
-                   class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] hover:underline">
-                  <span>Baca artikel lengkap</span>
-                  <span class="text-[16px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
+                   class="inline-flex items-center gap-2 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] hover:underline leading-none group">
+                  <span class="leading-none">Baca artikel lengkap</span>
+                  <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 6h12v12"/>
+                    <path d="M6 18 18 6"/>
+                  </svg>
                 </a>
               </div>
             </div>
 
           </div>
-        </article>
+        </x-reveal>
       @else
         @php $grid_posts = $all_posts; @endphp
       @endif
 
       {{-- 3-Column Articles Grid --}}
       @if(!empty($grid_posts))
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <x-reveal-group :step="100" :modulo="3" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           @foreach($grid_posts as $post)
-            <article class="bg-white rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between shadow-sm hover:shadow-md">
+            <article class="bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between border border-black/[0.05] hover:bg-[#ededf0]">
               <div>
                 <div class="aspect-[16/9] overflow-hidden bg-[#e8e8ed] relative">
                   @if($post['thumb_med'])
@@ -206,20 +262,23 @@
 
               <div class="px-6 sm:px-7 pb-6 pt-0">
                 <a href="{{ $post['permalink'] }}"
-                   class="inline-flex items-center gap-1 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
-                  <span>Baca selengkapnya</span>
-                  <span class="text-[15px] group-hover:translate-x-1 transition-transform">&rsaquo;</span>
+                   class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none group">
+                  <span class="leading-none">Baca selengkapnya</span>
+                  <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 6h12v12"/>
+                    <path d="M6 18 18 6"/>
+                  </svg>
                 </a>
               </div>
             </article>
           @endforeach
-        </div>
+        </x-reveal-group>
       @endif
 
       {{-- Numbered Pagination (No divider, tight spacing) --}}
-      <div class="mt-10 sm:mt-12 flex justify-center">
+      <x-reveal :delay="120" class="mt-10 sm:mt-12 flex justify-center">
         {!! function_exists('fds_posts_pagination') ? fds_posts_pagination() : get_the_posts_pagination() !!}
-      </div>
+      </x-reveal>
 
     @endif
 

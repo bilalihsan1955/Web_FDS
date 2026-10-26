@@ -420,6 +420,6 @@ function fds_handle_inquiry_submission() {
     }
 
     wp_send_json_success([
-        'message' => 'Pesan Anda telah berhasil terkirim dan tersimpan. Tim Enterprise FDS akan segera merespons dalam 1×24 jam kerja.',
+        'message' => 'Pesan Anda telah berhasil terkirim. Tim Enterprise FDS akan segera menindaklanjuti permintaan Anda.',
     ]);
 }

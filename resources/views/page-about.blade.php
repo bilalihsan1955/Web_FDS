@@ -93,19 +93,19 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0 relative z-10">
 
     <div class="max-w-[1140px] mx-auto text-center flex flex-col items-center">
-      <p class="text-[13px] sm:text-[14px] font-semibold text-white/80 tracking-wide mb-6">
+      <p class="text-[13px] sm:text-[14px] font-semibold text-white/80 tracking-wide mb-6 fds-hero-entrance fds-hero-delay-1">
         {!! esc_html(wp_specialchars_decode($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Pengalaman UAV Sejak 2012 · Yogyakarta')) !!}
       </p>
-      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px]">
+      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px] fds-hero-entrance fds-hero-delay-2">
         {!! nl2br(esc_html(wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology."))) !!}
       </h1>
-      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/65 max-w-[880px] mx-auto leading-[1.65]">
+      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/65 max-w-[880px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
         {!! nl2br(esc_html(wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'))) !!}
       </p>
     </div>
 
     {{-- Hero image --}}
-    <div class="mt-16 rounded-t-[2rem] overflow-hidden relative z-10" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
+    <div class="mt-16 rounded-t-[2rem] overflow-hidden relative z-10 fds-hero-entrance fds-hero-delay-4" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
       <img
         src="{{ !empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80') }}"
         alt="Tim & Workshop PT Karya Solusi Angkasa (FDS)"
@@ -139,7 +139,7 @@
 @if($total_about_stats > 0)
 <section class="bg-[#0a555c] py-16">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="grid grid-cols-2 {{ $total_about_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_about_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_about_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
+    <x-reveal-group :step="100" class="grid grid-cols-2 {{ $total_about_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_about_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_about_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
       @foreach($about_stats_list as $ast)
       <div>
         @if(!empty($ast['num']))
@@ -150,7 +150,7 @@
         @endif
       </div>
       @endforeach
-    </div>
+    </x-reveal-group>
   </div>
 </section>
 @endif
@@ -164,7 +164,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
       {{-- Left: headline sticky --}}
-      <div class="lg:sticky lg:top-28">
+      <x-reveal type="fade-right" class="lg:sticky lg:top-28">
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-5">
           {!! esc_html($about['story_badge'] ?? 'Cerita Kami') !!}
         </p>
@@ -178,10 +178,10 @@
                class="w-full h-auto block object-cover">
         </div>
         @endif
-      </div>
+      </x-reveal>
 
       {{-- Right: story text (Dikelola terpusat satu pintu via menu Konten Tentang Kami / About FDS) --}}
-      <div class="space-y-8 text-[18px] text-[#515154] leading-[1.7]">
+      <x-reveal-group :step="70" class="space-y-8 text-[18px] text-[#515154] leading-[1.7]">
         @if (!empty($about['story_p1']))
           <p>{!! $about['story_p1'] !!}</p>
         @endif
@@ -196,12 +196,15 @@
         @endif
         
         <div class="pt-4 border-t border-black/[0.06]">
-          <a href="{{ $about['story_cta_url'] ?? '#mitra' }}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0f808a] hover:underline">
-            {!! esc_html($about['story_cta_text'] ?? 'Lihat kemitraan strategis & portofolio klien') !!}
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          <a href="{{ $about['story_cta_url'] ?? '#mitra' }}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0f808a] hover:underline group leading-none">
+            <span>{!! esc_html($about['story_cta_text'] ?? 'Lihat kemitraan strategis & portofolio klien') !!}</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
-      </div>
+      </x-reveal-group>
 
     </div>
   </div>
@@ -211,7 +214,7 @@
 {{-- ========================================================== --}}
 {{-- EKOSISTEM TEKNOLOGI — Spektrum UAV & AI                    --}}
 {{-- ========================================================== --}}
-<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-b border-white/[0.06]">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden">
   
   {{-- Vector Background: Diagonal Sweeping Fluid Horizon with Linear Bottom Gradient (Tanpa Lingkaran) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -258,19 +261,19 @@
 
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
 
-    <div class="mb-16">
+    <x-reveal class="mb-16">
       <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-4">
         {!! esc_html($about['spektrum_badge'] ?? 'Spektrum Teknologi UAV') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[620px]">
         {!! esc_html($about['spektrum_title'] ?? 'Tiga arsitektur wahana udara untuk segala medan.') !!}
       </h2>
-    </div>
+    </x-reveal>
 
     <div class="relative">
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 relative z-10">
         {{-- Rotary Wing --}}
-        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+        <div data-aos="fade-up" data-aos-delay="0" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
           <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') !!}</h3>
@@ -280,7 +283,7 @@
         </div>
 
         {{-- Fixed Wing --}}
-        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+        <div data-aos="fade-up" data-aos-delay="200" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
           <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum2_title'] ?? 'Fixed Wing (Sayap Tetap)') !!}</h3>
@@ -290,7 +293,7 @@
         </div>
 
         {{-- Hybrid VTOL --}}
-        <div class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
+        <div data-aos="fade-up" data-aos-delay="400" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
           <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum3_title'] ?? 'Hybrid VTOL (DELTAV)') !!}</h3>
@@ -304,15 +307,14 @@
   </div>
 </section>
 
-
 {{-- ========================================================== --}}
 {{-- OUR ACTIVITY & KEMITRAAN — White, editorial list           --}}
 {{-- ========================================================== --}}
-<section id="aktivitas" class="bg-white py-24 sm:py-32 border-t border-black/[0.06]">
+<section id="aktivitas" class="bg-white py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
 
-      <div class="lg:col-span-4 lg:sticky lg:top-28">
+      <x-reveal type="fade-right" class="lg:col-span-4 lg:sticky lg:top-28">
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
           {!! esc_html($about['mitra_badge'] ?? 'Aktivitas Kami') !!}
         </p>
@@ -322,9 +324,9 @@
         <p class="text-[17px] text-[#515154] leading-relaxed">
           {!! esc_html($about['mitra_desc'] ?? 'Riset mandiri, inovasi manufaktur lokal, serta kolaborasi strategis bersama institusi nasional dan mitra internasional.') !!}
         </p>
-      </div>
+      </x-reveal>
 
-      <div class="lg:col-span-8 divide-y divide-black/[0.06]">
+      <x-reveal-group :step="70" class="lg:col-span-8 divide-y divide-black/[0.06]">
         @php
           $about_activities = function_exists('App\fds_get_about_activities') ? \App\fds_get_about_activities() : [];
         @endphp
@@ -343,7 +345,7 @@
           </div>
           @endif
         @endforeach
-      </div>
+      </x-reveal-group>
 
     </div>
   </div>
@@ -366,12 +368,12 @@
     : 'Dokumentasi rekam jejak kegiatan operasional, uji terbang, dan implementasi teknologi drone FDS.';
 @endphp
 @if(!empty($gallery_items))
-<section id="galeri-dokumentasi" class="bg-[#f8fafc] py-20 sm:py-28 border-t border-black/[0.06] relative">
+<section id="galeri-dokumentasi" class="bg-[#f8fafc] py-20 sm:py-28 relative">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
     
     {{-- Header Sederhana & Bersih (Tanpa Kategori) --}}
-    <div class="mb-10 sm:mb-14 max-w-[680px]">
-      <h2 class="text-[32px] sm:text-[42px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.15]">
+    <x-reveal class="mb-10 sm:mb-14 max-w-[680px]">
+      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
         {!! esc_html($gallery_heading) !!}
       </h2>
       @if(!empty($gallery_desc))
@@ -379,7 +381,7 @@
         {!! esc_html($gallery_desc) !!}
       </p>
       @endif
-    </div>
+    </x-reveal>
 
     {{-- Pinterest-Style Masonry Grid (Urutan Murni dari Kiri ke Kanan) --}}
     @php
@@ -396,22 +398,23 @@
           @foreach($columns_data[$c] as $g_val)
             @php
               $g_i = $g_val['_orig_idx'];
-              $g_title = esc_attr($g_val['title'] ?? 'Dokumentasi FDS');
+              $g_raw_title = wp_specialchars_decode($g_val['title'] ?? 'Dokumentasi FDS', ENT_QUOTES);
               $g_img = esc_url($g_val['img'] ?? '');
             @endphp
             <div 
               class="fds-gallery-card w-full rounded-2xl overflow-hidden group relative cursor-pointer bg-slate-200 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.14)] transition-all duration-300 hover:-translate-y-1 block"
               data-idx="{{ $g_i }}"
-              data-title="{{ $g_title }}"
+              data-title="{{ $g_raw_title }}"
               data-img="{{ $g_img }}"
             >
               <div class="relative overflow-hidden w-full">
                 {{-- Foto Dokumentasi (Tinggi Alami / Rasio Beragam Khas Pinterest) --}}
                 <img 
                   src="{{ $g_img }}" 
-                  alt="{{ $g_title }}" 
+                  alt="{{ $g_raw_title }}" 
                   class="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105 block"
                   loading="lazy"
+                  decoding="async"
                 >
 
                 {{-- Ambient Scrim Gradient di Dasar Foto --}}
@@ -427,7 +430,7 @@
                 {{-- Judul Foto (Hanya Judul Saja) --}}
                 <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10 pointer-events-none">
                   <h3 class="text-white font-semibold text-[15px] sm:text-[17px] leading-snug tracking-tight drop-shadow-sm group-hover:text-[#46deec] transition-colors duration-200">
-                    {!! esc_html($g_val['title'] ?? '') !!}
+                    {!! esc_html($g_raw_title) !!}
                   </h3>
                 </div>
               </div>
@@ -560,13 +563,27 @@
         resizeTimer = setTimeout(updateColumnsLayout, 150);
       });
 
+      function decodeHtmlEntities(str) {
+        if (!str) return '';
+        var txt = document.createElement('textarea');
+        var prev = '';
+        var count = 0;
+        while (prev !== str && str.indexOf('&') !== -1 && count < 5) {
+          prev = str;
+          txt.innerHTML = str;
+          str = txt.value;
+          count++;
+        }
+        return str;
+      }
+
       // Fungsi Modal Lightbox
       function openModal(index) {
         if (!totalCards) return;
         currentIndex = (index + totalCards) % totalCards;
         var targetCard = initialCards[currentIndex];
         var imgUrl = targetCard.getAttribute('data-img') || '';
-        var titleText = targetCard.getAttribute('data-title') || '';
+        var titleText = decodeHtmlEntities(targetCard.getAttribute('data-title') || '');
 
         modalImg.src = imgUrl;
         modalImg.alt = titleText;
@@ -652,22 +669,22 @@
 {{-- ========================================================== --}}
 {{-- CERTIFICATIONS — Light gray bento                         --}}
 {{-- ========================================================== --}}
-<section class="bg-[#f5f5f7] py-24 sm:py-32 border-t border-black/[0.06]">
+<section class="bg-[#f5f5f7] py-24 sm:py-32">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <div class="mb-14">
+    <x-reveal class="mb-14">
       <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
         {!! esc_html($about['certs_badge'] ?? 'Sertifikasi & Standar Mutu') !!}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[600px]">
         {!! $about['certs_title'] ?? 'Standar mutu global, sertifikasi resmi nasional.' !!}
       </h2>
-    </div>
+    </x-reveal>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
 
       {{-- Card 1: TKDN 60,74% (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div data-aos="fade-up" data-aos-delay="0" class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -699,7 +716,7 @@
       </div>
 
       {{-- Card 2: ISO & SNI (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-white rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-black/[0.06] transition-all duration-300 hover:-translate-y-1 group shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
+      <div data-aos="fade-up" data-aos-delay="200" class="relative overflow-hidden bg-white rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-black/[0.06] transition-all duration-300 hover:-translate-y-1 group shadow-[0_2px_24px_rgba(0,0,0,0.06)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -731,7 +748,7 @@
       </div>
 
       {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
-      <div class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
+      <div data-aos="fade-up" data-aos-delay="400" class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -780,7 +797,7 @@
   $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));
 @endphp
-<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden border-t border-white/[0.08]">
+<section class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden">
   
   {{-- Vector Background: Pure Organic Wave Fills (Matching Section Untuk Siapa) --}}
   <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
@@ -816,7 +833,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-24 items-start">
 
       {{-- Left: Massive Editorial Headline & Action Buttons (Col 7) --}}
-      <div class="lg:col-span-7">
+      <x-reveal type="fade-right" class="lg:col-span-7">
         <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-6">
           Kemitraan &amp; Pengadaan Korporasi
         </p>
@@ -836,15 +853,18 @@
             $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', html_entity_decode($btn2_label, ENT_QUOTES, 'UTF-8'));
           @endphp
           <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog') }}"
-             class="inline-flex items-center text-white/70 text-[16px] font-medium hover:text-white transition-colors gap-2 group">
-            <span>{{ $btn2_label }}</span>
-            <span class="group-hover:translate-x-1 transition-transform duration-150">&rsaquo;</span>
+             class="inline-flex items-center text-white/70 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
+            <span class="leading-none">{{ $btn2_label }}</span>
+            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
-      </div>
+      </x-reveal>
 
       {{-- Right: Editorial Directory & Workshop Details (Col 5) --}}
-      <div class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-white/[0.1] pt-12 lg:pt-0 lg:pl-16">
+      <x-reveal type="fade-left" class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-white/[0.1] pt-12 lg:pt-0 lg:pl-16">
         <h3 class="text-[14px] font-semibold text-white/60 tracking-normal mb-8">
           {!! esc_html($about['info_title'] ?? 'Kantor Pusat & Workshop') !!}
         </h3>
@@ -883,23 +903,25 @@
               <span class="text-white/30">&middot;</span>
               <a href="{{ esc_url($c_wa_link) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-[12.5px] font-semibold transition-all duration-150 shadow-sm hover:shadow active:scale-95">
                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                <span>WhatsApp</span>
-                <span class="text-[14px] leading-none">&rsaquo;</span>
-              </a>
-            </div>
+              <span>WhatsApp</span>
+              <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>
           </div>
-
         </div>
-      </div>
 
-    </div>
+      </div>
+    </x-reveal>
 
   </div>
+
+</div>
 </section>
 
 @if($show_map_about && !empty($c_maps))
 {{-- Full-width Map Media Block — Terpisah Namun Mepet --}}
-<section class="w-full overflow-hidden border-t border-white/[0.08] relative bg-[#0a555c]" style="height: 520px; max-height: 600px;">
+<section class="w-full overflow-hidden relative bg-[#eef2f6]" style="height: 520px; max-height: 600px;" data-aos="fade-up">
+  {{-- Map Skeleton Loader (Clean Grayscale Pulse) --}}
+  <div id="map-loader-about" class="absolute inset-0 bg-slate-200 animate-pulse z-10 transition-opacity duration-500 pointer-events-none"></div>
   <iframe 
     src="{{ esc_url($c_maps) }}" 
     width="100%" 
@@ -908,7 +930,8 @@
     allowfullscreen="" 
     loading="lazy" 
     referrerpolicy="strict-origin-when-cross-origin"
-    title="Lokasi Full Drone Solutions Sleman Yogyakarta">
+    title="Lokasi Full Drone Solutions Sleman Yogyakarta"
+    onload="var l = document.getElementById('map-loader-about'); if(l){ l.classList.add('opacity-0', 'pointer-events-none'); setTimeout(function(){ l.remove(); }, 500); }">
   </iframe>
 </section>
 @endif
