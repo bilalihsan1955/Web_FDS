@@ -38,11 +38,99 @@ add_action('pre_get_posts', function ($query) {
             }
             $query->set('post_type', 'post');
             $query->set('posts_per_page', 9);
-        } elseif ($query->is_home() || $query->is_archive()) {
-            $query->set('posts_per_page', 10);
+        } else {
+            $is_blog_archive = $query->is_home() || (
+                $query->is_archive()
+                && !$query->is_post_type_archive('drone')
+                && !$query->is_tax('kategori_drone')
+            );
+
+            if ($is_blog_archive) {
+                $first_page = 10;
+                $per_page = 9;
+
+                $paged = 1;
+                if ($query->get('paged')) {
+                    $paged = (int) $query->get('paged');
+                } elseif ($query->get('page')) {
+                    $paged = (int) $query->get('page');
+                } elseif (get_query_var('paged')) {
+                    $paged = (int) get_query_var('paged');
+                } elseif (get_query_var('page')) {
+                    $paged = (int) get_query_var('page');
+                }
+                $paged = max(1, $paged);
+
+                if ($paged <= 1) {
+                    $query->set('posts_per_page', $first_page);
+                } else {
+                    $offset = $first_page + (($paged - 2) * $per_page);
+                    $query->set('posts_per_page', $per_page);
+                    $query->set('offset', $offset);
+                }
+            }
         }
     }
 });
+
+/**
+ * Synchronize found_posts for Blog pagination with offset
+ */
+add_filter('found_posts', function ($found_posts, $query) {
+    if (!is_admin() && $query->is_main_query()) {
+        $is_blog_archive = $query->is_home() || (
+            $query->is_archive()
+            && !$query->is_post_type_archive('drone')
+            && !$query->is_tax('kategori_drone')
+        );
+
+        if ($is_blog_archive) {
+            $first_page = 10;
+            $paged = 1;
+            if ($query->get('paged')) {
+                $paged = (int) $query->get('paged');
+            } elseif ($query->get('page')) {
+                $paged = (int) $query->get('page');
+            } elseif (get_query_var('paged')) {
+                $paged = (int) get_query_var('paged');
+            } elseif (get_query_var('page')) {
+                $paged = (int) get_query_var('page');
+            }
+            $paged = max(1, $paged);
+
+            if ($found_posts > $first_page && $paged > 1) {
+                return $found_posts - 1;
+            }
+        }
+    }
+    return $found_posts;
+}, 10, 2);
+
+/**
+ * Synchronize max_num_pages so pagination controls (prev/next/page numbers) are exact on all pages
+ */
+add_filter('the_posts', function ($posts, $query) {
+    if (!is_admin() && $query->is_main_query()) {
+        $is_blog_archive = $query->is_home() || (
+            $query->is_archive()
+            && !$query->is_post_type_archive('drone')
+            && !$query->is_tax('kategori_drone')
+        );
+
+        if ($is_blog_archive) {
+            $first_page = 10;
+            $per_page = 9;
+            $total = (int) $query->found_posts;
+
+            if ($total <= $first_page) {
+                $query->max_num_pages = 1;
+            } else {
+                $query->max_num_pages = (int) ceil(($total - $first_page) / $per_page) + 1;
+            }
+        }
+    }
+    return $posts;
+}, 10, 2);
 
 /**
  * Security filter for search queries: sanitize all queries across the application
