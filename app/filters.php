@@ -47,7 +47,7 @@ add_action('pre_get_posts', function ($query) {
 
             if ($is_blog_archive) {
                 $first_page = 10;
-                $per_page = 9;
+                $per_page = 12; // 4 baris x 3 kolom = 12 artikel per halaman
 
                 $paged = 1;
                 if ($query->get('paged')) {
@@ -99,7 +99,7 @@ add_filter('found_posts', function ($found_posts, $query) {
             $paged = max(1, $paged);
 
             if ($found_posts > $first_page && $paged > 1) {
-                return $found_posts - 1;
+                return $found_posts + 2;
             }
         }
     }
@@ -119,7 +119,7 @@ add_filter('the_posts', function ($posts, $query) {
 
         if ($is_blog_archive) {
             $first_page = 10;
-            $per_page = 9;
+            $per_page = 12; // 4 baris x 3 kolom = 12 artikel per halaman
             $total = (int) $query->found_posts;
 
             if ($total <= $first_page) {
