@@ -70,6 +70,17 @@ add_filter('theme_file_path', function ($path, $file) {
 add_filter('should_load_separate_core_block_assets', '__return_false');
 
 /**
+ * Dequeue unused core block library styles on frontend to eliminate render-blocking CSS
+ */
+add_action('wp_enqueue_scripts', function () {
+    if (!is_admin()) {
+        wp_dequeue_style('wp-block-library');
+        wp_dequeue_style('wp-block-library-theme');
+        wp_dequeue_style('global-styles');
+    }
+}, 100);
+
+/**
  * Register the initial theme setup.
  *
  * @return void

@@ -20,10 +20,18 @@ if (!defined('ABSPATH')) {
  * - LiteSpeed Cache Dynamic AJAX No-Cache Protection
  */
 
+// Matikan kebocoran header versi Acorn / Laravel
+add_filter('acorn/powered_by', '__return_false');
+
 // 1. INJEKSI HTTP SECURITY HEADERS TERPUSAT
 add_action('send_headers', function (): void {
     if (headers_sent()) {
         return;
+    }
+
+    // Suppress signature headers
+    if (function_exists('header_remove')) {
+        header_remove('X-Powered-By');
     }
 
     // Clickjacking Defense
@@ -35,11 +43,18 @@ add_action('send_headers', function (): void {
     // Referrer Information Minimization
     header('Referrer-Policy: strict-origin-when-cross-origin');
 
+    // Cross-Origin Opener Policy (COOP)
+    header('Cross-Origin-Opener-Policy: same-origin-allow-popups');
+
     // Permissions & Hardware Access Policy
     header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 
-    // HSTS (HTTP Strict Transport Security) jika berjalan di HTTPS
-    if (is_ssl()) {
+    // Content Security Policy (Comprehensive defence-in-depth with Alpine.js & Font support)
+    header("Content-Security-Policy: default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self';");
+
+    // HSTS (HTTP Strict Transport Security) jika berjalan di HTTPS atau Cloudflare Proxy
+    $is_https = is_ssl() || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
+    if ($is_https) {
         header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
     }
 });
@@ -144,7 +159,9 @@ function fds_safe_filename(string $filename): string {
 // Mencegah serangan Brute Force via multicall XML-RPC dan DDoS Pingback Amplification
 add_filter('xmlrpc_enabled', '__return_false');
 add_filter('wp_headers', function (array $headers): array {
-    unset($headers['X-Pingback']);
+    unset($headers['X-Pingback'], $headers['X-Powered-By']);
+    $headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups';
+    $headers['Content-Security-Policy'] = "default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self';";
     return $headers;
 });
 
