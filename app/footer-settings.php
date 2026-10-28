@@ -36,6 +36,17 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
 // 2. HELPER GLOBAL CONTACT & SOCIAL MEDIA (SINGLE SOURCE OF TRUTH)
 function fds_get_global_contact() {
+    static $static_contact = null;
+    if ($static_contact !== null) {
+        return $static_contact;
+    }
+
+    $cached = get_transient('fds_global_contact_cache');
+    if ($cached !== false && is_array($cached)) {
+        $static_contact = $cached;
+        return $cached;
+    }
+
     $company_name = get_option('fds_global_company_name', get_option('fds_footer_company_name', 'PT Karya Solusi Angkasa (Full Drone Solutions)'));
     $address      = get_option('fds_global_address', get_option('fds_footer_address', get_option('fds_kontak_address', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281')));
     $phone        = get_option('fds_global_phone', get_option('fds_footer_phone', get_option('fds_kontak_phone', '+62 8112 748 882')));
@@ -97,7 +108,7 @@ function fds_get_global_contact() {
     ];
 
     // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
-    return array_map(function($v) {
+    $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
         $prev = '';
         while ($prev !== $v) {
@@ -106,6 +117,10 @@ function fds_get_global_contact() {
         }
         return $v;
     }, $data);
+
+    set_transient('fds_global_contact_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    $static_contact = $clean_data;
+    return $clean_data;
 }
 
 // Backward-compatible alias
@@ -223,6 +238,7 @@ function render_global_contact_admin_page() {
         update_option('fds_page_kontak_map_btn', sanitize_text_field($_POST['fds_page_kontak_map_btn'] ?? ''));
         update_option('fds_page_kontak_map_link', esc_url_raw($_POST['fds_page_kontak_map_link'] ?? ''));
 
+        delete_transient('fds_global_contact_cache');
         $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak &amp; Hak Cipta berhasil diperbarui!';
     }
 

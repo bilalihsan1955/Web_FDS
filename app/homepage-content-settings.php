@@ -101,6 +101,17 @@ function fds_get_layanan_items() {
 }
 
 function fds_get_homepage_content() {
+    static $static_hp = null;
+    if ($static_hp !== null) {
+        return $static_hp;
+    }
+
+    $cached = get_transient('fds_homepage_content_cache');
+    if ($cached !== false && is_array($cached)) {
+        $static_hp = $cached;
+        return $cached;
+    }
+
     $data = [
         // HERO
         'hero_badge'        => get_option('fds_hero_badge', 'Teknologi UAV Indonesia'),
@@ -197,7 +208,7 @@ function fds_get_homepage_content() {
 
     // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
     // agar template Blade tidak pernah menerima entity ganda.
-    return array_map(function($v) {
+    $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
         $prev = '';
         while ($prev !== $v) {
@@ -206,6 +217,10 @@ function fds_get_homepage_content() {
         }
         return $v;
     }, $data);
+
+    set_transient('fds_homepage_content_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    $static_hp = $clean_data;
+    return $clean_data;
 }
 
 // 5. TAMPILAN HALAMAN WP ADMIN KONTEN BERANDA
@@ -301,6 +316,7 @@ function render_homepage_content_admin_page() {
             update_option('fds_layanan_items', $saved_layanan, 'no');
         }
 
+        delete_transient('fds_homepage_content_cache');
         $message = 'Semua perubahan konten Beranda berhasil disimpan!';
     }
 

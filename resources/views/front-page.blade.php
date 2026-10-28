@@ -21,8 +21,15 @@
       <img
         src="{{ $slide['url'] }}"
         alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
-        class="w-full h-full object-cover object-center"
+        class="w-full h-full object-cover object-center {{ $i === 0 ? 'no-lazy' : '' }}"
         loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
+        @if($i === 0)
+        fetchpriority="high"
+        data-no-lazy="1"
+        decoding="sync"
+        @else
+        decoding="async"
+        @endif
       >
       {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
       <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
@@ -1205,7 +1212,11 @@ function filterDrones(btn) {
             {{-- Image Box (Clean without covering tags) --}}
             <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
               @if(has_post_thumbnail($post->ID))
-                {!! get_the_post_thumbnail($post->ID, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) !!}
+                {!! get_the_post_thumbnail($post->ID, 'medium_large', [
+                  'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
+                  'loading' => 'lazy',
+                  'decoding' => 'async',
+                ]) !!}
               @else
                 <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8fbfd] to-[#d1f7fa]">
                   <svg class="w-10 h-10 text-[#0f808a]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>

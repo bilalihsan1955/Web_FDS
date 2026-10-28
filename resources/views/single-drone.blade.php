@@ -325,7 +325,9 @@
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
              loading="eager"
              fetchpriority="high"
-             class="w-full h-auto object-cover object-center block max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px]">
+             data-no-lazy="1"
+             decoding="sync"
+             class="w-full h-auto object-cover object-center block max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px] no-lazy">
       </div>
 
     </section>

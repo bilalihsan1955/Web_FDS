@@ -12,18 +12,22 @@
     $drones[$s] = $item;
   }
 
-  // 2. ENRICH WITH WORDPRESS CPT 'drone' DATABASE
-  $db_drones = get_posts([
-    'post_type'      => 'drone',
-    'posts_per_page' => -1,
-    'post_status'    => 'publish',
-    'orderby'        => 'ID',
-    'order'          => 'ASC',
-  ]);
+  // 2. ENRICH WITH WORDPRESS CPT 'drone' DATABASE (CACHED VIA TRANSIENT)
+  $cached_catalog = get_transient('fds_bandingkan_catalog_cache');
+  if ($cached_catalog !== false && is_array($cached_catalog)) {
+    $catalog = $cached_catalog;
+  } else {
+    $db_drones = get_posts([
+      'post_type'      => 'drone',
+      'posts_per_page' => -1,
+      'post_status'    => 'publish',
+      'orderby'        => 'ID',
+      'order'          => 'ASC',
+    ]);
 
-  $catalog = $drones;
+    $catalog = $drones;
 
-  foreach ($db_drones as $dp) {
+    foreach ($db_drones as $dp) {
     $slug    = $dp->post_name;
     $post_id = $dp->ID;
 
@@ -183,6 +187,8 @@
 
     $catalog[$slug] = $item;
   }
+  set_transient('fds_bandingkan_catalog_cache', $catalog, 12 * HOUR_IN_SECONDS);
+}
 
   // 3. PARAMETER URL & VALIDASI KATEGORI SAMA
   $req_d1 = isset($_GET['d1']) && isset($catalog[$_GET['d1']]) ? $_GET['d1'] : '';

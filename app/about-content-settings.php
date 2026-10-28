@@ -162,6 +162,17 @@ function fds_get_about_gallery() {
 
 // 2. HELPER GET ABOUT CONTENT
 function fds_get_about_content() {
+    static $static_about = null;
+    if ($static_about !== null) {
+        return $static_about;
+    }
+
+    $cached = get_transient('fds_about_content_cache');
+    if ($cached !== false && is_array($cached)) {
+        $static_about = $cached;
+        return $cached;
+    }
+
     $data = [
         // HERO
         'hero_sub'        => get_option('fds_about_hero_sub', 'PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Pengalaman UAV Sejak 2012 &middot; Yogyakarta'),
@@ -276,7 +287,7 @@ function fds_get_about_content() {
     ];
 
     // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
-    return array_map(function($v) {
+    $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
         $prev = '';
         while ($prev !== $v) {
@@ -285,6 +296,10 @@ function fds_get_about_content() {
         }
         return $v;
     }, $data);
+
+    set_transient('fds_about_content_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    $static_about = $clean_data;
+    return $clean_data;
 }
 
 // 3. RENDER ADMIN PAGE
@@ -420,6 +435,7 @@ function render_about_content_admin_page() {
         }
 
         $saved = true;
+        delete_transient('fds_about_content_cache');
     }
 
     wp_enqueue_media();

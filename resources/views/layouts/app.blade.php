@@ -10,6 +10,24 @@
     {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    {{-- Universal LCP Image Preload across Homepage, Detail Drone, and Detail Blog --}}
+    @if(is_front_page())
+      @php
+        $hp_slides = function_exists('App\fds_get_hero_slides') ? \App\fds_get_hero_slides() : [];
+        $lcp_img = !empty($hp_slides[0]['url']) ? $hp_slides[0]['url'] : '';
+      @endphp
+      @if(!empty($lcp_img))
+      <link rel="preload" as="image" href="{{ esc_url($lcp_img) }}" fetchpriority="high">
+      @endif
+    @elseif(is_singular())
+      @php
+        $sing_thumb = get_the_post_thumbnail_url(get_the_ID(), 'full');
+      @endphp
+      @if(!empty($sing_thumb))
+      <link rel="preload" as="image" href="{{ esc_url($sing_thumb) }}" fetchpriority="high">
+      @endif
+    @endif
+
     <style>
       *, *::before, *::after { box-sizing: border-box; }
       html { scroll-behavior: smooth; }

@@ -15,7 +15,13 @@
       @if(has_post_thumbnail())
         <div class="max-w-[1100px] mx-auto px-6 lg:px-12 mb-14 fds-hero-entrance fds-hero-delay-3">
           <div class="rounded-[1.5rem] overflow-hidden aspect-video bg-[#f5f5f7]">
-            {!! get_the_post_thumbnail(null, 'full', ['class' => 'w-full h-full object-cover']) !!}
+            {!! get_the_post_thumbnail(null, 'full', [
+              'class' => 'w-full h-full object-cover no-lazy',
+              'loading' => 'eager',
+              'fetchpriority' => 'high',
+              'data-no-lazy' => '1',
+              'decoding' => 'sync',
+            ]) !!}
           </div>
         </div>
       @endif

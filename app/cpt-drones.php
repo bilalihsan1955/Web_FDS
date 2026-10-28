@@ -713,33 +713,39 @@ add_action('save_post_drone', function ($post_id) {
     // Auto-generate Rich Enterprise SEO Article into post_content and Sync Rank Math Metadata
     fds_sync_drone_rank_math_seo($post_id);
 
-    // Invalidate Mega Menu Nav Transient Cache
+    // Invalidate Mega Menu Nav Transient Cache & Bandingkan Catalog Cache
     delete_transient('fds_mega_menu_data');
+    delete_transient('fds_bandingkan_catalog_cache');
 
     $is_saving = false;
 });
 
-// Invalidate Mega Menu cache saat drone dihapus atau di-restore
+// Invalidate Mega Menu & Bandingkan cache saat drone dihapus atau di-restore
 add_action('wp_trash_post', function ($post_id) {
     if (get_post_type($post_id) === 'drone') {
         delete_transient('fds_mega_menu_data');
+        delete_transient('fds_bandingkan_catalog_cache');
     }
 });
 add_action('untrash_post', function ($post_id) {
     if (get_post_type($post_id) === 'drone') {
         delete_transient('fds_mega_menu_data');
+        delete_transient('fds_bandingkan_catalog_cache');
     }
 });
 add_action('delete_post', function ($post_id) {
     if (get_post_type($post_id) === 'drone') {
         delete_transient('fds_mega_menu_data');
+        delete_transient('fds_bandingkan_catalog_cache');
     }
 });
 add_action('saved_kategori_drone', function () {
     delete_transient('fds_mega_menu_data');
+    delete_transient('fds_bandingkan_catalog_cache');
 });
 add_action('delete_kategori_drone', function () {
     delete_transient('fds_mega_menu_data');
+    delete_transient('fds_bandingkan_catalog_cache');
 });
 
 /**
