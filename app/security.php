@@ -49,8 +49,9 @@ add_action('send_headers', function (): void {
     // Permissions & Hardware Access Policy
     header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 
-    // Content Security Policy (Comprehensive defence-in-depth with Alpine.js & Font support)
-    header("Content-Security-Policy: default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self';");
+    // Content Security Policy (Granular enterprise defence-in-depth for WordPress & Alpine.js)
+    $csp = "default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:; style-src 'self' 'unsafe-inline' https: http:; img-src 'self' data: blob: https: http:; font-src 'self' data: https: http:; connect-src 'self' https: http:; frame-ancestors 'self';";
+    header("Content-Security-Policy: {$csp}");
 
     // HSTS (HTTP Strict Transport Security) jika berjalan di HTTPS atau Cloudflare Proxy
     $is_https = is_ssl() || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
@@ -161,7 +162,7 @@ add_filter('xmlrpc_enabled', '__return_false');
 add_filter('wp_headers', function (array $headers): array {
     unset($headers['X-Pingback'], $headers['X-Powered-By']);
     $headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups';
-    $headers['Content-Security-Policy'] = "default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'self';";
+    $headers['Content-Security-Policy'] = "default-src 'self' http: https: data: blob: 'unsafe-inline' 'unsafe-eval'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:; style-src 'self' 'unsafe-inline' https: http:; img-src 'self' data: blob: https: http:; font-src 'self' data: https: http:; connect-src 'self' https: http:; frame-ancestors 'self';";
     return $headers;
 });
 
