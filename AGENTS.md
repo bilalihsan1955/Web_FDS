@@ -74,6 +74,14 @@ Every agent working on this repository **MUST** strictly obey these 11 rules:
 - State 2: Smooth AJAX transition into an active "Download Brosur PDF" button in `#0f808a`.
 - Leads stored in database table/option and exportable to CSV in WP Admin.
 
+### Rule 12: Single Drone Specs Offset Floating Image & Spacing Rule
+- **Intentional Offset:** On `single-drone.blade.php`, the large transparent product image in the specs section is intentionally designed to offset/float downwards (`lg:h-0 lg:relative` + `lg:absolute lg:top-0 lg:left-0 pointer-events-none z-30`).
+- **Strictly Preserve Tight Section Spacing:** Section padding MUST remain compact (`pt-16 sm:pt-20 pb-10 sm:pb-12`). NEVER expand the bottom padding or push the brochure section down into a huge empty gap.
+- **Zero-Clipping Stacking Context:**
+  - The specs `<section>` MUST have `relative z-20 overflow-visible`.
+  - The left column `<div class="lg:col-span-6 flex flex-col relative overflow-visible z-20">` and image wrapper MUST have `overflow-visible z-30`.
+  - The subsequent brochure `<section id="unduh-brosur">` MUST have `relative z-0` so its white background NEVER slices or clips the bottom landing gear or rotors of the floating drone image.
+
 ---
 
 ## 📂 3. ARCHITECTURAL MAP & KEY FILES

@@ -332,7 +332,7 @@
 
     {{-- ── SPECS ─────────────────────────────────────────────────── --}}
     @if(!empty($drone['specs']) || !empty($drone['desc']))
-    <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 relative z-10 overflow-visible">
+    <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 relative z-20 overflow-visible">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative overflow-visible">
         @php
           $specs_img_meta = $get_meta('drone_specs_img');
@@ -342,7 +342,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start relative overflow-visible">
           
           {{-- Left Column: Header, Desc, & Big Transparent Product Image (Col 6) --}}
-          <x-reveal type="fade-right" class="lg:col-span-6 flex flex-col relative overflow-visible">
+          <x-reveal type="fade-right" class="lg:col-span-6 flex flex-col relative overflow-visible z-20">
             <div>
               <div class="flex items-center justify-between mb-3">
                 <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">Spesifikasi</p>
@@ -362,10 +362,10 @@
               </p>
             </div>
 
-            {{-- Big Transparent Specs Drone Image: Ditengah di mobile/tablet, selaras di desktop --}}
+            {{-- Big Transparent Specs Drone Image: Offset melayang presisi, 100% utuh tanpa terpotong --}}
             @if($specs_img)
-            <div class="mt-4 sm:mt-6 w-full select-none lg:h-0 lg:relative flex justify-center lg:block">
-              <div class="relative lg:absolute lg:top-0 lg:left-0 lg:-ml-2 xl:-ml-4 w-full max-w-[540px] lg:max-w-[620px] pointer-events-none z-20 flex justify-center lg:block mx-auto lg:mx-0">
+            <div class="mt-4 sm:mt-6 w-full select-none lg:h-0 lg:relative flex justify-center lg:block overflow-visible">
+              <div class="relative lg:absolute lg:top-0 lg:left-0 lg:-ml-2 xl:-ml-4 w-full max-w-[540px] lg:max-w-[620px] pointer-events-none z-30 flex justify-center lg:block mx-auto lg:mx-0 overflow-visible">
                 <img src="{{ $specs_img }}" 
                      alt="Spesifikasi Teknis {!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Full Drone Solutions" 
                      loading="lazy"
@@ -422,8 +422,8 @@
     @endphp
 
     @if($brochure_enable === '1')
-    <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 relative z-10">
-      <x-reveal class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <section id="unduh-brosur" class="bg-white py-16 sm:py-20 lg:py-24 relative z-0">
+      <x-reveal class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-0">
         <x-modal-brochure
           :drone-id="$post_id"
           :drone-name="$drone['name']"
