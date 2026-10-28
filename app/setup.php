@@ -81,6 +81,19 @@ add_action('wp_enqueue_scripts', function () {
 }, 100);
 
 /**
+ * Matikan Speculation Rules API bawaan WP 6.5+ yang memicu prerender instan setengah-jadi (FOUC)
+ */
+add_action('init', function () {
+    remove_action('wp_head', 'wp_maybe_enqueue_speculation_rules', 10);
+});
+add_action('wp_footer', function () {
+    remove_action('wp_footer', 'wp_print_speculation_rules');
+    remove_action('wp_footer', 'wp_maybe_enqueue_speculation_rules');
+}, 0);
+add_filter('wp_speculation_rules_configuration', '__return_empty_array', 9999);
+add_filter('speculation_rules_configuration', '__return_empty_array', 9999);
+
+/**
  * Register the initial theme setup.
  *
  * @return void

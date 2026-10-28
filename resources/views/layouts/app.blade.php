@@ -7,6 +7,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
       *, *::before, *::after { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
@@ -21,6 +24,21 @@
       ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: #f5f5f7; }
       ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
+
+      /* Anti-FOUC & Anti-SVG Blowout: Mencegah icon membesar raksasa sebelum CSS selesai di-parse */
+      svg {
+        display: inline-block;
+        vertical-align: middle;
+        overflow: hidden;
+      }
+      header svg, nav svg, .site-header svg, button svg, a svg {
+        max-width: 24px;
+        max-height: 24px;
+      }
+      svg:not([class*="w-full"]):not([class*="w-["]):not([width]) {
+        max-width: 28px;
+        max-height: 28px;
+      }
 
       /* WP Admin Bar compensation */
       .admin-bar #site-header { top: 32px; }
@@ -49,7 +67,6 @@
 
     <?php do_action('get_header'); ?>
     <?php wp_head(); ?>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
   </head>
 
   <body <?php body_class('bg-[#f5f5f7] text-[#1d1d1f] antialiased'); ?>>
