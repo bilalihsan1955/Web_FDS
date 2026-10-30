@@ -806,6 +806,13 @@ add_action('admin_enqueue_scripts', function ($hook) {
 /**
  * Ensure CPT 'drone' is enabled in Rank Math XML Sitemaps
  */
+add_filter('rank_math/sitemap/post_types', function ($post_types) {
+    if (is_array($post_types) && !isset($post_types['drone'])) {
+        $post_types['drone'] = 'drone';
+    }
+    return $post_types;
+}, 10, 1);
+
 add_filter('rank_math/sitemap/enable_cpt', function ($enabled, $post_type) {
     if ($post_type === 'drone') {
         return true;
