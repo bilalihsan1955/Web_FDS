@@ -8,8 +8,8 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
 
-    {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head --}}
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head (dikunci dengan data-no-optimize agar tidak di-404-kan oleh LiteSpeed Combine) --}}
+    {!! str_replace(['<link ', '<script '], ['<link data-no-optimize="1" data-no-minify="1" ', '<script data-no-optimize="1" data-no-minify="1" '], \Illuminate\Support\Facades\Vite::withEntryPoints(['resources/css/app.css', 'resources/js/app.js'])->toHtml()) !!}
 
     {{-- Universal LCP Image Preload across Homepage, Detail Drone, and Detail Blog --}}
     @if(is_front_page())
@@ -204,6 +204,9 @@
                 @if($nb_brand['has_logo'])
                   <img src="{{ esc_url($nb_brand['logo_url']) }}"
                        alt="{{ esc_attr($nb_brand['brand_text']) }}"
+                       width="195"
+                       height="{{ (int) $nb_brand['logo_height'] }}"
+                       decoding="async"
                        style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
                        class="transition-transform duration-200 group-hover:scale-[1.03]">
                 @else
@@ -270,7 +273,7 @@
               <a href="{{ esc_url($nb_brand['cta_url'] ?? home_url('/#kontak')) }}" class="nav-direct-link hidden sm:inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[13px] font-semibold px-4 py-2 rounded-full transition-all duration-150">
                 {!! esc_html($nb_brand['cta_text'] ?? 'Konsultasi Drone') !!}
               </a>
-              <button id="mobile-menu-toggle" type="button" class="lg:hidden w-8 h-8 flex flex-col gap-1.5 items-center justify-center" aria-label="Menu">
+              <button id="mobile-menu-toggle" type="button" class="lg:hidden w-10 h-10 flex flex-col gap-1.5 items-center justify-center" aria-label="Menu">
                 <span id="bar1" class="block w-5 h-[1.5px] bg-[#1d1d1f] transition-all duration-300 origin-center"></span>
                 <span id="bar2" class="block w-5 h-[1.5px] bg-[#1d1d1f] transition-all duration-300"></span>
                 <span id="bar3" class="block w-5 h-[1.5px] bg-[#1d1d1f] transition-all duration-300 origin-center"></span>
@@ -582,11 +585,11 @@
 
         <!-- Mobile nav — 100% Dinamis dari WordPress -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6 max-h-[85vh] overflow-y-auto">
-          <nav class="flex flex-col gap-4 text-[16px] font-medium text-[#1d1d1f]">
-            <a href="{{ home_url('/') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0f808a] font-semibold' : '' }}">Beranda</a>
+          <nav class="flex flex-col gap-3 text-[16px] font-medium text-[#1d1d1f]">
+            <a href="{{ home_url('/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0f808a] font-semibold' : '' }}">Beranda</a>
             
             <details class="border-b border-[#f5f5f7]" {{ $is_active_produk ? 'open' : '' }}>
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">Produk Drone
+              <summary class="py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">Produk Drone
                 <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
@@ -597,7 +600,7 @@
                       @php
                         $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
                       @endphp
-                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-1.5 flex items-center justify-between {{ $is_this_drone ? 'text-[#0f808a] font-semibold' : '' }}">
+                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-2 flex items-center justify-between {{ $is_this_drone ? 'text-[#0f808a] font-semibold' : '' }}">
                         <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
                         <span class="text-[10px] text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
@@ -614,20 +617,20 @@
             </details>
 
             <details class="border-b border-[#f5f5f7]" {{ $is_active_layanan ? 'open' : '' }}>
-              <summary class="py-1.5 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">Layanan
+              <summary class="py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">Layanan
                 <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
                 @foreach($all_layanan as $lItem)
-                  <a href="{{ esc_url($lItem['url']) }}" class="mobile-nav-link py-1">
+                  <a href="{{ esc_url($lItem['url']) }}" class="mobile-nav-link py-2">
                     {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
                   </a>
                 @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
-            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-1.5 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
-            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-1.5 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
+            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
+            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
+            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-2 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
           </nav>
         </div>
       </header>
@@ -659,38 +662,38 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-10 border-b border-black/[0.08]">
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Produk Drone</h4>
-              <ul class="space-y-2 text-[12px] text-[#515154]">
+              <ul class="space-y-1 text-[12px] text-[#515154]">
                 @foreach($nav_drones as $d)
-                <li><a href="{{ home_url('/' . $d->post_name) }}" class="hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
+                <li><a href="{{ home_url('/' . $d->post_name) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
                 @endforeach
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Layanan</h4>
-              <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Kursus &amp; Sertifikasi Pilot</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Pesewaan Drone</a></li>
-                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Pemetaan Aerial &amp; GIS</a></li>
-                <li><a href="{{ home_url('/#layanan') }}" class="hover:text-[#1d1d1f] hover:underline">Inspeksi Termal &amp; Industri</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">After-Sales &amp; Servis</a></li>
+              <ul class="space-y-1 text-[12px] text-[#515154]">
+                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Kursus &amp; Sertifikasi Pilot</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pesewaan Drone</a></li>
+                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemetaan Aerial &amp; GIS</a></li>
+                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Inspeksi Termal &amp; Industri</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">After-Sales &amp; Servis</a></li>
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Perusahaan</h4>
-              <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                <li><a href="{{ home_url('/tentang-kami') }}" class="hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
-                <li><a href="{{ home_url('/blog') }}" class="hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
-                <li><a href="{{ home_url('/#solusi') }}" class="hover:text-[#1d1d1f] hover:underline">Solusi Multi-Industri &amp; AI</a></li>
+              <ul class="space-y-1 text-[12px] text-[#515154]">
+                <li><a href="{{ home_url('/tentang-kami') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
+                <li><a href="{{ home_url('/blog') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
+                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
+                <li><a href="{{ home_url('/#solusi') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi Multi-Industri &amp; AI</a></li>
               </ul>
             </div>
             <div class="relative flex flex-col justify-between h-full min-h-[160px] pb-10 md:pb-12">
               <div>
                 <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Dukungan</h4>
-                <ul class="space-y-2.5 text-[12px] text-[#515154]">
-                  <li><a href="{{ home_url('/kontak') }}" class="hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
-                  <li><a href="{{ home_url('/kontak#lokasi-workshop') }}" class="hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
-                  <li><a href="{{ home_url('/kontak#hubungi-form') }}" class="hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
+                <ul class="space-y-1 text-[12px] text-[#515154]">
+                  <li><a href="{{ home_url('/kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
+                  <li><a href="{{ home_url('/kontak#lokasi-workshop') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
+                  <li><a href="{{ home_url('/kontak#hubungi-form') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
                 </ul>
               </div>
 
@@ -705,11 +708,11 @@
                     @endphp
                     @if(!empty($logo['url']) && $logo['url'] !== '#')
                       <a href="{{ esc_url($logo['url']) }}" target="_blank" rel="noopener" class="inline-flex items-center flex-shrink-0" title="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}">
-                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
+                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" width="{{ $mw }}" height="{{ $footer_logo_height }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
                       </a>
                     @else
                       <div class="inline-flex items-center flex-shrink-0" title="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}">
-                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
+                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" width="{{ $mw }}" height="{{ $footer_logo_height }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
                       </div>
                     @endif
                   @endif
@@ -730,11 +733,11 @@
                     @endphp
                     @if(!empty($logo['url']) && $logo['url'] !== '#')
                       <a href="{{ esc_url($logo['url']) }}" target="_blank" rel="noopener" class="inline-flex items-center flex-shrink-0" title="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}">
-                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
+                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" width="{{ $mw }}" height="{{ $footer_logo_height }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
                       </a>
                     @else
                       <div class="inline-flex items-center flex-shrink-0" title="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}">
-                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
+                        <img src="{{ esc_url($logo['img']) }}" alt="{{ esc_attr($logo['name'] ?? 'Logo Partner') }}" width="{{ $mw }}" height="{{ $footer_logo_height }}" class="w-auto object-contain mix-blend-multiply flex-shrink-0" style="{{ $style_attr }}">
                       </div>
                     @endif
                   @endif

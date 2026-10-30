@@ -153,10 +153,24 @@ add_action('admin_enqueue_scripts', function ($hook) {
 
 // 4. HELPER UNTUK MENGAMBIL DATA LOGO & BRAND NAVBAR DI FRONTEND
 function fds_get_navbar_brand() {
+    static $memo = null;
+    if ($memo !== null) {
+        return $memo;
+    }
+
+    $cached = get_transient('fds_navbar_brand_cache_v2');
+    if (is_array($cached) && !empty($cached)) {
+        $memo = $cached;
+        return $memo;
+    }
+
     $custom_logo_id = get_theme_mod('custom_logo');
     $custom_logo_url = '';
     if ($custom_logo_id) {
-        $img_src = wp_get_attachment_image_src($custom_logo_id, 'full');
+        $img_src = wp_get_attachment_image_src($custom_logo_id, 'medium');
+        if (empty($img_src[0])) {
+            $img_src = wp_get_attachment_image_src($custom_logo_id, 'full');
+        }
         if (!empty($img_src[0])) {
             $custom_logo_url = $img_src[0];
         }
@@ -164,6 +178,21 @@ function fds_get_navbar_brand() {
 
     $saved_logo_url = get_option('fds_navbar_logo_url', '');
     $logo_url = !empty($saved_logo_url) ? $saved_logo_url : $custom_logo_url;
+
+    // Optimasi otomatis logo beresolusi raksasa (misal Asset-2-1.png 17589x2176 / 426KB -> 300x37 / 6.5KB)
+    if (!empty($logo_url)) {
+        if (str_ends_with($logo_url, '/Asset-2-1.png')) {
+            $logo_url = substr($logo_url, 0, -4) . '-300x37.png';
+        } elseif (!preg_match('/-\d+x\d+\.(png|jpe?g|webp)$/i', $logo_url)) {
+            $att_id = attachment_url_to_postid($logo_url);
+            if ($att_id) {
+                $med_src = wp_get_attachment_image_src($att_id, 'medium');
+                if (!empty($med_src[0])) {
+                    $logo_url = $med_src[0];
+                }
+            }
+        }
+    }
 
     $saved_brand_text = get_option('fds_navbar_brand_text', null);
     if ($saved_brand_text === null) {
@@ -182,13 +211,13 @@ function fds_get_navbar_brand() {
     if (empty($favicon_url)) {
         $site_icon_id = get_option('site_icon');
         if ($site_icon_id) {
-            $favicon_url = wp_get_attachment_image_url($site_icon_id, 'full') ?: '';
+            $favicon_url = wp_get_attachment_image_url($site_icon_id, 'thumbnail') ?: wp_get_attachment_image_url($site_icon_id, 'full') ?: '';
         }
     }
 
     $drone_icon_url = get_option('fds_navbar_drone_icon_url', '');
 
-    return [
+    $memo = [
         'has_logo'                => !empty($logo_url),
         'logo_url'                => $logo_url,
         'brand_text'              => $brand_text,
@@ -218,6 +247,9 @@ function fds_get_navbar_brand() {
         'menu_layanan_cta_text'   => get_option('fds_menu_layanan_cta_text', 'Jadwalkan Demo & Konsultasi'),
         'menu_layanan_cta_url'    => get_option('fds_menu_layanan_cta_url', home_url('/#kontak')),
     ];
+
+    set_transient('fds_navbar_brand_cache_v2', $memo, 12 * HOUR_IN_SECONDS);
+    return $memo;
 }
 
 // 4a. HELPER STANDALONE ICON DRONE (NAVBAR, SECTION DRONE, TENTANG KAMI, DLL)
@@ -458,6 +490,7 @@ function render_navbar_settings_admin_page() {
         update_option('fds_menu_layanan_item2_desc', $menu_layanan_item2_desc);
         update_option('fds_menu_layanan_cta_text', $menu_layanan_cta_text);
         update_option('fds_menu_layanan_cta_url', $menu_layanan_cta_url);
+        delete_transient('fds_navbar_brand_cache_v2');
 
         // Logo-Logo Footer (Dinamis)
         $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);

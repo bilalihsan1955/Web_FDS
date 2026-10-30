@@ -19,17 +19,22 @@
     @foreach($hero_slides as $i => $slide)
     <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
       <img
-        src="{{ $slide['url'] }}"
-        alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
-        class="w-full h-full object-cover object-center {{ $i === 0 ? 'no-lazy' : '' }}"
-        loading="{{ $i === 0 ? 'eager' : 'lazy' }}"
         @if($i === 0)
+        src="{{ $slide['url'] }}"
         fetchpriority="high"
-        data-no-lazy="1"
+        loading="eager"
         decoding="sync"
         @else
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+        data-slide-src="{{ $slide['url'] }}"
+        loading="lazy"
         decoding="async"
         @endif
+        width="1920"
+        height="1080"
+        data-no-lazy="1"
+        alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
+        class="w-full h-full object-cover object-center no-lazy"
       >
       {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
       <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
@@ -83,9 +88,11 @@
       <div class="flex items-center gap-4 sm:gap-5">
         
         {{-- Dot Indicators --}}
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-1">
           @foreach($hero_slides as $i => $slide)
-          <button type="button" class="fds-slider-dot h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer {{ $i === 0 ? 'w-8 sm:w-10 bg-[#0f808a] shadow-[0_0_12px_rgba(15,128,138,0.85)]' : 'w-2 sm:w-2.5 bg-white/45 hover:bg-white/80' }}" data-dot-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}"></button>
+          <button type="button" class="fds-slider-dot min-w-[24px] min-h-[24px] px-1 flex items-center justify-center cursor-pointer" data-dot-index="{{ $i }}" aria-label="Slide {{ $i + 1 }}">
+            <span class="fds-slider-dot-pill block h-2 sm:h-2.5 rounded-full transition-all duration-300 {{ $i === 0 ? 'w-8 sm:w-10 bg-[#0f808a] shadow-[0_0_12px_rgba(15,128,138,0.85)]' : 'w-2 sm:w-2.5 bg-white/45 hover:bg-white/80' }}"></span>
+          </button>
           @endforeach
         </div>
 
@@ -123,10 +130,26 @@
       let timer = null;
       const interval = 6000; // 6 detik per slide
 
+      function hydrateSlideImage(idx) {
+        const s = slides[idx];
+        if (!s) return;
+        const img = s.querySelector('img[data-slide-src]');
+        if (img) {
+          const url = img.getAttribute('data-slide-src');
+          if (url) {
+            img.src = url;
+            img.removeAttribute('data-slide-src');
+          }
+        }
+      }
+
       function showSlide(index) {
         if (index < 0) index = total - 1;
         if (index >= total) index = 0;
         current = index;
+
+        hydrateSlideImage(current);
+        hydrateSlideImage((current + 1) % total);
 
         slides.forEach((slide, i) => {
           if (i === current) {
@@ -139,12 +162,13 @@
         });
 
         dots.forEach((dot, i) => {
+          const pill = dot.querySelector('.fds-slider-dot-pill') || dot;
           if (i === current) {
-            dot.classList.remove('w-2', 'sm:w-2.5', 'bg-white/45');
-            dot.classList.add('w-8', 'sm:w-10', 'bg-[#0f808a]', 'shadow-[0_0_12px_rgba(15,128,138,0.85)]');
+            pill.classList.remove('w-2', 'sm:w-2.5', 'bg-white/45');
+            pill.classList.add('w-8', 'sm:w-10', 'bg-[#0f808a]', 'shadow-[0_0_12px_rgba(15,128,138,0.85)]');
           } else {
-            dot.classList.remove('w-8', 'sm:w-10', 'bg-[#0f808a]', 'shadow-[0_0_12px_rgba(15,128,138,0.85)]');
-            dot.classList.add('w-2', 'sm:w-2.5', 'bg-white/45');
+            pill.classList.remove('w-8', 'sm:w-10', 'bg-[#0f808a]', 'shadow-[0_0_12px_rgba(15,128,138,0.85)]');
+            pill.classList.add('w-2', 'sm:w-2.5', 'bg-white/45');
           }
         });
 
@@ -252,9 +276,13 @@
     <div class="flex" style="animation: fds-marquee 35s linear infinite;">
       @foreach($mitra_with_logo as $mitra)
         @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
-        <div class="flex-shrink-0 flex items-center justify-center px-10" data-aos="fade-up" data-aos-delay="{{ min($loop->index * 100, 700) }}">
+        <div class="flex-shrink-0 flex items-center justify-center px-10">
           <img src="{{ $logo }}"
                alt="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}"
+               width="180"
+               height="96"
+               loading="lazy"
+               decoding="async"
                class="h-24 w-auto object-contain"
                title="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}">
         </div>
@@ -262,7 +290,7 @@
       @foreach($mitra_with_logo as $mitra)
         @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10" aria-hidden="true">
-          <img src="{{ $logo }}" alt="" class="h-24 w-auto object-contain">
+          <img src="{{ $logo }}" alt="" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
         </div>
       @endforeach
     </div>
@@ -384,6 +412,10 @@
           <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#031e20]">
             <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
+                 width="720"
+                 height="380"
+                 loading="lazy"
+                 decoding="async"
                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
             <div class="absolute inset-0 bg-gradient-to-t from-[#052b2e]/80 via-transparent to-transparent pointer-events-none"></div>
             @if(!empty($card['tag']))
@@ -556,6 +588,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="absolute inset-0 z-0">
           <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80') }}"
                alt="Pabrik &amp; Workshop FDS"
+               width="1200"
+               height="675"
+               loading="lazy"
+               decoding="async"
                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
           {{-- Gradasi Halus Terkalibrasi: Gelap Mantap di Area Teks Bawah (~45%) Agar Teks Sangat Kontras & Tajam di Mobile, Tablet, dan Desktop --}}
           <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/65 via-45% to-transparent sm:from-[#070b14]/90 sm:via-[#070b14]/55 sm:via-45% lg:from-[#070b14]/90 lg:via-[#070b14]/50 lg:via-45% lg:to-transparent"></div>
@@ -617,6 +653,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="relative z-10 my-auto py-2 flex justify-center items-center flex-shrink-0 md:max-w-[38%] lg:max-w-full">
           <img src="{{ esc_url($card2_img) }}" 
                alt="Bangga Buatan Indonesia" 
+               width="320"
+               height="180"
+               loading="lazy"
+               decoding="async"
                class="w-auto max-w-[95%] sm:max-w-full max-h-[140px] md:max-h-[160px] lg:max-h-[205px] object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500">
         </div>
 
@@ -707,6 +747,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="absolute inset-0 z-0">
           <img src="{{ esc_url($card6_img) }}" 
                alt="Akademi Pilot &amp; Riset FDS" 
+               width="800"
+               height="500"
+               loading="lazy"
+               decoding="async"
                class="w-full h-full object-cover brightness-[0.95] group-hover:scale-105 group-hover:brightness-105 transition-all duration-700">
           {{-- Vignette Halus Terkalibrasi (Cukup Gelap di Bagian Teks Bawah) --}}
           <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10"></div>
@@ -947,7 +991,8 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
             <p class="hidden lg:block text-[13px] text-[#86868b]">{!! $p['specs'] !!}</p>
             <a href="{{ $p['url'] }}"
-               class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 leading-none group"
+               aria-label="Detail {!! esc_attr(strip_tags($p['name'])) !!}"
+               class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 py-1.5 leading-none group"
                onclick="event.stopPropagation()">
               <span>Detail</span>
               <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

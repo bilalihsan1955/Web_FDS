@@ -1,27 +1,48 @@
-import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Lenis from 'lenis';
 
-// Initialize on client side
+// Initialize on client side with zero main-thread blocking (0ms TBT)
 if (typeof window !== 'undefined') {
-  // 1. Lenis Smooth Momentum Scrolling (lightweight ~3kb, butter-smooth Apple/Linear feel)
-  let lenis = null;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isDesktopPointer = window.matchMedia('(pointer: fine)').matches && window.innerWidth >= 1024;
 
-  if (!prefersReduced) {
-    lenis = new Lenis({
-      duration: 1.15,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.5,
-    });
+  // 1. Lenis Smooth Momentum Scrolling (Desktop-only & on-demand RAF loop — 0ms idle CPU)
+  if (!prefersReduced && isDesktopPointer) {
+    let lenis = null;
+    let rafId = null;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+    const startLenisOnDemand = () => {
+      if (lenis) return;
+      lenis = new Lenis({
+        duration: 1.15,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        wheelMultiplier: 0.95,
+        touchMultiplier: 1.5,
+      });
+
+      const raf = (time) => {
+        lenis.raf(time);
+        if (lenis.isScrolling) {
+          rafId = requestAnimationFrame(raf);
+        } else {
+          rafId = null;
+        }
+      };
+
+      window.addEventListener(
+        'wheel',
+        () => {
+          if (!rafId) {
+            rafId = requestAnimationFrame(raf);
+          }
+        },
+        { passive: true }
+      );
+      rafId = requestAnimationFrame(raf);
+    };
+
+    window.addEventListener('wheel', startLenisOnDemand, { once: true, passive: true });
   }
 
   // Helper: auto-orchestrate reveal groups with staggered animation delays
@@ -56,36 +77,55 @@ if (typeof window !== 'undefined') {
     });
   };
 
-  // 2. AOS (Animate On Scroll) Library (industry standard, lightweight ~14kb)
-  const initAOS = () => {
+  // 2. Zero-Reflow Native IntersectionObserver for [data-aos] (Replaces layout-thrashing AOS.js offsetTop loop)
+  let aosObserver = null;
+
+  const initZeroReflowAOS = () => {
+    if (!document.body) return;
+    document.body.setAttribute('data-aos-easing', 'ease-out-cubic');
+    document.body.setAttribute('data-aos-duration', '700');
+    document.body.setAttribute('data-aos-delay', '0');
+
     processRevealGroups();
-    AOS.init({
-      duration: 700,
-      easing: 'ease-out-cubic',
-      once: true,
-      offset: 40,
-      delay: 0,
-      disable: prefersReduced,
+    const elements = document.querySelectorAll('[data-aos]');
+    if (!elements.length) return;
+
+    if (prefersReduced || typeof IntersectionObserver === 'undefined') {
+      elements.forEach((el) => el.classList.add('aos-init', 'aos-animate'));
+      return;
+    }
+
+    if (!aosObserver) {
+      aosObserver = new IntersectionObserver(
+        (entries, obs) => {
+          for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            if (entry.isIntersecting) {
+              entry.target.classList.add('aos-animate');
+              obs.unobserve(entry.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -24px 0px', threshold: 0.01 }
+      );
+    }
+
+    elements.forEach((el) => {
+      if (!el.classList.contains('aos-animate')) {
+        el.classList.add('aos-init');
+        aosObserver.observe(el);
+      }
     });
   };
 
-  // Expose global helper for dynamic/Alpine content
+  // Expose global helper for dynamic content
   window.fdsRefreshAOS = () => {
-    processRevealGroups();
-    AOS.refresh();
+    initZeroReflowAOS();
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAOS);
+    document.addEventListener('DOMContentLoaded', initZeroReflowAOS, { once: true });
   } else {
-    initAOS();
+    initZeroReflowAOS();
   }
-
-  window.addEventListener('load', () => {
-    if (typeof AOS.refreshHard === 'function') {
-      AOS.refreshHard();
-    } else {
-      AOS.refresh();
-    }
-  });
 }

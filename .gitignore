@@ -2,6 +2,8 @@
 /vendor
 /public/*
 !/public/.gitkeep
+!/public/build
+!/public/images
 public/hot
 .env
 npm-debug.log

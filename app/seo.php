@@ -917,7 +917,7 @@ add_action('template_redirect', function () {
     }
 
     // 4. Direct Root Slugs for Drones (e.g., /ferto-10l/ -> /drone/ferto-10l/)
-    if (!empty($path_lower) && !in_array($path_lower, ['bandingkan', 'tentang-kami', 'kontak', 'blog', 'wp-admin', 'wp-login.php'], true)) {
+    if (!empty($path_lower) && !in_array($path_lower, ['bandingkan', 'tentang-kami', 'kontak', 'blog', 'wp-admin', 'wp-login.php', 'llms.txt', 'llms-full.txt', 'sitemap.xml', 'sitemap_index.xml', 'robots.txt'], true)) {
         if (!str_starts_with($path_lower, 'drone/') && !str_starts_with($path_lower, 'kategori-drone/')) {
             $drone_posts = get_posts([
                 'post_type'      => 'drone',
@@ -973,13 +973,106 @@ add_filter('robots_txt', function ($output, $public) {
 // =========================================================================
 
 /**
- * Add rewrite rule for /llms.txt and /llms-full.txt
+ * Build standardized llmstxt.org Markdown content (cached + static disk sync)
+ */
+function fds_build_llms_txt_content(): string {
+    $cached = get_transient('fds_llms_txt_cache_v2');
+    if (is_string($cached) && $cached !== '') {
+        return $cached;
+    }
+
+    $site_name = 'PT Karya Solusi Angkasa (Full Drone Solutions / FDS)';
+    $home_url  = trailingslashit(home_url());
+
+    $out = [];
+    $out[] = "# {$site_name}";
+    $out[] = "";
+    $out[] = "> Manufaktur dan Produsen UAV Indonesia resmi berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 yang berpusat di Sleman, D.I. Yogyakarta.";
+    $out[] = "";
+    $out[] = "PT Karya Solusi Angkasa (Full Drone Solutions / FDS) memproduksi pesawat nirawak (UAV) industrial untuk sektor pertanian presisi (Seri FERTO 5L hingga 50L), pemetaan topografi dan survey LiDAR (DELTAV Fixed-Wing VTOL), logistik kargo (DELFRO), reboisasi kehutanan (REBO), serta misi khusus inspeksi dan SAR (MULTIPURPOSE).";
+    $out[] = "";
+    $out[] = "## Halaman Utama Perusahaan";
+    $out[] = "";
+    $out[] = "- [Beranda Full Drone Solutions]({$home_url}): Profil solusi drone industrial, sertifikasi TKDN 60,74%, dan katalog produk UAV Indonesia.";
+    $out[] = "- [Tentang Kami PT Karya Solusi Angkasa]({$home_url}tentang-kami/): Sejarah inovasi sejak 2012, fasilitas pabrik perakitan di Sleman Yogyakarta, dan standar mutu ISO 9001:2015.";
+    $out[] = "- [Bandingkan Spesifikasi Drone]({$home_url}bandingkan/): Alat komparasi teknis berdampingan seluruh model drone FDS.";
+    $out[] = "- [Artikel dan Riset UAV]({$home_url}blog/): Publikasi berita, edukasi drone pertanian, regulasi TKDN, dan studi kasus lapangan.";
+    $out[] = "- [Hubungi Sales dan Engineering]({$home_url}kontak/): Konsultasi pengadaan B2B, BUMN, instansi pemerintah (e-Katalog LKPP), dan jadwal demo unit.";
+    $out[] = "";
+    $out[] = "## Katalog Produk Drone Resmi FDS";
+    $out[] = "";
+
+    $drones = get_posts([
+        'post_type'      => 'drone',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order title',
+        'order'          => 'ASC',
+    ]);
+
+    foreach ($drones as $d) {
+        $t       = get_the_title($d->ID);
+        $url     = get_permalink($d->ID);
+        $tagline = get_post_meta($d->ID, 'drone_tagline', true);
+        $payload = get_post_meta($d->ID, 'drone_spec_kapasitas', true);
+        $durasi  = get_post_meta($d->ID, 'drone_spec_durasi', true);
+        $prod    = get_post_meta($d->ID, 'drone_spec_produktivitas', true);
+
+        $details = array_filter([$tagline, $payload ? "Kapasitas {$payload}" : '', $durasi ? "Durasi {$durasi}" : '', $prod ? "Produktivitas {$prod}" : '']);
+        $desc    = !empty($details) ? implode(' — ', $details) : 'Pesawat nirawak industrial buatan Indonesia bersertifikat resmi.';
+        $out[]   = "- [{$t}]({$url}): {$desc}";
+    }
+
+    $out[] = "";
+    $out[] = "## Layanan dan Informasi Korporat";
+    $out[] = "";
+    $out[] = "- [Jasa Pemetaan Drone dan Survey LiDAR]({$home_url}#solusi): Akuisisi data ortofoto GIS, topografi tambang, perhitungan volume cut and fill stockpile, dan inspeksi koridor.";
+    $out[] = "- [Pelatihan dan Sertifikasi Pilot FDS Academy]({$home_url}#layanan): Program pelatihan operasional dan teknis pilot UAV komersial bersertifikat.";
+    $out[] = "- [Pusat Perakitan dan Suku Cadang]({$home_url}kontak/): Jl. Magelang KM 14, Murangan VII, Triharjo, Sleman, D.I. Yogyakarta 55514 (+62 821-3555-5347 | info@fulldronesolutions.com).";
+    $out[] = "";
+
+    $content = implode("\n", $out);
+    set_transient('fds_llms_txt_cache_v2', $content, 12 * HOUR_IN_SECONDS);
+
+    // Tulis file statis fisik ke root agar web server (LiteSpeed/Nginx) menyajikan instan (<10ms) tanpa 301 redirect
+    if (defined('ABSPATH') && is_writable(ABSPATH)) {
+        @file_put_contents(ABSPATH . 'llms.txt', $content);
+        @file_put_contents(ABSPATH . 'llms-full.txt', $content);
+    }
+
+    return $content;
+}
+
+/**
+ * Intercept /llms.txt immediately on init (priority 1) BEFORE redirect_canonical can 301-redirect to /llms.txt/
  */
 add_action('init', function () {
+    $req_path = trim((string) strtok($_SERVER['REQUEST_URI'] ?? '', '?'), '/');
+    if ($req_path === 'llms.txt' || $req_path === 'llms-full.txt') {
+        status_header(200);
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Cache-Control: public, max-age=86400');
+        header('X-LiteSpeed-Cache-Control: public, max-age=604800');
+        echo fds_build_llms_txt_content();
+        exit;
+    }
+
+    // Ensure static physical llms.txt exists on disk for zero-latency serving
+    if (defined('ABSPATH') && !file_exists(ABSPATH . 'llms.txt') && is_writable(ABSPATH)) {
+        fds_build_llms_txt_content();
+    }
+
     add_rewrite_rule('^llms\.txt$', 'index.php?fds_llms_txt=1', 'top');
     add_rewrite_rule('^llms-full\.txt$', 'index.php?fds_llms_txt=1', 'top');
     add_rewrite_rule('^sitemap\.xml$', 'index.php?fds_sitemap_xml=1', 'top');
-});
+}, 1);
+
+add_filter('redirect_canonical', function ($redirect_url, $requested_url) {
+    if (preg_match('#/llms(-full)?\.txt/?$#i', $requested_url)) {
+        return false;
+    }
+    return $redirect_url;
+}, 1, 2);
 
 add_filter('query_vars', function ($vars) {
     $vars[] = 'fds_llms_txt';
@@ -988,77 +1081,15 @@ add_filter('query_vars', function ($vars) {
 });
 
 /**
- * Handle /llms.txt and /sitemap.xml rendering
+ * Handle /llms.txt fallback and /sitemap.xml rendering
  */
 add_action('template_redirect', function () {
     // 1. LLMS.TXT ENDPOINT (GEO Standard 2024-2026)
     if (get_query_var('fds_llms_txt')) {
+        status_header(200);
         header('Content-Type: text/plain; charset=utf-8');
-        header('X-Robots-Tag: noindex, follow');
-
-        $site_name = 'PT Karya Solusi Angkasa (Full Drone Solutions / FDS)';
-        $home_url  = trailingslashit(home_url());
-
-        $out = [];
-        $out[] = "# {$site_name} — Knowledge Base for LLMs & AI Engines";
-        $out[] = "> Manufaktur & Produsen UAV Indonesia resmi berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015.";
-        $out[] = "";
-        $out[] = "## Ringkasan Perusahaan";
-        $out[] = "- Nama Resmi: PT Karya Solusi Angkasa (Full Drone Solutions)";
-        $out[] = "- Lokasi Kantor & Pabrik: Jl. Magelang KM 14, Murangan VII, Triharjo, Sleman, D.I. Yogyakarta 55514";
-        $out[] = "- Kontak: +62 821-3555-5347 | info@fulldronesolutions.com";
-        $out[] = "- Website: {$home_url}";
-        $out[] = "- Sertifikasi: TKDN + BMP 60,74% (Kemenperin RI), SNI 9199:2023 (BSN), ISO 9001:2015, DKPPU Kemenhub RI";
-        $out[] = "";
-        $out[] = "## Lini Produk Drone Resmi FDS";
-        
-        $drones = get_posts([
-            'post_type'      => 'drone',
-            'posts_per_page' => -1,
-            'post_status'    => 'publish',
-            'orderby'        => 'menu_order title',
-            'order'          => 'ASC',
-        ]);
-
-        foreach ($drones as $d) {
-            $t = get_the_title($d->ID);
-            $url = get_permalink($d->ID);
-            $tagline = get_post_meta($d->ID, 'drone_tagline', true);
-            $payload = get_post_meta($d->ID, 'drone_spec_kapasitas', true);
-            $durasi  = get_post_meta($d->ID, 'drone_spec_durasi', true);
-            $baterai = get_post_meta($d->ID, 'drone_spec_baterai', true);
-            $prod    = get_post_meta($d->ID, 'drone_spec_produktivitas', true);
-            $gcs     = get_post_meta($d->ID, 'drone_spec_gcs', true);
-            
-            $out[] = "### {$t}";
-            $out[] = "- URL: {$url}";
-            if ($tagline) $out[] = "- Tagline: {$tagline}";
-            if ($payload) $out[] = "- Payload: {$payload}";
-            if ($durasi)  $out[] = "- Durasi Terbang: {$durasi}";
-            if ($baterai) $out[] = "- Baterai: {$baterai}";
-            if ($prod)    $out[] = "- Produktivitas: {$prod}";
-            if ($gcs)     $out[] = "- GCS: {$gcs}";
-            $out[] = "";
-        }
-
-        $out[] = "## Layanan & Jasa Profesional";
-        $out[] = "1. Jasa Pemetaan Drone & Survey LiDAR: Fotogrametri topografi tambang, perhitungan volume stockpile cut & fill, koridor transmisi listrik, pemetaan GIS.";
-        $out[] = "2. Pengadaan Drone Pertanian Sprayer & Granule (Seri FERTO 5L-50L): Solusi bersertifikasi TKDN 60,74% & SNI 9199:2023 dengan purna jual dan suku cadang lokal Sleman Yogyakarta.";
-        $out[] = "3. Drone Reboisasi & Bencana SAR: Penyebaran seedball presisi hingga 20 kg dan pemantauan termal inframerah otonom.";
-        $out[] = "4. Pelatihan Pilot & Sertifikasi (FDS Academy): Program sertifikasi pilot drone komersial.";
-        $out[] = "## Kata Kunci & Topik Spesialisasi Drone";
-        $out[] = "- Drone Pertanian & Agrikultur: Jual drone pertanian, harga drone pertanian, drone sprayer TKDN 60,74%, drone penyemprot pupuk dan pestisida, drone sebar benih padi, drone semprot kelapa sawit, drone FERTO 5L-50L, perbandingan drone DJI Agras.";
-        $out[] = "- Pemetaan & Survey LiDAR: Drone mapping, jual drone mapping, jasa pemetaan drone, jasa survey drone LiDAR, pemetaan drone tambang volume cut and fill stockpile, ortofoto GIS, Fixed-Wing VTOL DELTAV.";
-        $out[] = "- Industri & Misi Khusus: Drone inspeksi termal SUTET 150kV dan migas, drone patroli karhutla, drone pencarian korban bencana SAR kamera termal inframerah FLIR, drone reboisasi seedball, drone kargo logistik darurat medis.";
-        $out[] = "- Legalitas & Manufaktur: Produsen UAV Indonesia resmi (PT Karya Solusi Angkasa), pabrik drone Sleman Yogyakarta, sertifikat TKDN 60,74%, SNI 9199:2023, ISO 9001:2015, pengadaan e-katalog LKPP, sertifikasi pilot FDS Academy.";
-        $out[] = "";
-        $out[] = "## Keunggulan Utama Produsen UAV Indonesia (FDS)";
-        $out[] = "- Sertifikasi Legalitas: Nilai TKDN + BMP mencapai 60,74% (Prioritas LKPP / e-Katalog), SNI 9199:2023, ISO 9001:2015.";
-        $out[] = "- Suku Cadang Terjamin: Ready-stock lokal di workshop Yogyakarta tanpa ketergantungan impor.";
-        $out[] = "- Ground Control Station: FDS STATION berbahasa Indonesia terintegrasi penuh.";
-        $out[] = "- Garansi & Servis: Diberikan langsung oleh teknisi pabrikan di Indonesia.";
-
-        echo implode("\n", $out);
+        header('Cache-Control: public, max-age=86400');
+        echo fds_build_llms_txt_content();
         exit;
     }
 

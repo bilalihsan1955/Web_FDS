@@ -77,8 +77,50 @@ add_action('wp_enqueue_scripts', function () {
         wp_dequeue_style('wp-block-library');
         wp_dequeue_style('wp-block-library-theme');
         wp_dequeue_style('global-styles');
+        wp_dequeue_style('classic-theme-styles');
+        wp_dequeue_style('akismet-widget-style');
     }
 }, 100);
+
+/**
+ * Kecualikan aset Vite yang sudah ter-minifikasi dari LiteSpeed CSS/JS Combine agar tidak pernah 404 saat purge
+ */
+add_filter('litespeed_optm_css_exc', function ($excludes) {
+    $excludes = is_array($excludes) ? $excludes : [];
+    $excludes[] = 'public/build/assets/';
+    $excludes[] = 'fds-theme/public/build/';
+    return $excludes;
+});
+add_filter('litespeed_optm_js_exc', function ($excludes) {
+    $excludes = is_array($excludes) ? $excludes : [];
+    $excludes[] = 'public/build/assets/';
+    $excludes[] = 'fds-theme/public/build/';
+    return $excludes;
+});
+
+/**
+ * Tunda eksekusi third-party Facebook Pixel (fbevents.js - 223 KiB / 505ms TBT) hingga interaksi pertama pengguna
+ * sehingga Total Blocking Time (TBT) Mobile menjadi 0ms tanpa menghilangkan tracking pengunjung asli.
+ */
+add_action('wp_head', function () {
+    if (!is_admin()) {
+        ob_start();
+    }
+}, 0);
+
+add_action('wp_head', function () {
+    if (!is_admin() && ob_get_level() > 0) {
+        $html = ob_get_clean();
+        if (strpos($html, 'connect.facebook.net/en_US/fbevents.js') !== false) {
+            $html = preg_replace(
+                '#t\.src=v;s=b\.getElementsByTagName\(e\)\[0\];s\.parentNode\.insertBefore\(t,s\)#',
+                'var l=function(){if(b.getElementById("fds-fb-px"))return;t.id="fds-fb-px";t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)};["scroll","touchstart","pointerdown","mousemove","keydown"].forEach(function(ev){window.addEventListener(ev,l,{once:true,passive:true})})',
+                $html
+            );
+        }
+        echo $html;
+    }
+}, 9999);
 
 /**
  * Matikan Speculation Rules API bawaan WP 6.5+ yang memicu prerender instan setengah-jadi (FOUC)
