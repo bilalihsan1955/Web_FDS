@@ -828,14 +828,32 @@ add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type
 }, 10, 2);
 
 // =========================================================================
-// 8. 301 PERMANENT REDIRECT ENGINE (Fix Old About Page & Legacy Slugs in Google)
+// 8. 301 PERMANENT REDIRECT ENGINE & FEED CLEANUP (Fix Legacy Slugs & /feed/ Crawl Bloat)
 // =========================================================================
+
+// Hilangkan tag <link rel="alternate" ... Comments Feed href=".../feed/"> di <head>
+// agar Googlebot tidak meng-crawl ribuan URL /nama-artikel/feed/ sebagai halaman terpisah.
+add_action('init', function () {
+    remove_action('wp_head', 'feed_links_extra', 3);
+}, 20);
 
 add_action('template_redirect', function () {
     global $wp;
     $request_uri = trim($_SERVER['REQUEST_URI'] ?? '', '/');
     $path_only   = trim(strtok($request_uri, '?'), '/');
     $path_lower  = strtolower($path_only);
+
+    // 0. Redirect Single Post/Page Comment Feeds (/judul-artikel/feed/ -> /judul-artikel/)
+    if (preg_match('#^(.+)/feed$#i', $path_only, $feed_match)) {
+        $parent_path = trim($feed_match[1], '/');
+        if ($parent_path !== '' && strtolower($parent_path) !== 'comments') {
+            wp_safe_redirect(home_url('/' . $parent_path . '/'), 301);
+            exit;
+        }
+    }
+    if (is_feed()) {
+        header('X-Robots-Tag: noindex, follow', true);
+    }
 
     // 1. Legacy About Page 301 Redirects -> /tentang-kami/
     $legacy_about_slugs = [
