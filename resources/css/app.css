@@ -187,12 +187,12 @@ html.lenis, html.lenis body {
 }
 
 /* ========================================================== */
-/* Hero Section Cinematic Page Load Entrance Animations      */
+/* Hero Section Entrance Animations (LCP Optimized: Zero Delay Paint) */
 /* ========================================================== */
 @keyframes fdsHeroFadeUp {
   0% {
-    opacity: 0;
-    transform: translateY(28px);
+    opacity: 0.85;
+    transform: translateY(14px);
   }
   100% {
     opacity: 1;
@@ -201,16 +201,15 @@ html.lenis, html.lenis body {
 }
 
 .fds-hero-entrance {
-  opacity: 0;
-  animation: fdsHeroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  will-change: opacity, transform;
+  opacity: 1;
+  animation: fdsHeroFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.fds-hero-delay-1 { animation-delay: 80ms; }
-.fds-hero-delay-2 { animation-delay: 200ms; }
-.fds-hero-delay-3 { animation-delay: 340ms; }
-.fds-hero-delay-4 { animation-delay: 480ms; }
-.fds-hero-delay-5 { animation-delay: 620ms; }
+.fds-hero-delay-1 { animation-delay: 40ms; }
+.fds-hero-delay-2 { animation-delay: 80ms; }
+.fds-hero-delay-3 { animation-delay: 120ms; }
+.fds-hero-delay-4 { animation-delay: 160ms; }
+.fds-hero-delay-5 { animation-delay: 200ms; }
 
 @media (prefers-reduced-motion: reduce) {
   .fds-hero-entrance {
