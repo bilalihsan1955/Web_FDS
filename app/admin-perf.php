@@ -48,3 +48,4 @@ add_action('admin_init', function (): void {
     // Cegah pengecekan update bahasa yang memblokir request admin
     remove_action('admin_init', 'wp_maybe_auto_update');
 }, 1);
+
