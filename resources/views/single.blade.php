@@ -15,7 +15,7 @@
       @if(has_post_thumbnail())
         <div class="max-w-[1100px] mx-auto px-6 lg:px-12 mb-14 fds-hero-entrance fds-hero-delay-3">
           <div class="rounded-[1.5rem] overflow-hidden aspect-video bg-[#f5f5f7]">
-            {!! get_the_post_thumbnail(null, 'full', [
+            {!! get_the_post_thumbnail(null, 'large', [
               'class' => 'w-full h-full object-cover no-lazy',
               'loading' => 'eager',
               'fetchpriority' => 'high',

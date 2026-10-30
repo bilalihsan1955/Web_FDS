@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
 
     {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -21,7 +22,7 @@
       @endif
     @elseif(is_singular())
       @php
-        $sing_thumb = get_the_post_thumbnail_url(get_the_ID(), 'full');
+        $sing_thumb = get_the_post_thumbnail_url(get_the_ID(), 'large') ?: get_the_post_thumbnail_url(get_the_ID(), 'full');
       @endphp
       @if(!empty($sing_thumb))
       <link rel="preload" as="image" href="{{ esc_url($sing_thumb) }}" fetchpriority="high">

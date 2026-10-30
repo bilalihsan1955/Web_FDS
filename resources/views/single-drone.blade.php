@@ -318,10 +318,13 @@
       {{-- Hero image (STRUKTUR ASLI TIDAK DIUBAH) --}}
       <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px] fds-hero-entrance fds-hero-delay-5">
         @php
-          $heroSrc = $featuredImg ?: get_the_post_thumbnail_url($post_id, 'full');
+          $thumb_id = get_post_thumbnail_id($preview_id) ?: get_post_thumbnail_id($post_id);
+          $heroSrc = $featuredImg ?: (get_the_post_thumbnail_url($post_id, 'large') ?: get_the_post_thumbnail_url($post_id, 'full'));
           $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
+          $heroSrcset = $thumb_id ? wp_get_attachment_image_srcset($thumb_id, 'large') : '';
         @endphp
         <img src="{{ $heroSrc }}"
+             @if($heroSrcset) srcset="{{ $heroSrcset }}" sizes="(max-width: 768px) 100vw, 1200px" @endif
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
              loading="eager"
              fetchpriority="high"
