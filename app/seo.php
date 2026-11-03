@@ -822,13 +822,15 @@ add_filter('rank_math/frontend/title', function ($title) {
 add_filter('rank_math/frontend/description', function ($description) {
     if (!empty($description)) {
         $description = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $description));
+        $description = str_ireplace('full frone solutions', 'Full Drone Solutions', $description);
     }
 
     if (is_singular('drone')) {
         $drone_id = get_the_ID();
         $custom_rm_desc = get_post_meta($drone_id, 'rank_math_description', true);
         if (!empty($custom_rm_desc)) {
-            return trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
+            $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
+            return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
         }
     }
 
@@ -890,14 +892,19 @@ add_action('admin_enqueue_scripts', function ($hook) {
 });
 
 /**
- * Ensure CPT 'drone' is enabled in Rank Math XML Sitemaps
+ * Ensure CPT 'drone' is enabled in Rank Math XML Sitemaps & clean legacy zombie pages from page-sitemap.xml
  */
-add_filter('rank_math/sitemap/post_types', function ($post_types) {
-    if (is_array($post_types) && !isset($post_types['drone'])) {
-        $post_types['drone'] = 'drone';
+add_action('init', function () {
+    if (!get_option('fds_rm_drone_sitemap_enabled_v1')) {
+        $rm_sitemap = get_option('rank-math-options-sitemap');
+        if (is_array($rm_sitemap)) {
+            $rm_sitemap['pt_drone_sitemap'] = 'on';
+            $rm_sitemap['tax_kategori_drone_sitemap'] = 'on';
+            update_option('rank-math-options-sitemap', $rm_sitemap);
+            update_option('fds_rm_drone_sitemap_enabled_v1', 1, false);
+        }
     }
-    return $post_types;
-}, 10, 1);
+}, 30);
 
 add_filter('rank_math/sitemap/enable_cpt', function ($enabled, $post_type) {
     if ($post_type === 'drone') {
@@ -912,6 +919,81 @@ add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type
     }
     return $include;
 }, 10, 2);
+
+/**
+ * Daftar halaman Elementor/WooCommerce lama (2017–2025) yang menyebabkan Kanibalisasi Keyword "drone pertanian"
+ * dan dialihkan (301 Redirect) ke halaman resmi baru.
+ */
+function fds_get_legacy_zombie_redirect_map(): array {
+    return [
+        // Redirect ke halaman produk FERTO 5L & 10L
+        'drone-pertanian-ferto-5'                                                       => '/drone/ferto-5l/',
+        'ferto-draft'                                                                   => '/drone/ferto-5l/',
+        'drone-pertanian-ferto-10-terbaik-2023'                                         => '/drone/ferto-10l/',
+        'alat-semprot-pertanian-modern-cairan-pestisida-dan-pupuk-ag15'                 => '/drone/ferto-20l/',
+        'drone-pertanian-15-liter-sprayer-pestisida-pupuk-a415-agriculture-harga-efisien' => '/drone/ferto-20l/',
+
+        // Redirect ke halaman produk DELTAV (Pemetaan)
+        'drone-pemetaan'                                                                => '/drone/deltav/',
+        'drone-fixed-wing-x8-uav-untuk-pemetaan-udara-harga-terbaik'                    => '/drone/deltav/',
+        'harga-jasa-pemetaan-udara'                                                     => '/drone/deltav/',
+        'jasa-pemetaan-survey-agriculture'                                              => '/drone/deltav/',
+        'jasa-pemetaan-udara-dan-drone-agriculture-pertanian'                           => '/drone/deltav/',
+
+        // Redirect ke Blog & Kontak
+        'blogfds'                                                                       => '/blog/',
+        'a9365-tech-lab-news'                                                           => '/blog/',
+        'contact-1'                                                                     => '/kontak/',
+
+        // Redirect halaman duplikat Beranda & Landing Page Elementor lama ke Beranda Utama (/)
+        // agar seluruh otoritas SEO keyword "drone pertanian" terpusat di https://fulldronesolutions.co.id/
+        'produsen-drone-pertanian-no-1-buatan-indonesia-bertkdn'                        => '/',
+        'drone-pertanian-sprayer-spreader-buatan-indonesia-terbaik'                     => '/',
+        'drone-sprayer-pertanian-fds-ferto-series'                                      => '/',
+        'drone-pertanian-indonesia'                                                     => '/',
+        'drone-sprayer-pestisida-untuk-pertanian-buatan-indonesia-harga-efisien'        => '/',
+        'halaman-utama'                                                                 => '/',
+        'home-2'                                                                        => '/',
+        'home2-draft'                                                                   => '/',
+        'pertanian-draft'                                                               => '/',
+        'jasa-semprot-sawah-fds'                                                        => '/',
+        'bisnis-penyewaan-drone-pertanian-terbaik'                                      => '/',
+        'bisnis-penyewaan-drone-pertanian-terpercaya'                                   => '/',
+        'bisnis-penyewaan-drone'                                                        => '/',
+        'mitra-usaha-pertanian'                                                         => '/',
+        'persewaan-fds'                                                                 => '/',
+        'produk-drone-pemetaan-dan-agriculture'                                         => '/',
+        'jual-drone-pemetaan-dan-agriculture-paling-efisien'                            => '/',
+        'jual-drone-pemetaan-atau-pertanian-agriculture-fitur-dan-harga-terbaik'        => '/',
+        'pelatihan-pilot-drone-bersertifikat-indonesia-terpercaya'                      => '/',
+        'pelatihatraining-fds-2024'                                                     => '/',
+        'training-2024-fds'                                                             => '/',
+        'daftar-harga-training-full-drone-solutions'                                    => '/',
+        'drone-edukasi'                                                                 => '/',
+        'portfolio'                                                                     => '/',
+        'shop'                                                                          => '/',
+        'cart-2'                                                                        => '/',
+        'checkout-2'                                                                    => '/',
+        'my-account'                                                                    => '/',
+        'my-account-2'                                                                  => '/',
+        'sample-page'                                                                   => '/',
+        '13759-2'                                                                       => '/',
+        'a9365-tech-lab-service-details'                                                => '/',
+        'a9365-tech-lab-services'                                                       => '/',
+    ];
+}
+
+// Hapus halaman zombie lama dari page-sitemap.xml Rank Math agar Google tidak bingung memilih halaman utama
+add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
+    if ($type === 'post' && is_object($object) && isset($object->post_type) && $object->post_type === 'page') {
+        $slug = strtolower((string) ($object->post_name ?? ''));
+        $zombie_map = fds_get_legacy_zombie_redirect_map();
+        if (isset($zombie_map[$slug])) {
+            return false;
+        }
+    }
+    return $url;
+}, 10, 3);
 
 // =========================================================================
 // 8. 301 PERMANENT REDIRECT ENGINE & FEED CLEANUP (Fix Legacy Slugs & /feed/ Crawl Bloat)
@@ -939,6 +1021,13 @@ add_action('template_redirect', function () {
     }
     if (is_feed()) {
         header('X-Robots-Tag: noindex, follow', true);
+    }
+
+    // 0b. Redirect 301 Halaman Zombie Elementor/WooCommerce Lama (Anti-Kanibalisasi Keyword "drone pertanian")
+    $zombie_map = fds_get_legacy_zombie_redirect_map();
+    if (isset($zombie_map[$path_lower])) {
+        wp_safe_redirect(home_url($zombie_map[$path_lower]), 301);
+        exit;
     }
 
     // 1. Legacy About Page 301 Redirects -> /tentang-kami/
