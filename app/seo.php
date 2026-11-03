@@ -38,6 +38,7 @@ function fds_has_external_seo_plugin() {
 
 /**
  * Master List of Categorized Default Drone Keywords (Indonesia High-Intent B2B SEO)
+ * Benchmarked against: Halo Robotics, TechnoGIS, Tera Drone, Frogs Indonesia, Beta-UAS, Skytech, DJI Enterprise/Agriculture, ANX UAV
  */
 function fds_get_default_drone_keywords_grouped() {
     return [
@@ -45,72 +46,98 @@ function fds_get_default_drone_keywords_grouped() {
             'drone pertanian',
             'jual drone pertanian',
             'harga drone pertanian',
+            'alat semprot pertanian otomatis',
+            'alat penyiram tanaman modern',
             'drone sprayer indonesia',
-            'drone penyemprot pupuk',
+            'drone sprayer pertanian',
+            'drone penyemprot pupuk cair',
             'drone penyemprot pestisida',
-            'drone sebar benih',
+            'drone tebar pupuk granul dan benih',
+            'drone sebar benih padi',
             'drone pertanian tkdn',
-            'drone semprot sawit',
+            'drone semprot sawit tebu padi',
             'drone perkebunan kelapa sawit',
+            'smart agriculture drone indonesia',
             'drone ferto 50l',
             'drone ferto 30l',
             'drone ferto 20l',
             'drone ferto 10l',
+            'drone ferto 5l',
+            'drone pertanian 50 liter',
+            'drone pertanian 30 liter',
+            'drone pertanian 20 liter',
+            'drone pertanian 10 liter',
             'drone pemupukan presisi',
             'drone agrikultur indonesia',
-            'jasa sewa drone sprayer',
-            'perbandingan drone dji agras',
-            'drone penyemprot tanaman pangan',
+            'drone multispektral ndvi kesehatan tanaman',
+            'jasa sewa drone sprayer pertanian',
+            'perbandingan drone dji agras t50 t40 t25 t20p',
+            'alternatif drone dji agras ber-tkdn',
+            'drone penyemprot tanaman pangan dan hortikultura',
         ],
         'pemetaan' => [
             'drone mapping',
             'jual drone mapping',
             'jasa pemetaan drone',
+            'jasa pemetaan drone rtk ppk',
             'jasa survey drone',
             'jasa drone foto udara',
             'jasa drone lidar',
+            'jasa survey lidar indonesia',
             'jasa pemetaan drone tambang',
             'pemetaan GIS drone',
-            'drone topografi',
-            'fotogrametri udara ortomosaik',
+            'drone topografi tambang',
+            'fotogrametri udara ortomosaik dsm dtm',
             'drone fixed wing vtol indonesia',
-            'uav vtol pemetaan',
+            'long endurance hybrid vtol uav',
+            'uav vtol pemetaan jarak jauh',
             'drone deltav',
             'perhitungan volume stockpile tambang',
-            'drone cut and fill',
-            'survey koridor transmisi listrik dan sutet',
-            'pemetaan batas kawasan perkebunan dan kehutanan',
+            'drone cut and fill tambang batubara nikel',
+            'survey koridor transmisi listrik sutet dan pipa migas',
+            'pemetaan batas kawasan perkebunan dan kehutanan hgu',
+            'sewa drone pemetaan dan survey topografi',
             'drone inspeksi tambang nikel batubara',
         ],
         'industri_sar' => [
             'drone pencarian korban bencana',
+            'drone logistik untuk kebencanaan',
+            'drone mitigasi bencana',
             'drone misi SAR',
             'drone thermal flir inframerah',
             'drone inspeksi industri',
-            'drone inspeksi sutet 150kv',
-            'drone patroli karhutla',
+            'drone inspeksi sutet 150kv dan pltu',
+            'drone inspeksi migas dan energi',
+            'drone patroli karhutla dan keamanan',
+            'drone surveillance pemantauan jarak jauh',
             'drone reboisasi seedball otonom',
+            'drone reboisasi hutan dan lahan kritis',
             'drone kargo logistik darurat medis',
+            'drone pengangkut barang daerah 3t',
+            'drone kargo delfro kapasitas besar',
             'drone payload besar indonesia',
             'drone tanggap darurat bencana',
             'drone pemadam kebakaran',
         ],
         'produsen_legalitas' => [
             'produsen UAV Indonesia',
+            'manufaktur drone indonesia',
+            'drone buatan indonesia',
             'pabrik drone di Indonesia',
             'manufaktur drone lokal Indonesia',
+            'solusi drone enterprise indonesia',
             'PT Karya Solusi Angkasa',
             'Full Drone Solutions',
             'drone TKDN 60,74%',
             'drone sertifikat SNI 9199:2023',
             'sistem manajemen mutu ISO 9001:2015',
-            'pengadaan drone e-katalog LKPP',
+            'pengadaan drone e-katalog LKPP pemerintah BUMN',
             'pelatihan pilot drone resmi',
-            'sertifikasi pilot drone FDS Academy',
+            'sertifikasi pilot drone DKPPU CASR 107 FDS Academy',
             'service dan reparasi drone indonesia',
-            'sparepart drone sprayer ready stock',
-            'ground control station FDS STATION',
-            'bengkel drone sleman yogyakarta',
+            'pusat servis dan suku cadang drone sprayer ready stock',
+            'ground control station FDS STATION bahasa indonesia',
+            'manufaktur uav sleman yogyakarta',
         ],
     ];
 }
@@ -318,16 +345,17 @@ function fds_get_default_share_image() {
  */
 function fds_render_seo_meta_tags() {
     $has_plugin = fds_has_external_seo_plugin();
+    $seo = fds_get_seo_data();
 
     // JIKA PLUGIN SEO EKSTERNAL (RANK MATH / YOAST / AIOSEO) AKTIF:
-    // Sepenuhnya serahkan output Title, Description, Canonical, Robots, OpenGraph,
-    // dan Twitter Cards ke plugin SEO tersebut agar hasil editan user di Rank Math
-    // 100% dipatuhi dan tidak terjadi duplikasi tag di HTML source.
+    // Serahkan Title, Description, Canonical, Robots, OpenGraph, dan Twitter Cards ke plugin SEO
+    // namun tetap cetak <meta name="keywords"> karena plugin SEO modern tidak mencetaknya secara default.
     if ($has_plugin) {
+        if (!empty($seo['keywords'])) {
+            echo '    <meta name="keywords" content="' . esc_attr($seo['keywords']) . "\">\n";
+        }
         return;
     }
-
-    $seo = fds_get_seo_data();
 
     echo "\n    <!-- ============================================================ -->\n";
     echo "    <!-- FDS STANDALONE SEO ENGINE & OPEN GRAPH META TAGS           -->\n";
@@ -570,7 +598,7 @@ function fds_render_schema_jsonld() {
         ],
     ];
 
-    // 5. FAQPage Schema (Targets People Also Ask & Featured Snippets on Google)
+    // 5. FAQPage Schema (Targets People Also Ask & Featured Snippets on Google Search)
     $faq_schema = [
         '@context'   => 'https://schema.org',
         '@type'      => 'FAQPage',
@@ -578,34 +606,34 @@ function fds_render_schema_jsonld() {
         'mainEntity' => [
             [
                 '@type'          => 'Question',
-                'name'           => 'Apakah PT Karya Solusi Angkasa (FDS) merupakan produsen UAV resmi di Indonesia?',
+                'name'           => 'Apakah PT Karya Solusi Angkasa (FDS) merupakan produsen dan manufaktur UAV resmi di Indonesia?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Ya. PT Karya Solusi Angkasa (Full Drone Solutions) adalah produsen UAV terdaftar di Indonesia yang memproduksi drone pertanian, drone mapping VTOL, drone kargo, dan reboisasi dengan sertifikasi nilai TKDN + BMP mencapai 60,74%, Standar Nasional Indonesia SNI 9199:2023, dan ISO 9001:2015 berlokasi pabrik di Sleman, Yogyakarta.',
+                    'text'  => 'Ya. PT Karya Solusi Angkasa (Full Drone Solutions / FDS) adalah manufaktur dan produsen UAV resmi di Indonesia sejak 2012 yang memproduksi drone pertanian presisi (alat semprot pertanian otomatis FERTO), drone mapping Fixed-Wing VTOL DELTAV, drone kargo logistik DELFRO, dan drone reboisasi REBO dengan sertifikasi TKDN + BMP hingga 60,74%, SNI 9199:2023, dan ISO 9001:2015 di Sleman, Yogyakarta.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Apa saja keunggulan drone pertanian FDS FERTO untuk agrikultur Indonesia?',
+                'name'           => 'Apa keunggulan drone pertanian FDS FERTO dibanding drone sprayer impor untuk agrikultur dan perkebunan sawit?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Drone pertanian FDS seri FERTO (tersedia kapasitas 5L, 10L, 20L, 30L, hingga 50L) dirancang dengan sertifikasi TKDN 60,74% resmi untuk pengadaan instansi pemerintah/BUMN, ketersediaan suku cadang ready-stock lokal tanpa inden luar negeri, garansi pabrikan langsung di Indonesia, dan sistem kendali GCS berbahasa Indonesia (FDS STATION).',
+                    'text'  => 'Drone pertanian FDS seri FERTO (kapasitas 5L, 10L, 20L, 30L, hingga 50L) memiliki sertifikasi TKDN 60,74% & SNI 9199:2023 resmi untuk pengadaan e-Katalog LKPP pemerintah/BUMN, fungsi ganda penyemprotan cairan (pupuk/pestisida) dan penebar pupuk granul/benih, suku cadang ready-stock di pabrik Indonesia tanpa inden impor, serta sistem kendali FDS STATION berbahasa Indonesia.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Layanan apa saja yang disediakan dalam jasa pemetaan drone dan survey LiDAR FDS?',
+                'name'           => 'Layanan apa saja yang tersedia dalam jasa pemetaan drone, survey LiDAR, dan topografi tambang FDS?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'FDS menyediakan layanan drone mapping lengkap: survey drone LiDAR akurasi tinggi, jasa pemetaan drone tambang untuk perhitungan volume cut and fill dan stockpile, pemetaan GIS koridor infrastruktur jalan dan kelistrikan, serta foto udara ortomosaik sub-sentimeter menggunakan Fixed-Wing Hybrid VTOL DELTAV dengan jangkauan jelajah hingga 60 km.',
+                    'text'  => 'FDS menyediakan jasa pemetaan drone RTK/PPK dan survey drone LiDAR akurasi sub-sentimeter, jasa pemetaan drone tambang batubara dan nikel untuk perhitungan volume stockpile serta cut and fill, ortofoto GIS, Digital Elevation Model (DSM/DTM), dan survey koridor transmisi SUTET maupun pipa migas menggunakan UAV Fixed-Wing Hybrid VTOL DELTAV berdaya jelajah 60 km.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Apakah drone FDS dapat digunakan untuk misi pencarian korban bencana dan SAR?',
+                'name'           => 'Apakah FDS menyediakan drone kargo logistik kebencanaan, kamera thermal SAR, dan pelatihan sertifikasi pilot drone?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Tentu. FDS memiliki drone khusus tanggap darurat yang dilengkapi sensor kamera termal inframerah (thermal imaging) dan kamera zoom optik tinggi untuk misi pencarian korban bencana alam (SAR), pemantauan banjir, serta patroli otonom pendeteksian titik api karhutla secara real-time.',
+                    'text'  => 'Ya. FDS memproduksi drone kargo DELFRO untuk distribusi logistik darurat bencana dan daerah 3T, drone MULTIPURPOSE berbekal sensor kamera termal inframerah (FLIR) untuk pencarian korban bencana (SAR), inspeksi SUTET 150kV, dan patroli karhutla, serta menyelenggarakan pelatihan dan sertifikasi pilot drone resmi melalui FDS Academy sesuai regulasi DKPPU CASR 107.',
                 ],
             ],
         ],
@@ -616,6 +644,41 @@ function fds_render_schema_jsonld() {
         $schemas[] = $srv;
     }
     $schemas[] = $faq_schema;
+
+    // 5b. ItemList Product Catalog Schema on Homepage & /bandingkan/ (Surfaces Product Lineup in Google Search)
+    if (is_front_page() || is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
+        $catalog_drones = get_posts([
+            'post_type'      => 'drone',
+            'posts_per_page' => -1,
+            'post_status'    => 'publish',
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+        ]);
+        if (!empty($catalog_drones)) {
+            $item_elements = [];
+            $item_pos = 1;
+            foreach ($catalog_drones as $cd) {
+                $cd_title   = get_the_title($cd->ID);
+                $cd_url     = get_permalink($cd->ID);
+                $cd_tagline = get_post_meta($cd->ID, 'drone_tagline', true);
+                $cd_payload = get_post_meta($cd->ID, 'drone_spec_kapasitas', true);
+                $item_elements[] = [
+                    '@type'       => 'ListItem',
+                    'position'    => $item_pos++,
+                    'name'        => $cd_title . ($cd_payload ? " ({$cd_payload})" : ''),
+                    'description' => wp_strip_all_tags($cd_tagline ?: "Drone UAV {$cd_title} buatan Indonesia berstandar TKDN 60,74% & SNI 9199:2023."),
+                    'url'         => $cd_url,
+                ];
+            }
+            $schemas[] = [
+                '@context'        => 'https://schema.org',
+                '@type'           => 'ItemList',
+                '@id'             => $home_url . '#drone-catalog-list',
+                'name'            => 'Katalog Produk Drone Pertanian, Pemetaan LiDAR, Kargo & Reboisasi FDS (TKDN 60,74%)',
+                'itemListElement' => $item_elements,
+            ];
+        }
+    }
 
     // 6. Product Schema (Only on Single Drone CPT Page)
     if (is_singular('drone') || get_query_var('drone')) {
@@ -704,6 +767,11 @@ function fds_render_schema_jsonld() {
 // 7. RANK MATH SEO PLUGIN HOOKS & COMPATIBILITY LAYER
 // =========================================================================
 
+// Pastikan OpenGraph Locale di Rank Math selalu id_ID untuk target pasar Google Indonesia
+add_filter('rank_math/opengraph/facebook/og_locale', function () {
+    return 'id_ID';
+}, 20);
+
 /**
  * Filter Rank Math Title for Drone CPT and Custom Pages
  * Prioritizes user custom title from Rank Math snippet editor if set.
@@ -733,28 +801,46 @@ add_filter('rank_math/frontend/title', function ($title) {
             return "{$d_title} — Drone Reboisasi Hutan & SAR Kebencanaan TKDN | Full Drone Solutions";
         }
     }
+
+    if (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
+        $page_id = get_queried_object_id();
+        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
+        if (empty($custom_rm_title)) {
+            $seo = fds_get_seo_data();
+            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
+        }
+    }
+
     return $title;
 }, 20);
 
 /**
  * Filter Rank Math Meta Description
- * Prioritizes user custom description from Rank Math snippet editor if set.
+ * Prioritizes user custom description from Rank Math snippet editor if set,
+ * cleans accidental "Deskripsi Singkat:" prefix, and provides rich fallback when empty.
  */
 add_filter('rank_math/frontend/description', function ($description) {
+    if (!empty($description)) {
+        $description = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $description));
+    }
+
     if (is_singular('drone')) {
         $drone_id = get_the_ID();
-        
-        // JIKA USER SUDAH MENGISI / MENGEDIT DESKRIPSI DI METABOX RANK MATH, GUNAKAN DESKRIPSI USER!
         $custom_rm_desc = get_post_meta($drone_id, 'rank_math_description', true);
         if (!empty($custom_rm_desc)) {
-            return $description;
-        }
-
-        $seo_desc = get_post_meta($drone_id, 'rank_math_description', true);
-        if ($seo_desc) {
-            return $seo_desc;
+            return trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
         }
     }
+
+    // Jika halaman (/bandingkan/, /blog/, dll.) belum memiliki deskripsi di Rank Math,
+    // otomatis isi dengan deskripsi SEO kaya kata kunci dari fds_get_seo_data() agar tampil di Google Search!
+    if (empty($description)) {
+        $seo = fds_get_seo_data();
+        if (!empty($seo['description'])) {
+            return html_entity_decode($seo['description'], ENT_QUOTES, 'UTF-8');
+        }
+    }
+
     return $description;
 }, 20);
 

@@ -664,7 +664,7 @@
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Produk Drone</h4>
               <ul class="space-y-1 text-[12px] text-[#515154]">
                 @foreach($nav_drones as $d)
-                <li><a href="{{ home_url('/' . $d->post_name) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
+                <li><a href="{{ get_permalink($d->ID) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
                 @endforeach
               </ul>
             </div>
