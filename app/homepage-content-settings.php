@@ -114,9 +114,9 @@ function fds_get_homepage_content() {
 
     $data = [
         // HERO
-        'hero_badge'        => get_option('fds_hero_badge', 'Teknologi UAV Indonesia'),
-        'hero_title'        => get_option('fds_hero_title', "Solusi Drone Industrial\nuntuk Setiap Sektor."),
-        'hero_desc'         => get_option('fds_hero_desc', 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.'),
+        'hero_badge'        => get_option('fds_hero_badge', 'Produsen Drone Pertanian & UAV Indonesia'),
+        'hero_title'        => get_option('fds_hero_title', "Solusi Drone Pertanian &\nIndustrial Indonesia."),
+        'hero_desc'         => get_option('fds_hero_desc', 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.'),
         'hero_cta1_text'    => get_option('fds_hero_cta1_text', 'Jelajahi Solusi Kami'),
         'hero_cta1_url'     => get_option('fds_hero_cta1_url', '#solusi'),
         'hero_cta2_text'    => get_option('fds_hero_cta2_text', 'Konsultasi Enterprise'),

@@ -398,10 +398,15 @@ function fds_render_schema_jsonld() {
     $home_url = trailingslashit(home_url('/'));
     $logo_url = fds_get_default_share_image();
 
-    // 1. Organization & LocalBusiness Schema
+    // Ambil data kontak & alamat resmi dinamis dari Theme Settings
+    $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+    $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
+    $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
+
+    // 1. Organization & LocalBusiness Schema (B2B UAV Manufacturer - Bebas Price Slop)
     $org_schema = [
         '@context'        => 'https://schema.org',
-        '@type'           => ['Organization', 'LocalBusiness'],
+        '@type'           => ['Organization', 'Corporation', 'LocalBusiness'],
         '@id'             => $home_url . '#organization',
         'name'            => 'PT Karya Solusi Angkasa',
         'alternateName'   => ['Full Drone Solutions', 'FDS UAV Indonesia', 'FDS'],
@@ -415,21 +420,20 @@ function fds_render_schema_jsonld() {
         ],
         'image'           => $logo_url,
         'description'     => 'Produsen UAV Indonesia terkemuka (PT Karya Solusi Angkasa) penyedia jasa pemetaan drone tambang, survey drone LiDAR, drone pertanian sprayer TKDN 60,74%, inspeksi termal, dan drone pencarian korban bencana.',
-        'telephone'       => '+62-821-3555-5347',
-        'email'           => 'info@fulldronesolutions.com',
-        'priceRange'      => '$$$$',
+        'telephone'       => $phone,
+        'email'           => $email,
         'address'         => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => 'Jl. Magelang KM 14, Murangan VII, Triharjo',
+            'streetAddress'   => 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok',
             'addressLocality' => 'Sleman',
             'addressRegion'   => 'Daerah Istimewa Yogyakarta',
-            'postalCode'      => '55514',
+            'postalCode'      => '55281',
             'addressCountry'  => 'ID',
         ],
         'geo'             => [
             '@type'     => 'GeoCoordinates',
-            'latitude'  => -7.6975,
-            'longitude' => 110.3548,
+            'latitude'  => -7.7554,
+            'longitude' => 110.3951,
         ],
         'areaServed'      => [
             '@type' => 'Country',
@@ -495,7 +499,8 @@ function fds_render_schema_jsonld() {
         'contactPoint'    => [
             [
                 '@type'             => 'ContactPoint',
-                'telephone'         => '+62-821-3555-5347',
+                'telephone'         => $phone,
+                'email'             => $email,
                 'contactType'       => 'customer service',
                 'areaServed'        => 'ID',
                 'availableLanguage' => ['Indonesian', 'English'],
@@ -773,17 +778,35 @@ add_filter('rank_math/opengraph/facebook/og_locale', function () {
 }, 20);
 
 /**
- * Filter Rank Math Title for Drone CPT and Custom Pages
- * Prioritizes user custom title from Rank Math snippet editor if set.
+ * Filter Rank Math Title for Drone CPT, Homepage, and Custom Pages
+ * Prioritizes user custom title from Rank Math snippet editor if set,
+ * and strips redundant "Beranda - " / "Home - " prefixes to maximize keyword prominence.
  */
 add_filter('rank_math/frontend/title', function ($title) {
+    // 0. Bersihkan prefix "Beranda - ", "Beranda | ", "Home - " dari seluruh title
+    // agar kata kunci utama berada di posisi paling depan (karakter 0) demi CTR & algoritma ranking Google.
+    $title = preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', (string) $title);
+
+    // 0b. Optimalisasi Khusus Judul Halaman Depan (Homepage)
+    if (is_front_page() || is_home()) {
+        $front_id = get_option('page_on_front');
+        $custom_rm_title = $front_id ? get_post_meta($front_id, 'rank_math_title', true) : '';
+        if (!empty($custom_rm_title)) {
+            $clean_rm = preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', $custom_rm_title);
+            if (!empty(trim($clean_rm))) {
+                return $clean_rm;
+            }
+        }
+        return 'Produsen Drone Pertanian No.1 Buatan Indonesia & UAV TKDN | Full Drone Solutions';
+    }
+
     if (is_singular('drone')) {
         $drone_id = get_the_ID();
         
         // JIKA USER SUDAH MENGISI / MENGEDIT JUDUL DI METABOX RANK MATH, GUNAKAN JUDUL USER!
         $custom_rm_title = get_post_meta($drone_id, 'rank_math_title', true);
         if (!empty($custom_rm_title)) {
-            return $title;
+            return preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', $title);
         }
 
         // Fallback cerdas jika user belum mengisi judul custom di Rank Math:
@@ -812,7 +835,7 @@ add_filter('rank_math/frontend/title', function ($title) {
     }
 
     return $title;
-}, 20);
+}, 99);
 
 /**
  * Filter Rank Math Meta Description
@@ -823,6 +846,15 @@ add_filter('rank_math/frontend/description', function ($description) {
     if (!empty($description)) {
         $description = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $description));
         $description = str_ireplace('full frone solutions', 'Full Drone Solutions', $description);
+    }
+
+    if (is_front_page() || is_home()) {
+        $front_id = get_option('page_on_front');
+        $custom_rm_desc = $front_id ? get_post_meta($front_id, 'rank_math_description', true) : '';
+        if (!empty($custom_rm_desc)) {
+            $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
+            return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
+        }
     }
 
     if (is_singular('drone')) {
@@ -844,7 +876,7 @@ add_filter('rank_math/frontend/description', function ($description) {
     }
 
     return $description;
-}, 20);
+}, 99);
 
 /**
  * Bridge Custom Template Content into Rank Math Analyzer (Score 100/100)
@@ -1216,12 +1248,17 @@ function fds_build_llms_txt_content(): string {
         $out[]   = "- [{$t}]({$url}): {$desc}";
     }
 
+    $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+    $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
+    $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
+    $address  = !empty($contact['address']) ? $contact['address'] : 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Sleman, D.I. Yogyakarta 55281';
+
     $out[] = "";
     $out[] = "## Layanan dan Informasi Korporat";
     $out[] = "";
     $out[] = "- [Jasa Pemetaan Drone dan Survey LiDAR]({$home_url}#solusi): Akuisisi data ortofoto GIS, topografi tambang, perhitungan volume cut and fill stockpile, dan inspeksi koridor.";
     $out[] = "- [Pelatihan dan Sertifikasi Pilot FDS Academy]({$home_url}#layanan): Program pelatihan operasional dan teknis pilot UAV komersial bersertifikat.";
-    $out[] = "- [Pusat Perakitan dan Suku Cadang]({$home_url}kontak/): Jl. Magelang KM 14, Murangan VII, Triharjo, Sleman, D.I. Yogyakarta 55514 (+62 821-3555-5347 | info@fulldronesolutions.com).";
+    $out[] = "- [Kantor Resmi dan Pusat Layanan]({$home_url}kontak/): {$address} ({$phone} | {$email}).";
     $out[] = "";
 
     $content = implode("\n", $out);

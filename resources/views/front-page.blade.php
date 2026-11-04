@@ -47,16 +47,16 @@
     
     @if(!empty($hp['hero_badge']))
     <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all fds-hero-entrance fds-hero-delay-1">
-      <span>{!! esc_html($hp['hero_badge'] ?? 'Teknologi UAV Indonesia') !!}</span>
+      <span>{!! esc_html($hp['hero_badge'] ?? 'Produsen Drone Pertanian & UAV Indonesia') !!}</span>
     </div>
     @endif
 
     <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] fds-hero-entrance fds-hero-delay-2">
-      {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Industrial\nuntuk Setiap Sektor.")) !!}
+      {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")) !!}
     </h1>
 
     <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] fds-hero-entrance fds-hero-delay-3">
-      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Teknologi udara berstandar industri, diproduksi lokal oleh PT Karya Solusi Angkasa (FDS) di Yogyakarta.')) !!}
+      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.')) !!}
     </p>
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap fds-hero-entrance fds-hero-delay-4">
