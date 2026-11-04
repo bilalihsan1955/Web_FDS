@@ -873,7 +873,39 @@ add_filter('rank_math/frontend/title', function ($title) {
         }
     }
 
+    if (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
+        $page_id = get_queried_object_id();
+        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
+        if (empty($custom_rm_title)) {
+            $seo = fds_get_seo_data();
+            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
+        }
+    }
+
+    if (is_page('kontak') || is_page('contact') || (isset($_SERVER['REQUEST_URI']) && preg_match('#/(kontak|contact)/?#i', $_SERVER['REQUEST_URI']))) {
+        $page_id = get_queried_object_id();
+        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
+        if (empty($custom_rm_title)) {
+            $seo = fds_get_seo_data();
+            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
+        }
+    }
+
     return $title;
+}, 99);
+
+/**
+ * Pastikan halaman utama dan produk selalu terindeks ('index, follow')
+ * Mencegah kesalahan konfigurasi Rank Math yang tidak sengaja menyetel 'noindex'.
+ */
+add_filter('rank_math/frontend/robots', function ($robots) {
+    if (is_front_page() || is_home() || is_page(['tentang-kami', 'bandingkan', 'kontak', 'blog']) || is_singular('drone')) {
+        $robots['index'] = 'index';
+        unset($robots['noindex']);
+        $robots['follow'] = 'follow';
+        unset($robots['nofollow']);
+    }
+    return $robots;
 }, 99);
 
 /**

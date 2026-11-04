@@ -254,15 +254,15 @@
                 </svg>
               </div>
 
-              <a href="{{ home_url('/tentang-kami') }}" 
+              <a href="{{ home_url('/tentang-kami/') }}" 
                  class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_about ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Tentang Kami
               </a>
-              <a href="{{ home_url('/blog') }}" 
+              <a href="{{ home_url('/blog/') }}" 
                  class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_blog ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Blog
               </a>
-              <a href="{{ home_url('/kontak') }}" 
+              <a href="{{ home_url('/kontak/') }}" 
                  class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_kontak ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Kontak
               </a>
@@ -468,7 +468,7 @@
                   </div>
 
                   <div class="pt-5 border-t border-black/[0.06]">
-                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan/')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
                       <span class="leading-none">{!! esc_html($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone') !!}</span>
                       <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 6h12v12"/>
@@ -609,7 +609,7 @@
                     @endforeach
                   @endif
                 @endforeach
-                <a href="{{ home_url('/bandingkan') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0f808a] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0f808a]/10 px-2.5 rounded-lg' : '' }}">
+                <a href="{{ home_url('/bandingkan/') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0f808a] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0f808a]/10 px-2.5 rounded-lg' : '' }}">
                   <span>Bandingkan Semua Model</span>
                   <svg class="w-4 h-4 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
@@ -628,9 +628,9 @@
                 @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
-            <a href="{{ home_url('/blog') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
-            <a href="{{ home_url('/kontak') }}" class="mobile-nav-link py-2 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
+            <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
+            <a href="{{ home_url('/blog/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
+            <a href="{{ home_url('/kontak/') }}" class="mobile-nav-link py-2 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
           </nav>
         </div>
       </header>
@@ -681,8 +681,8 @@
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Perusahaan</h4>
               <ul class="space-y-1 text-[12px] text-[#515154]">
-                <li><a href="{{ home_url('/tentang-kami') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
-                <li><a href="{{ home_url('/blog') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
+                <li><a href="{{ home_url('/tentang-kami/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
+                <li><a href="{{ home_url('/blog/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
                 <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
                 <li><a href="{{ home_url('/#solusi') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi Multi-Industri &amp; AI</a></li>
               </ul>
@@ -691,7 +691,7 @@
               <div>
                 <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Dukungan</h4>
                 <ul class="space-y-1 text-[12px] text-[#515154]">
-                  <li><a href="{{ home_url('/kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
+                  <li><a href="{{ home_url('/kontak/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
                   <li><a href="{{ home_url('/kontak#lokasi-workshop') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
                   <li><a href="{{ home_url('/kontak#hubungi-form') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
                 </ul>
