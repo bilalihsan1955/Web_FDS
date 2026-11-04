@@ -5,7 +5,7 @@
 @php
   $paged = max(1, get_query_var('paged'), get_query_var('page'));
   $current_cat_id = is_category() ? get_queried_object_id() : 0;
-  $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog');
+  $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 @endphp
 
 {{-- ========================================================== --}}

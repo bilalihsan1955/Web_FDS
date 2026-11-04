@@ -770,7 +770,6 @@ function fds_render_schema_jsonld() {
                     '@type'           => 'Offer',
                     'url'             => $permalink,
                     'priceCurrency'   => 'IDR',
-                    'price'           => '0',
                     'priceValidUntil' => '2028-12-31',
                     'availability'    => 'https://schema.org/InStock',
                     'seller'          => [
@@ -781,6 +780,36 @@ function fds_render_schema_jsonld() {
             ];
 
             $schemas[] = $product_schema;
+        }
+    }
+
+    // 6b. Article / BlogPosting Schema for Single Posts
+    if (is_singular('post')) {
+        $post_obj = get_post();
+        if ($post_obj) {
+            $p_feat = get_the_post_thumbnail_url($post_obj->ID, 'full') ?: $logo_url;
+            $schemas[] = [
+                '@context'         => 'https://schema.org',
+                '@type'            => 'BlogPosting',
+                '@id'              => get_permalink($post_obj->ID) . '#article',
+                'headline'         => get_the_title($post_obj->ID),
+                'description'      => wp_strip_all_tags(get_the_excerpt($post_obj->ID) ?: wp_trim_words($post_obj->post_content, 30)),
+                'image'            => [$p_feat],
+                'datePublished'    => get_the_date('c', $post_obj->ID),
+                'dateModified'     => get_the_modified_date('c', $post_obj->ID),
+                'author'           => [
+                    '@type' => 'Organization',
+                    'name'  => 'PT Karya Solusi Angkasa (Full Drone Solutions)',
+                    'url'   => $home_url,
+                ],
+                'publisher'        => [
+                    '@id' => $home_url . '#organization',
+                ],
+                'mainEntityOfPage' => [
+                    '@type' => 'WebPage',
+                    '@id'   => get_permalink($post_obj->ID),
+                ],
+            ];
         }
     }
 
@@ -891,19 +920,33 @@ add_filter('rank_math/frontend/title', function ($title) {
         }
     }
 
+    if (is_singular('post')) {
+        $post_id = get_the_ID();
+        $custom_rm_title = get_post_meta($post_id, 'rank_math_title', true);
+        if (!empty($custom_rm_title)) {
+            return preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', $title);
+        }
+        $p_title = get_the_title($post_id);
+        return "{$p_title} — Inovasi Drone Indonesia | Full Drone Solutions";
+    }
+
     return $title;
 }, 99);
 
 /**
- * Pastikan halaman utama dan produk selalu terindeks ('index, follow')
- * Mencegah kesalahan konfigurasi Rank Math yang tidak sengaja menyetel 'noindex'.
+ * Pastikan seluruh konten publik (Post Artikel, Halaman Page, Produk Drone, Arsip, Home)
+ * SELALU terindeks ('index, follow') dengan izin cuplikan penuh (Rich Snippets).
+ * Mencegah Rank Math atau setting WP Admin secara tidak sengaja menyetel 'noindex'.
  */
 add_filter('rank_math/frontend/robots', function ($robots) {
-    if (is_front_page() || is_home() || is_page(['tentang-kami', 'bandingkan', 'kontak', 'blog']) || is_singular('drone')) {
+    if (!is_admin() && !is_search() && !is_404() && !is_feed()) {
         $robots['index'] = 'index';
         unset($robots['noindex']);
         $robots['follow'] = 'follow';
         unset($robots['nofollow']);
+        $robots['max-snippet'] = 'max-snippet:-1';
+        $robots['max-image-preview'] = 'max-image-preview:large';
+        $robots['max-video-preview'] = 'max-video-preview:-1';
     }
     return $robots;
 }, 99);
@@ -934,6 +977,22 @@ add_filter('rank_math/frontend/description', function ($description) {
         if (!empty($custom_rm_desc)) {
             $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
             return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
+        }
+    }
+
+    if (is_singular('post')) {
+        $post_id = get_the_ID();
+        $custom_rm_desc = get_post_meta($post_id, 'rank_math_description', true);
+        if (!empty($custom_rm_desc)) {
+            $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
+            return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
+        }
+        $post_obj = get_post($post_id);
+        if ($post_obj) {
+            $excerpt = get_the_excerpt($post_obj) ?: wp_trim_words($post_obj->post_content, 28);
+            if (!empty($excerpt)) {
+                return esc_attr(wp_strip_all_tags($excerpt));
+            }
         }
     }
 

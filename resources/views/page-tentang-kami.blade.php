@@ -852,7 +852,7 @@
             $btn2_label = $about['cta_btn2_text'] ?? 'Baca Studi Kasus';
             $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', html_entity_decode($btn2_label, ENT_QUOTES, 'UTF-8'));
           @endphp
-          <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog') }}"
+          <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog/') }}"
              class="inline-flex items-center text-white/70 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
             <span class="leading-none">{{ $btn2_label }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

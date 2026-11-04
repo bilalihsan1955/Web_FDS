@@ -22,7 +22,7 @@
       ];
     }
   }
-  $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog');
+  $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
 @endphp
 
 {{-- ========================================================== --}}

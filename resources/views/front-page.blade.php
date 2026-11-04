@@ -1229,7 +1229,7 @@ function filterDrones(btn) {
           {!! esc_html($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') !!}
         </h2>
       </div>
-      <a href="{{ home_url('/blog') }}"
+      <a href="{{ home_url('/blog/') }}"
          class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline flex-shrink-0 group leading-none">
         <span>{!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}</span>
         <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

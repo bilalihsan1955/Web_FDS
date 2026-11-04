@@ -638,7 +638,7 @@
              class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
             Hubungi Tim Sales
           </a>
-          <a href="{{ home_url('/blog') }}"
+          <a href="{{ home_url('/blog/') }}"
              class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
             <span class="leading-none">Baca studi kasus</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
