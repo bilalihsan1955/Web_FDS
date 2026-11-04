@@ -42,6 +42,42 @@ function fds_has_external_seo_plugin() {
  */
 function fds_get_default_drone_keywords_grouped() {
     return [
+        'head_drone' => [
+            'drone',
+            'drone indonesia',
+            'uav indonesia',
+            'drone uav',
+            'pesawat tanpa awak',
+            'pesawat nirawak',
+            'produsen drone',
+            'produsen drone indonesia',
+            'pabrik drone',
+            'pabrik drone indonesia',
+            'manufaktur drone indonesia',
+            'jual drone',
+            'jual drone indonesia',
+            'harga drone',
+            'beli drone',
+            'toko drone indonesia',
+            'distributor drone indonesia',
+            'perusahaan drone',
+            'perusahaan drone indonesia',
+            'pt karya solusi angkasa',
+            'full drone solutions',
+            'fds drone',
+            'drone tkdn',
+            'drone ber-tkdn',
+            'drone sni',
+            'drone industrial',
+            'drone enterprise indonesia',
+            'drone komersial',
+            'drone b2b',
+            'drone profesional',
+            'teknologi drone indonesia',
+            'rekayasa drone indonesia',
+            'pusat perakitan drone yogyakarta',
+            'drone sleman yogyakarta',
+        ],
         'pertanian' => [
             'drone pertanian',
             'jual drone pertanian',
@@ -205,8 +241,8 @@ function fds_get_seo_data() {
 
     // 1. FRONT PAGE / HOMEPAGE
     if (is_front_page() || is_home()) {
-        $title       = 'Full Drone Solutions — Produsen UAV Indonesia & Jasa Pemetaan Drone, LiDAR, Pertanian Presisi';
-        $description = 'PT Karya Solusi Angkasa (FDS), produsen UAV Indonesia berstandar TKDN 60,74% dan SNI 9199:2023. Melayani jasa pemetaan drone tambang, survey drone LiDAR, foto udara GIS, drone pertanian presisi FERTO, serta drone pencarian korban bencana SAR.';
+        $title       = 'Drone Indonesia — Produsen Drone Pertanian & UAV TKDN | Full Drone Solutions';
+        $description = 'PT Karya Solusi Angkasa (FDS), produsen drone dan UAV Indonesia berstandar TKDN 60,74% dan SNI 9199:2023. Melayani pengadaan drone pertanian sprayer FERTO, jasa pemetaan drone LiDAR tambang, drone kargo, dan drone SAR.';
         $keywords    = $primary_keywords;
         $canonical   = trailingslashit(home_url('/'));
         $image_url   = fds_get_default_share_image();
@@ -440,6 +476,12 @@ function fds_render_schema_jsonld() {
             'name'  => 'Indonesia',
         ],
         'knowsAbout'      => [
+            'Drone',
+            'Drone Indonesia',
+            'Pesawat Udara Tanpa Awak (UAV)',
+            'Produsen Drone Indonesia',
+            'Pabrik Drone & Manufaktur UAV Indonesia',
+            'Jual Drone & Pengadaan Drone Pemerintah BUMN',
             'Drone Pertanian & Sprayer Presisi TKDN 60,74%',
             'Pengadaan Drone Pertanian E-Katalog LKPP',
             'Drone Penyemprot Pupuk & Pestisida Tanaman Pangan & Sawit',
@@ -562,7 +604,6 @@ function fds_render_schema_jsonld() {
             'offers'        => [
                 '@type'         => 'Offer',
                 'priceCurrency' => 'IDR',
-                'price'         => '0',
                 'availability'  => 'https://schema.org/InStock',
                 'url'           => $home_url . '#kontak',
             ]
@@ -579,7 +620,6 @@ function fds_render_schema_jsonld() {
             'offers'        => [
                 '@type'         => 'Offer',
                 'priceCurrency' => 'IDR',
-                'price'         => '0',
                 'availability'  => 'https://schema.org/InStock',
                 'url'           => $home_url . '#produk',
             ]
@@ -596,7 +636,6 @@ function fds_render_schema_jsonld() {
             'offers'        => [
                 '@type'         => 'Offer',
                 'priceCurrency' => 'IDR',
-                'price'         => '0',
                 'availability'  => 'https://schema.org/InStock',
                 'url'           => $home_url . '#kontak',
             ]
@@ -797,7 +836,7 @@ add_filter('rank_math/frontend/title', function ($title) {
                 return $clean_rm;
             }
         }
-        return 'Produsen Drone Pertanian No.1 Buatan Indonesia & UAV TKDN | Full Drone Solutions';
+        return 'Drone Indonesia — Produsen Drone Pertanian & UAV TKDN | Full Drone Solutions';
     }
 
     if (is_singular('drone')) {
