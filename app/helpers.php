@@ -18,6 +18,48 @@ if (!function_exists('fds_img')) {
     }
 }
 
+if (!function_exists('fds_optimized_img_url')) {
+    /**
+     * Cerdas mengonversi URL foto mentah berukuran besar (kamera/AI) menjadi ukuran web teroptimasi (large/medium_large)
+     * jika tersedia di WordPress Media Library, memangkas payload hingga 85-95%.
+     */
+    function fds_optimized_img_url($url, $size = 'large') {
+        if (empty($url) || !is_string($url)) {
+            return $url;
+        }
+
+        // Hanya proses media lokal uploads WordPress
+        if (strpos($url, '/wp-content/uploads/') === false) {
+            return $url;
+        }
+
+        static $cache = [];
+        $cache_key = md5($url . '_' . $size);
+        if (isset($cache[$cache_key])) {
+            return $cache[$cache_key];
+        }
+
+        // Cek jika URL sudah merupakan versi resized (-1024x..., -768x..., dsb)
+        if (preg_match('/-\d+x\d+\.(jpe?g|png|webp|avif)$/i', $url)) {
+            $cache[$cache_key] = $url;
+            return $url;
+        }
+
+        // Resolusi attachment ID
+        $attachment_id = attachment_url_to_postid($url);
+        if ($attachment_id) {
+            $src = wp_get_attachment_image_url($attachment_id, $size);
+            if ($src) {
+                $cache[$cache_key] = $src;
+                return $src;
+            }
+        }
+
+        $cache[$cache_key] = $url;
+        return $url;
+    }
+}
+
 if (!function_exists('fds_posts_pagination')) {
     /**
      * Render modern numbered circular pagination for WordPress queries

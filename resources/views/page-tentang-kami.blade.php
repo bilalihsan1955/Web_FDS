@@ -173,8 +173,12 @@
         </h2>
         @if (!empty($about['story_img']))
         <div class="mt-8 rounded-2xl overflow-hidden shadow-sm">
-          <img src="{{ $about['story_img'] }}"
+          <img src="{{ esc_url(fds_optimized_img_url($about['story_img'], 'large')) }}"
                alt="Perjalanan dan Sejarah PT Karya Solusi Angkasa (FDS)"
+               loading="lazy"
+               decoding="async"
+               width="800"
+               height="500"
                class="w-full h-auto block object-cover">
         </div>
         @endif

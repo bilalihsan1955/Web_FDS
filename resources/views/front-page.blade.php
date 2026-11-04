@@ -20,21 +20,22 @@
     <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
       <img
         @if($i === 0)
-        src="{{ $slide['url'] }}"
+        src="{{ fds_optimized_img_url($slide['url'], 'full') }}"
         fetchpriority="high"
         loading="eager"
         decoding="sync"
+        data-no-lazy="1"
+        class="w-full h-full object-cover object-center no-lazy"
         @else
         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        data-slide-src="{{ $slide['url'] }}"
+        data-slide-src="{{ fds_optimized_img_url($slide['url'], 'full') }}"
         loading="lazy"
         decoding="async"
+        class="w-full h-full object-cover object-center"
         @endif
         width="1920"
         height="1080"
-        data-no-lazy="1"
         alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
-        class="w-full h-full object-cover object-center no-lazy"
       >
       {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
       <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
@@ -410,7 +411,7 @@
         <div>
           {{-- Image Box --}}
           <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#031e20]">
-            <img src="{{ esc_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80') }}" 
+            <img src="{{ esc_url(fds_optimized_img_url($card['image'] ?: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80', 'large')) }}" 
                  alt="{!! esc_attr(wp_specialchars_decode($card['title'], ENT_QUOTES)) !!}" 
                  width="720"
                  height="380"
@@ -586,7 +587,7 @@ document.addEventListener('DOMContentLoaded', function() {
       {{-- Card 1: Kiri Atas Lebar (md:col-span-2 lg:col-span-2) — Manufaktur Sleman --}}
       <div class="md:col-span-2 lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[340px] sm:min-h-[280px] lg:min-h-[240px] group flex flex-col justify-end p-5 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         <div class="absolute inset-0 z-0">
-          <img src="{{ !empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80') }}"
+          <img src="{{ esc_url(fds_optimized_img_url(!empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80'), 'large')) }}"
                alt="Pabrik &amp; Workshop FDS"
                width="1200"
                height="675"
@@ -651,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         {{-- Logo Bangga Buatan Indonesia (Tengah pada Layar Besar) --}}
         <div class="relative z-10 my-auto py-2 flex justify-center items-center flex-shrink-0 md:max-w-[38%] lg:max-w-full">
-          <img src="{{ esc_url($card2_img) }}" 
+          <img src="{{ esc_url(fds_optimized_img_url($card2_img, 'medium')) }}" 
                alt="Bangga Buatan Indonesia" 
                width="320"
                height="180"
@@ -745,7 +746,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="md:col-span-1 lg:col-span-1 bg-[#0a0c10] rounded-3xl overflow-hidden relative min-h-[185px] sm:min-h-[200px] group flex flex-col justify-end p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
         {{-- Background Image Foto Pilot/Operasional --}}
         <div class="absolute inset-0 z-0">
-          <img src="{{ esc_url($card6_img) }}" 
+          <img src="{{ esc_url(fds_optimized_img_url($card6_img, 'large')) }}" 
                alt="Akademi Pilot &amp; Riset FDS" 
                width="800"
                height="500"
