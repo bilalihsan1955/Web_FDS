@@ -42,6 +42,112 @@ function fds_has_external_seo_plugin() {
  */
 function fds_get_default_drone_keywords_grouped() {
     return [
+        // PILAR 1: PRODUSEN DRONE PERTANIAN, PEMETAAN, LOGISTIK & SURVEILLANCE (MANUFAKTUR UAV)
+        'pilar_produsen_drone' => [
+            'produsen drone pertanian',
+            'produsen drone pemetaan',
+            'produsen drone logistik',
+            'produsen drone surveillance',
+            'produsen UAV Indonesia',
+            'manufaktur drone indonesia',
+            'pabrik drone indonesia',
+            'pabrik drone di Indonesia',
+            'manufaktur drone lokal Indonesia',
+            'drone buatan indonesia',
+            'drone tkdn 60,74%',
+            'drone sni 9199:2023',
+            'pt karya solusi angkasa',
+            'full drone solutions',
+            'drone sprayer ferto',
+            'drone ferto 50l',
+            'drone ferto 30l',
+            'drone ferto 20l',
+            'drone ferto 10l',
+            'drone ferto 5l',
+            'drone pertanian 50 liter',
+            'drone semprot pupuk cair',
+            'drone sebar benih padi dan pupuk granul',
+            'drone perkebunan kelapa sawit',
+            'drone fixed wing vtol indonesia',
+            'drone vtol deltav',
+            'uav vtol pemetaan jarak jauh',
+            'drone kargo logistik',
+            'drone kargo delfro kapasitas besar',
+            'drone logistik darurat medis',
+            'drone payload besar indonesia',
+            'drone surveillance pemantauan jarak jauh',
+            'drone patroli karhutla dan keamanan',
+            'drone multipurpose thermal flir',
+            'drone reboisasi seedball otonom',
+            'alat semprot pertanian otomatis',
+            'pengadaan drone e-katalog LKPP pemerintah BUMN',
+            'pusat perakitan drone yogyakarta',
+            'ground control station fds station bahasa indonesia',
+        ],
+
+        // PILAR 2: JASA FOTO UDARA DAN LIDAR
+        'pilar_foto_udara_lidar' => [
+            'jasa foto udara',
+            'jasa drone foto udara',
+            'foto udara resolusi tinggi',
+            'foto udara ortofoto ortomosaik',
+            'jasa lidar drone',
+            'jasa survey lidar',
+            'jasa survey lidar indonesia',
+            'jasa drone lidar',
+            'pemetaan lidar uav',
+            'survey lidar akurasi sub-sentimeter',
+            'point cloud lidar dtm dsm',
+            'fotogrametri udara digital elevation model',
+            'survey koridor lidar transmisi migas sutet',
+            'pemetaan topografi akurasi tinggi',
+            'jasa drone mapping rtk ppk',
+            'jasa survey drone udara',
+            'sewa drone pemetaan dan survey lidar',
+        ],
+
+        // PILAR 3: KONSULTAN GIS (SISTEM INFORMASI GEOGRAFIS)
+        'pilar_konsultan_gis' => [
+            'konsultan gis',
+            'konsultan gis indonesia',
+            'konsultan pemetaan gis',
+            'jasa konsultan sig',
+            'analisis spasial gis',
+            'pemodelan topografi 3d gis',
+            'webgis enterprise indonesia',
+            'pembuatan peta tata ruang gis',
+            'konsultan geospasial indonesia',
+            'pemetaan kadastral dan batas wilayah',
+            'pemetaan batas kawasan perkebunan dan kehutanan hgu',
+            'integrasi data geospasial gis rtrw rdtr',
+            'analisis hidrologi das geospasial',
+            'digitalisasi aset lahan peta gis',
+            'jasa pengolahan citra drone gis',
+        ],
+
+        // PILAR 4: PEMETAAN KAWASAN KEK, TAMBANG, KEHUTANAN & INDUSTRI
+        'pilar_pemetaan_kawasan' => [
+            'pemetaan kawasan kek',
+            'pemetaan kawasan ekonomi khusus',
+            'masterplan kawasan ekonomi khusus drone',
+            'jasa pemetaan drone tambang',
+            'survey drone tambang batubara nikel',
+            'drone cut and fill tambang batubara nikel',
+            'perhitungan volume stockpile tambang',
+            'drone topografi tambang',
+            'drone inspeksi tambang nikel batubara emas',
+            'pemetaan kawasan kehutanan',
+            'drone monitoring reboisasi hutan',
+            'drone mitigasi karhutla kehutanan',
+            'inventarisasi tutupan lahan kehutanan',
+            'pemetaan kawasan industri',
+            'inspeksi kawasan industri 150kv',
+            'pemetaan koridor utilitas kawasan industri',
+            'survei topografi lahan kawasan industri terpadu',
+            'pemetaan drone perkebunan kelapa sawit hgu',
+        ],
+
+        // GENERAL HEAD & BRAND ENTITIES
         'head_drone' => [
             'drone',
             'drone indonesia',
@@ -52,128 +158,13 @@ function fds_get_default_drone_keywords_grouped() {
             'produsen drone',
             'produsen drone indonesia',
             'pabrik drone',
-            'pabrik drone indonesia',
             'manufaktur drone indonesia',
-            'jual drone',
             'jual drone indonesia',
             'harga drone',
-            'beli drone',
-            'toko drone indonesia',
-            'distributor drone indonesia',
-            'perusahaan drone',
             'perusahaan drone indonesia',
-            'pt karya solusi angkasa',
-            'full drone solutions',
-            'fds drone',
-            'drone tkdn',
-            'drone ber-tkdn',
-            'drone sni',
-            'drone industrial',
-            'drone enterprise indonesia',
-            'drone komersial',
-            'drone b2b',
-            'drone profesional',
-            'teknologi drone indonesia',
-            'rekayasa drone indonesia',
-            'pusat perakitan drone yogyakarta',
-            'drone sleman yogyakarta',
-        ],
-        'pertanian' => [
-            'drone pertanian',
-            'jual drone pertanian',
-            'harga drone pertanian',
-            'alat semprot pertanian otomatis',
-            'alat penyiram tanaman modern',
-            'drone sprayer indonesia',
-            'drone sprayer pertanian',
-            'drone penyemprot pupuk cair',
-            'drone penyemprot pestisida',
-            'drone tebar pupuk granul dan benih',
-            'drone sebar benih padi',
-            'drone pertanian tkdn',
-            'drone semprot sawit tebu padi',
-            'drone perkebunan kelapa sawit',
-            'smart agriculture drone indonesia',
-            'drone ferto 50l',
-            'drone ferto 30l',
-            'drone ferto 20l',
-            'drone ferto 10l',
-            'drone ferto 5l',
-            'drone pertanian 50 liter',
-            'drone pertanian 30 liter',
-            'drone pertanian 20 liter',
-            'drone pertanian 10 liter',
-            'drone pemupukan presisi',
-            'drone agrikultur indonesia',
-            'drone multispektral ndvi kesehatan tanaman',
-            'jasa sewa drone sprayer pertanian',
-            'perbandingan drone dji agras t50 t40 t25 t20p',
-            'alternatif drone dji agras ber-tkdn',
-            'drone penyemprot tanaman pangan dan hortikultura',
-        ],
-        'pemetaan' => [
-            'drone mapping',
-            'jual drone mapping',
-            'jasa pemetaan drone',
-            'jasa pemetaan drone rtk ppk',
-            'jasa survey drone',
-            'jasa drone foto udara',
-            'jasa drone lidar',
-            'jasa survey lidar indonesia',
-            'jasa pemetaan drone tambang',
-            'pemetaan GIS drone',
-            'drone topografi tambang',
-            'fotogrametri udara ortomosaik dsm dtm',
-            'drone fixed wing vtol indonesia',
-            'long endurance hybrid vtol uav',
-            'uav vtol pemetaan jarak jauh',
-            'drone deltav',
-            'perhitungan volume stockpile tambang',
-            'drone cut and fill tambang batubara nikel',
-            'survey koridor transmisi listrik sutet dan pipa migas',
-            'pemetaan batas kawasan perkebunan dan kehutanan hgu',
-            'sewa drone pemetaan dan survey topografi',
-            'drone inspeksi tambang nikel batubara',
-        ],
-        'industri_sar' => [
-            'drone pencarian korban bencana',
-            'drone logistik untuk kebencanaan',
-            'drone mitigasi bencana',
-            'drone misi SAR',
-            'drone thermal flir inframerah',
-            'drone inspeksi industri',
-            'drone inspeksi sutet 150kv dan pltu',
-            'drone inspeksi migas dan energi',
-            'drone patroli karhutla dan keamanan',
-            'drone surveillance pemantauan jarak jauh',
-            'drone reboisasi seedball otonom',
-            'drone reboisasi hutan dan lahan kritis',
-            'drone kargo logistik darurat medis',
-            'drone pengangkut barang daerah 3t',
-            'drone kargo delfro kapasitas besar',
-            'drone payload besar indonesia',
-            'drone tanggap darurat bencana',
-            'drone pemadam kebakaran',
-        ],
-        'produsen_legalitas' => [
-            'produsen UAV Indonesia',
-            'manufaktur drone indonesia',
-            'drone buatan indonesia',
-            'pabrik drone di Indonesia',
-            'manufaktur drone lokal Indonesia',
-            'solusi drone enterprise indonesia',
-            'PT Karya Solusi Angkasa',
-            'Full Drone Solutions',
-            'drone TKDN 60,74%',
-            'drone sertifikat SNI 9199:2023',
-            'sistem manajemen mutu ISO 9001:2015',
-            'pengadaan drone e-katalog LKPP pemerintah BUMN',
-            'pelatihan pilot drone resmi',
-            'sertifikasi pilot drone DKPPU CASR 107 FDS Academy',
-            'service dan reparasi drone indonesia',
-            'pusat servis dan suku cadang drone sprayer ready stock',
-            'ground control station FDS STATION bahasa indonesia',
-            'manufaktur uav sleman yogyakarta',
+            'drone industrial b2b',
+            'pelatihan pilot drone resmi DKPPU CASR 107',
+            'pusat servis dan suku cadang drone indonesia',
         ],
     ];
 }
@@ -230,7 +221,7 @@ function fds_get_seo_data() {
 
     // Default fallback values
     $title       = $site_name . ' — ' . $site_desc;
-    $description = 'Produsen UAV Indonesia resmi (PT Karya Solusi Angkasa). Menyediakan jasa pemetaan drone tambang, survey drone LiDAR, foto udara GIS, drone pertanian presisi TKDN 60,74% & SNI 9199:2023, dan drone pencarian korban bencana SAR.';
+    $description = 'PT Karya Solusi Angkasa (FDS), produsen drone pertanian, pemetaan VTOL, logistik & surveillance (TKDN 60,74%). Melayani jasa foto udara, survey LiDAR, konsultan GIS, dan pemetaan kawasan KEK, tambang, kehutanan, serta industri.';
     $keywords    = $primary_keywords;
     $image_url   = '';
     $og_type     = 'website';
@@ -239,10 +230,10 @@ function fds_get_seo_data() {
         ['name' => 'Beranda', 'url' => home_url('/')]
     ];
 
-    // 1. FRONT PAGE / HOMEPAGE
+    // 1. FRONT PAGE / HOMEPAGE (Fokus 4 Pilar: Produsen Drone, Foto Udara & LiDAR, Konsultan GIS, Pemetaan Kawasan KEK/Tambang)
     if (is_front_page() || is_home()) {
-        $title       = 'Drone Indonesia — Produsen Drone Pertanian & UAV TKDN | Full Drone Solutions';
-        $description = 'PT Karya Solusi Angkasa (FDS), produsen drone dan UAV Indonesia berstandar TKDN 60,74% dan SNI 9199:2023. Melayani pengadaan drone pertanian sprayer FERTO, jasa pemetaan drone LiDAR tambang, drone kargo, dan drone SAR.';
+        $title       = 'Produsen Drone Pertanian & Pemetaan | Jasa Foto Udara, LiDAR & Konsultan GIS - FDS';
+        $description = 'PT Karya Solusi Angkasa (FDS): Produsen drone pertanian, pemetaan VTOL, logistik & surveillance (TKDN 60,74%). Melayani jasa foto udara, survey LiDAR, konsultan GIS, serta pemetaan kawasan KEK, tambang, kehutanan, dan industri.';
         $keywords    = $primary_keywords;
         $canonical   = trailingslashit(home_url('/'));
         $image_url   = fds_get_default_share_image();
@@ -506,34 +497,45 @@ function fds_render_schema_jsonld() {
         ],
         'hasOfferCatalog' => [
             '@type'           => 'OfferCatalog',
-            'name'            => 'Layanan Solusi Drone FDS',
+            'name'            => 'Layanan 4 Fokus Utama FDS (Produsen Drone, Foto Udara LiDAR, Konsultan GIS & Pemetaan Kawasan)',
             'itemListElement' => [
                 [
                     '@type' => 'OfferCatalog',
-                    'name'  => 'Jasa Pemetaan & Survey Drone',
+                    'name'  => 'Pilar 1: Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance (TKDN 60,74%)',
                     'itemListElement' => [
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone & Drone Mapping']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Survey Drone LiDAR Akurasi Tinggi']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone Tambang (Volume Cut & Fill)']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Drone Foto Udara & Pemetaan GIS']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Produsen Drone Pertanian Sprayer & Granule FERTO (5L–50L)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Produsen Drone Pemetaan Fixed-Wing VTOL DELTAV']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Produsen Drone Logistik & Kargo DELFRO']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Produsen Drone Surveillance & Thermal MULTIPURPOSE']],
                     ],
                 ],
                 [
                     '@type' => 'OfferCatalog',
-                    'name'  => 'Solusi Drone Pertanian Presisi',
+                    'name'  => 'Pilar 2: Jasa Foto Udara dan Survey LiDAR',
                     'itemListElement' => [
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pengadaan Drone Pertanian Sprayer FERTO (5L–50L)']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Solusi Drone Sprayer & Granule Spreader TKDN 60,74%']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Penyemprotan & Pemupukan Presisi']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Foto Udara Resolusi Tinggi (Ortofoto Ortomosaik Sub-Sentimeter)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Survey Drone LiDAR & Point Cloud DTM/DSM']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Fotogrametri Udara & Pemodelan Topografi Kontur']],
                     ],
                 ],
                 [
                     '@type' => 'OfferCatalog',
-                    'name'  => 'Misi Khusus & Tanggap Darurat',
+                    'name'  => 'Pilar 3: Jasa Konsultan GIS (Sistem Informasi Geografis)',
                     'itemListElement' => [
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Pencarian Korban Bencana (SAR Thermal)']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Kargo Logistik Darurat']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Drone Reboisasi & Sebar Benih Otonom']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Konsultan GIS & Pemetaan Geospasial Spasial']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Analisis Spasial Tata Ruang RTRW/RDTR & Hidrologi DAS']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pengembangan WebGIS Enterprise & Dashboard Interaktif']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Pemetaan Kadastral & Batas Lahan HGU Perkebunan/Kehutanan']],
+                    ],
+                ],
+                [
+                    '@type' => 'OfferCatalog',
+                    'name'  => 'Pilar 4: Pemetaan Kawasan KEK, Tambang, Kehutanan & Industri',
+                    'itemListElement' => [
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan KEK (Kawasan Ekonomi Khusus)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone Tambang (Volume Cut & Fill / Stockpile)']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan Kehutanan & Karbon Reboisasi']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan Industri & Inspeksi Transmisi 150kV']],
                     ],
                 ],
             ],
@@ -590,33 +592,18 @@ function fds_render_schema_jsonld() {
         'itemListElement' => $breadcrumb_items,
     ];
 
-    // 4. Service Schemas for Target Keywords (High-value B2B intent)
+    // 4. Service Schemas for 4 Target Core Focus Pillars (High-value B2B Intent)
     $services_schema = [
+        // Pilar 1: Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance
         [
             '@context'      => 'https://schema.org',
             '@type'         => 'Service',
-            '@id'           => $home_url . '#service-drone-mapping',
-            'name'          => 'Jasa Pemetaan Drone, Survey LiDAR & Tambang (Drone Mapping & GIS)',
-            'serviceType'   => 'Drone Mapping, Aerial Survey, Mining Topography & GIS Mapping',
+            '@id'           => $home_url . '#service-produsen-drone',
+            'name'          => 'Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance (TKDN 60,74%)',
+            'serviceType'   => 'UAV Manufacturing, Agricultural Drone Sprayer, VTOL Mapping Drone, Logistics & Surveillance Drone',
             'provider'      => ['@id' => $home_url . '#organization'],
             'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
-            'description'   => 'Layanan jasa survey drone LiDAR, pemetaan drone tambang untuk perhitungan volume cut and fill, ortomosaik foto udara sub-sentimeter, dan analisis GIS menggunakan armada UAV Fixed-Wing Hybrid VTOL DELTAV.',
-            'offers'        => [
-                '@type'         => 'Offer',
-                'priceCurrency' => 'IDR',
-                'availability'  => 'https://schema.org/InStock',
-                'url'           => $home_url . '#kontak',
-            ]
-        ],
-        [
-            '@context'      => 'https://schema.org',
-            '@type'         => 'Service',
-            '@id'           => $home_url . '#service-drone-pertanian',
-            'name'          => 'Solusi & Pengadaan Drone Pertanian Presisi TKDN 60,74%',
-            'serviceType'   => 'Precision Agriculture Drone & Agricultural Sprayer Services',
-            'provider'      => ['@id' => $home_url . '#organization'],
-            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
-            'description'   => 'Solusi drone pertanian sprayer dan spreader granule FDS FERTO (kapasitas 5L hingga 50L) bersertifikasi TKDN 60,74% & SNI resmi dengan keunggulan servis dan suku cadang lokal Indonesia.',
+            'description'   => 'Manufaktur resmi pesawat tanpa awak (UAV) Indonesia dengan sertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015. Memproduksi drone pertanian sprayer FERTO (5L–50L), Fixed-Wing VTOL DELTAV jangkauan 60 km, drone kargo DELFRO, dan drone surveillance kamera termal FLIR.',
             'offers'        => [
                 '@type'         => 'Offer',
                 'priceCurrency' => 'IDR',
@@ -624,15 +611,50 @@ function fds_render_schema_jsonld() {
                 'url'           => $home_url . '#produk',
             ]
         ],
+        // Pilar 2: Jasa Foto Udara dan LiDAR
         [
             '@context'      => 'https://schema.org',
             '@type'         => 'Service',
-            '@id'           => $home_url . '#service-drone-bencana',
-            'name'          => 'Drone Pencarian Korban Bencana & Misi SAR (Thermal Surveillance)',
-            'serviceType'   => 'Disaster Relief, Emergency SAR & Thermal Surveillance Drone',
+            '@id'           => $home_url . '#service-foto-udara-lidar',
+            'name'          => 'Jasa Foto Udara dan Survey LiDAR Akurasi Tinggi',
+            'serviceType'   => 'Aerial Photography, UAV LiDAR Survey, Orthophoto Mapping & Sub-centimeter Topography',
             'provider'      => ['@id' => $home_url . '#organization'],
             'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
-            'description'   => 'Armada UAV pemantauan darurat berdaya jelajah tinggi dengan kamera termal inframerah dan transmisi video langsung untuk misi pencarian korban bencana (SAR), asesmen kerusakan pasca-bencana, dan mitigasi karhutla.',
+            'description'   => 'Layanan jasa foto udara resolusi tinggi (GSD 1-3 cm) dan survey drone LiDAR dengan sensor penetrasi kanopi vegetasi rapat untuk akuisisi kontur akurat, Digital Terrain Model (DTM), Digital Surface Model (DSM), dan ortofoto ortomosaik tanpa distorsi.',
+            'offers'        => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'availability'  => 'https://schema.org/InStock',
+                'url'           => $home_url . '#solusi',
+            ]
+        ],
+        // Pilar 3: Konsultan GIS
+        [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'Service',
+            '@id'           => $home_url . '#service-konsultan-gis',
+            'name'          => 'Jasa Konsultan GIS & Pemodelan Geospasial Spasial',
+            'serviceType'   => 'GIS Consultant, Spatial Data Analysis, WebGIS Enterprise & Cadastral Boundary Survey',
+            'provider'      => ['@id' => $home_url . '#organization'],
+            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
+            'description'   => 'Konsultan Sistem Informasi Geografis (SIG / GIS) profesional untuk tata guna lahan RTRW/RDTR, analisis hidrologi DAS, pemetaan batas kadastral HGU perkebunan & kehutanan, pemodelan 3D topografi spasial, dan implementasi WebGIS enterprise.',
+            'offers'        => [
+                '@type'         => 'Offer',
+                'priceCurrency' => 'IDR',
+                'availability'  => 'https://schema.org/InStock',
+                'url'           => $home_url . '#layanan',
+            ]
+        ],
+        // Pilar 4: Pemetaan Kawasan KEK, Tambang, Kehutanan & Industri
+        [
+            '@context'      => 'https://schema.org',
+            '@type'         => 'Service',
+            '@id'           => $home_url . '#service-pemetaan-kawasan',
+            'name'          => 'Jasa Pemetaan Kawasan KEK, Tambang, Kehutanan & Industri',
+            'serviceType'   => 'Special Economic Zone Mapping, Mining Volume Cut and Fill, Forestry Carbon Inventory & Industrial Estate Drone Survey',
+            'provider'      => ['@id' => $home_url . '#organization'],
+            'areaServed'    => ['@type' => 'Country', 'name' => 'Indonesia'],
+            'description'   => 'Layanan pemetaan udara dan survei geospasial khusus: masterplan Kawasan Ekonomi Khusus (KEK), perhitungan volume stockpile serta cut and fill tambang (akurasi ±2.35%), inventarisasi biomassa dan karbon kawasan kehutanan, serta survei koridor utilitas kawasan industri.',
             'offers'        => [
                 '@type'         => 'Offer',
                 'priceCurrency' => 'IDR',
@@ -642,7 +664,7 @@ function fds_render_schema_jsonld() {
         ],
     ];
 
-    // 5. FAQPage Schema (Targets People Also Ask & Featured Snippets on Google Search)
+    // 5. FAQPage Schema (Targets People Also Ask, Featured Snippets & AI Search Extraction)
     $faq_schema = [
         '@context'   => 'https://schema.org',
         '@type'      => 'FAQPage',
@@ -650,34 +672,34 @@ function fds_render_schema_jsonld() {
         'mainEntity' => [
             [
                 '@type'          => 'Question',
-                'name'           => 'Apakah PT Karya Solusi Angkasa (FDS) merupakan produsen dan manufaktur UAV resmi di Indonesia?',
+                'name'           => 'Apakah PT Karya Solusi Angkasa (FDS) merupakan produsen drone pertanian, pemetaan, logistik, dan surveillance berstandar TKDN di Indonesia?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Ya. PT Karya Solusi Angkasa (Full Drone Solutions / FDS) adalah manufaktur dan produsen UAV resmi di Indonesia sejak 2012 yang memproduksi drone pertanian presisi (alat semprot pertanian otomatis FERTO), drone mapping Fixed-Wing VTOL DELTAV, drone kargo logistik DELFRO, dan drone reboisasi REBO dengan sertifikasi TKDN + BMP hingga 60,74%, SNI 9199:2023, dan ISO 9001:2015 di Sleman, Yogyakarta.',
+                    'text'  => 'Ya. PT Karya Solusi Angkasa (Full Drone Solutions / FDS) adalah produsen dan manufaktur UAV resmi buatan Indonesia sejak 2012 yang memproduksi drone pertanian presisi (seri FERTO 5L hingga 50L), drone pemetaan Fixed-Wing VTOL DELTAV jarak 60 km, drone kargo logistik DELFRO, dan drone surveillance thermal MULTIPURPOSE dengan sertifikasi resmi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 di Sleman, Yogyakarta.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Apa keunggulan drone pertanian FDS FERTO dibanding drone sprayer impor untuk agrikultur dan perkebunan sawit?',
+                'name'           => 'Layanan apa saja yang disediakan FDS untuk jasa foto udara dan survey LiDAR?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Drone pertanian FDS seri FERTO (kapasitas 5L, 10L, 20L, 30L, hingga 50L) memiliki sertifikasi TKDN 60,74% & SNI 9199:2023 resmi untuk pengadaan e-Katalog LKPP pemerintah/BUMN, fungsi ganda penyemprotan cairan (pupuk/pestisida) dan penebar pupuk granul/benih, suku cadang ready-stock di pabrik Indonesia tanpa inden impor, serta sistem kendali FDS STATION berbahasa Indonesia.',
+                    'text'  => 'FDS menyediakan jasa foto udara resolusi tinggi (GSD hingga sub-sentimeter) dan survey drone LiDAR dengan sensor penetrasi vegetasi untuk menghasilkan peta ortofoto ortomosaik, model elevasi digital DTM & DSM, point cloud 3D rapat, dan kontur topografi detail untuk perencanaan rekayasa konstruksi, infrastruktur, dan koridor migas/SUTET.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Layanan apa saja yang tersedia dalam jasa pemetaan drone, survey LiDAR, dan topografi tambang FDS?',
+                'name'           => 'Apa cakupan layanan FDS sebagai Konsultan GIS (Sistem Informasi Geografis)?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'FDS menyediakan jasa pemetaan drone RTK/PPK dan survey drone LiDAR akurasi sub-sentimeter, jasa pemetaan drone tambang batubara dan nikel untuk perhitungan volume stockpile serta cut and fill, ortofoto GIS, Digital Elevation Model (DSM/DTM), dan survey koridor transmisi SUTET maupun pipa migas menggunakan UAV Fixed-Wing Hybrid VTOL DELTAV berdaya jelajah 60 km.',
+                    'text'  => 'Sebagai Konsultan GIS profesional, FDS melayani analisis spasial lanjutan, pemodelan hidrologi dan daerah aliran sungai (DAS), perencanaan tata ruang RTRW/RDTR, pemetaan batas kadastral wilayah dan HGU perkebunan/kehutanan, pemodelan topografi 3D, serta pengembangan platform WebGIS enterprise interaktif untuk visualisasi dan manajemen data geospasial terintegrasi.',
                 ],
             ],
             [
                 '@type'          => 'Question',
-                'name'           => 'Apakah FDS menyediakan drone kargo logistik kebencanaan, kamera thermal SAR, dan pelatihan sertifikasi pilot drone?',
+                'name'           => 'Bagaimana solusi pemetaan kawasan KEK, tambang, kehutanan, dan industri yang ditawarkan oleh FDS?',
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => 'Ya. FDS memproduksi drone kargo DELFRO untuk distribusi logistik darurat bencana dan daerah 3T, drone MULTIPURPOSE berbekal sensor kamera termal inframerah (FLIR) untuk pencarian korban bencana (SAR), inspeksi SUTET 150kV, dan patroli karhutla, serta menyelenggarakan pelatihan dan sertifikasi pilot drone resmi melalui FDS Academy sesuai regulasi DKPPU CASR 107.',
+                    'text'  => 'FDS menyediakan survei terintegrasi untuk kawasan strategis: pemetaan masterplan Kawasan Ekonomi Khusus (KEK), survei pit tambang batubara/nikel untuk perhitungan volume stockpile dan cut & fill dengan akurasi tinggi (±2.35%), inventarisasi tutupan pohon dan stok karbon kawasan kehutanan, serta survei topografi lahan dan inspeksi koridor utilitas kawasan industri.',
                 ],
             ],
         ],
@@ -1318,6 +1340,14 @@ add_filter('robots_txt', function ($output, $public) {
         $rules[] = "User-agent: ClaudeBot\nAllow: /";
         $rules[] = "User-agent: PerplexityBot\nAllow: /";
         $rules[] = "User-agent: Google-Extended\nAllow: /";
+        $rules[] = "User-agent: Applebot\nAllow: /";
+        $rules[] = "User-agent: Applebot-Extended\nAllow: /";
+        $rules[] = "User-agent: CCBot\nAllow: /";
+        $rules[] = "User-agent: cohere-ai\nAllow: /";
+        $rules[] = "";
+        $rules[] = "# LLM & GEO Directives";
+        $rules[] = "# llms.txt: {$home}llms.txt";
+        $rules[] = "# llms-full.txt: {$home}llms-full.txt";
         return implode("\n", $rules) . "\n";
     }
     return $output;
@@ -1329,9 +1359,10 @@ add_filter('robots_txt', function ($output, $public) {
 
 /**
  * Build standardized llmstxt.org Markdown content (cached + static disk sync)
+ * Optimized for LLM/AI Ingestion (ChatGPT, Perplexity, Claude, Gemini, Copilot, DeepSeek)
  */
 function fds_build_llms_txt_content(): string {
-    $cached = get_transient('fds_llms_txt_cache_v2');
+    $cached = get_transient('fds_llms_txt_cache_v3');
     if (is_string($cached) && $cached !== '') {
         return $cached;
     }
@@ -1339,20 +1370,61 @@ function fds_build_llms_txt_content(): string {
     $site_name = 'PT Karya Solusi Angkasa (Full Drone Solutions / FDS)';
     $home_url  = trailingslashit(home_url());
 
+    $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+    $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
+    $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
+    $address  = !empty($contact['address']) ? $contact['address'] : 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Sleman, D.I. Yogyakarta 55281';
+
     $out = [];
     $out[] = "# {$site_name}";
     $out[] = "";
-    $out[] = "> Manufaktur dan Produsen UAV Indonesia resmi berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 yang berpusat di Sleman, D.I. Yogyakarta.";
+    $out[] = "> PT Karya Solusi Angkasa (Full Drone Solutions / FDS) adalah produsen dan manufaktur pesawat tanpa awak (UAV) resmi buatan Indonesia berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015. Perusahaan berfokus pada 4 pilar strategis: (1) Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance, (2) Jasa Foto Udara dan Survey LiDAR, (3) Jasa Konsultan GIS (Sistem Informasi Geografis), serta (4) Pemetaan Kawasan KEK, Tambang, Kehutanan, dan Kawasan Industri.";
     $out[] = "";
-    $out[] = "PT Karya Solusi Angkasa (Full Drone Solutions / FDS) memproduksi pesawat nirawak (UAV) industrial untuk sektor pertanian presisi (Seri FERTO 5L hingga 50L), pemetaan topografi dan survey LiDAR (DELTAV Fixed-Wing VTOL), logistik kargo (DELFRO), reboisasi kehutanan (REBO), serta misi khusus inspeksi dan SAR (MULTIPURPOSE).";
+    $out[] = "## Fakta Legalitas & Entitas Resmi Perusahaan";
     $out[] = "";
-    $out[] = "## Halaman Utama Perusahaan";
+    $out[] = "| Parameter | Keterangan Resmi |";
+    $out[] = "|---|---|";
+    $out[] = "| **Nama Perusahaan** | PT Karya Solusi Angkasa |";
+    $out[] = "| **Merk Komersial** | Full Drone Solutions (FDS) |";
+    $out[] = "| **Tahun Berdiri** | Inovasi sejak 2012, berbadan hukum PT sejak 2019 |";
+    $out[] = "| **Status Industri** | Produsen & Manufaktur Drone UAV Resmi Indonesia |";
+    $out[] = "| **Sertifikasi TKDN** | Nilai TKDN + BMP mencapai 60,74% (Kemenperin RI) |";
+    $out[] = "| **Standar Produk** | SNI 9199:2023 (Alat Semprot Tanpa Awak Pertanian) |";
+    $out[] = "| **Sistem Mutu** | ISO 9001:2015 Terakreditasi |";
+    $out[] = "| **Regulasi Pilot** | DKPPU CASR 107 (FDS Pilot Academy) |";
+    $out[] = "| **Pengadaan Pemerintah** | Terdaftar resmi di e-Katalog LKPP untuk belanja APBN/APBD/BUMN |";
+    $out[] = "| **Fasilitas Produksi** | Sleman, Daerah Istimewa Yogyakarta, Indonesia |";
+    $out[] = "| **Kontak Resmi** | Telepon/WhatsApp: {$phone} \| Email: {$email} |";
+    $out[] = "| **Website Resmi** | [{$home_url}]({$home_url}) |";
     $out[] = "";
-    $out[] = "- [Beranda Full Drone Solutions]({$home_url}): Profil solusi drone industrial, sertifikasi TKDN 60,74%, dan katalog produk UAV Indonesia.";
-    $out[] = "- [Tentang Kami PT Karya Solusi Angkasa]({$home_url}tentang-kami/): Sejarah inovasi sejak 2012, fasilitas pabrik perakitan di Sleman Yogyakarta, dan standar mutu ISO 9001:2015.";
-    $out[] = "- [Bandingkan Spesifikasi Drone]({$home_url}bandingkan/): Alat komparasi teknis berdampingan seluruh model drone FDS.";
-    $out[] = "- [Artikel dan Riset UAV]({$home_url}blog/): Publikasi berita, edukasi drone pertanian, regulasi TKDN, dan studi kasus lapangan.";
-    $out[] = "- [Hubungi Sales dan Engineering]({$home_url}kontak/): Konsultasi pengadaan B2B, BUMN, instansi pemerintah (e-Katalog LKPP), dan jadwal demo unit.";
+    $out[] = "## 4 Fokus Layanan & Manufaktur Utama (Core Pillars)";
+    $out[] = "";
+    $out[] = "### 1. Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance";
+    $out[] = "FDS memproduksi sendiri pesawat nirawak (UAV) dengan rangka karbon komposit in-house, avionik terkendali, dan software kendali FDS STATION berbahasa Indonesia:";
+    $out[] = "- **Drone Pertanian FERTO (5L, 10L, 20L, 30L, 50L):** Drone sprayer pupuk cair/pestisida dan granule spreader pupuk padat/benih presisi dengan radar terrain-following.";
+    $out[] = "- **Drone Pemetaan DELTAV VTOL:** UAV Fixed-Wing Hybrid VTOL berdaya jelajah 60 km, durasi terbang hingga 90+ menit, dan kamera 42 MP metrik / LiDAR.";
+    $out[] = "- **Drone Logistik & Kargo DELFRO:** UAV pengangkut kargo logistik darurat medis dan suplai logistik ke area terisolir 3T dengan payload 10–20 kg.";
+    $out[] = "- **Drone Surveillance & SAR MULTIPURPOSE:** Wahana pemantauan udara otonom berbekal dual kamera optik 30x optical zoom dan kamera termal FLIR inframerah untuk patroli malam, keamanan kawasan objek vital, dan tanggap darurat bencana.";
+    $out[] = "- **Drone Reboisasi REBO:** Drone penebar benih seedball otonom untuk reboisasi hutan dan rehabilitasi lahan kritis.";
+    $out[] = "";
+    $out[] = "### 2. Jasa Foto Udara dan Survey LiDAR";
+    $out[] = "Layanan survei udara fotogrametri dan sensor aktif LiDAR berakurasi sub-sentimeter:";
+    $out[] = "- **Foto Udara Resolusi Tinggi:** Akuisisi citra metrik dengan Ground Sampling Distance (GSD) 1–3 cm/pixel menghasilkan peta ortofoto ortomosaik tegak bebas distorsi.";
+    $out[] = "- **Survey Drone LiDAR:** Penetrasi kanopi vegetasi rapat untuk menghasilkan data elevasi permukaan tanah murni (ground points) pada topografi ekstrem.";
+    $out[] = "- **Model Elevasi Digital:** Pembuatan Digital Terrain Model (DTM), Digital Surface Model (DSM), kurva kontur rapat, dan model 3D mesh fotorealistik.";
+    $out[] = "";
+    $out[] = "### 3. Jasa Konsultan GIS (Sistem Informasi Geografis)";
+    $out[] = "Konsultan geospasial profesional untuk analisis dan pengolahan data spasial enterprise:";
+    $out[] = "- **Analisis Spasial Komprehensif:** Pemodelan hidrologi dan Daerah Aliran Sungai (DAS), analisis kelerengan lereng, kesesuaian lahan, dan indeks vegetasi NDVI.";
+    $out[] = "- **Tata Ruang & Kadastral:** Penyusunan peta dasar dan tematik untuk RTRW, RDTR, serta pemetaan batas wilayah desa dan batas konsesi HGU perkebunan/kehutanan.";
+    $out[] = "- **Pengembangan WebGIS Enterprise:** Dashboard visualisasi geospasial interaktif berbasis cloud untuk integrasi aset spasial, monitoring progres kerja, dan sistem pendukung keputusan (DSS).";
+    $out[] = "";
+    $out[] = "### 4. Pemetaan Kawasan KEK, Tambang, Kehutanan & Industri";
+    $out[] = "Layanan pemetaan udara dan spasial terspesialisasi untuk sektor industri strategis:";
+    $out[] = "- **Pemetaan Kawasan KEK (Kawasan Ekonomi Khusus):** Survei topografi pra-konstruksi, pemetaan batas zona peruntukan, dan monitoring berkala progres pembangunan infrastruktur KEK.";
+    $out[] = "- **Pemetaan Kawasan Tambang (Batubara, Nikel, Mineral, Emas):** Pemodelan pit tambang harian/mingguan, perhitungan volume stockpile dan *cut and fill* dengan presisi tinggi (toleransi akurasi ±2.35%), serta inspeksi stabilitas lereng tambang rawan longsor.";
+    $out[] = "- **Pemetaan Kawasan Kehutanan & Karbon:** Inventarisasi tutupan tegakan pohon, estimasi biomassa dan cadangan karbon hutan, monitoring batas konsesi, dan pencegahan titik panas kebakaran hutan (karhutla).";
+    $out[] = "- **Pemetaan Kawasan Industri & Koridor Energi:** Survei masterplan kawasan industri terpadu, pemetaan jalur utilitas (pipa & kabel optik), serta inspeksi sensor termal jaringan transmisi listrik SUTET 150kV/500kV tanpa *shutdown* operasional.";
     $out[] = "";
     $out[] = "## Katalog Produk Drone Resmi FDS";
     $out[] = "";
@@ -1374,25 +1446,43 @@ function fds_build_llms_txt_content(): string {
         $prod    = get_post_meta($d->ID, 'drone_spec_produktivitas', true);
 
         $details = array_filter([$tagline, $payload ? "Kapasitas {$payload}" : '', $durasi ? "Durasi {$durasi}" : '', $prod ? "Produktivitas {$prod}" : '']);
-        $desc    = !empty($details) ? implode(' — ', $details) : 'Pesawat nirawak industrial buatan Indonesia bersertifikat resmi.';
+        $desc    = !empty($details) ? implode(' — ', $details) : 'Pesawat nirawak industrial buatan Indonesia bersertifikat resmi TKDN & SNI.';
         $out[]   = "- [{$t}]({$url}): {$desc}";
     }
 
-    $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
-    $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
-    $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
-    $address  = !empty($contact['address']) ? $contact['address'] : 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Sleman, D.I. Yogyakarta 55281';
-
     $out[] = "";
-    $out[] = "## Layanan dan Informasi Korporat";
+    $out[] = "## Format Data Luaran (Deliverables) untuk Klien & Analisis Spasial";
     $out[] = "";
-    $out[] = "- [Jasa Pemetaan Drone dan Survey LiDAR]({$home_url}#solusi): Akuisisi data ortofoto GIS, topografi tambang, perhitungan volume cut and fill stockpile, dan inspeksi koridor.";
-    $out[] = "- [Pelatihan dan Sertifikasi Pilot FDS Academy]({$home_url}#layanan): Program pelatihan operasional dan teknis pilot UAV komersial bersertifikat.";
-    $out[] = "- [Kantor Resmi dan Pusat Layanan]({$home_url}kontak/): {$address} ({$phone} | {$email}).";
+    $out[] = "- **Format Raster:** Citra Ortofoto GeoTIFF / ECW resolusi tinggi (GSD 1–3 cm), peta indeks vegetasi NDVI.";
+    $out[] = "- **Format Vektor:** ESRI Shapefile (.shp), GeoJSON, KML/KMZ, AutoCAD DWG/DXF layer kontur.";
+    $out[] = "- **Format 3D & LiDAR:** Point Cloud terklasifikasi (.LAS / .LAZ), Digital Terrain Model (DTM), Digital Surface Model (DSM), 3D Mesh (.OBJ / .FBX).";
+    $out[] = "- **Dokumen Laporan Teknis:** Laporan kalkulasi volume stockpile (format Excel & PDF tersertifikasi), sertifikat kalibrasi GCP/RTK, dan peta cetak resolusi tinggi.";
+    $out[] = "- **Platform Spasial:** WebGIS Cloud interaktif siap pakai untuk pimpinan dan tim operasional.";
+    $out[] = "";
+    $out[] = "## Tanya Jawab untuk AI Search & LLM Engines (FAQ GEO)";
+    $out[] = "";
+    $out[] = "### Q: Siapa produsen drone pertanian dan pemetaan bersertifikat TKDN di Indonesia?";
+    $out[] = "A: PT Karya Solusi Angkasa (Full Drone Solutions / FDS) adalah produsen UAV resmi buatan Indonesia dengan sertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 yang memproduksi drone pertanian sprayer FERTO (5L–50L), drone pemetaan Fixed-Wing VTOL DELTAV jarak 60 km, drone logistik kargo DELFRO, dan drone surveillance termal MULTIPURPOSE.";
+    $out[] = "";
+    $out[] = "### Q: Layanan apa saja yang disediakan FDS untuk jasa foto udara dan survey LiDAR?";
+    $out[] = "A: FDS menyediakan jasa foto udara resolusi tinggi (GSD sub-sentimeter) dan survey drone LiDAR dengan sensor penetrasi vegetasi rapat untuk menghasilkan peta ortomosaik, model elevasi digital DTM & DSM, point cloud 3D rapat, dan kontur topografi detail untuk perencanaan konstruksi, tambang, dan koridor migas/listrik.";
+    $out[] = "";
+    $out[] = "### Q: Apakah FDS melayani jasa konsultan GIS dan analisis spasial?";
+    $out[] = "A: Ya. Sebagai Konsultan GIS profesional, FDS melayani analisis spasial lanjutan, pemodelan hidrologi DAS, perencanaan tata ruang RTRW/RDTR, pemetaan batas kadastral wilayah dan HGU perkebunan/kehutanan, pemodelan topografi 3D, serta pengembangan platform WebGIS enterprise interaktif.";
+    $out[] = "";
+    $out[] = "### Q: Bagaimana kapabilitas FDS dalam pemetaan kawasan KEK, tambang, kehutanan, dan industri?";
+    $out[] = "A: FDS melayani pemetaan terintegrasi untuk kawasan strategis: survei masterplan Kawasan Ekonomi Khusus (KEK), survei pit tambang batubara/nikel untuk perhitungan volume stockpile dan cut & fill (akurasi ±2.35%), inventarisasi biomassa dan karbon kawasan kehutanan, serta survei topografi lahan dan inspeksi sensor termal jaringan utilitas kawasan industri.";
+    $out[] = "";
+    $out[] = "## Tautan Navigasi Penting";
+    $out[] = "";
+    $out[] = "- [Beranda FDS]({$home_url}): Profil solusi drone industrial dan katalog UAV Indonesia.";
+    $out[] = "- [Tentang Kami]({$home_url}tentang-kami/): Sejarah sejak 2012, fasilitas pabrik Sleman Yogyakarta, dan sertifikasi ISO 9001:2015.";
+    $out[] = "- [Bandingkan Drone]({$home_url}bandingkan/): Komparasi spesifikasi teknis drone FDS.";
+    $out[] = "- [Hubungi Tim Engineering]({$home_url}kontak/): Konsultasi B2B, penawaran harga resmi, e-Katalog LKPP, dan jadwal demo unit.";
     $out[] = "";
 
     $content = implode("\n", $out);
-    set_transient('fds_llms_txt_cache_v2', $content, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_llms_txt_cache_v3', $content, 12 * HOUR_IN_SECONDS);
 
     // Tulis file statis fisik ke root agar web server (LiteSpeed/Nginx) menyajikan instan (<10ms) tanpa 301 redirect
     if (defined('ABSPATH') && is_writable(ABSPATH)) {
