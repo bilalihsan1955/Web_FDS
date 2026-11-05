@@ -1507,9 +1507,15 @@ add_action('init', function () {
         exit;
     }
 
-    // Ensure static physical llms.txt exists on disk for zero-latency serving
-    if (defined('ABSPATH') && !file_exists(ABSPATH . 'llms.txt') && is_writable(ABSPATH)) {
-        fds_build_llms_txt_content();
+    // Ensure static physical llms.txt on disk is always refreshed to version 3.0
+    if (defined('ABSPATH') && is_writable(ABSPATH)) {
+        $llms_disk_ver = get_option('fds_llms_version_disk', '0');
+        if ($llms_disk_ver !== '3.0' || isset($_GET['refresh_llms'])) {
+            delete_transient('fds_llms_txt_cache_v2');
+            delete_transient('fds_llms_txt_cache_v3');
+            fds_build_llms_txt_content();
+            update_option('fds_llms_version_disk', '3.0');
+        }
     }
 
     add_rewrite_rule('^llms\.txt$', 'index.php?fds_llms_txt=1', 'top');
