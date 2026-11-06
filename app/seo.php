@@ -1157,12 +1157,16 @@ add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type
  */
 function fds_get_legacy_zombie_redirect_map(): array {
     return [
-        // Redirect ke halaman produk FERTO (5L, 10L, 15L)
+        // Redirect ke halaman produk FERTO (5L, 10L, 15L, 22L)
         'drone-pertanian-ferto-5'                                                       => '/drone/ferto-5l/',
         'ferto-draft'                                                                   => '/drone/ferto-5l/',
         'drone-pertanian-ferto-10-terbaik-2023'                                         => '/drone/ferto-10l/',
         'alat-semprot-pertanian-modern-cairan-pestisida-dan-pupuk-ag15'                 => '/drone/ferto-15l/',
         'drone-pertanian-15-liter-sprayer-pestisida-pupuk-a415-agriculture-harga-efisien' => '/drone/ferto-15l/',
+        'drone/ferto-20l'                                                               => '/drone/ferto-15l/',
+        'drone/ferto-20'                                                                => '/drone/ferto-15l/',
+        'ferto-20l'                                                                     => '/drone/ferto-15l/',
+        'ferto-20'                                                                      => '/drone/ferto-15l/',
 
         // Redirect ke halaman produk DELTAV (Pemetaan)
         'drone-pemetaan'                                                                => '/drone/deltav/',
@@ -1211,7 +1215,6 @@ function fds_get_legacy_zombie_redirect_map(): array {
         '13759-2'                                                                       => '/',
         'a9365-tech-lab-service-details'                                                => '/',
         'a9365-tech-lab-services'                                                       => '/',
-        'dji-indonesia-daftar-drone-paling-diminati-untuk-fotografi-hingga-agriculture-2019' => '/bandingkan/',
     ];
 }
 
@@ -1299,6 +1302,12 @@ add_action('template_redirect', function () {
     $zombie_map = fds_get_legacy_zombie_redirect_map();
     if (isset($zombie_map[$path_lower])) {
         wp_safe_redirect(home_url($zombie_map[$path_lower]), 301);
+        exit;
+    }
+
+    // 0c. Tangani Typo Slug Drone Non-Eksisten (seperti /drone/ferto-20l/ -> /drone/ferto-15l/)
+    if (preg_match('#^(drone/)?ferto-20l?/?$#i', $path_lower)) {
+        wp_safe_redirect(home_url('/drone/ferto-15l/'), 301);
         exit;
     }
 
