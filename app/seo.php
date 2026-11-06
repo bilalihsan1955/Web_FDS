@@ -1227,6 +1227,46 @@ add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
     return $url;
 }, 10, 3);
 
+/**
+ * Pembersihan Otomatis Konten Warisan Lawas (2019-2023):
+ * 1. Menghapus / me-rename halaman "Drone Pertanian Agrea 15" (ID 13821) dan "Agrea 10" (ID 15297) yang dibuat pada 2020-2023
+ *    agar kata kunci kompetitor (Agrea / Agras) bersih 100% dari database.
+ * 2. Memindahkan artikel DJI impor lawas tahun 2019 ke Trash.
+ */
+add_action('init', function () {
+    if (!get_option('fds_clean_agrea_dji_legacy_posts_v2')) {
+        // 1. Rename & Trash Agrea 15 (Page 13821, dibuat 29 Des 2020)
+        if ($p13821 = get_post(13821)) {
+            wp_update_post([
+                'ID'          => 13821,
+                'post_title'  => 'FERTO 15 — Drone Pertanian TKDN Resmi FDS',
+                'post_status' => 'trash',
+            ]);
+        }
+
+        // 2. Rename & Trash Agrea 10 (Page 15297, dibuat 1 Agu 2023)
+        if ($p15297 = get_post(15297)) {
+            wp_update_post([
+                'ID'          => 15297,
+                'post_title'  => 'FERTO 10 — Drone Pertanian TKDN Resmi FDS',
+                'post_status' => 'trash',
+            ]);
+        }
+
+        // 3. Trash artikel DJI impor lawas tahun 2019 (ID 2618, 3127, 2970, 1638)
+        foreach ([2618, 3127, 2970, 1638] as $dji_id) {
+            if (get_post($dji_id)) {
+                wp_update_post([
+                    'ID'          => $dji_id,
+                    'post_status' => 'trash',
+                ]);
+            }
+        }
+
+        update_option('fds_clean_agrea_dji_legacy_posts_v2', 1, false);
+    }
+}, 25);
+
 // =========================================================================
 // 8. 301 PERMANENT REDIRECT ENGINE & FEED CLEANUP (Fix Legacy Slugs & /feed/ Crawl Bloat)
 // =========================================================================
