@@ -232,8 +232,8 @@ function fds_get_seo_data() {
 
     // 1. FRONT PAGE / HOMEPAGE (Fokus 4 Pilar: Produsen Drone, Foto Udara & LiDAR, Konsultan GIS, Pemetaan Kawasan KEK/Tambang)
     if (is_front_page() || is_home()) {
-        $title       = 'Produsen Drone Pertanian & Pemetaan | Jasa Foto Udara, LiDAR & Konsultan GIS - FDS';
-        $description = 'PT Karya Solusi Angkasa (FDS): Produsen drone pertanian, pemetaan VTOL, logistik & surveillance (TKDN 60,74%). Melayani jasa foto udara, survey LiDAR, konsultan GIS, serta pemetaan kawasan KEK, tambang, kehutanan, dan industri.';
+        $title       = 'Produsen Drone Pertanian & UAV Indonesia — Full Drone Solutions';
+        $description = 'PT Karya Solusi Angkasa (FDS), produsen drone & UAV Indonesia TKDN. Solusi drone sprayer FERTO, survey LiDAR, pemetaan GIS, dan pelatihan pilot resmi.';
         $keywords    = $primary_keywords;
         $canonical   = trailingslashit(home_url('/'));
         $image_url   = fds_get_default_share_image();
@@ -265,8 +265,8 @@ function fds_get_seo_data() {
                 $keywords = fds_get_primary_keywords_string("drone pertanian, drone sprayer {$d_title}, jual drone pertanian {$slug}, harga drone pertanian, drone penyemprot pupuk dan pestisida, drone sebar benih, drone pertanian indonesia, produsen UAV Indonesia, TKDN 60,74%, SNI 9199, {$payload}");
             } elseif (strpos($cat_lower, 'peta') !== false || strpos($cat_lower, 'gis') !== false || strpos($slug, 'deltav') !== false) {
                 $keywords = fds_get_primary_keywords_string("drone mapping, jual drone mapping, jasa pemetaan drone, jasa survey drone, jasa drone foto udara, jasa drone lidar, jasa pemetaan drone tambang, pemetaan GIS drone, fixed wing VTOL, {$d_title}");
-            } elseif (strpos($cat_lower, 'rebo') !== false || strpos($cat_lower, 'kargo') !== false) {
-                $keywords = fds_get_primary_keywords_string("drone pencarian korban bencana, drone SAR, drone reboisasi, drone kargo logistik darurat, drone tanggap darurat, UAV Indonesia {$d_title}");
+            } elseif (strpos($cat_lower, 'kargo') !== false) {
+                $keywords = fds_get_primary_keywords_string("drone kargo logistik darurat, drone medis, drone payload besar, drone tanggap darurat, UAV Indonesia {$d_title}");
             } else {
                 $keywords = fds_get_primary_keywords_string("Drone {$d_title}, Drone {$kategori}, produsen UAV Indonesia, jasa survey drone, inspeksi drone, PT Karya Solusi Angkasa");
             }
@@ -281,8 +281,8 @@ function fds_get_seo_data() {
     }
     // 3. BANDINGKAN DRONE PAGE
     elseif (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
-        $title       = 'Bandingkan Spesifikasi Drone Pertanian & Pemetaan FDS — Komparasi UAV TKDN Indonesia';
-        $description = 'Bandingkan spesifikasi teknis lengkap drone pertanian FERTO (5L–50L), Fixed-Wing VTOL DELTAV untuk pemetaan GIS LiDAR, drone inspeksi, dan reboisasi buatan produsen UAV Indonesia PT Karya Solusi Angkasa.';
+        $title       = 'Bandingkan Spesifikasi Drone — Komparasi Lini UAV FDS';
+        $description = 'Bandingkan spesifikasi teknis drone sprayer FERTO, drone pemetaan VTOL DELTAV, dan kargo DELFRO berstandar TKDN & SNI buatan PT Karya Solusi Angkasa.';
         $keywords    = 'drone pertanian, komparasi drone pertanian, spesifikasi drone pertanian TKDN, drone mapping, jasa pemetaan drone, produsen UAV Indonesia';
         $canonical   = trailingslashit(home_url('/bandingkan/'));
         $image_url   = fds_get_default_share_image();
@@ -291,8 +291,8 @@ function fds_get_seo_data() {
     }
     // 4. TENTANG KAMI PAGE
     elseif (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
-        $title       = 'Tentang Kami — PT Karya Solusi Angkasa (Produsen UAV Indonesia Resmi Berstandar TKDN)';
-        $description = 'Profil PT Karya Solusi Angkasa (Full Drone Solutions), manufaktur drone nasional berstandar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015. Pusat riset, perakitan, dan pelatihan pilot drone di Sleman, Yogyakarta.';
+        $title       = 'Tentang Kami — PT Karya Solusi Angkasa (Produsen UAV)';
+        $description = 'Profil PT Karya Solusi Angkasa (FDS), produsen drone & UAV Indonesia sejak 2012. Fasilitas riset, perakitan lokal, dan sertifikasi TKDN resmi di Sleman.';
         $keywords    = 'produsen UAV Indonesia, PT Karya Solusi Angkasa, pabrik drone Indonesia, produsen drone pertanian, jasa pemetaan drone, drone TKDN SNI Yogyakarta, FDS';
         $canonical   = trailingslashit(home_url('/tentang-kami/'));
         $image_url   = fds_get_default_share_image();
@@ -301,8 +301,8 @@ function fds_get_seo_data() {
     }
     // 5. KONTAK KAMI PAGE
     elseif (is_page('kontak') || is_page('contact') || (isset($_SERVER['REQUEST_URI']) && preg_match('#/(kontak|contact)/?#i', $_SERVER['REQUEST_URI']))) {
-        $title       = 'Kontak Kami — PT Karya Solusi Angkasa (Produsen UAV Indonesia Sleman Yogyakarta)';
-        $description = 'Hubungi tim PT Karya Solusi Angkasa (Full Drone Solutions). Konsultasi pengadaan drone pertanian TKDN, mapping VTOL, jadwal uji terbang di Yogyakarta, dan layanan servis resmi.';
+        $title       = 'Hubungi Kami — Konsultasi Resmi Full Drone Solutions';
+        $description = 'Hubungi tim PT Karya Solusi Angkasa untuk konsultasi drone pertanian, jasa survey LiDAR, jadwal demo terbang, dan servis resmi di Sleman, Yogyakarta.';
         $keywords    = 'kontak full drone solutions, kontak PT Karya Solusi Angkasa, alamat pabrik drone yogyakarta, hubungi produsen drone indonesia, pengadaan drone TKDN';
         $canonical   = trailingslashit(home_url('/kontak/'));
         $image_url   = fds_get_default_share_image();
@@ -311,8 +311,8 @@ function fds_get_seo_data() {
     }
     // 6. BLOG / NEWSROOM
     elseif (is_home() || is_archive() || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/blog') !== false)) {
-        $title       = 'Newsroom & Artikel Drone — Inovasi Drone Pertanian, Pemetaan LiDAR & Industri UAV';
-        $description = 'Kumpulan berita, artikel teknologi, studi kasus drone mapping pertambangan, efisiensi drone pertanian presisi, regulasi UAV, dan operasional lapangan dari Full Drone Solutions.';
+        $title       = 'Newsroom & Blog — Inovasi Teknologi UAV & Drone Indonesia';
+        $description = 'Berita terkini, studi kasus operasional drone pertanian, survei pemetaan LiDAR tambang, dan riset teknologi industri UAV dari tim PT Karya Solusi Angkasa.';
         $keywords    = 'artikel drone pertanian, berita drone mapping, studi kasus survey drone lidar, jasa pemetaan drone tambang, teknologi UAV indonesia, sertifikasi TKDN drone';
         $canonical   = trailingslashit(home_url('/blog/'));
         $image_url   = fds_get_default_share_image();
@@ -925,16 +925,25 @@ add_filter('rank_math/frontend/title', function ($title) {
     $title = preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', (string) $title);
 
     // 0b. Optimalisasi Khusus Judul Halaman Depan (Homepage)
-    if (is_front_page() || is_home()) {
-        $front_id = get_option('page_on_front');
-        $custom_rm_title = $front_id ? get_post_meta($front_id, 'rank_math_title', true) : '';
-        if (!empty($custom_rm_title)) {
-            $clean_rm = preg_replace('/^(beranda|home)\s*[-|–—:]\s*/iu', '', $custom_rm_title);
-            if (!empty(trim($clean_rm))) {
-                return $clean_rm;
-            }
-        }
-        return 'Drone Indonesia — Produsen Drone Pertanian & UAV TKDN | Full Drone Solutions';
+    if (is_front_page()) {
+        return 'Produsen Drone Pertanian & UAV Indonesia — Full Drone Solutions';
+    }
+
+    // 0c. Optimalisasi Judul Sub-Halaman Utama (Tentang Kami, Kontak, Bandingkan, Blog)
+    if (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
+        return 'Tentang Kami — PT Karya Solusi Angkasa (Produsen UAV)';
+    }
+
+    if (is_page('kontak') || is_page('contact') || (isset($_SERVER['REQUEST_URI']) && preg_match('#/(kontak|contact)/?#i', $_SERVER['REQUEST_URI']))) {
+        return 'Hubungi Kami — Konsultasi Resmi Full Drone Solutions';
+    }
+
+    if (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
+        return 'Bandingkan Spesifikasi Drone — Komparasi Lini UAV FDS';
+    }
+
+    if (is_home() || (isset($_SERVER['REQUEST_URI']) && preg_match('#/blog/?#i', $_SERVER['REQUEST_URI']))) {
+        return 'Newsroom & Blog — Inovasi Teknologi UAV & Drone Indonesia';
     }
 
     if (is_singular('drone')) {
@@ -952,40 +961,13 @@ add_filter('rank_math/frontend/title', function ($title) {
         
         $cat_lower = strtolower($kategori);
         if (strpos($cat_lower, 'agri') !== false) {
-            return "{$d_title} — Drone Pertanian Presisi TKDN 60,74% & SNI Resmi | Full Drone Solutions";
+            return "{$d_title} — Drone Pertanian TKDN 60,74% & SNI | FDS";
         } elseif (strpos($cat_lower, 'peta') !== false) {
-            return "{$d_title} — Drone Mapping & Jasa Survey Pemetaan LiDAR GIS | Full Drone Solutions";
+            return "{$d_title} — Drone Mapping & Survey LiDAR GIS | FDS";
         } elseif (strpos($cat_lower, 'kargo') !== false) {
-            return "{$d_title} — Drone Kargo Logistik Otonom & Medis Darurat | Full Drone Solutions";
+            return "{$d_title} — Drone Kargo Logistik Otonom TKDN | FDS";
         } else {
-            return "{$d_title} — Drone Reboisasi Hutan & SAR Kebencanaan TKDN | Full Drone Solutions";
-        }
-    }
-
-    if (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
-        $page_id = get_queried_object_id();
-        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
-        if (empty($custom_rm_title)) {
-            $seo = fds_get_seo_data();
-            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
-        }
-    }
-
-    if (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
-        $page_id = get_queried_object_id();
-        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
-        if (empty($custom_rm_title)) {
-            $seo = fds_get_seo_data();
-            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
-        }
-    }
-
-    if (is_page('kontak') || is_page('contact') || (isset($_SERVER['REQUEST_URI']) && preg_match('#/(kontak|contact)/?#i', $_SERVER['REQUEST_URI']))) {
-        $page_id = get_queried_object_id();
-        $custom_rm_title = $page_id ? get_post_meta($page_id, 'rank_math_title', true) : '';
-        if (empty($custom_rm_title)) {
-            $seo = fds_get_seo_data();
-            return html_entity_decode($seo['title'], ENT_QUOTES, 'UTF-8');
+            return "{$d_title} — Drone Inspeksi & Surveillance TKDN | FDS";
         }
     }
 
@@ -1022,24 +1004,35 @@ add_filter('rank_math/frontend/robots', function ($robots) {
 
 /**
  * Filter Rank Math Meta Description
- * Prioritizes user custom description from Rank Math snippet editor if set,
- * cleans accidental "Deskripsi Singkat:" prefix, and provides rich fallback when empty.
+ * Menjamin sub-deskripsi Google Sitelinks rapi, ringkas (<155 karakter), dan relevan langsung dengan isi halaman.
  */
 add_filter('rank_math/frontend/description', function ($description) {
-    if (!empty($description)) {
-        $description = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $description));
-        $description = str_ireplace('full frone solutions', 'Full Drone Solutions', $description);
+    // 1. Homepage / Beranda
+    if (is_front_page()) {
+        return 'PT Karya Solusi Angkasa (FDS), produsen drone & UAV Indonesia TKDN. Solusi drone sprayer FERTO, survey LiDAR, pemetaan GIS, dan pelatihan pilot resmi.';
     }
 
-    if (is_front_page() || is_home()) {
-        $front_id = get_option('page_on_front');
-        $custom_rm_desc = $front_id ? get_post_meta($front_id, 'rank_math_description', true) : '';
-        if (!empty($custom_rm_desc)) {
-            $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
-            return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
-        }
+    // 2. Tentang Kami
+    if (is_page('tentang-kami') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/tentang-kami') !== false)) {
+        return 'Profil PT Karya Solusi Angkasa (FDS), produsen drone & UAV Indonesia sejak 2012. Fasilitas riset, perakitan lokal, dan sertifikasi TKDN resmi di Sleman.';
     }
 
+    // 3. Hubungi Kami / Kontak
+    if (is_page('kontak') || is_page('contact') || (isset($_SERVER['REQUEST_URI']) && preg_match('#/(kontak|contact)/?#i', $_SERVER['REQUEST_URI']))) {
+        return 'Hubungi tim PT Karya Solusi Angkasa untuk konsultasi drone pertanian, jasa survey LiDAR, jadwal demo terbang, dan servis resmi di Sleman, Yogyakarta.';
+    }
+
+    // 4. Bandingkan Drone
+    if (is_page('bandingkan') || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], '/bandingkan') !== false)) {
+        return 'Bandingkan spesifikasi teknis drone sprayer FERTO, drone pemetaan VTOL DELTAV, dan kargo DELFRO berstandar TKDN & SNI buatan PT Karya Solusi Angkasa.';
+    }
+
+    // 5. Newsroom & Blog
+    if (is_home() || (isset($_SERVER['REQUEST_URI']) && preg_match('#/blog/?#i', $_SERVER['REQUEST_URI']))) {
+        return 'Berita terkini, studi kasus operasional drone pertanian, survei pemetaan LiDAR tambang, dan riset teknologi industri UAV dari tim PT Karya Solusi Angkasa.';
+    }
+
+    // 6. Produk Drone Tunggal (Single CPT)
     if (is_singular('drone')) {
         $drone_id = get_the_ID();
         $custom_rm_desc = get_post_meta($drone_id, 'rank_math_description', true);
@@ -1047,8 +1040,21 @@ add_filter('rank_math/frontend/description', function ($description) {
             $clean_desc = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $custom_rm_desc));
             return str_ireplace('full frone solutions', 'Full Drone Solutions', $clean_desc);
         }
+        $d_title  = get_the_title($drone_id);
+        $payload  = get_post_meta($drone_id, 'drone_spec_kapasitas', true);
+        $kategori = get_post_meta($drone_id, 'drone_kategori', true) ?: 'UAV Industri';
+        $cat_lower = strtolower($kategori);
+        if (strpos($cat_lower, 'agri') !== false) {
+            $cap = $payload ? "berkapasitas {$payload}" : 'resmi';
+            return "Spesifikasi resmi drone pertanian {$d_title} {$cap}. Bersertifikat TKDN 60,74% & SNI buatan PT Karya Solusi Angkasa (FDS) Indonesia.";
+        } elseif (strpos($cat_lower, 'peta') !== false) {
+            return "Spesifikasi resmi drone pemetaan Fixed-Wing VTOL {$d_title} jangkauan 60 km. Bersertifikat TKDN & SNI buatan PT Karya Solusi Angkasa (FDS) Indonesia.";
+        } else {
+            return "Spesifikasi resmi {$d_title} lini UAV industri berstandar SNI & ISO buatan PT Karya Solusi Angkasa (Full Drone Solutions) Indonesia.";
+        }
     }
 
+    // 7. Artikel Blog Tunggal
     if (is_singular('post')) {
         $post_id = get_the_ID();
         $custom_rm_desc = get_post_meta($post_id, 'rank_math_description', true);
@@ -1058,15 +1064,19 @@ add_filter('rank_math/frontend/description', function ($description) {
         }
         $post_obj = get_post($post_id);
         if ($post_obj) {
-            $excerpt = get_the_excerpt($post_obj) ?: wp_trim_words($post_obj->post_content, 28);
+            $excerpt = get_the_excerpt($post_obj) ?: wp_trim_words($post_obj->post_content, 25);
             if (!empty($excerpt)) {
                 return esc_attr(wp_strip_all_tags($excerpt));
             }
         }
     }
 
-    // Jika halaman (/bandingkan/, /blog/, dll.) belum memiliki deskripsi di Rank Math,
-    // otomatis isi dengan deskripsi SEO kaya kata kunci dari fds_get_seo_data() agar tampil di Google Search!
+    if (!empty($description)) {
+        $description = trim(preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', $description));
+        $description = str_ireplace('full frone solutions', 'Full Drone Solutions', $description);
+    }
+
+    // Fallback jika kosong
     if (empty($description)) {
         $seo = fds_get_seo_data();
         if (!empty($seo['description'])) {
@@ -1075,6 +1085,25 @@ add_filter('rank_math/frontend/description', function ($description) {
     }
 
     return $description;
+}, 99);
+
+/**
+ * Pastikan OpenGraph (Facebook/LinkedIn) dan Twitter Card memakai Title & Description yang seragam.
+ */
+add_filter('rank_math/opengraph/facebook/title', function ($og_title) {
+    return apply_filters('rank_math/frontend/title', $og_title);
+}, 99);
+
+add_filter('rank_math/opengraph/facebook/description', function ($og_desc) {
+    return apply_filters('rank_math/frontend/description', $og_desc);
+}, 99);
+
+add_filter('rank_math/opengraph/twitter/title', function ($tw_title) {
+    return apply_filters('rank_math/frontend/title', $tw_title);
+}, 99);
+
+add_filter('rank_math/opengraph/twitter/description', function ($tw_desc) {
+    return apply_filters('rank_math/frontend/description', $tw_desc);
 }, 99);
 
 /**
@@ -1146,7 +1175,7 @@ add_filter('rank_math/sitemap/enable_cpt', function ($enabled, $post_type) {
 
 add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type) {
     if ($post_type === 'drone') {
-        return true;
+        return false;
     }
     return $include;
 }, 10, 2);
@@ -1157,6 +1186,12 @@ add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type
  */
 function fds_get_legacy_zombie_redirect_map(): array {
     return [
+        // Redirect ke katalog produk resmi (/#produk)
+        'drone'                                                                         => '/#produk',
+        'drone/rebo'                                                                    => '/#produk',
+        'rebo'                                                                          => '/#produk',
+        'drone-reboisasi'                                                               => '/#produk',
+
         // Redirect ke halaman produk FERTO (5L, 10L, 15L, 22L)
         'drone-pertanian-ferto-5'                                                       => '/drone/ferto-5l/',
         'ferto-draft'                                                                   => '/drone/ferto-5l/',
@@ -1218,12 +1253,24 @@ function fds_get_legacy_zombie_redirect_map(): array {
     ];
 }
 
-// Hapus halaman zombie lama dari page-sitemap.xml Rank Math agar Google tidak bingung memilih halaman utama
+// Hapus halaman zombie lama dan arsip CPT drone dari sitemap XML Rank Math
 add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
-    if ($type === 'post' && is_object($object) && isset($object->post_type) && $object->post_type === 'page') {
+    if (is_object($object)) {
+        if (isset($object->post_status) && $object->post_status !== 'publish') {
+            return false;
+        }
         $slug = strtolower((string) ($object->post_name ?? ''));
+        if ($slug === 'rebo' || strpos($slug, 'rebo') !== false || strpos($slug, 'agrea') !== false) {
+            return false;
+        }
         $zombie_map = fds_get_legacy_zombie_redirect_map();
         if (isset($zombie_map[$slug])) {
+            return false;
+        }
+    }
+    if (is_string($url)) {
+        $parsed_path = trim(wp_parse_url($url, PHP_URL_PATH) ?? '', '/');
+        if ($parsed_path === 'drone' || preg_match('#^(drone/)?rebo/?$#i', $parsed_path)) {
             return false;
         }
     }
@@ -1235,6 +1282,7 @@ add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
  * 1. Menghapus / me-rename halaman "Drone Pertanian Agrea 15" (ID 13821) dan "Agrea 10" (ID 15297) yang dibuat pada 2020-2023
  *    agar kata kunci kompetitor (Agrea / Agras) bersih 100% dari database.
  * 2. Memindahkan artikel DJI impor lawas tahun 2019 ke Trash.
+ * 3. Mengarsipkan dan menghapus sisa data REBO dari sitemap.
  */
 add_action('init', function () {
     if (!get_option('fds_clean_agrea_dji_legacy_posts_v2')) {
@@ -1267,6 +1315,24 @@ add_action('init', function () {
         }
 
         update_option('fds_clean_agrea_dji_legacy_posts_v2', 1, false);
+    }
+
+    if (!get_option('fds_clean_rebo_trash_v2')) {
+        $rebo_posts = get_posts([
+            'name'        => 'rebo',
+            'post_type'   => 'any',
+            'post_status' => 'any',
+        ]);
+        foreach ($rebo_posts as $rp) {
+            wp_update_post([
+                'ID'          => $rp->ID,
+                'post_name'   => 'rebo-archived-' . $rp->ID,
+                'post_status' => 'trash',
+            ]);
+        }
+        global $wpdb;
+        $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '%rank_math_sitemap%' OR option_name LIKE '%rm_sm_%'");
+        update_option('fds_clean_rebo_trash_v2', 1, false);
     }
 }, 25);
 
@@ -1305,7 +1371,18 @@ add_action('template_redirect', function () {
         exit;
     }
 
-    // 0c. Tangani Typo Slug Drone Non-Eksisten (seperti /drone/ferto-20l/ -> /drone/ferto-15l/)
+    // 0c. Tangani Akses ke Arsip CPT Drone & REBO (Alihkan langsung ke Katalog Beranda /#produk)
+    if ($path_lower === 'drone' || is_post_type_archive('drone')) {
+        wp_safe_redirect(home_url('/#produk'), 301);
+        exit;
+    }
+
+    if (preg_match('#^(drone/)?rebo/?$#i', $path_lower)) {
+        wp_safe_redirect(home_url('/#produk'), 301);
+        exit;
+    }
+
+    // 0d. Tangani Typo Slug Drone Non-Eksisten (seperti /drone/ferto-20l/ -> /drone/ferto-15l/)
     if (preg_match('#^(drone/)?ferto-20l?/?$#i', $path_lower)) {
         wp_safe_redirect(home_url('/drone/ferto-15l/'), 301);
         exit;
@@ -1674,6 +1751,10 @@ add_action('template_redirect', function () {
             'post_status'    => 'publish',
         ]);
         foreach ($drones as $d) {
+            $slug_check = strtolower((string) $d->post_name);
+            if (in_array($slug_check, ['rebo', 'agrea-15', 'agrea-10'], true) || strpos($slug_check, 'rebo') !== false) {
+                continue;
+            }
             $urls[] = [
                 'loc'      => get_permalink($d->ID),
                 'priority' => '0.85',
