@@ -1157,12 +1157,12 @@ add_filter('rank_math/sitemap/post_type_archive', function ($include, $post_type
  */
 function fds_get_legacy_zombie_redirect_map(): array {
     return [
-        // Redirect ke halaman produk FERTO 5L & 10L
+        // Redirect ke halaman produk FERTO (5L, 10L, 15L)
         'drone-pertanian-ferto-5'                                                       => '/drone/ferto-5l/',
         'ferto-draft'                                                                   => '/drone/ferto-5l/',
         'drone-pertanian-ferto-10-terbaik-2023'                                         => '/drone/ferto-10l/',
-        'alat-semprot-pertanian-modern-cairan-pestisida-dan-pupuk-ag15'                 => '/drone/ferto-20l/',
-        'drone-pertanian-15-liter-sprayer-pestisida-pupuk-a415-agriculture-harga-efisien' => '/drone/ferto-20l/',
+        'alat-semprot-pertanian-modern-cairan-pestisida-dan-pupuk-ag15'                 => '/drone/ferto-15l/',
+        'drone-pertanian-15-liter-sprayer-pestisida-pupuk-a415-agriculture-harga-efisien' => '/drone/ferto-15l/',
 
         // Redirect ke halaman produk DELTAV (Pemetaan)
         'drone-pemetaan'                                                                => '/drone/deltav/',
@@ -1211,6 +1211,7 @@ function fds_get_legacy_zombie_redirect_map(): array {
         '13759-2'                                                                       => '/',
         'a9365-tech-lab-service-details'                                                => '/',
         'a9365-tech-lab-services'                                                       => '/',
+        'dji-indonesia-daftar-drone-paling-diminati-untuk-fotografi-hingga-agriculture-2019' => '/bandingkan/',
     ];
 }
 
