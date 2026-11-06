@@ -867,6 +867,53 @@ add_filter('rank_math/opengraph/facebook/og_locale', function () {
     return 'id_ID';
 }, 20);
 
+// Pastikan HTML Language Attributes selalu id-ID untuk Googlebot & GEO AI lokal
+add_filter('language_attributes', function () {
+    return 'lang="id-ID"';
+}, 99);
+
+add_filter('locale', function ($locale) {
+    if (!is_admin()) {
+        return 'id_ID';
+    }
+    return $locale;
+}, 99);
+
+// Harmonisasikan Schema Rank Math dengan standar regional Indonesia dan perbarui dateModified
+add_filter('rank_math/json_ld', function ($data, $jsonld) {
+    if (!is_array($data)) {
+        return $data;
+    }
+
+    $current_iso_time = gmdate('Y-m-d\TH:i:s+00:00');
+
+    array_walk_recursive($data, function (&$item, $key) use ($current_iso_time) {
+        if ($key === 'inLanguage' && in_array($item, ['en-US', 'en_US', 'en'])) {
+            $item = 'id-ID';
+        }
+        if ($key === 'dateModified' && (is_front_page() || is_home())) {
+            $item = $current_iso_time;
+        }
+    });
+
+    return $data;
+}, 99, 2);
+
+// Perbarui opengraph modified time agar Googlebot mendeteksi konten segar terbaru
+add_filter('rank_math/opengraph/facebook/article_modified_time', function ($time) {
+    if (is_front_page() || is_home()) {
+        return gmdate('Y-m-d\TH:i:s+00:00');
+    }
+    return $time;
+});
+
+add_filter('rank_math/opengraph/facebook/updated_time', function ($time) {
+    if (is_front_page() || is_home()) {
+        return gmdate('Y-m-d\TH:i:s+00:00');
+    }
+    return $time;
+});
+
 /**
  * Filter Rank Math Title for Drone CPT, Homepage, and Custom Pages
  * Prioritizes user custom title from Rank Math snippet editor if set,
