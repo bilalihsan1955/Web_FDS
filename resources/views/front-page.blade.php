@@ -847,7 +847,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT
       $tax_terms = get_terms([
           'taxonomy'   => 'kategori_drone',
-          'hide_empty' => false,
+          'hide_empty' => true,
           'orderby'    => 'term_id',
           'order'      => 'ASC',
       ]);
@@ -855,10 +855,13 @@ document.addEventListener('DOMContentLoaded', function() {
       $categories = ['Semua'];
       if (!empty($tax_terms) && !is_wp_error($tax_terms)) {
           foreach ($tax_terms as $t) {
+              if (strtolower((string) $t->slug) === 'reboisasi') {
+                  continue;
+              }
               $categories[] = $t->name;
           }
       } else {
-          $categories = ['Semua', 'Agrikultur', 'Pemetaan & GIS', 'Kargo', 'Reboisasi'];
+          $categories = ['Semua', 'Agrikultur', 'Pemetaan & GIS', 'Kargo'];
       }
 
       $wp_drones = get_posts([

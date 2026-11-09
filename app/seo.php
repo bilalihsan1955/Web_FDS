@@ -78,7 +78,6 @@ function fds_get_default_drone_keywords_grouped() {
             'drone surveillance pemantauan jarak jauh',
             'drone patroli karhutla dan keamanan',
             'drone multipurpose thermal flir',
-            'drone reboisasi seedball otonom',
             'alat semprot pertanian otomatis',
             'pengadaan drone e-katalog LKPP pemerintah BUMN',
             'pusat perakitan drone yogyakarta',
@@ -429,6 +428,11 @@ function fds_render_schema_jsonld() {
     $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
     $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
     $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
+    $raw_addr = !empty($contact['address']) ? wp_strip_all_tags($contact['address']) : 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285';
+    $postal   = '55285';
+    if (preg_match('/\b(\d{5})\b/', $raw_addr, $pm)) {
+        $postal = $pm[1];
+    }
 
     // 1. Organization & LocalBusiness Schema (B2B UAV Manufacturer - Bebas Price Slop)
     $org_schema = [
@@ -451,16 +455,16 @@ function fds_render_schema_jsonld() {
         'email'           => $email,
         'address'         => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok',
+            'streetAddress'   => $raw_addr,
             'addressLocality' => 'Sleman',
             'addressRegion'   => 'Daerah Istimewa Yogyakarta',
-            'postalCode'      => '55281',
+            'postalCode'      => $postal,
             'addressCountry'  => 'ID',
         ],
         'geo'             => [
             '@type'     => 'GeoCoordinates',
-            'latitude'  => -7.7554,
-            'longitude' => 110.3951,
+            'latitude'  => -7.7332,
+            'longitude' => 110.3558,
         ],
         'areaServed'      => [
             '@type' => 'Country',
@@ -484,7 +488,6 @@ function fds_render_schema_jsonld() {
             'Jasa Drone Foto Udara & Pemetaan GIS Topografi',
             'UAV Fixed-Wing Hybrid VTOL DELTAV Jelajah Panjang',
             'Drone Pencarian Korban Bencana & Misi SAR (Thermal FLIR)',
-            'Drone Reboisasi Hutan & Penyebaran Seedball Otonom',
             'Drone Kargo Logistik Medis Darurat',
             'Inspeksi Termal Infrastruktur Energi, SUTET 150kV & Migas',
             'Sistem Kendali Wahana FDS STATION (Bahasa Indonesia)',
@@ -534,7 +537,7 @@ function fds_render_schema_jsonld() {
                     'itemListElement' => [
                         ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan KEK (Kawasan Ekonomi Khusus)']],
                         ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Drone Tambang (Volume Cut & Fill / Stockpile)']],
-                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan Kehutanan & Karbon Reboisasi']],
+                        ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan Kehutanan & Karbon Hutan']],
                         ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Jasa Pemetaan Kawasan Industri & Inspeksi Transmisi 150kV']],
                     ],
                 ],
@@ -740,7 +743,7 @@ function fds_render_schema_jsonld() {
                 '@context'        => 'https://schema.org',
                 '@type'           => 'ItemList',
                 '@id'             => $home_url . '#drone-catalog-list',
-                'name'            => 'Katalog Produk Drone Pertanian, Pemetaan LiDAR, Kargo & Reboisasi FDS (TKDN 60,74%)',
+                'name'            => 'Katalog Produk Drone Pertanian, Pemetaan LiDAR, Kargo & Inspeksi FDS (TKDN 60,74%)',
                 'itemListElement' => $item_elements,
             ];
         }
@@ -879,36 +882,98 @@ add_filter('locale', function ($locale) {
     return $locale;
 }, 99);
 
-// Harmonisasikan Schema Rank Math dengan standar regional Indonesia dan perbarui dateModified
+// Harmonisasikan Schema Rank Math dengan standar regional Indonesia, bersihkan priceRange & perbarui dateModified
 add_filter('rank_math/json_ld', function ($data, $jsonld) {
     if (!is_array($data)) {
         return $data;
     }
 
     $current_iso_time = gmdate('Y-m-d\TH:i:s+00:00');
+    $is_core_refresh  = is_front_page() || is_home() || is_page(['tentang-kami', 'kontak', 'bandingkan']);
 
-    array_walk_recursive($data, function (&$item, $key) use ($current_iso_time) {
-        if ($key === 'inLanguage' && in_array($item, ['en-US', 'en_US', 'en'])) {
-            $item = 'id-ID';
-        }
-        if ($key === 'dateModified' && (is_front_page() || is_home())) {
-            $item = $current_iso_time;
-        }
-    });
+    $contact        = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+    $official_addr  = !empty($contact['address']) ? wp_strip_all_tags($contact['address']) : 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285';
+    $official_phone = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
+    $postal         = '55285';
+    if (preg_match('/\b(\d{5})\b/', $official_addr, $pm)) {
+        $postal = $pm[1];
+    }
 
+    $sanitize_node = function (&$node) use (&$sanitize_node, $current_iso_time, $is_core_refresh, $official_addr, $official_phone, $postal) {
+        if (!is_array($node)) {
+            return;
+        }
+
+        // Hapus paksa priceRange dari schema Rank Math agar baris "Price: $$$$" tidak pernah muncul di SERP
+        if (array_key_exists('priceRange', $node)) {
+            unset($node['priceRange']);
+        }
+
+        if (isset($node['inLanguage']) && in_array($node['inLanguage'], ['en-US', 'en_US', 'en'], true)) {
+            $node['inLanguage'] = 'id-ID';
+        }
+
+        if ($is_core_refresh && isset($node['dateModified'])) {
+            $node['dateModified'] = $current_iso_time;
+        }
+
+        if (isset($node['caption']) && is_string($node['caption']) && stripos($node['caption'], 'supplier') !== false) {
+            $node['caption'] = 'Full Drone Solutions — PT Karya Solusi Angkasa';
+        }
+
+        $node_type = $node['@type'] ?? '';
+        $types     = is_array($node_type) ? $node_type : [$node_type];
+
+        if (in_array('WebSite', $types, true)) {
+            $node['name']          = 'Full Drone Solutions';
+            $node['alternateName'] = 'PT Karya Solusi Angkasa (FDS)';
+        }
+
+        if (in_array('Organization', $types, true) || in_array('LocalBusiness', $types, true)) {
+            if (!empty($node['telephone']) && strpos((string) $node['telephone'], '821-3555') !== false) {
+                $node['telephone'] = $official_phone;
+            }
+            if (isset($node['logo']['caption']) && is_string($node['logo']['caption']) && stripos($node['logo']['caption'], 'supplier') !== false) {
+                $node['logo']['caption'] = 'Full Drone Solutions — PT Karya Solusi Angkasa';
+            }
+        }
+
+        if (in_array('PostalAddress', $types, true) || (isset($node['streetAddress']) && stripos((string) $node['streetAddress'], 'Griya Perwita') !== false)) {
+            $node['streetAddress']   = $official_addr;
+            $node['addressLocality'] = 'Sleman';
+            $node['addressRegion']   = 'Daerah Istimewa Yogyakarta';
+            $node['postalCode']      = $postal;
+            $node['addressCountry']  = 'ID';
+        }
+
+        foreach ($node as &$child) {
+            if (is_array($child)) {
+                $sanitize_node($child);
+            }
+        }
+    };
+
+    $sanitize_node($data);
     return $data;
 }, 99, 2);
 
 // Perbarui opengraph modified time agar Googlebot mendeteksi konten segar terbaru
 add_filter('rank_math/opengraph/facebook/article_modified_time', function ($time) {
-    if (is_front_page() || is_home()) {
+    if (is_front_page() || is_home() || is_page(['tentang-kami', 'kontak', 'bandingkan'])) {
+        return gmdate('Y-m-d\TH:i:s+00:00');
+    }
+    return $time;
+});
+
+add_filter('rank_math/opengraph/facebook/og_updated_time', function ($time) {
+    if (is_front_page() || is_home() || is_page(['tentang-kami', 'kontak', 'bandingkan'])) {
         return gmdate('Y-m-d\TH:i:s+00:00');
     }
     return $time;
 });
 
 add_filter('rank_math/opengraph/facebook/updated_time', function ($time) {
-    if (is_front_page() || is_home()) {
+    if (is_front_page() || is_home() || is_page(['tentang-kami', 'kontak', 'bandingkan'])) {
         return gmdate('Y-m-d\TH:i:s+00:00');
     }
     return $time;
@@ -985,20 +1050,30 @@ add_filter('rank_math/frontend/title', function ($title) {
 }, 99);
 
 /**
- * Pastikan seluruh konten publik (Post Artikel, Halaman Page, Produk Drone, Arsip, Home)
- * SELALU terindeks ('index, follow') dengan izin cuplikan penuh (Rich Snippets).
- * Mencegah Rank Math atau setting WP Admin secara tidak sengaja menyetel 'noindex'.
+ * Pastikan seluruh konten publik utama terindeks ('index, follow') dengan cuplikan penuh,
+ * sementara halaman utilitas non-komersial (Karir, Privacy Policy, Disclaimer) disetel 'noindex, follow'
+ * agar tidak menggeser Sitelink komersial FDS di Google Search.
  */
 add_filter('rank_math/frontend/robots', function ($robots) {
-    if (!is_admin() && !is_search() && !is_404() && !is_feed()) {
-        $robots['index'] = 'index';
-        unset($robots['noindex']);
-        $robots['follow'] = 'follow';
-        unset($robots['nofollow']);
-        $robots['max-snippet'] = 'max-snippet:-1';
-        $robots['max-image-preview'] = 'max-image-preview:large';
-        $robots['max-video-preview'] = 'max-video-preview:-1';
+    if (is_admin() || is_search() || is_404() || is_feed()) {
+        return $robots;
     }
+
+    if (is_page(['karir', 'privacy-policy', 'disclaimer'])) {
+        $robots['index']  = 'noindex';
+        $robots['follow'] = 'follow';
+        unset($robots['max-snippet'], $robots['max-image-preview'], $robots['max-video-preview']);
+        return $robots;
+    }
+
+    $robots['index'] = 'index';
+    unset($robots['noindex']);
+    $robots['follow'] = 'follow';
+    unset($robots['nofollow']);
+    $robots['max-snippet'] = 'max-snippet:-1';
+    $robots['max-image-preview'] = 'max-image-preview:large';
+    $robots['max-video-preview'] = 'max-video-preview:-1';
+
     return $robots;
 }, 99);
 
@@ -1088,18 +1163,40 @@ add_filter('rank_math/frontend/description', function ($description) {
 }, 99);
 
 /**
- * Pastikan OpenGraph (Facebook/LinkedIn) dan Twitter Card memakai Title & Description yang seragam.
+ * Pastikan OpenGraph (Facebook/LinkedIn) dan Twitter Card memakai Title, Description & Site Name yang seragam.
+ * Menggunakan hook resmi Rank Math (og_title, og_description, og_site_name, twitter_title, twitter_description)
+ * agar tidak bocor teks "Deskripsi Singkat: ..." atau judul/deskripsi lama dari database.
  */
+add_filter('rank_math/opengraph/facebook/og_title', function ($og_title) {
+    return apply_filters('rank_math/frontend/title', $og_title);
+}, 99);
+
 add_filter('rank_math/opengraph/facebook/title', function ($og_title) {
     return apply_filters('rank_math/frontend/title', $og_title);
+}, 99);
+
+add_filter('rank_math/opengraph/facebook/og_description', function ($og_desc) {
+    return apply_filters('rank_math/frontend/description', $og_desc);
 }, 99);
 
 add_filter('rank_math/opengraph/facebook/description', function ($og_desc) {
     return apply_filters('rank_math/frontend/description', $og_desc);
 }, 99);
 
+add_filter('rank_math/opengraph/facebook/og_site_name', function () {
+    return 'Full Drone Solutions';
+}, 99);
+
+add_filter('rank_math/opengraph/twitter/twitter_title', function ($tw_title) {
+    return apply_filters('rank_math/frontend/title', $tw_title);
+}, 99);
+
 add_filter('rank_math/opengraph/twitter/title', function ($tw_title) {
     return apply_filters('rank_math/frontend/title', $tw_title);
+}, 99);
+
+add_filter('rank_math/opengraph/twitter/twitter_description', function ($tw_desc) {
+    return apply_filters('rank_math/frontend/description', $tw_desc);
 }, 99);
 
 add_filter('rank_math/opengraph/twitter/description', function ($tw_desc) {
@@ -1196,6 +1293,12 @@ function fds_get_legacy_zombie_redirect_map(): array {
         'drone-pertanian-ferto-5'                                                       => '/drone/ferto-5l/',
         'ferto-draft'                                                                   => '/drone/ferto-5l/',
         'drone-pertanian-ferto-10-terbaik-2023'                                         => '/drone/ferto-10l/',
+        'drone-pertanian-agrea-15'                                                      => '/drone/ferto-15l/',
+        'drone-pertanian-agrea-10'                                                      => '/drone/ferto-10l/',
+        'drone/agrea-15'                                                                => '/drone/ferto-15l/',
+        'drone/agrea-10'                                                                => '/drone/ferto-10l/',
+        'agrea-15'                                                                      => '/drone/ferto-15l/',
+        'agrea-10'                                                                      => '/drone/ferto-10l/',
         'alat-semprot-pertanian-modern-cairan-pestisida-dan-pupuk-ag15'                 => '/drone/ferto-15l/',
         'drone-pertanian-15-liter-sprayer-pestisida-pupuk-a415-agriculture-harga-efisien' => '/drone/ferto-15l/',
         'drone/ferto-20l'                                                               => '/drone/ferto-15l/',
@@ -1209,11 +1312,19 @@ function fds_get_legacy_zombie_redirect_map(): array {
         'harga-jasa-pemetaan-udara'                                                     => '/drone/deltav/',
         'jasa-pemetaan-survey-agriculture'                                              => '/drone/deltav/',
         'jasa-pemetaan-udara-dan-drone-agriculture-pertanian'                           => '/drone/deltav/',
+        'jual-drone-pemetaan-udara-agriculture-pertanian-murah-berkualitas'             => '/drone/deltav/',
 
         // Redirect ke Blog & Kontak
         'blogfds'                                                                       => '/blog/',
         'a9365-tech-lab-news'                                                           => '/blog/',
+        '5-rekomendasi-jenis-drone-terbaik-untuk-pemetaan-udara-yang-harus-anda-ketahui' => '/blog/',
+        'inovasi-pertanian-modern-di-indonesia-smart-farming-drone-agriculture'         => '/blog/',
+        'tutorial-membuat-peta-otmosaic-3d-dengan-software-agisoft'                     => '/blog/',
         'contact-1'                                                                     => '/kontak/',
+
+        // Redirect katalog/pricing/perbandingan lama ke /#produk
+        '3-rekomendasi-drone-untuk-pertanian-atau-agriculture-paling-efisien'           => '/#produk',
+        'daftar-harga-drone-penyemprot-pestisida-dan-sprayer-2019'                      => '/#produk',
 
         // Redirect halaman duplikat Beranda & Landing Page Elementor lama ke Beranda Utama (/)
         // agar seluruh otoritas SEO keyword "drone pertanian" terpusat di https://fulldronesolutions.co.id/
@@ -1253,14 +1364,22 @@ function fds_get_legacy_zombie_redirect_map(): array {
     ];
 }
 
-// Hapus halaman zombie lama dan arsip CPT drone dari sitemap XML Rank Math
+// Hapus halaman zombie lama, utilitas (karir, privacy-policy, disclaimer), agrea/rebo, dan arsip CPT drone dari sitemap XML Rank Math
 add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
+    $utility_exclude = ['karir', 'privacy-policy', 'disclaimer'];
+
     if (is_object($object)) {
         if (isset($object->post_status) && $object->post_status !== 'publish') {
             return false;
         }
-        $slug = strtolower((string) ($object->post_name ?? ''));
-        if ($slug === 'rebo' || strpos($slug, 'rebo') !== false || strpos($slug, 'agrea') !== false) {
+        $slug = strtolower((string) ($object->post_name ?? ($object->slug ?? '')));
+        if (in_array($slug, $utility_exclude, true)) {
+            return false;
+        }
+        if ($slug === 'rebo' || $slug === 'reboisasi' || strpos($slug, 'agrea') !== false || strpos($slug, 'ferto-20') !== false) {
+            return false;
+        }
+        if (isset($object->post_type) && $object->post_type !== 'post' && strpos($slug, 'rebo') !== false) {
             return false;
         }
         $zombie_map = fds_get_legacy_zombie_redirect_map();
@@ -1268,9 +1387,20 @@ add_filter('rank_math/sitemap/entry', function ($url, $type, $object) {
             return false;
         }
     }
-    if (is_string($url)) {
-        $parsed_path = trim(wp_parse_url($url, PHP_URL_PATH) ?? '', '/');
-        if ($parsed_path === 'drone' || preg_match('#^(drone/)?rebo/?$#i', $parsed_path)) {
+
+    $check_url = is_array($url) ? ($url['loc'] ?? '') : (is_string($url) ? $url : '');
+    if ($check_url !== '') {
+        $parsed_path = strtolower(trim(wp_parse_url($check_url, PHP_URL_PATH) ?? '', '/'));
+        if (
+            $parsed_path === 'drone'
+            || in_array($parsed_path, $utility_exclude, true)
+            || preg_match('#^(drone/|kategori-drone/)?(rebo|reboisasi)/?$#i', $parsed_path)
+            || preg_match('#^(drone/)?(drone-pertanian-)?agrea(-?\d+)?/?$#i', $parsed_path)
+        ) {
+            return false;
+        }
+        $zombie_map = fds_get_legacy_zombie_redirect_map();
+        if (isset($zombie_map[$parsed_path])) {
             return false;
         }
     }
@@ -1334,6 +1464,57 @@ add_action('init', function () {
         $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '%rank_math_sitemap%' OR option_name LIKE '%rm_sm_%'");
         update_option('fds_clean_rebo_trash_v2', 1, false);
     }
+
+    if (!get_option('fds_seo_cleanup_v6')) {
+        global $wpdb;
+
+        // Trash artikel pricing/kompetitor lawas 2019-2021 (ID 1797 Daftar Harga 2019, ID 35 Jual Murah 2021)
+        foreach ([1797, 35] as $legacy_post_id) {
+            if (get_post($legacy_post_id)) {
+                wp_update_post([
+                    'ID'          => $legacy_post_id,
+                    'post_status' => 'trash',
+                ]);
+            }
+        }
+
+        // Pastikan seluruh post/page/drone dengan slug mengandung "agrea" atau "rebo" bersih ke trash & rename slug
+        $agrea_like = '%' . $wpdb->esc_like('agrea') . '%';
+        $legacy_ids = $wpdb->get_col($wpdb->prepare(
+            "SELECT ID FROM {$wpdb->posts} WHERE post_type IN ('post', 'page', 'drone') AND post_status != 'trash' AND (LOWER(post_name) LIKE %s OR LOWER(post_name) = 'rebo')",
+            $agrea_like
+        ));
+        if (!empty($legacy_ids)) {
+            foreach ($legacy_ids as $lid) {
+                $p_obj = get_post((int) $lid);
+                if ($p_obj) {
+                    wp_update_post([
+                        'ID'          => $p_obj->ID,
+                        'post_name'   => sanitize_title($p_obj->post_name) . '-archived-' . $p_obj->ID,
+                        'post_status' => 'trash',
+                    ]);
+                }
+            }
+        }
+
+        // Perbarui post_modified pada halaman utama & produk agar lastmod di sitemap_index.xml & page-sitemap.xml segar
+        $now_local = current_time('mysql');
+        $now_gmt   = current_time('mysql', true);
+        $wpdb->query($wpdb->prepare(
+            "UPDATE {$wpdb->posts} SET post_modified = %s, post_modified_gmt = %s WHERE post_status = 'publish' AND (post_name IN ('beranda', 'tentang-kami', 'kontak', 'bandingkan', 'blog') OR post_type = 'drone')",
+            $now_local,
+            $now_gmt
+        ));
+
+        // Bersihkan cache transient sitemap Rank Math, mega menu, & seluruh LiteSpeed Cache agar HTML/XML terbaru langsung terpublikasi
+        $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '%rank_math_sitemap%' OR option_name LIKE '%rm_sm_%'");
+        delete_transient('fds_mega_menu_data');
+        if (has_action('litespeed_purge_all')) {
+            do_action('litespeed_purge_all');
+        }
+
+        update_option('fds_seo_cleanup_v6', 1, false);
+    }
 }, 25);
 
 // =========================================================================
@@ -1367,23 +1548,35 @@ add_action('template_redirect', function () {
     // 0b. Redirect 301 Halaman Zombie Elementor/WooCommerce Lama (Anti-Kanibalisasi Keyword "drone pertanian")
     $zombie_map = fds_get_legacy_zombie_redirect_map();
     if (isset($zombie_map[$path_lower])) {
+        header('X-Robots-Tag: noindex, nofollow', true);
         wp_safe_redirect(home_url($zombie_map[$path_lower]), 301);
         exit;
     }
 
     // 0c. Tangani Akses ke Arsip CPT Drone & REBO (Alihkan langsung ke Katalog Beranda /#produk)
     if ($path_lower === 'drone' || is_post_type_archive('drone')) {
+        header('X-Robots-Tag: noindex, nofollow', true);
         wp_safe_redirect(home_url('/#produk'), 301);
         exit;
     }
 
-    if (preg_match('#^(drone/)?rebo/?$#i', $path_lower)) {
+    if (preg_match('#^(drone/|kategori-drone/)?(rebo|reboisasi)/?$#i', $path_lower)) {
+        header('X-Robots-Tag: noindex, nofollow', true);
         wp_safe_redirect(home_url('/#produk'), 301);
+        exit;
+    }
+
+    // 0c-2. Tangani Wildcard URL Legacy Agrea (mis. /drone-pertanian-agrea-15/, /drone/agrea-15/, /agrea-10/)
+    if (preg_match('#^(drone/)?(drone-pertanian-)?agrea(-?(\d+))?/?$#i', $path_lower, $ag_m)) {
+        header('X-Robots-Tag: noindex, nofollow', true);
+        $target_ferto = (!empty($ag_m[4]) && $ag_m[4] === '10') ? '/drone/ferto-10l/' : '/drone/ferto-15l/';
+        wp_safe_redirect(home_url($target_ferto), 301);
         exit;
     }
 
     // 0d. Tangani Typo Slug Drone Non-Eksisten (seperti /drone/ferto-20l/ -> /drone/ferto-15l/)
     if (preg_match('#^(drone/)?ferto-20l?/?$#i', $path_lower)) {
+        header('X-Robots-Tag: noindex, nofollow', true);
         wp_safe_redirect(home_url('/drone/ferto-15l/'), 301);
         exit;
     }
@@ -1547,7 +1740,7 @@ function fds_build_llms_txt_content(): string {
     $contact  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
     $phone    = !empty($contact['phone']) ? $contact['phone'] : '+62 8112 748 882';
     $email    = !empty($contact['email']) ? $contact['email'] : 'marketing@fulldronesolutions.com';
-    $address  = !empty($contact['address']) ? $contact['address'] : 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Sleman, D.I. Yogyakarta 55281';
+    $address  = !empty($contact['address']) ? $contact['address'] : 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285';
 
     $out = [];
     $out[] = "# {$site_name}";
@@ -1575,11 +1768,10 @@ function fds_build_llms_txt_content(): string {
     $out[] = "";
     $out[] = "### 1. Produsen Drone Pertanian, Pemetaan, Logistik & Surveillance";
     $out[] = "FDS memproduksi sendiri pesawat nirawak (UAV) dengan rangka karbon komposit in-house, avionik terkendali, dan software kendali FDS STATION berbahasa Indonesia:";
-    $out[] = "- **Drone Pertanian FERTO (5L, 10L, 20L, 30L, 50L):** Drone sprayer pupuk cair/pestisida dan granule spreader pupuk padat/benih presisi dengan radar terrain-following.";
+    $out[] = "- **Drone Pertanian FERTO (5L, 10L, 15L, 22L, 30L, 50L):** Drone sprayer pupuk cair/pestisida dan granule spreader pupuk padat/benih presisi dengan radar terrain-following.";
     $out[] = "- **Drone Pemetaan DELTAV VTOL:** UAV Fixed-Wing Hybrid VTOL berdaya jelajah 60 km, durasi terbang hingga 90+ menit, dan kamera 42 MP metrik / LiDAR.";
     $out[] = "- **Drone Logistik & Kargo DELFRO:** UAV pengangkut kargo logistik darurat medis dan suplai logistik ke area terisolir 3T dengan payload 10–20 kg.";
     $out[] = "- **Drone Surveillance & SAR MULTIPURPOSE:** Wahana pemantauan udara otonom berbekal dual kamera optik 30x optical zoom dan kamera termal FLIR inframerah untuk patroli malam, keamanan kawasan objek vital, dan tanggap darurat bencana.";
-    $out[] = "- **Drone Reboisasi REBO:** Drone penebar benih seedball otonom untuk reboisasi hutan dan rehabilitasi lahan kritis.";
     $out[] = "";
     $out[] = "### 2. Jasa Foto Udara dan Survey LiDAR";
     $out[] = "Layanan survei udara fotogrametri dan sensor aktif LiDAR berakurasi sub-sentimeter:";
@@ -1681,14 +1873,14 @@ add_action('init', function () {
         exit;
     }
 
-    // Ensure static physical llms.txt on disk is always refreshed to version 3.0
+    // Ensure static physical llms.txt on disk is always refreshed to version 3.1
     if (defined('ABSPATH') && is_writable(ABSPATH)) {
         $llms_disk_ver = get_option('fds_llms_version_disk', '0');
-        if ($llms_disk_ver !== '3.0' || isset($_GET['refresh_llms'])) {
+        if ($llms_disk_ver !== '3.1' || isset($_GET['refresh_llms'])) {
             delete_transient('fds_llms_txt_cache_v2');
             delete_transient('fds_llms_txt_cache_v3');
             fds_build_llms_txt_content();
-            update_option('fds_llms_version_disk', '3.0');
+            update_option('fds_llms_version_disk', '3.1');
         }
     }
 
@@ -1752,7 +1944,7 @@ add_action('template_redirect', function () {
         ]);
         foreach ($drones as $d) {
             $slug_check = strtolower((string) $d->post_name);
-            if (in_array($slug_check, ['rebo', 'agrea-15', 'agrea-10'], true) || strpos($slug_check, 'rebo') !== false) {
+            if (in_array($slug_check, ['rebo', 'agrea-15', 'agrea-10'], true) || strpos($slug_check, 'rebo') !== false || strpos($slug_check, 'agrea') !== false) {
                 continue;
             }
             $urls[] = [

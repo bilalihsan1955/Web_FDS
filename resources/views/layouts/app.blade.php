@@ -98,7 +98,7 @@
       if ($drones_by_cat_slug === false) {
           $tax_terms = get_terms([
               'taxonomy'   => 'kategori_drone',
-              'hide_empty' => false,
+              'hide_empty' => true,
               'orderby'    => 'term_id',
               'order'      => 'ASC',
           ]);
@@ -108,7 +108,6 @@
                   (object)['name' => 'Agrikultur', 'slug' => 'agrikultur', 'description' => 'Pertanian Presisi FERTO 5L – 50L'],
                   (object)['name' => 'Pemetaan & GIS', 'slug' => 'pemetaan-gis', 'description' => 'Survei Geospasial & Inspeksi Aset'],
                   (object)['name' => 'Kargo', 'slug' => 'kargo', 'description' => 'Distribusi Logistik Cepat 10 kg'],
-                  (object)['name' => 'Reboisasi', 'slug' => 'reboisasi', 'description' => 'Restorasi Hutan & Penabur Biji'],
               ];
           }
 
