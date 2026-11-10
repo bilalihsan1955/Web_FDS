@@ -17,6 +17,11 @@
   $wa_prefill = $q_def['wa_prefill'] ?? 'Halo tim Enterprise FDS, kami ingin berkonsultasi mengenai layanan UAV dan pemetaan udara.';
   $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
   $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
+  $kontak_form_url     = home_url('/kontak/#hubungi-form');
+  $raw_hub_cta_url     = trim((string) ($hub['cta_primary_url'] ?? ''));
+  $hub_primary_cta_url = ($raw_hub_cta_url !== '' && $raw_hub_cta_url !== '#form-penawaran')
+      ? $raw_hub_cta_url
+      : $kontak_form_url;
 
   $resolved_reading_links = [];
   foreach (($hub['reading_links'] ?? []) as $rl) {
@@ -84,7 +89,7 @@
     @endif
 
     <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="{{ esc_attr($hub['cta_primary_url'] ?? '#form-penawaran') }}"
+      <a href="{{ esc_url($hub_primary_cta_url) }}"
          class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
         {{ $hub['cta_primary_text'] ?? 'Minta Penawaran Proyek' }}
       </a>
@@ -350,7 +355,7 @@
         @endif
 
         <div class="mt-6">
-          <a href="#form-penawaran" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
+          <a href="{{ esc_url($kontak_form_url) }}" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
             {{ $ui['hub_cost_cta_text'] ?? 'Kirim batas poligon AOI & KAK untuk estimasi resmi →' }}
           </a>
         </div>
@@ -414,21 +419,10 @@
   sectionBg="white"
 />
 
-{{-- 9. FORM PENAWARAN & REQUEST FOR PROPOSAL (RFP) --}}
-<x-service-quotation-section
-  serviceSlug="layanan"
-  :eyebrow="$q_def['eyebrow'] ?? 'Konsultasi & Request for Proposal (RFP)'"
-  :title="$q_def['title'] ?? 'Ajukan Kebutuhan Pemetaan, Survei LiDAR, Inspeksi, atau Pelatihan Tim Anda'"
-  :subtitle="$q_def['subtitle'] ?? ''"
-  :kakChecklist="$hub['cost_framework']['kak_checklist'] ?? []"
-  :waPrefill="$wa_prefill"
-  :messagePlaceholder="$q_def['placeholder'] ?? ''"
-  sectionBg="gray"
-/>
-
-{{-- 10. MOBILE STICKY CTA BAR --}}
+{{-- 9. MOBILE STICKY CTA BAR --}}
 <x-service-sticky-bar
   :ctaLabel="$ui['sticky_cta_label'] ?? 'Minta Penawaran'"
+  :ctaUrl="$hub_primary_cta_url"
   :waPrefill="$wa_prefill"
 />
 

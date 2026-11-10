@@ -1013,12 +1013,15 @@ function fds_sync_drone_rank_math_seo($post_id) {
         'max-image-preview' => 'large',
     ]);
 
-    // Rank Math Schema Product Assignment
-    update_post_meta($post_id, 'rank_math_rich_snippet', 'product');
-    update_post_meta($post_id, 'rank_math_snippet_product_name', $title);
-    update_post_meta($post_id, 'rank_math_snippet_product_desc', $seo_desc);
-    update_post_meta($post_id, 'rank_math_snippet_product_currency', 'IDR');
-    update_post_meta($post_id, 'rank_math_snippet_product_instock', 'on');
+    // Nonaktifkan rich snippet Product kosong (B2B tanpa harga publik/ulasan) agar tidak memicu error Merchant/Product Snippets di GSC
+    $existing_snippet = get_post_meta($post_id, 'rank_math_rich_snippet', true);
+    if ($existing_snippet === '' || $existing_snippet === 'product') {
+        update_post_meta($post_id, 'rank_math_rich_snippet', 'off');
+    }
+    delete_post_meta($post_id, 'rank_math_snippet_product_name');
+    delete_post_meta($post_id, 'rank_math_snippet_product_desc');
+    delete_post_meta($post_id, 'rank_math_snippet_product_currency');
+    delete_post_meta($post_id, 'rank_math_snippet_product_instock');
 
     // Yoast SEO Fallback Fields (only if empty to avoid overwriting user edits)
     if (!get_post_meta($post_id, '_yoast_wpseo_focuskw', true)) {

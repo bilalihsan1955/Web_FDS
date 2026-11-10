@@ -28,6 +28,7 @@
   $wa_prefill = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan sektor ' . ($sector['card_title'] ?? 'Industri') . '.');
   $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
   $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
+  $kontak_form_url = home_url('/kontak/#hubungi-form');
 
   $resolved_reading_links = [];
   foreach (($sector['reading_links'] ?? []) as $rl) {
@@ -88,7 +89,7 @@
     @endif
 
     <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="#form-penawaran"
+      <a href="{{ esc_url($kontak_form_url) }}"
          class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
         {{ $p_join((string) ($ui['sektor_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($sector['card_title'] ?? '')) }}
       </a>
@@ -183,12 +184,16 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       @foreach($sector['solutions'] as $sol)
-        @php $has_sol_link = !empty($sol['link_url']); @endphp
+        @php
+          $raw_sol_url  = trim((string) ($sol['link_url'] ?? ''));
+          $sol_url      = ($raw_sol_url === '#form-penawaran') ? $kontak_form_url : $raw_sol_url;
+          $has_sol_link = $sol_url !== '';
+        @endphp
         <article class="fds-service-card {{ $has_sol_link ? 'fds-service-card--interactive fds-service-card--light' : '' }} bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.08] flex flex-col justify-between group">
           <div>
             <h3 class="text-[19px] sm:text-[20px] font-semibold tracking-[-0.015em] text-[#1d1d1f] leading-snug mb-2.5 {{ $has_sol_link ? 'group-hover:text-[#0a555c]' : '' }} transition-colors">
               @if($has_sol_link)
-                <a href="{{ esc_url($sol['link_url']) }}" class="fds-stretched-link">
+                <a href="{{ esc_url($sol_url) }}" class="fds-stretched-link">
                   {{ $sol['name'] }}
                 </a>
               @else
@@ -469,7 +474,7 @@
         @endif
 
         <div class="mt-6">
-          <a href="#form-penawaran" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
+          <a href="{{ esc_url($kontak_form_url) }}" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
             {{ $ui['sektor_cost_cta_text'] ?? 'Kirim lokasi & batas AOI untuk estimasi resmi →' }}
           </a>
         </div>
@@ -565,7 +570,7 @@
 @endif
 
 {{-- 10. FAQ SEKTOR --}}
-@php $faq_bg = $use_white ? 'white' : 'gray'; $use_white = !$use_white; @endphp
+@php $faq_bg = $use_white ? 'white' : 'gray'; @endphp
 <x-service-faq
   :title="$p_join((string) ($ui['sektor_faq_prefix'] ?? 'Pertanyaan Umum:'), (string) ($sector['card_title'] ?? 'Layanan'))"
   :subtitle="$ui['sektor_faq_subtitle'] ?? 'Jawaban ringkas terkait metodologi, deliverables, integrasi software, dan tahapan kerja lapangan.'"
@@ -573,21 +578,10 @@
   :sectionBg="$faq_bg"
 />
 
-{{-- 11. FORM PENAWARAN & REQUEST FOR PROPOSAL (RFP) --}}
-<x-service-quotation-section
-  :serviceSlug="$sec_slug"
-  :eyebrow="$q_def['eyebrow'] ?? ('Konsultasi Sektor ' . ($sector['card_title'] ?? 'Industri'))"
-  :title="$q_def['title'] ?? ('Ajukan Kebutuhan Sektor ' . ($sector['card_title'] ?? 'Industri') . ' Anda')"
-  :subtitle="$q_def['subtitle'] ?? ''"
-  :kakChecklist="$sector['cost_framework']['kak_checklist'] ?? []"
-  :waPrefill="$wa_prefill"
-  :messagePlaceholder="$q_def['placeholder'] ?? ''"
-  :sectionBg="$use_white ? 'white' : 'gray'"
-/>
-
-{{-- 12. MOBILE STICKY CTA BAR --}}
+{{-- 11. MOBILE STICKY CTA BAR --}}
 <x-service-sticky-bar
   :ctaLabel="$ui['sticky_cta_label'] ?? 'Minta Penawaran'"
+  :ctaUrl="$kontak_form_url"
   :waPrefill="$wa_prefill"
 />
 

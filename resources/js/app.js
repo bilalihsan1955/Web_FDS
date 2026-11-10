@@ -251,8 +251,11 @@ if (typeof window !== 'undefined') {
       window.fdsTrackEvent('click_phone', { phone_href: href });
     } else if (/^mailto:/i.test(href)) {
       window.fdsTrackEvent('click_email', { email_href: href });
-    } else if (href.includes('#form-penawaran')) {
-      window.fdsTrackEvent('scroll_to_quotation', { link_text: (anchor.textContent || '').trim().slice(0, 80) });
+    } else if (href.includes('#hubungi-form') || href.includes('#form-penawaran')) {
+      window.fdsTrackEvent('click_quotation_cta', {
+        link_url: href,
+        link_text: (anchor.textContent || '').trim().slice(0, 80),
+      });
     }
   });
 

@@ -29,6 +29,7 @@
   $wa_prefill = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan ' . ($cat['short_title'] ?? 'Layanan FDS') . '.');
   $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
   $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
+  $kontak_form_url = home_url('/kontak/#hubungi-form');
 
   $resolved_reading_links = [];
   foreach (($cat['reading_links'] ?? []) as $rl) {
@@ -91,7 +92,7 @@
     @endif
 
     <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="#form-penawaran"
+      <a href="{{ esc_url($kontak_form_url) }}"
          class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
         {{ $p_join((string) ($ui['kat_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($cat['short_title'] ?? '')) }}
       </a>
@@ -382,7 +383,7 @@
         @endif
 
         <div class="mt-6">
-          <a href="#form-penawaran" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
+          <a href="{{ esc_url($kontak_form_url) }}" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
             {{ $ui['kat_cost_cta_text'] ?? 'Kirim rincian kebutuhan untuk estimasi penawaran →' }}
           </a>
         </div>
@@ -440,7 +441,7 @@
 @endif
 
 {{-- 8. FAQ KATEGORI --}}
-@php $faq_bg = $use_white ? 'white' : 'gray'; $use_white = !$use_white; @endphp
+@php $faq_bg = $use_white ? 'white' : 'gray'; @endphp
 <x-service-faq
   :title="$p_join((string) ($ui['kat_faq_prefix'] ?? 'Pertanyaan Umum:'), (string) ($cat['short_title'] ?? 'Layanan'))"
   :subtitle="$ui['kat_faq_subtitle'] ?? 'Penjelasan teknis, format file keluaran, dan informasi yang dapat Anda konsultasikan bersama tim FDS.'"
@@ -448,21 +449,10 @@
   :sectionBg="$faq_bg"
 />
 
-{{-- 9. FORM PENAWARAN & REQUEST FOR PROPOSAL (RFP) --}}
-<x-service-quotation-section
-  :serviceSlug="$cat_slug"
-  :eyebrow="$q_def['eyebrow'] ?? ('Konsultasi ' . ($cat['short_title'] ?? 'Layanan'))"
-  :title="$q_def['title'] ?? ('Ajukan Kebutuhan ' . ($cat['short_title'] ?? 'Layanan') . ' Anda')"
-  :subtitle="$q_def['subtitle'] ?? ''"
-  :kakChecklist="$cat['cost_framework']['kak_checklist'] ?? []"
-  :waPrefill="$wa_prefill"
-  :messagePlaceholder="$q_def['placeholder'] ?? ''"
-  :sectionBg="$use_white ? 'white' : 'gray'"
-/>
-
-{{-- 10. MOBILE STICKY CTA BAR --}}
+{{-- 9. MOBILE STICKY CTA BAR --}}
 <x-service-sticky-bar
   :ctaLabel="$ui['sticky_cta_label'] ?? 'Minta Penawaran'"
+  :ctaUrl="$kontak_form_url"
   :waPrefill="$wa_prefill"
 />
 

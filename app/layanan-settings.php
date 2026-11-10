@@ -140,7 +140,7 @@ function fds_get_default_layanan_hub_data(): array {
             'Mulai dari jasa drone mapping fotogrametri, drone LiDAR survey, multispectral dan hyperspectral imaging, aerial inspection visual/termal, pengembangan UAV khusus, hingga pelatihan dan bootcamp operator, setiap pekerjaan disesuaikan langsung dengan karakteristik proyek dan standar teknis organisasi Anda.',
         ],
         'cta_primary_text'   => 'Minta Penawaran Proyek',
-        'cta_primary_url'    => '#form-penawaran',
+        'cta_primary_url'    => home_url('/kontak/#hubungi-form'),
         'cta_secondary_text' => 'Jelajahi 6 Sektor Industri',
         'cta_secondary_url'  => '#solusi-industri',
         'challenge_section' => [
@@ -324,7 +324,7 @@ function fds_get_default_layanan_hub_data(): array {
             ],
             [
                 'q' => 'Bagaimana prosedur permintaan penawaran proyek, apakah bisa sekaligus konsultasi pengadaan unit drone?',
-                'a' => 'Anda dapat mengirimkan informasi lokasi proyek, lampiran poligon AOI (.kml/.kmz/.shp), perkiraan luasan area, dan kebutuhan output melalui formulir penawaran pada halaman ini atau melalui WhatsApp resmi FDS. Tim kami akan menjadwalkan diskusi teknis baik untuk skema jasa survei maupun pengadaan armada UAV mandiri beserta pelatihan.',
+                'a' => 'Anda dapat mengirimkan informasi lokasi proyek, lampiran poligon AOI (.kml/.kmz/.shp), perkiraan luasan area, dan kebutuhan output melalui halaman Kontak resmi FDS atau melalui WhatsApp resmi FDS. Tim kami akan menjadwalkan diskusi teknis baik untuk skema jasa survei maupun pengadaan armada UAV mandiri beserta pelatihan.',
             ],
         ],
         'quote_defaults' => [
@@ -361,6 +361,11 @@ function fds_get_layanan_hub_data(bool $fresh = false): array {
     $memo     = (is_array($override) && !empty($override))
         ? fds_merge_layanan_data($default, $override)
         : $default;
+
+    $cta_url = trim((string) ($memo['cta_primary_url'] ?? ''));
+    if ($cta_url === '' || $cta_url === '#form-penawaran') {
+        $memo['cta_primary_url'] = home_url('/kontak/#hubungi-form');
+    }
 
     return $memo;
 }

@@ -1,19 +1,22 @@
 @props([
   'ctaLabel'  => 'Minta Penawaran',
+  'ctaUrl'    => '',
   'waPrefill' => 'Halo tim Enterprise FDS, kami ingin berkonsultasi mengenai layanan UAV dan pemetaan udara.',
 ])
 
 @php
-  $gc          = function_exists('App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
-  $c_wa_link   = $gc['wa_link'] ?? 'https://wa.me/628112748882';
-  $wa_sep      = strpos($c_wa_link, '?') === false ? '?' : '&';
-  $wa_full_url = $c_wa_link . $wa_sep . 'text=' . rawurlencode((string) $waPrefill);
+  $gc             = function_exists('App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
+  $c_wa_link      = $gc['wa_link'] ?? 'https://wa.me/628112748882';
+  $wa_sep         = strpos($c_wa_link, '?') === false ? '?' : '&';
+  $wa_full_url    = $c_wa_link . $wa_sep . 'text=' . rawurlencode((string) $waPrefill);
+  $raw_cta_url    = trim((string) $ctaUrl);
+  $target_cta_url = ($raw_cta_url !== '' && $raw_cta_url !== '#form-penawaran') ? $raw_cta_url : home_url('/kontak/#hubungi-form');
 @endphp
 
 <div id="fds-mobile-sticky-cta"
      class="lg:hidden fixed inset-x-0 bottom-0 z-[9990] bg-white/95 backdrop-blur-lg border-t border-black/[0.1] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] px-4 py-3 transition-all duration-300 translate-y-0 opacity-100">
   <div class="flex items-center gap-3 max-w-[600px] mx-auto">
-    <a href="#form-penawaran"
+    <a href="{!! esc_url($target_cta_url) !!}"
        class="flex-1 inline-flex items-center justify-center min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13.5px] font-semibold px-4 py-2.5 rounded-full transition-colors">
       {{ $ctaLabel }}
     </a>
@@ -35,31 +38,22 @@ document.addEventListener('DOMContentLoaded', function() {
   var bar = document.getElementById('fds-mobile-sticky-cta');
   if (!bar || typeof IntersectionObserver === 'undefined') return;
 
-  var quoteTarget = document.getElementById('form-penawaran');
   var footerTarget = document.querySelector('footer');
-  var hiddenReasons = { quote: false, footer: false };
-
-  function syncBar() {
-    var shouldHide = hiddenReasons.quote || hiddenReasons.footer;
-    if (shouldHide) {
-      bar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
-      bar.classList.remove('translate-y-0', 'opacity-100');
-    } else {
-      bar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
-      bar.classList.add('translate-y-0', 'opacity-100');
-    }
-  }
+  if (!footerTarget) return;
 
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.target === quoteTarget) hiddenReasons.quote = entry.isIntersecting;
-      if (entry.target === footerTarget) hiddenReasons.footer = entry.isIntersecting;
+      if (entry.isIntersecting) {
+        bar.classList.add('translate-y-full', 'opacity-0', 'pointer-events-none');
+        bar.classList.remove('translate-y-0', 'opacity-100');
+      } else {
+        bar.classList.remove('translate-y-full', 'opacity-0', 'pointer-events-none');
+        bar.classList.add('translate-y-0', 'opacity-100');
+      }
     });
-    syncBar();
   }, { threshold: 0.05 });
 
-  if (quoteTarget) observer.observe(quoteTarget);
-  if (footerTarget) observer.observe(footerTarget);
+  observer.observe(footerTarget);
 });
 </script>
 @endonce

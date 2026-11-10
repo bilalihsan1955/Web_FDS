@@ -562,11 +562,15 @@ function fds_handle_layanan_admin_post(string $active_tab, array $tabs): array {
         update_option($meta['option'], $override, 'no');
     } elseif ($meta['kind'] === 'ui') {
         $defaults  = fds_get_default_layanan_ui_texts();
-        $ui_save   = [];
+        $existing  = get_option($meta['option'], []);
+        $ui_save   = is_array($existing) ? $existing : [];
         $submitted = $_POST['ui'] ?? [];
         if (is_array($submitted)) {
             foreach ($defaults as $k => $def_val) {
-                $raw_v       = (string) ($submitted[$k] ?? $def_val);
+                if (!array_key_exists($k, $submitted)) {
+                    continue;
+                }
+                $raw_v       = (string) $submitted[$k];
                 $ui_save[$k] = str_contains((string) $k, 'subtitle') || str_contains((string) $k, '_desc')
                     ? fds_admin_unslash_textarea($raw_v)
                     : fds_admin_unslash_text($raw_v);
@@ -605,30 +609,14 @@ function fds_render_shared_seo_quote_fields(array $d, bool $include_service_type
     </div>
 
     <div class="fds-card">
-        <h3>Form Penawaran &amp; Prefill WhatsApp Halaman Ini</h3>
-        <div class="fds-grid-2">
-            <div class="fds-field">
-                <label>Eyebrow Form Penawaran</label>
-                <input type="text" name="qd_eyebrow" value="<?php echo esc_attr($qd['eyebrow'] ?? ''); ?>">
-            </div>
-            <div class="fds-field">
-                <label>Judul Form Penawaran</label>
-                <input type="text" name="qd_title" value="<?php echo esc_attr($qd['title'] ?? ''); ?>">
-            </div>
-        </div>
+        <h3>Konsultasi WhatsApp Halaman Ini</h3>
+        <input type="hidden" name="qd_eyebrow" value="<?php echo esc_attr($qd['eyebrow'] ?? ''); ?>">
+        <input type="hidden" name="qd_title" value="<?php echo esc_attr($qd['title'] ?? ''); ?>">
+        <input type="hidden" name="qd_subtitle" value="<?php echo esc_attr($qd['subtitle'] ?? ''); ?>">
+        <input type="hidden" name="qd_placeholder" value="<?php echo esc_attr($qd['placeholder'] ?? ''); ?>">
         <div class="fds-field">
-            <label>Subjudul Form Penawaran</label>
-            <textarea name="qd_subtitle" rows="2"><?php echo esc_textarea($qd['subtitle'] ?? ''); ?></textarea>
-        </div>
-        <div class="fds-grid-2">
-            <div class="fds-field">
-                <label>Pesan Otomatis WhatsApp (<code>wa_prefill</code>)</label>
-                <textarea name="qd_wa_prefill" rows="2"><?php echo esc_textarea($qd['wa_prefill'] ?? ''); ?></textarea>
-            </div>
-            <div class="fds-field">
-                <label>Placeholder Textarea Form</label>
-                <textarea name="qd_placeholder" rows="2"><?php echo esc_textarea($qd['placeholder'] ?? ''); ?></textarea>
-            </div>
+            <label>Pesan Otomatis WhatsApp (<code>wa_prefill</code>)</label>
+            <textarea name="qd_wa_prefill" rows="2"><?php echo esc_textarea($qd['wa_prefill'] ?? ''); ?></textarea>
         </div>
     </div>
     <?php
@@ -1455,17 +1443,6 @@ function render_layanan_content_admin_page() {
                         'kat_reading_heading'       => 'Judul Referensi Teknis',
                         'kat_faq_prefix'            => 'Awalan Judul FAQ (diikuti nama kategori)',
                         'kat_faq_subtitle'          => 'Subjudul FAQ Kategori',
-                    ],
-                    'Form Penawaran Bersama (Quotation Section)' => [
-                        'quote_kak_heading'       => 'Judul Daftar Checklist Evaluasi',
-                        'quote_wa_btn'            => 'Teks Tombol WhatsApp Panel Kiri',
-                        'quote_phone_label'       => 'Label Telepon',
-                        'quote_email_label'       => 'Label Email',
-                        'quote_trust_footer'      => 'Teks Footer Trust Panel Kiri',
-                        'quote_form_heading'      => 'Judul Formulir Panel Kanan',
-                        'quote_form_subtitle'     => 'Subjudul Formulir Panel Kanan',
-                        'quote_form_submit_text'  => 'Teks Tombol Submit',
-                        'quote_form_privacy_note' => 'Catatan Privasi di Bawah Tombol',
                     ],
                     'Halaman Konfirmasi Lead (/terima-kasih/)' => [
                         'ty_badge'         => 'Badge Status Konfirmasi',

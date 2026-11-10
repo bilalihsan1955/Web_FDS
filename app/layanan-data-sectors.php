@@ -354,7 +354,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana prosedur pengajuan survei lokasi tambang atau penjadwalan monitoring berkala?',
-                    'a' => 'Proses dimulai dengan pengiriman batas area (AOI dalam format .kml/.kmz/.shp) dan target output melalui formulir penawaran atau WhatsApp resmi. Tim kami akan melakukan mining site assessment guna menyusun rekomendasi metode, rencana K3, dan estimasi kerja.',
+                    'a' => 'Proses dimulai dengan pengiriman batas area (AOI dalam format .kml/.kmz/.shp) dan target output melalui halaman Kontak atau WhatsApp resmi FDS. Tim kami akan melakukan mining site assessment guna menyusun rekomendasi metode, rencana K3, dan estimasi kerja.',
                 ],
             ],
             'quote_defaults' => [
@@ -465,7 +465,7 @@ function fds_get_default_layanan_sectors(): array {
                 [
                     'name'       => 'Agricultural UAV Customization',
                     'desc'       => 'Pengembangan dan konfigurasi drone sesuai kebutuhan aplikasi.',
-                    'link_url'   => '#form-penawaran',
+                    'link_url'   => home_url('/kontak/#hubungi-form'),
                     'link_label' => 'Konsultasi Kustomisasi UAV',
                 ],
             ],
@@ -1045,7 +1045,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana memulai diskusi penyusunan metode survei untuk areal hutan atau program restorasi kami?',
-                    'a' => 'Kirimkan poligon batas kawasan (.kml/.shp), jenis ekosistem target, serta ketersediaan data plot darat melalui formulir konsultasi di halaman ini agar tim FDS dapat menyusun rekomendasi metode dan rancangan kebutuhan kerja.',
+                    'a' => 'Kirimkan poligon batas kawasan (.kml/.shp), jenis ekosistem target, serta ketersediaan data plot darat melalui halaman Kontak atau WhatsApp resmi FDS agar tim FDS dapat menyusun rekomendasi metode dan rancangan kebutuhan kerja.',
                 ],
             ],
             'quote_defaults' => [
@@ -1372,7 +1372,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana cara mengajukan permintaan penawaran untuk inspeksi jalur transmisi atau PLTS?',
-                    'a' => 'Kirimkan jalur .kml atau batas lokasi aset, perkiraan panjang koridor atau kapasitas PLTS, dan jenis output inspeksi yang dibutuhkan melalui formulir penawaran di bawah ini untuk evaluasi teknis awal.',
+                    'a' => 'Kirimkan jalur .kml atau batas lokasi aset, perkiraan panjang koridor atau kapasitas PLTS, dan jenis output inspeksi yang dibutuhkan melalui halaman Kontak atau WhatsApp resmi FDS untuk evaluasi teknis awal.',
                 ],
             ],
             'quote_defaults' => [
@@ -1693,7 +1693,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Apa dokumen awal yang dibutuhkan agar FDS bisa menghitung estimasi survei topografi kawasan?',
-                    'a' => 'Kirimkan file batas lokasi (.kml/.kmz/.shp), informasi kondisi lahan saat ini, serta skala/tujuan perencanaan (studi kelayakan, DED, tata ruang, atau konstruksi) melalui formulir penawaran kami.',
+                    'a' => 'Kirimkan file batas lokasi (.kml/.kmz/.shp), informasi kondisi lahan saat ini, serta skala/tujuan perencanaan (studi kelayakan, DED, tata ruang, atau konstruksi) melalui halaman Kontak atau WhatsApp resmi kami.',
                 ],
             ],
             'quote_defaults' => [
@@ -2006,7 +2006,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana cara mengajukan permintaan pemetaan baseline mitigasi maupun pemulihan pascabencana?',
-                    'a' => 'Anda dapat mengirimkan lokasi wilayah (.kml/.shp) atau deskripsi kebutuhan kajian hidrologi, longsor, dan lingkungan melalui formulir penawaran atau kontak resmi PT Karya Solusi Angkasa.',
+                    'a' => 'Anda dapat mengirimkan lokasi wilayah (.kml/.shp) atau deskripsi kebutuhan kajian hidrologi, longsor, dan lingkungan melalui halaman Kontak atau WhatsApp resmi PT Karya Solusi Angkasa.',
                 ],
             ],
             'quote_defaults' => [
@@ -2046,10 +2046,21 @@ function fds_get_layanan_sectors(bool $fresh = false): array {
     foreach ($defaults as $slug => $sec_default) {
         $override = get_option('fds_layanan_sector_overrides_' . $slug, null);
         if (is_array($override) && !empty($override) && function_exists(__NAMESPACE__ . '\\fds_merge_layanan_data')) {
-            $merged[$slug] = fds_merge_layanan_data($sec_default, $override);
+            $merged_sec = fds_merge_layanan_data($sec_default, $override);
         } else {
-            $merged[$slug] = $sec_default;
+            $merged_sec = $sec_default;
         }
+
+        if (!empty($merged_sec['solutions']) && is_array($merged_sec['solutions'])) {
+            foreach ($merged_sec['solutions'] as &$sol_item) {
+                if (is_array($sol_item) && trim((string) ($sol_item['link_url'] ?? '')) === '#form-penawaran') {
+                    $sol_item['link_url'] = home_url('/kontak/#hubungi-form');
+                }
+            }
+            unset($sol_item);
+        }
+
+        $merged[$slug] = $merged_sec;
     }
 
     $memo = $merged;

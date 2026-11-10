@@ -221,7 +221,7 @@ function fds_get_default_layanan_categories(): array {
                 ],
                 [
                     'q' => 'Data apa saja yang perlu saya siapkan untuk mengajukan permintaan penawaran harga?',
-                    'a' => 'Siapkan batas area proyek dalam format .kml, .kmz, atau .shp, nama lokasi kabupaten/provinsi, estimasi luas atau panjang koridor, target interval kontur atau kebutuhan output (misalnya LAS, DTM, DSM, Ortofoto), serta target jadwal kerja melalui formulir penawaran di halaman ini.',
+                    'a' => 'Siapkan batas area proyek dalam format .kml, .kmz, atau .shp, nama lokasi kabupaten/provinsi, estimasi luas atau panjang koridor, target interval kontur atau kebutuhan output (misalnya LAS, DTM, DSM, Ortofoto), serta target jadwal kerja untuk dikirim melalui halaman Kontak atau WhatsApp resmi FDS.',
                 ],
                 [
                     'q' => 'Kapan proyek lebih efisien memakai Drone LiDAR dibandingkan Backpack SLAM LiDAR?',
@@ -470,7 +470,7 @@ function fds_get_default_layanan_categories(): array {
                 ],
                 [
                     'q' => 'Informasi apa yang dibutuhkan saat kami meminta penawaran survei multispectral?',
-                    'a' => 'Silakan lampirkan batas poligon area (.kml/.kmz/.shp), jenis tanaman/komoditas, lokasi provinsi/kabupaten, perkiraan luas hektar, serta tujuan analisis (misalnya monitoring NDVI, deteksi empty spot, atau riset hyperspectral) melalui formulir penawaran di bawah.',
+                    'a' => 'Silakan lampirkan batas poligon area (.kml/.kmz/.shp), jenis tanaman/komoditas, lokasi provinsi/kabupaten, perkiraan luas hektar, serta tujuan analisis (misalnya monitoring NDVI, deteksi empty spot, atau riset hyperspectral) melalui halaman Kontak atau WhatsApp resmi FDS.',
                 ],
             ],
             'quote_defaults' => [
@@ -691,7 +691,7 @@ function fds_get_default_layanan_categories(): array {
                 ],
                 [
                     'q' => 'Bagaimana cara mendapatkan informasi silabus lengkap, jadwal batch, dan penawaran biaya pelatihan?',
-                    'a' => 'Anda dapat mengirimkan perkiraan jumlah peserta, fokus materi (pemetaan, agrikultur, inspeksi, atau sertifikasi), serta preferensi lokasi melalui formulir pengajuan penawaran di bagian bawah halaman ini agar tim FDS mengirimkan rancangan proposal resmi.',
+                    'a' => 'Anda dapat mengirimkan perkiraan jumlah peserta, fokus materi (pemetaan, agrikultur, inspeksi, atau sertifikasi), serta preferensi lokasi melalui halaman Kontak atau WhatsApp resmi FDS agar tim FDS mengirimkan rancangan proposal resmi.',
                 ],
             ],
             'quote_defaults' => [
