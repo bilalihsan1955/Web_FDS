@@ -1,9 +1,9 @@
 @props([
   'title'   => 'Kantor & Workshop Resmi',
-  'address' => 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281',
+  'address' => 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285',
   'mapUrl'  => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid',
   'btnText' => 'Buka di Google Maps',
-  'btnUrl'  => 'https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman',
+  'btnUrl'  => 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta',
 ])
 
 <div class="bg-white rounded-[2rem] border border-black/[0.08] shadow-lg overflow-hidden">

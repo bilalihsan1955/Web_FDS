@@ -944,7 +944,7 @@ function render_homepage_content_admin_page() {
                     </div>
 
                     <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px;">
-                        <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                        <span style="font-size: 12px; font-weight: 700; color: #0f808a; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                             <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
                             Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Beranda

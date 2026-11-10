@@ -81,8 +81,13 @@
   }
 
   $terms = get_the_terms($preview_id, 'kategori_drone') ?: get_the_terms($post_id, 'kategori_drone');
+  $cat_url = home_url('/#produk');
   if (!empty($terms) && !is_wp_error($terms)) {
       $drone['kategori'] = $terms[0]->name;
+      $term_link = get_term_link($terms[0]);
+      if (!is_wp_error($term_link) && is_string($term_link)) {
+          $cat_url = $term_link;
+      }
   } else {
       $cpt_kategori = $get_meta('drone_kategori');
       if ($cpt_kategori) $drone['kategori'] = $cpt_kategori;
@@ -277,9 +282,9 @@
       <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
         {{-- Badge chips --}}
         <div class="flex flex-wrap items-start gap-3 mb-8 fds-hero-entrance fds-hero-delay-1">
-          <span class="inline-flex items-center text-[12px] font-semibold text-white/70 tracking-wide border border-white/[0.15] bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm">
+          <a href="{{ esc_url($cat_url) }}" class="inline-flex items-center text-[12px] font-semibold text-white/80 hover:text-white tracking-wide border border-white/[0.15] hover:border-white/35 bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm transition-colors">
             {!! wp_specialchars_decode($drone['kategori'] ?? 'Agrikultur') !!}
-          </span>
+          </a>
           @if(!empty($drone['badge']))
           <span class="inline-flex items-center text-[12px] font-semibold text-[#18d6e7] tracking-wide bg-[#0f808a]/20 border border-[#46deec]/30 rounded-full px-3.5 py-1 backdrop-blur-sm">
             {!! wp_specialchars_decode($drone['badge']) !!}
@@ -304,7 +309,7 @@
              class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-black/15">
             Minta Penawaran
           </a>
-          <a href="{{ home_url('/bandingkan?d1=' . $slug) }}"
+          <a href="{{ home_url('/bandingkan/?d1=' . $slug) }}"
              class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-2 px-3 py-3 leading-none group">
             <span class="leading-none">Bandingkan model</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -326,6 +331,8 @@
         <img src="{{ $heroSrc }}"
              @if($heroSrcset) srcset="{{ $heroSrcset }}" sizes="(max-width: 768px) 100vw, 1200px" @endif
              alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
+             width="1200"
+             height="720"
              loading="eager"
              fetchpriority="high"
              data-no-lazy="1"
@@ -351,7 +358,7 @@
             <div>
               <div class="flex items-center justify-between mb-3">
                 <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">Spesifikasi</p>
-                <a href="{{ home_url('/bandingkan?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1.5 leading-none group">
+                <a href="{{ home_url('/bandingkan/?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1.5 leading-none group">
                   <span class="leading-none">Bandingkan spesifikasi</span>
                   <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
@@ -360,7 +367,7 @@
                 </a>
               </div>
               <h2 class="text-[32px] sm:text-[40px] lg:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-5">
-                Direkayasa untuk<br>performa nyata.
+                Direkayasa untuk <br>performa nyata.
               </h2>
               <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed max-w-xl mb-4">
                 {!! wp_specialchars_decode($drone['desc'] ?: "Setiap spesifikasi {$drone['name']} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.") !!}
@@ -587,6 +594,31 @@
           </div>
           @endforeach
         </x-reveal-group>
+      </div>
+    </section>
+    @endif
+
+    {{-- ── PANDUAN TEKNIS & FAQ RESMI (VISIBLE SSR CONTENT) ─────── --}}
+    @php
+      $raw_guide_body = trim((string) get_post_field('post_content', $preview_id ?: $post_id));
+      if ($raw_guide_body !== '') {
+          $drone_guide_html = apply_filters('the_content', $raw_guide_body);
+      } else {
+          $drone_guide_html = function_exists('App\fds_generate_drone_seo_content')
+              ? \App\fds_generate_drone_seo_content($post_id)
+              : (function_exists('fds_generate_drone_seo_content') ? fds_generate_drone_seo_content($post_id) : '');
+      }
+      if (is_string($drone_guide_html) && $drone_guide_html !== '') {
+          $drone_guide_html = preg_replace('/<(\/?)h1\b/i', '<$1h2', $drone_guide_html);
+      }
+    @endphp
+    @if(!empty($drone_guide_html))
+    <section id="panduan-teknis" class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
+      <div class="max-w-[1100px] mx-auto px-6 lg:px-12">
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Panduan Teknis &amp; Tanya Jawab</p>
+        <div class="fds-drone-guide">
+          {!! $drone_guide_html !!}
+        </div>
       </div>
     </section>
     @endif

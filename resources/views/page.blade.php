@@ -17,7 +17,14 @@
       <div class="max-w-[1100px] mx-auto px-6 lg:px-12 py-16 sm:py-24">
         <div class="max-w-[1100px]">
           <div class="prose text-[18px] text-[#515154] leading-[1.7]" style="max-width:none;">
-            @php(the_content())
+            @php
+              $page_body_html = apply_filters('the_content', get_the_content());
+              if (is_string($page_body_html) && $page_body_html !== '') {
+                  $page_body_html = preg_replace('/<(\/?)h1\b/i', '<$1h2', $page_body_html);
+                  $page_body_html = str_replace(['mailto:mhttps://', 'mailto: mhttps://', 'mhttps://'], ['https://', 'https://', 'https://'], $page_body_html);
+              }
+            @endphp
+            {!! $page_body_html !!}
           </div>
         </div>
       </div>

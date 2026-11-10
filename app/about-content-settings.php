@@ -167,7 +167,7 @@ function fds_get_about_content() {
         return $static_about;
     }
 
-    $cached = get_transient('fds_about_content_cache');
+    $cached = get_transient('fds_about_content_cache_v2');
     if ($cached !== false && is_array($cached)) {
         $static_about = $cached;
         return $cached;
@@ -274,11 +274,11 @@ function fds_get_about_content() {
         'cta_btn1_text'   => get_option('fds_about_cta_btn1_text', 'Mulai Konsultasi'),
         'cta_btn1_url'    => get_option('fds_about_cta_btn1_url', '#kontak'),
         'cta_btn2_text'   => get_option('fds_about_cta_btn2_text', 'Baca Studi Kasus ›'),
-        'cta_btn2_url'    => get_option('fds_about_cta_btn2_url', '/blog'),
+        'cta_btn2_url'    => get_option('fds_about_cta_btn2_url', '/blog/'),
 
         'info_title'      => get_option('fds_about_info_title', 'Kantor Pusat & Workshop'),
         'info_entitas'    => get_option('fds_about_info_entitas', 'PT Karya Solusi Angkasa (Full Drone Solutions)'),
-        'info_alamat'     => get_option('fds_about_info_alamat', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281'),
+        'info_alamat'     => get_option('fds_about_info_alamat', 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285'),
         'info_email'      => get_option('fds_about_info_email', 'marketing@fulldronesolutions.com'),
         'info_phone'      => get_option('fds_about_info_phone', '+62 8112 748 882'),
         'info_layanan'    => get_option('fds_about_info_layanan', 'Konsultasi Proyek & Pengadaan Korporasi'),
@@ -297,7 +297,7 @@ function fds_get_about_content() {
         return $v;
     }, $data);
 
-    set_transient('fds_about_content_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_about_content_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_about = $clean_data;
     return $clean_data;
 }
@@ -436,6 +436,7 @@ function render_about_content_admin_page() {
 
         $saved = true;
         delete_transient('fds_about_content_cache');
+        delete_transient('fds_about_content_cache_v2');
     }
 
     wp_enqueue_media();
@@ -984,7 +985,7 @@ function render_about_content_admin_page() {
             </div>
 
             <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 14px;">
-              <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
+              <span style="font-size: 12px; font-weight: 700; color: #0f808a; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
               <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                 <input type="checkbox" name="fds_show_map_about" value="1" <?php checked($data['show_map_about'], true); ?>>
                 Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Tentang Kami

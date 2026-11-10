@@ -10,7 +10,7 @@
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
   $c_phone   = $global_c['phone'] ?? '+62 8112 748 882';
   $c_email   = $global_c['email'] ?? 'marketing@fulldronesolutions.com';
-  $c_address = $global_c['address'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281';
+  $c_address = $global_c['address'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285';
   $c_wa_link = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
   $c_maps    = $global_c['maps_url'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid';
 
@@ -35,7 +35,7 @@
   $p_form_note   = fds_clean_string($global_c['page_kontak_form_note'] ?? 'Respons 1×24 jam kerja. Data terjamin aman.');
   $p_map_title   = fds_clean_string($global_c['page_kontak_map_title'] ?? 'Lokasi Workshop Sleman');
   $p_map_btn     = fds_clean_string($global_c['page_kontak_map_btn'] ?? 'Buka di Google Maps');
-  $p_map_link    = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman';
+  $p_map_link    = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta';
 @endphp
 
 <div id="contact-page" class="w-full bg-white font-sans">
@@ -120,7 +120,7 @@
 
           {{-- Description --}}
           <p class="text-[15px] sm:text-[16px] text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-[440px] fds-hero-entrance fds-hero-delay-3">
-            {!! nl2br(esc_html($p_desc)) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $p_desc))) !!}
           </p>
 
           {{-- Direct Contact Information (Clean, zero boxes) --}}
@@ -179,7 +179,7 @@
         </div>
 
         {{-- RIGHT COLUMN: Compact Enterprise Form Card (Col 7) --}}
-        <div class="lg:col-span-7 fds-hero-entrance fds-hero-delay-3">
+        <div id="hubungi-form" class="lg:col-span-7 scroll-mt-24 fds-hero-entrance fds-hero-delay-3">
           <div class="bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-7 lg:p-8 border border-black/[0.06] shadow-[0_4px_20px_rgba(0,0,0,0.06)] text-[#1d1d1f]">
             
             <div class="mb-5">
@@ -335,6 +335,45 @@
     </div>
   </section>
   @endif
+
+  {{-- ========================================================== --}}
+  {{-- 3. PANDUAN KONSULTASI & PENGADAAN B2B (EDITORIAL SSR)      --}}
+  {{-- ========================================================== --}}
+  <section class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
+    <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+      <div class="max-w-4xl">
+        <p class="text-[12.5px] font-semibold text-[#0f808a] tracking-wide mb-2">
+          Dukungan Pengadaan Enterprise
+        </p>
+        <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.15] mb-6">
+          Layanan Konsultasi &amp; Pengadaan Korporasi FDS
+        </h2>
+
+        <div class="fds-drone-guide">
+          <p class="lead">
+            PT Karya Solusi Angkasa (Full Drone Solutions) melayani konsultasi teknis, penjadwalan demo terbang di workshop Sleman maupun lokasi proyek, hingga pendampingan dokumen pengadaan armada UAV untuk instansi pemerintah, BUMN, sektor perkebunan, dan perusahaan swasta nasional. Seluruh lini produksi lokal kami dilengkapi sertifikasi TKDN + BMP hingga 60,74%, manajemen mutu ISO 9001:2015, serta standar nasional SNI 9199:2023 untuk pengadaan e-Katalog maupun kontrak korporasi.
+          </p>
+
+          <h3>Portofolio Solusi yang Dapat Dikonsultasikan</h3>
+          <ul>
+            <li>
+              <a href="{{ esc_url(home_url('/kategori-drone/agrikultur/')) }}">Drone Agrikultur Seri FERTO</a> — Pilihan drone sprayer dan spreader berkapasitas 5 hingga 50 liter untuk pemeliharaan tanaman pangan, hortikultura, dan perkebunan kelapa sawit skala komersial.
+            </li>
+            <li>
+              <a href="{{ esc_url(home_url('/kategori-drone/pemetaan-gis/')) }}">Drone Pemetaan &amp; Survei GIS</a> — Platform Hybrid VTOL jarak jauh serta multirotor modular untuk pemetaan topografi, inspeksi jaringan listrik 150 kV, dan survei aset energi.
+            </li>
+            <li>
+              <a href="{{ esc_url(home_url('/kategori-drone/kargo/')) }}">Drone Kargo &amp; Logistik DELFRO</a> — Wahana angkut otonom berdaya angkat 10 kg untuk distribusi logistik di medan perbukitan maupun wilayah kepulauan.
+            </li>
+          </ul>
+
+          <p>
+            Sebelum mengajukan permintaan penawaran harga resmi melalui formulir di atas, Anda juga dapat menggunakan alat <a href="{{ esc_url(home_url('/bandingkan/')) }}">Perbandingan Spesifikasi Drone</a> untuk mengevaluasi kapasitas muatan dan daya jelajah tiap model, atau membaca profil fasilitas riset kami di halaman <a href="{{ esc_url(home_url('/tentang-kami/')) }}">Tentang PT Karya Solusi Angkasa</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </div>
 

@@ -70,6 +70,8 @@
         <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">
           @if(is_category())
             Kategori Artikel
+          @elseif(is_tax('kategori_drone'))
+            Kategori Drone
           @elseif(is_tag())
             Tag Artikel
           @else
@@ -79,6 +81,8 @@
         <h1 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.08] mb-3 fds-hero-entrance fds-hero-delay-2">
           @if(is_category())
             {{ single_cat_title('', false) }}
+          @elseif(is_tax('kategori_drone'))
+            {{ single_term_title('', false) }}
           @elseif(is_tag())
             Tag: {{ single_tag_title('', false) }}
           @else
@@ -88,6 +92,8 @@
         <p class="text-[15px] sm:text-[17px] text-white/85 max-w-[580px] leading-relaxed fds-hero-entrance fds-hero-delay-3">
           @if(is_category() && category_description())
             {!! category_description() !!}
+          @elseif(is_tax('kategori_drone') && term_description())
+            {!! term_description() !!}
           @else
             Perkembangan produk drone, studi kasus operasional lapangan, dan wawasan teknologi industri dari tim FDS.
           @endif
@@ -140,6 +146,11 @@
           the_post();
           $cats = get_the_category(get_the_ID());
           $cat_label = !empty($cats) ? $cats[0]->name : 'Berita';
+          $thumb_id  = get_post_thumbnail_id(get_the_ID());
+          $thumb_alt = $thumb_id ? trim((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true)) : '';
+          if ($thumb_alt === '') {
+            $thumb_alt = trim(wp_specialchars_decode(get_the_title(), ENT_QUOTES)) . ' — Full Drone Solutions';
+          }
           $all_posts[] = [
             'id'        => get_the_ID(),
             'title'     => get_the_title(),
@@ -147,8 +158,8 @@
             'excerpt'   => get_the_excerpt(),
             'date'      => get_the_date('d M Y'),
             'cat'       => $cat_label,
-            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) : null,
-            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) : null,
+            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
+            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
           ];
         }
       }

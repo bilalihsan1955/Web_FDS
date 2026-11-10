@@ -4,7 +4,7 @@
   'panelDesc'  => 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.',
   'phone'      => '+62 8112 748 882',
   'email'      => 'marketing@fulldronesolutions.com',
-  'address'    => 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281',
+  'address'    => 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285',
   'waLink'     => 'https://wa.me/628112748882',
   'waBtn'      => 'Chat via WhatsApp',
   'formTitle'  => 'Kirim pesan inquiry',
@@ -48,10 +48,10 @@
       </div>
 
       <h2 class="text-[24px] sm:text-[28px] lg:text-[30px] font-semibold tracking-tight text-white leading-tight mb-2">
-        {!! nl2br(esc_html($company)) !!}
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $company))) !!}
       </h2>
       <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed max-w-[420px]">
-        {!! nl2br(esc_html($panelDesc)) !!}
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $panelDesc))) !!}
       </p>
     </div>
 

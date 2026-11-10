@@ -93,7 +93,7 @@
 
     @php
       // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT (Cached via Transient)
-      $drones_by_cat_slug = get_transient('fds_mega_menu_data');
+      $drones_by_cat_slug = get_transient('fds_mega_menu_data_v2');
 
       if ($drones_by_cat_slug === false) {
           $tax_terms = get_terms([
@@ -109,6 +109,10 @@
                   (object)['name' => 'Pemetaan & GIS', 'slug' => 'pemetaan-gis', 'description' => 'Survei Geospasial & Inspeksi Aset'],
                   (object)['name' => 'Kargo', 'slug' => 'kargo', 'description' => 'Distribusi Logistik Cepat 10 kg'],
               ];
+          } else {
+              $tax_terms = array_values(array_filter($tax_terms, function ($t) {
+                  return stripos((string) $t->slug, 'rebo') === false;
+              }));
           }
 
           $nav_drones = get_posts([
@@ -121,13 +125,20 @@
 
           $drones_by_cat_slug = [];
           foreach ($tax_terms as $t) {
+              $t_link = (isset($t->term_id) && taxonomy_exists('kategori_drone')) ? get_term_link($t) : home_url('/kategori-drone/' . $t->slug . '/');
               $drones_by_cat_slug[$t->slug] = [
-                  'term'   => $t,
-                  'drones' => [],
+                  'term'     => $t,
+                  'term_url' => (!is_wp_error($t_link) && is_string($t_link)) ? $t_link : home_url('/#produk'),
+                  'drones'   => [],
               ];
           }
 
           foreach ($nav_drones as $nd) {
+              $nd_slug_chk = strtolower((string) $nd->post_name);
+              if (strpos($nd_slug_chk, 'rebo') !== false || strpos($nd_slug_chk, 'agrea') !== false) {
+                  continue;
+              }
+
               $terms = get_the_terms($nd->ID, 'kategori_drone');
               $cat_slug = '';
               if (!empty($terms) && !is_wp_error($terms)) {
@@ -136,11 +147,17 @@
                   $meta_cat = get_post_meta($nd->ID, 'drone_kategori', true) ?: 'Agrikultur';
                   $cat_slug = sanitize_title($meta_cat);
               }
+              if (stripos((string) $cat_slug, 'rebo') !== false) {
+                  continue;
+              }
 
               if (!isset($drones_by_cat_slug[$cat_slug])) {
+                  $t_obj = (object)['name' => (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : ($meta_cat ?? 'Agrikultur'), 'slug' => $cat_slug, 'description' => ''];
+                  $t_link = (!empty($terms) && !is_wp_error($terms)) ? get_term_link($terms[0]) : home_url('/kategori-drone/' . $cat_slug . '/');
                   $drones_by_cat_slug[$cat_slug] = [
-                      'term'   => (object)['name' => (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : $meta_cat, 'slug' => $cat_slug, 'description' => ''],
-                      'drones' => [],
+                      'term'     => $t_obj,
+                      'term_url' => (!is_wp_error($t_link) && is_string($t_link)) ? $t_link : home_url('/#produk'),
+                      'drones'   => [],
                   ];
               }
 
@@ -171,7 +188,21 @@
               ];
           }
 
-          set_transient('fds_mega_menu_data', $drones_by_cat_slug, 12 * HOUR_IN_SECONDS);
+          set_transient('fds_mega_menu_data_v2', $drones_by_cat_slug, 12 * HOUR_IN_SECONDS);
+      }
+
+      // Build ordered flat list for footer without extra DB queries on cache hit
+      $footer_drones = [];
+      if (is_array($drones_by_cat_slug)) {
+          foreach ($drones_by_cat_slug as $cslug => $cdata) {
+              if (stripos((string) $cslug, 'rebo') !== false || empty($cdata['drones'])) {
+                  continue;
+              }
+              foreach ($cdata['drones'] as $cd_item) {
+                  $footer_drones[$cd_item['id']] = $cd_item;
+              }
+          }
+          ksort($footer_drones);
       }
     @endphp
 
@@ -296,7 +327,10 @@
                 $agri_cat = $drones_by_cat_slug['agrikultur'] ?? null;
                 $pemetaan_cat = $drones_by_cat_slug['pemetaan-gis'] ?? ($drones_by_cat_slug['pemetaan'] ?? null);
                 $kargo_cat = $drones_by_cat_slug['kargo'] ?? ($drones_by_cat_slug['cargo'] ?? null);
-                $reboisasi_cat = $drones_by_cat_slug['reboisasi'] ?? null;
+
+                $agri_url = $agri_cat['term_url'] ?? home_url('/kategori-drone/agrikultur/');
+                $pemetaan_url = $pemetaan_cat['term_url'] ?? home_url('/kategori-drone/pemetaan-gis/');
+                $kargo_url = $kargo_cat['term_url'] ?? home_url('/kategori-drone/kargo/');
 
                 $agri_limit = 6;
                 $agri_drones = $agri_cat ? array_slice($agri_cat['drones'], 0, $agri_limit) : [];
@@ -306,13 +340,16 @@
                 $pemetaan_drones = $pemetaan_cat ? array_slice($pemetaan_cat['drones'], 0, $pemetaan_limit) : [];
                 $pemetaan_remaining = $pemetaan_cat ? max(0, count($pemetaan_cat['drones']) - $pemetaan_limit) : 0;
 
-                $kargo_limit = 1;
+                $kargo_limit = 2;
                 $kargo_drones = $kargo_cat ? array_slice($kargo_cat['drones'], 0, $kargo_limit) : [];
                 $kargo_remaining = $kargo_cat ? max(0, count($kargo_cat['drones']) - $kargo_limit) : 0;
 
-                $rebo_limit = 1;
-                $rebo_drones = $reboisasi_cat ? array_slice($reboisasi_cat['drones'], 0, $rebo_limit) : [];
-                $rebo_remaining = $reboisasi_cat ? max(0, count($reboisasi_cat['drones']) - $rebo_limit) : 0;
+                $raw_compare_url = trim((string) ($nb_brand['menu_prod_compare_url'] ?? ''));
+                if ($raw_compare_url === '' || preg_match('#/bandingkan$#i', $raw_compare_url)) {
+                    $compare_href = home_url('/bandingkan/');
+                } else {
+                    $compare_href = $raw_compare_url;
+                }
               @endphp
 
               <div class="grid grid-cols-12 gap-10">
@@ -323,11 +360,11 @@
                   <!-- Agrikultur (Atas) -->
                   <div>
                     <div class="mb-3 flex items-center justify-between">
-                      <p class="text-[12px] font-semibold text-[#86868b]">
+                      <a href="{{ esc_url($agri_url) }}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors">
                         {!! !empty($agri_cat['term']->name) ? wp_specialchars_decode($agri_cat['term']->name) : 'UAV Agrikultur' !!} (Seri FERTO)
-                      </p>
+                      </a>
                       @if($agri_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-0.5 group">
+                      <a href="{{ esc_url($agri_url) }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-0.5 group">
                         <span>+ Lihat {{ $agri_remaining }} lainnya</span>
                         <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                       </a>
@@ -337,7 +374,7 @@
                     @if(!empty($agri_drones))
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($agri_drones as $item)
-                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ esc_url($item['url']) }}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -356,11 +393,11 @@
                   @if(!empty($pemetaan_cat) && !empty($pemetaan_drones))
                   <div class="pt-4 mt-4 border-t border-black/[0.06]">
                     <div class="mb-3 flex items-center justify-between">
-                      <p class="text-[12px] font-semibold text-[#86868b]">
+                      <a href="{{ esc_url($pemetaan_url) }}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors">
                         {!! wp_specialchars_decode($pemetaan_cat['term']->name) !!}
-                      </p>
+                      </a>
                       @if($pemetaan_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-0.5 group">
+                      <a href="{{ esc_url($pemetaan_url) }}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-0.5 group">
                         <span>+ Lihat {{ $pemetaan_remaining }} lainnya</span>
                         <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                       </a>
@@ -369,7 +406,7 @@
 
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                       @foreach($pemetaan_drones as $item)
-                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ esc_url($item['url']) }}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -384,18 +421,18 @@
 
                 </div>
 
-                <!-- Column 3: Kargo & Reboisasi (Di Tempatnya / Kolom Tengah Kanan) (Col 3) -->
+                <!-- Column 3: Kargo & Logistik (Col 3) -->
                 <div class="col-span-3 border-r border-black/[0.06] pr-8 space-y-5">
                   
                   <!-- Kargo -->
                   @if(!empty($kargo_cat) && !empty($kargo_drones))
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-2.5">
+                    <a href="{{ esc_url($kargo_url) }}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors mb-2.5 inline-block">
                       {!! wp_specialchars_decode($kargo_cat['term']->name) !!}
-                    </p>
+                    </a>
                     <div class="space-y-2.5">
                       @foreach($kargo_drones as $item)
-                      <a href="{{ home_url('/' . $item['slug']) }}" class="group py-0.5 block transition-colors">
+                      <a href="{{ esc_url($item['url']) }}" class="group py-0.5 block transition-colors">
                         <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {!! $item['name'] !!}
                         </div>
@@ -405,35 +442,8 @@
                       </a>
                       @endforeach
                       @if($kargo_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center gap-0.5 text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5 group">
+                      <a href="{{ esc_url($kargo_url) }}" class="inline-flex items-center gap-0.5 text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5 group">
                         <span>+ Lihat {{ $kargo_remaining }} lainnya</span>
-                        <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                      </a>
-                      @endif
-                    </div>
-                  </div>
-                  @endif
-
-                  <!-- Reboisasi -->
-                  @if(!empty($reboisasi_cat) && !empty($rebo_drones))
-                  <div class="pt-4 border-t border-black/[0.06]">
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-2.5">
-                      {!! wp_specialchars_decode($reboisasi_cat['term']->name) !!}
-                    </p>
-                    <div class="space-y-2.5">
-                      @foreach($rebo_drones as $item)
-                      <a href="{{ $item['url'] }}" class="group py-0.5 block transition-colors">
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
-                          {!! $item['name'] !!}
-                        </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
-                          {!! $item['spec'] ?: $item['desc'] !!}
-                        </div>
-                      </a>
-                      @endforeach
-                      @if($rebo_remaining > 0)
-                      <a href="{{ home_url('/#solusi') }}" class="inline-flex items-center gap-0.5 text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5 group">
-                        <span>+ Lihat {{ $rebo_remaining }} lainnya</span>
                         <svg class="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                       </a>
                       @endif
@@ -467,7 +477,7 @@
                   </div>
 
                   <div class="pt-5 border-t border-black/[0.06]">
-                    <a href="{{ esc_url($nb_brand['menu_prod_compare_url'] ?? home_url('/bandingkan/')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                    <a href="{{ esc_url($compare_href) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
                       <span class="leading-none">{!! esc_html($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone') !!}</span>
                       <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 6h12v12"/>
@@ -662,8 +672,8 @@
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Produk Drone</h4>
               <ul class="space-y-1 text-[12px] text-[#515154]">
-                @foreach($nav_drones as $d)
-                <li><a href="{{ get_permalink($d->ID) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{!! wp_specialchars_decode($d->post_title) !!}</a></li>
+                @foreach($footer_drones as $d)
+                <li><a href="{{ esc_url($d['url']) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{!! esc_html($d['name']) !!}</a></li>
                 @endforeach
               </ul>
             </div>
@@ -691,8 +701,8 @@
                 <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Dukungan</h4>
                 <ul class="space-y-1 text-[12px] text-[#515154]">
                   <li><a href="{{ home_url('/kontak/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Hubungi Tim Sales &amp; Engineering</a></li>
-                  <li><a href="{{ home_url('/kontak#lokasi-workshop') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
-                  <li><a href="{{ home_url('/kontak#hubungi-form') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
+                  <li><a href="{{ home_url('/kontak/#lokasi-workshop') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Workshop &amp; Demo Unit Yogyakarta</a></li>
+                  <li><a href="{{ home_url('/kontak/#hubungi-form') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Permintaan Penawaran &amp; RFP</a></li>
                 </ul>
               </div>
 
@@ -753,7 +763,7 @@
               <div>
                 <p class="text-[13px] font-semibold text-[#1d1d1f]">{!! esc_html($footer_data['company_name'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)') !!}</p>
                 <p class="text-[12px] text-[#515154] mt-1.5 max-w-2xl leading-relaxed">
-                  {!! nl2br(esc_html($footer_data['address'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281')) !!}
+                  {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($footer_data['address'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285')))) !!}
                 </p>
               </div>
               <div class="flex flex-wrap items-center gap-4 mt-3 text-[12px] text-[#515154]">
@@ -830,9 +840,9 @@
           <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#86868b]">
             <span>{!! esc_html($footer_data['copyright'] ?? ('Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.')) !!}</span>
             <div class="flex items-center gap-4">
-              <a href="{{ esc_url($footer_data['privacy_url'] ?? '#') }}" class="hover:text-[#1d1d1f] hover:underline">Kebijakan Privasi</a>
+              <a href="{{ esc_url(!empty($footer_data['privacy_url']) && $footer_data['privacy_url'] !== '#' ? $footer_data['privacy_url'] : home_url('/privacy-policy/')) }}" class="hover:text-[#1d1d1f] hover:underline">Kebijakan Privasi</a>
               <span class="h-3 w-px bg-black/10"></span>
-              <a href="{{ esc_url($footer_data['terms_url'] ?? '#') }}" class="hover:text-[#1d1d1f] hover:underline">Ketentuan Layanan</a>
+              <a href="{{ esc_url(!empty($footer_data['terms_url']) && $footer_data['terms_url'] !== '#' ? $footer_data['terms_url'] : home_url('/disclaimer/')) }}" class="hover:text-[#1d1d1f] hover:underline">Ketentuan Layanan</a>
             </div>
           </div>
         </div>

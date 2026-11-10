@@ -13,14 +13,22 @@
 
       {{-- Featured image --}}
       @if(has_post_thumbnail())
+        @php
+          $s_thumb_id  = get_post_thumbnail_id(get_the_ID());
+          $s_thumb_alt = $s_thumb_id ? trim((string) get_post_meta($s_thumb_id, '_wp_attachment_image_alt', true)) : '';
+          if ($s_thumb_alt === '') {
+              $s_thumb_alt = trim(wp_specialchars_decode(get_the_title(), ENT_QUOTES)) . ' — Full Drone Solutions';
+          }
+        @endphp
         <div class="max-w-[1100px] mx-auto px-6 lg:px-12 mb-14 fds-hero-entrance fds-hero-delay-3">
           <div class="rounded-[1.5rem] overflow-hidden aspect-video bg-[#f5f5f7]">
             {!! get_the_post_thumbnail(null, 'large', [
-              'class' => 'w-full h-full object-cover no-lazy',
-              'loading' => 'eager',
+              'class'         => 'w-full h-full object-cover no-lazy',
+              'alt'           => esc_attr($s_thumb_alt),
+              'loading'       => 'eager',
               'fetchpriority' => 'high',
-              'data-no-lazy' => '1',
-              'decoding' => 'sync',
+              'data-no-lazy'  => '1',
+              'decoding'      => 'sync',
             ]) !!}
           </div>
         </div>
@@ -30,7 +38,13 @@
       <x-reveal :delay="200" class="max-w-[1100px] mx-auto px-6 lg:px-12">
         <div class="prose max-w-none"
              style="font-family: inherit; font-size: 18px; line-height: 1.8; color: #1d1d1f;">
-          @php(the_content())
+          @php
+            $post_body_html = apply_filters('the_content', get_the_content());
+            if (is_string($post_body_html) && $post_body_html !== '') {
+                $post_body_html = preg_replace('/<(\/?)h1\b/i', '<$1h2', $post_body_html);
+            }
+          @endphp
+          {!! $post_body_html !!}
         </div>
 
         {{-- Share --}}

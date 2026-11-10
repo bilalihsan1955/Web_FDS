@@ -41,18 +41,23 @@ function fds_get_global_contact() {
         return $static_contact;
     }
 
-    $cached = get_transient('fds_global_contact_cache');
+    $cached = get_transient('fds_global_contact_cache_v2');
     if ($cached !== false && is_array($cached)) {
         $static_contact = $cached;
         return $cached;
     }
 
     $company_name = get_option('fds_global_company_name', get_option('fds_footer_company_name', 'PT Karya Solusi Angkasa (Full Drone Solutions)'));
-    $address      = get_option('fds_global_address', get_option('fds_footer_address', get_option('fds_kontak_address', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281')));
+    $address      = get_option('fds_global_address', get_option('fds_footer_address', get_option('fds_kontak_address', 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285')));
     $phone        = get_option('fds_global_phone', get_option('fds_footer_phone', get_option('fds_kontak_phone', '+62 8112 748 882')));
     $email        = get_option('fds_global_email', get_option('fds_footer_email', get_option('fds_kontak_email', 'marketing@fulldronesolutions.com')));
     $wa_link      = get_option('fds_global_wa_link', get_option('fds_kontak_wa_link', 'https://wa.me/628112748882'));
     $maps_url     = get_option('fds_global_maps_url', get_option('fds_kontak_maps', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid'));
+
+    $raw_privacy_url = trim((string) get_option('fds_footer_privacy_url', ''));
+    $raw_terms_url   = trim((string) get_option('fds_footer_terms_url', ''));
+    $privacy_url     = ($raw_privacy_url !== '' && $raw_privacy_url !== '#') ? $raw_privacy_url : home_url('/privacy-policy/');
+    $terms_url       = ($raw_terms_url !== '' && $raw_terms_url !== '#') ? $raw_terms_url : home_url('/disclaimer/');
 
     $data = [
         // KONTAK TERPUSAT
@@ -86,8 +91,8 @@ function fds_get_global_contact() {
 
         // HAK CIPTA & LEGAL
         'copyright'    => get_option('fds_footer_copyright', 'Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.'),
-        'privacy_url'  => get_option('fds_footer_privacy_url', '#'),
-        'terms_url'    => get_option('fds_footer_terms_url', '#'),
+        'privacy_url'  => $privacy_url,
+        'terms_url'    => $terms_url,
 
         // KUSTOMISASI NARASI HALAMAN KONTAK (/kontak/)
         'page_kontak_badge'       => get_option('fds_page_kontak_badge', 'Pusat Kontak'),
@@ -104,7 +109,7 @@ function fds_get_global_contact() {
         'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Respons 1×24 jam kerja. Data terjamin aman.'),
         'page_kontak_map_title'   => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
         'page_kontak_map_btn'     => get_option('fds_page_kontak_map_btn', 'Buka di Google Maps'),
-        'page_kontak_map_link'    => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Condongcatur+Sleman'),
+        'page_kontak_map_link'    => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta'),
     ];
 
     // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
@@ -118,7 +123,7 @@ function fds_get_global_contact() {
         return $v;
     }, $data);
 
-    set_transient('fds_global_contact_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_global_contact_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_contact = $clean_data;
     return $clean_data;
 }
@@ -217,9 +222,11 @@ function render_global_contact_admin_page() {
         update_option('fds_sosmed_whatsapp_active', isset($_POST['fds_sosmed_whatsapp_active']) ? 1 : 0);
 
         // 3. Simpan Footer Hak Cipta
+        $raw_priv = trim((string) ($_POST['fds_footer_privacy_url'] ?? ''));
+        $raw_term = trim((string) ($_POST['fds_footer_terms_url'] ?? ''));
         update_option('fds_footer_copyright', sanitize_text_field($_POST['fds_footer_copyright'] ?? ''));
-        update_option('fds_footer_privacy_url', esc_url_raw($_POST['fds_footer_privacy_url'] ?? '#'));
-        update_option('fds_footer_terms_url', esc_url_raw($_POST['fds_footer_terms_url'] ?? '#'));
+        update_option('fds_footer_privacy_url', ($raw_priv !== '' && $raw_priv !== '#') ? esc_url_raw($raw_priv) : '');
+        update_option('fds_footer_terms_url', ($raw_term !== '' && $raw_term !== '#') ? esc_url_raw($raw_term) : '');
 
         // 4. Simpan Kustomisasi Narasi Halaman Kontak (/kontak/)
         update_option('fds_page_kontak_badge', sanitize_text_field($_POST['fds_page_kontak_badge'] ?? ''));
@@ -239,6 +246,7 @@ function render_global_contact_admin_page() {
         update_option('fds_page_kontak_map_link', esc_url_raw($_POST['fds_page_kontak_map_link'] ?? ''));
 
         delete_transient('fds_global_contact_cache');
+        delete_transient('fds_global_contact_cache_v2');
         $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak &amp; Hak Cipta berhasil diperbarui!';
     }
 
@@ -313,7 +321,7 @@ function render_global_contact_admin_page() {
                 </div>
 
                 <div style="padding: 14px 18px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; gap: 10px;">
-                    <span style="font-size: 12px; font-weight: 700; color: #0f808a; text-transform: uppercase; letter-spacing: 0.5px;">🗺️ Pengaturan Tampilan Google Maps</span>
+                    <span style="font-size: 12px; font-weight: 700; color: #0f808a; letter-spacing: 0.5px;">🗺️ Pengaturan Tampilan Google Maps</span>
                     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
                         <input type="checkbox" name="fds_show_map_home" value="1" <?php checked($c['show_map_home'], true); ?>>
                         Tampilkan Google Maps di Halaman Beranda (Home)

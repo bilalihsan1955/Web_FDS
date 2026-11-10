@@ -28,7 +28,7 @@
 
     @if(!empty($description))
       <p class="mt-5 text-[18px] sm:text-[20px] text-[#515154] font-normal max-w-[640px] {{ $mxClass }} leading-[1.55] fds-hero-entrance fds-hero-delay-3">
-        {!! nl2br(esc_html($description)) !!}
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $description))) !!}
       </p>
     @endif
 

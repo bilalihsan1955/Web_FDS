@@ -19,17 +19,17 @@
           @endif
         </div>
         <div class="flex flex-col">
-          <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 uppercase group-hover:text-[#0f808a] transition-colors">
-            FULL DRONE <span class="text-[#0f808a]">SOLUTIONS</span>
+          <span class="font-bold text-base sm:text-lg tracking-wider text-slate-100 group-hover:text-[#0f808a] transition-colors">
+            Full Drone <span class="text-[#0f808a]">Solutions</span>
           </span>
-          <span class="text-[10px] tracking-widest text-slate-400 uppercase font-mono -mt-1">
+          <span class="text-[10px] tracking-widest text-slate-400 font-mono -mt-1">
             TKDN + BMP Hingga 60,74%
           </span>
         </div>
       </a>
 
       <!-- Desktop Navigation Links -->
-      <nav class="hidden lg:flex items-center gap-7 text-xs font-semibold tracking-wider uppercase text-slate-300">
+      <nav class="hidden lg:flex items-center gap-7 text-xs font-semibold tracking-wider text-slate-300">
         <a href="{{ home_url('/') }}" class="hover:text-[#0f808a] transition-colors py-2">
           Beranda
         </a>
@@ -52,8 +52,7 @@
               <div class="col-span-6 pr-6">
                 <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/[0.06]">
                   <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                    <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">UAV Agrikultur &middot; Seri FERTO</span>
+                    <span class="text-[11px] font-bold text-slate-200 tracking-wider">UAV Agrikultur &middot; Seri FERTO</span>
                   </div>
                   <span class="text-[10px] font-mono font-medium text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded border border-[#0f808a]/20">TKDN &middot; SNI</span>
                 </div>
@@ -70,7 +69,7 @@
                     ];
                   @endphp
                   @foreach($ferto_list as $f)
-                  <a href="{{ home_url('/' . $f['slug'] . '/') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
+                  <a href="{{ home_url('/drone/' . $f['slug'] . '/') }}" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
                     <div class="w-8 h-8 rounded-lg bg-[#0f808a]/10 border border-[#0f808a]/20 flex items-center justify-center flex-shrink-0 text-[#0f808a] font-mono text-[10px] font-bold group-hover/item:bg-[#0f808a] group-hover/item:text-white transition-colors">
                       {{ str_replace(' Liter', 'L', $f['cap']) }}
                     </div>
@@ -90,13 +89,12 @@
               <div class="col-span-3 px-6">
                 <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/[0.06]">
                   <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">Spesialis &amp; GIS</span>
+                    <span class="text-[11px] font-bold text-slate-200 tracking-wider">Spesialis &amp; GIS</span>
                   </div>
                 </div>
 
                 <div class="flex flex-col gap-2">
-                  <a href="{{ home_url('/deltav/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
+                  <a href="{{ home_url('/drone/deltav/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
                     <span class="w-7 h-7 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-mono text-[9px] font-bold flex items-center justify-center flex-shrink-0">VTOL</span>
                     <div class="min-w-0">
                       <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-emerald-400 transition-colors">DELTAV</div>
@@ -104,7 +102,7 @@
                     </div>
                   </a>
 
-                  <a href="{{ home_url('/multipurpose/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
+                  <a href="{{ home_url('/drone/multipurpose/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
                     <span class="w-7 h-7 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-400 font-mono text-[9px] font-bold flex items-center justify-center flex-shrink-0">MOD</span>
                     <div class="min-w-0">
                       <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-amber-400 transition-colors">MULTIPURPOSE</div>
@@ -112,19 +110,11 @@
                     </div>
                   </a>
 
-                  <a href="{{ home_url('/delfro/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
+                  <a href="{{ home_url('/drone/delfro/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
                     <span class="w-7 h-7 rounded-md bg-purple-500/10 border border-purple-500/20 text-purple-400 font-mono text-[9px] font-bold flex items-center justify-center flex-shrink-0">LOG</span>
                     <div class="min-w-0">
                       <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-purple-400 transition-colors">DELFRO</div>
                       <p class="text-[11px] text-slate-400 font-normal leading-tight mt-0.5">Kargo Logistik Ringan 10 kg</p>
-                    </div>
-                  </a>
-
-                  <a href="{{ home_url('/rebo/') }}" class="group/item flex items-start gap-3 p-2.5 rounded-xl hover:bg-white/[0.04] border border-transparent hover:border-white/[0.06] transition-all normal-case">
-                    <span class="w-7 h-7 rounded-md bg-teal-500/10 border border-teal-500/20 text-teal-400 font-mono text-[9px] font-bold flex items-center justify-center flex-shrink-0">SEEDB</span>
-                    <div class="min-w-0">
-                      <div class="text-[13px] font-bold text-slate-100 group-hover/item:text-teal-400 transition-colors">REBO</div>
-                      <p class="text-[11px] text-slate-400 font-normal leading-tight mt-0.5">Restorasi Hutan &middot; 20 kg Seedball</p>
                     </div>
                   </a>
                 </div>
@@ -134,12 +124,12 @@
               <div class="col-span-3 pl-6 flex flex-col justify-between">
                 <div>
                   <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/[0.06]">
-                    <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">FDS Station &amp; Sertifikasi</span>
+                    <span class="text-[11px] font-bold text-slate-200 tracking-wider">FDS Station &amp; Sertifikasi</span>
                   </div>
 
                   <div class="p-4 rounded-xl bg-gradient-to-br from-[#052b2e]/30 via-slate-900/40 to-slate-950/80 border border-[#0f808a]/20">
                     <div class="flex items-center gap-2 mb-2">
-                      <span class="text-[11px] font-bold text-[#0f808a] uppercase tracking-wider font-mono">FDS STATION GCS</span>
+                      <span class="text-[11px] font-bold text-[#0f808a] tracking-wider font-mono">FDS Station GCS</span>
                     </div>
                     <p class="text-[12px] text-slate-300 font-normal leading-relaxed normal-case">
                       Ground Control Station berbahasa Indonesia untuk perencanaan misi otomatis &amp; telemetri *real-time*.
@@ -152,7 +142,7 @@
                 </div>
 
                 <div class="pt-4">
-                  <a href="#kontak" class="block w-full text-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-md shadow-black/15 transition-all normal-case">
+                  <a href="{{ home_url('/#kontak') }}" class="block w-full text-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[12px] font-semibold py-2.5 px-4 rounded-xl shadow-md shadow-black/15 transition-all normal-case">
                     Jadwalkan Demo Produk &rarr;
                   </a>
                 </div>
@@ -164,7 +154,7 @@
             <!-- Bottom Sub-Bar -->
             <div class="bg-white/[0.02] border-t border-white/[0.06] px-8 py-3.5 flex items-center justify-between text-[12px] normal-case text-slate-400">
               <span>Semua produk drone FDS dirakit di Indonesia dengan dukungan servis &amp; suku cadang resmi.</span>
-              <a href="{{ home_url('/#solusi') }}" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
+              <a href="{{ home_url('/bandingkan/') }}" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
                 Bandingkan Semua Spesifikasi
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
               </a>
@@ -190,8 +180,7 @@
               <!-- Column 1: Operasional & Pelatihan -->
               <div class="pr-6">
                 <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/[0.06]">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">Operasional &amp; Pelatihan</span>
+                  <span class="text-[11px] font-bold text-slate-200 tracking-wider">Operasional &amp; Pelatihan</span>
                 </div>
 
                 <div class="space-y-2">
@@ -230,8 +219,7 @@
               <!-- Column 2: Survei & Analisis Geospasial -->
               <div class="pl-6">
                 <div class="flex items-center gap-2 mb-4 pb-2 border-b border-white/[0.06]">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span class="text-[11px] font-bold text-slate-200 tracking-wider uppercase">Survei &amp; Inspeksi Teknis</span>
+                  <span class="text-[11px] font-bold text-slate-200 tracking-wider">Survei &amp; Inspeksi Teknis</span>
                 </div>
 
                 <div class="space-y-2">
@@ -272,7 +260,7 @@
             <!-- Bottom Sub-Bar -->
             <div class="bg-white/[0.02] border-t border-white/[0.06] px-8 py-3.5 flex items-center justify-between text-[12px] normal-case text-slate-400">
               <span>Konsultasi kebutuhan survei &amp; demo armada gratis untuk korporasi &amp; instansi.</span>
-              <a href="#kontak" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
+              <a href="{{ home_url('/#kontak') }}" class="text-[#0f808a] hover:text-[#18d6e7] font-medium flex items-center gap-1">
                 Hubungi Spesialis Layanan &rarr;
               </a>
             </div>
@@ -283,14 +271,14 @@
         <a href="{{ home_url('/tentang-kami/') }}" class="hover:text-[#0f808a] transition-colors py-2">
           Tentang Kami
         </a>
-        <a href="#kontak" class="hover:text-[#0f808a] transition-colors py-2">
+        <a href="{{ home_url('/#kontak') }}" class="hover:text-[#0f808a] transition-colors py-2">
           Kontak
         </a>
       </nav>
 
       <!-- CTA Button & Mobile Menu Button -->
       <div class="flex items-center gap-3 sm:gap-4">
-        <a href="#kontak" class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-md shadow-black/15 transition-all flex items-center gap-2 leading-none group">
+        <a href="{{ home_url('/#kontak') }}" class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-xs sm:text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl shadow-md shadow-black/15 transition-all flex items-center gap-2 leading-none group">
           <span class="leading-none">Jadwalkan Demo</span>
           <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
@@ -314,67 +302,63 @@
 
   <!-- Mobile Menu Dropdown -->
   <div id="mobile-menu" class="hidden lg:hidden border-t border-white/[0.08] bg-[#0b0f17] px-4 py-6 space-y-4 max-h-[85vh] overflow-y-auto">
-    <nav class="flex flex-col space-y-3 text-xs uppercase tracking-wider font-semibold text-slate-300">
+    <nav class="flex flex-col space-y-3 text-xs tracking-wider font-semibold text-slate-300">
       <a href="{{ home_url('/') }}" class="mobile-nav-link hover:text-[#0f808a] py-2 border-b border-white/[0.06]">Beranda</a>
       
       <!-- Mobile Accordion: Produk -->
       <div class="border-b border-white/[0.06] py-2">
-        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] uppercase text-slate-300 text-xs font-semibold tracking-wider">
-          <span>Semua Produk Drone (10 Model)</span>
+        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] text-slate-300 text-xs font-semibold tracking-wider">
+          <span>Semua Produk Drone (9 Model)</span>
           <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
         <div class="hidden flex-col pl-3 mt-3 space-y-2 text-xs normal-case text-slate-400 transition-all duration-150">
-          <div class="text-[10px] font-bold tracking-widest text-slate-500 uppercase font-mono mt-1">UAV Agrikultur</div>
-          <a href="{{ home_url('/ferto-5l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <div class="text-[10px] font-bold tracking-widest text-slate-500 font-mono mt-1">UAV Agrikultur</div>
+          <a href="{{ home_url('/drone/ferto-5l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 5L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">5L</span>
           </a>
-          <a href="{{ home_url('/ferto-10l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/ferto-10l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 10L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">10L &middot; Terlaris</span>
           </a>
-          <a href="{{ home_url('/ferto-15l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/ferto-15l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 15L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">17L</span>
           </a>
-          <a href="{{ home_url('/ferto-22l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/ferto-22l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 22L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">22L</span>
           </a>
-          <a href="{{ home_url('/ferto-30l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/ferto-30l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 30L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">30L</span>
           </a>
-          <a href="{{ home_url('/ferto-50l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/ferto-50l/') }}" class="mobile-nav-link hover:text-[#0f808a] py-1.5 flex items-center justify-between text-slate-200">
             <span>FERTO 50L</span>
             <span class="text-[10px] font-mono text-[#0f808a]">50L</span>
           </a>
 
-          <div class="text-[10px] font-bold tracking-widest text-slate-500 uppercase font-mono pt-2 border-t border-white/[0.04]">Enterprise &amp; GIS</div>
-          <a href="{{ home_url('/deltav/') }}" class="mobile-nav-link hover:text-emerald-400 py-1.5 flex items-center justify-between text-slate-200">
+          <div class="text-[10px] font-bold tracking-widest text-slate-500 font-mono pt-2 border-t border-white/[0.04]">Enterprise &amp; GIS</div>
+          <a href="{{ home_url('/drone/deltav/') }}" class="mobile-nav-link hover:text-emerald-400 py-1.5 flex items-center justify-between text-slate-200">
             <span>DELTAV</span>
             <span class="text-[10px] font-mono text-emerald-400">Hybrid VTOL</span>
           </a>
-          <a href="{{ home_url('/multipurpose/') }}" class="mobile-nav-link hover:text-amber-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/multipurpose/') }}" class="mobile-nav-link hover:text-amber-400 py-1.5 flex items-center justify-between text-slate-200">
             <span>MULTIPURPOSE</span>
             <span class="text-[10px] font-mono text-amber-400">Inspeksi 150kV</span>
           </a>
-          <a href="{{ home_url('/delfro/') }}" class="mobile-nav-link hover:text-purple-400 py-1.5 flex items-center justify-between text-slate-200">
+          <a href="{{ home_url('/drone/delfro/') }}" class="mobile-nav-link hover:text-purple-400 py-1.5 flex items-center justify-between text-slate-200">
             <span>DELFRO</span>
             <span class="text-[10px] font-mono text-purple-400">Kargo 10kg</span>
-          </a>
-          <a href="{{ home_url('/rebo/') }}" class="mobile-nav-link hover:text-teal-400 py-1.5 flex items-center justify-between text-slate-200">
-            <span>REBO</span>
-            <span class="text-[10px] font-mono text-teal-400">Seedball 20kg</span>
           </a>
         </div>
       </div>
 
       <!-- Mobile Accordion: Layanan -->
       <div class="border-b border-white/[0.06] py-2">
-        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] uppercase text-slate-300 text-xs font-semibold tracking-wider">
+        <button onclick="toggleMobileSub(this)" class="w-full flex items-center justify-between hover:text-[#0f808a] text-slate-300 text-xs font-semibold tracking-wider">
           <span>Layanan FDS</span>
           <svg class="w-4 h-4 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -390,7 +374,7 @@
       </div>
 
       <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link hover:text-[#0f808a] py-2 border-b border-white/[0.06]">Tentang FDS &amp; TKDN</a>
-      <a href="#kontak" class="mobile-nav-link hover:text-[#0f808a] py-2">Hubungi Sales &amp; Demo</a>
+      <a href="{{ home_url('/#kontak') }}" class="mobile-nav-link hover:text-[#0f808a] py-2">Hubungi Sales &amp; Demo</a>
     </nav>
   </div>
 </header>

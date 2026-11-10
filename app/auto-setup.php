@@ -186,7 +186,7 @@ function fds_run_theme_auto_provision() {
     // 7. SEED DEFAULT CONTACT & ADDRESS
     if (!get_option('fds_contact_address')) {
         update_option('fds_contact_company_name', 'PT Karya Solusi Angkasa (Full Drone Solutions)');
-        update_option('fds_contact_address', 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+        update_option('fds_contact_address', 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285');
         update_option('fds_contact_email', 'marketing@fulldronesolutions.com');
         update_option('fds_contact_phone', '+62 8112 748 882');
         update_option('fds_contact_wa_link', 'https://wa.me/628112748882');

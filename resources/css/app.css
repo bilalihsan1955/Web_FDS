@@ -226,3 +226,135 @@ html.lenis, html.lenis body {
   content-visibility: auto;
   contain-intrinsic-size: 1px 300px;
 }
+
+/* ========================================================== */
+/* Editorial Technical Drone Guide & Specs Table (Single/B2B) */
+/* ========================================================== */
+.fds-drone-guide {
+  color: #1d1d1f;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.fds-drone-guide h2 {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  color: #1d1d1f;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.fds-drone-guide h2:first-child {
+  margin-top: 0;
+}
+
+.fds-drone-guide h3 {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+  color: #1d1d1f;
+  margin-top: 1.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.fds-drone-guide p {
+  color: #424245;
+  margin-bottom: 1.15rem;
+}
+
+.fds-drone-guide p.lead {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #1d1d1f;
+  margin-bottom: 1.35rem;
+}
+
+.fds-drone-guide ul,
+.fds-drone-guide ol {
+  margin: 1rem 0 1.5rem 1.35rem;
+  color: #424245;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.fds-drone-guide ul {
+  list-style-type: disc;
+}
+
+.fds-drone-guide ol {
+  list-style-type: decimal;
+}
+
+.fds-drone-guide a {
+  color: #0f808a;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fds-drone-guide a:hover {
+  color: #0a555c;
+}
+
+.fds-seo-spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0 2rem;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  font-size: 14.5px;
+}
+
+.fds-seo-spec-table thead th {
+  background: #f5f5f7;
+  color: #1d1d1f;
+  font-weight: 600;
+  text-align: left;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.fds-seo-spec-table thead th:first-child {
+  width: 36%;
+}
+
+.fds-seo-spec-table tbody td {
+  padding: 0.85rem 1.25rem;
+  color: #424245;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+}
+
+.fds-seo-spec-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.fds-seo-spec-table tbody tr:nth-child(even) td {
+  background: #fbfbfd;
+}
+
+.fds-seo-faq-group {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin-top: 1.25rem;
+}
+
+.fds-faq-item {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 1.25rem 0;
+}
+
+.fds-faq-item h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-size: 17px;
+  color: #1d1d1f;
+}
+
+.fds-faq-item p {
+  margin-bottom: 0;
+}

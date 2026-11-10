@@ -11,6 +11,11 @@
       the_post();
       $cats = get_the_category(get_the_ID());
       $cat_label = !empty($cats) ? $cats[0]->name : 'Berita';
+      $thumb_id  = get_post_thumbnail_id(get_the_ID());
+      $thumb_alt = $thumb_id ? trim((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true)) : '';
+      if ($thumb_alt === '') {
+        $thumb_alt = trim(wp_specialchars_decode(get_the_title(), ENT_QUOTES)) . ' — Full Drone Solutions';
+      }
       $all_posts[] = [
         'id'        => get_the_ID(),
         'title'     => get_the_title(),
@@ -18,7 +23,7 @@
         'excerpt'   => get_the_excerpt(),
         'date'      => get_the_date('d M Y'),
         'cat'       => $cat_label,
-        'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700']) : null,
+        'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
       ];
     }
   }

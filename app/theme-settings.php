@@ -158,7 +158,7 @@ function fds_get_navbar_brand() {
         return $memo;
     }
 
-    $cached = get_transient('fds_navbar_brand_cache_v2');
+    $cached = get_transient('fds_navbar_brand_cache_v3');
     if (is_array($cached) && !empty($cached)) {
         $memo = $cached;
         return $memo;
@@ -237,7 +237,13 @@ function fds_get_navbar_brand() {
         'menu_prod_item3_title'   => get_option('fds_menu_prod_item3_title', 'Standar SNI 9199:2023'),
         'menu_prod_item3_desc'    => get_option('fds_menu_prod_item3_desc', 'Teruji Resmi Mutu Pertanian Nasional'),
         'menu_prod_compare_text'  => get_option('fds_menu_prod_compare_text', 'Bandingkan Semua Model Drone'),
-        'menu_prod_compare_url'   => get_option('fds_menu_prod_compare_url', home_url('/bandingkan')),
+        'menu_prod_compare_url'   => (function () {
+            $raw = trim((string) get_option('fds_menu_prod_compare_url', ''));
+            if ($raw === '' || preg_match('#^/?bandingkan/?$#i', $raw) || preg_match('#/bandingkan$#i', $raw)) {
+                return home_url('/bandingkan/');
+            }
+            return $raw;
+        })(),
         // Mega Menu Layanan Right Sidebar
         'menu_layanan_heading'    => get_option('fds_menu_layanan_heading', 'Dukungan Teknis Langsung'),
         'menu_layanan_item1_title'=> get_option('fds_menu_layanan_item1_title', 'Pilot Bersertifikat Resmi'),
@@ -248,7 +254,7 @@ function fds_get_navbar_brand() {
         'menu_layanan_cta_url'    => get_option('fds_menu_layanan_cta_url', home_url('/#kontak')),
     ];
 
-    set_transient('fds_navbar_brand_cache_v2', $memo, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_navbar_brand_cache_v3', $memo, 12 * HOUR_IN_SECONDS);
     return $memo;
 }
 
@@ -446,7 +452,8 @@ function render_navbar_settings_admin_page() {
         $menu_prod_item3_title  = sanitize_text_field($_POST['fds_menu_prod_item3_title'] ?? 'Standar SNI 9199:2023');
         $menu_prod_item3_desc   = sanitize_text_field($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional');
         $menu_prod_compare_text = sanitize_text_field($_POST['fds_menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone');
-        $menu_prod_compare_url  = sanitize_text_field($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan');
+        $raw_compare_url        = sanitize_text_field($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan/');
+        $menu_prod_compare_url  = preg_match('#^/?bandingkan/?$#i', trim($raw_compare_url)) ? '/bandingkan/' : $raw_compare_url;
 
         $menu_layanan_heading    = sanitize_text_field($_POST['fds_menu_layanan_heading'] ?? 'Dukungan Teknis Langsung');
         $menu_layanan_item1_title= sanitize_text_field($_POST['fds_menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi');
@@ -491,6 +498,7 @@ function render_navbar_settings_admin_page() {
         update_option('fds_menu_layanan_cta_text', $menu_layanan_cta_text);
         update_option('fds_menu_layanan_cta_url', $menu_layanan_cta_url);
         delete_transient('fds_navbar_brand_cache_v2');
+        delete_transient('fds_navbar_brand_cache_v3');
 
         // Logo-Logo Footer (Dinamis)
         $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);
@@ -756,7 +764,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 3. Nama Tab Halaman Perbandingan -->
                         <div>
                             <label for="fds_compare_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                <span class="dashicons dashicons-leftright" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Perbandingan Drone (/bandingkan):
+                                <span class="dashicons dashicons-leftright" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Perbandingan Drone (/bandingkan/):
                             </label>
                             <input type="text" 
                                    id="fds_compare_tab_title" 
@@ -772,7 +780,7 @@ function render_navbar_settings_admin_page() {
                         <!-- 4. Nama Tab Halaman Blog -->
                         <div>
                             <label for="fds_blog_tab_title" style="display: block; font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;">
-                                <span class="dashicons dashicons-welcome-write-blog" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Blog / Berita (/blog):
+                                <span class="dashicons dashicons-welcome-write-blog" style="color: #64748b; vertical-align: text-bottom; margin-right: 2px;"></span> Nama Tab Halaman Blog / Berita (/blog/):
                             </label>
                             <input type="text" 
                                    id="fds_blog_tab_title" 
@@ -947,10 +955,10 @@ function render_navbar_settings_admin_page() {
                                   name="fds_custom_keywords" 
                                   rows="3" 
                                   style="width: 100%; font-size: 13px; line-height: 1.5; padding: 10px 12px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: monospace;" 
-                                  placeholder="Contoh: sewa drone semprot jawa barat, drone inspeksi pipa gas pertamina, tender pengadaan drone pemda kalimantan, drone reboisasi bibit bakau"><?php echo esc_textarea($custom_keywords); ?></textarea>
+                                  placeholder="Contoh: sewa drone semprot jawa barat, drone inspeksi pipa gas pertamina, tender pengadaan drone pemda kalimantan, drone pemetaan kehutanan"><?php echo esc_textarea($custom_keywords); ?></textarea>
                         
                         <p style="margin: 6px 0 0; color: #64748b; font-size: 12px; line-height: 1.5;">
-                            Kata kunci kustom di atas akan otomatis digabungkan dengan kata kunci bawaan ke dalam <strong>Meta Tag Keywords</strong>, <strong>Schema.org Structured Data (Google Knowledge Graph)</strong>, dan direktif AI Search <strong>(/llms.txt)</strong>.
+                            Kata kunci kustom di atas terintegrasi otomatis ke dalam <strong>Schema.org Structured Data (Google Knowledge Graph)</strong> dan direktif AI Search <strong>(/llms.txt)</strong>.
                         </p>
                     </div>
 

@@ -53,11 +53,11 @@
     @endif
 
     <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] fds-hero-entrance fds-hero-delay-2">
-      {!! nl2br(esc_html($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")) !!}
+      {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")))) !!}
     </h1>
 
     <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] fds-hero-entrance fds-hero-delay-3">
-      {!! nl2br(esc_html($hp['hero_desc'] ?? 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.')) !!}
+      {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['hero_desc'] ?? 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.')))) !!}
     </p>
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap fds-hero-entrance fds-hero-delay-4">
@@ -276,16 +276,22 @@
     {{-- Scroll track --}}
     <div class="flex" style="animation: fds-marquee 35s linear infinite;">
       @foreach($mitra_with_logo as $mitra)
-        @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
+        @php
+          $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
+          $m_thumb_id = get_post_thumbnail_id($mitra->ID);
+          $m_alt_meta = $m_thumb_id ? trim((string) get_post_meta($m_thumb_id, '_wp_attachment_image_alt', true)) : '';
+          $m_title_clean = trim(wp_specialchars_decode((string) $mitra->post_title, ENT_QUOTES));
+          $m_alt = $m_alt_meta !== '' ? $m_alt_meta : ($m_title_clean !== '' ? $m_title_clean . ' — Mitra Full Drone Solutions' : 'Mitra Resmi Full Drone Solutions');
+        @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10">
           <img src="{{ $logo }}"
-               alt="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}"
+               alt="{{ esc_attr($m_alt) }}"
                width="180"
                height="96"
                loading="lazy"
                decoding="async"
                class="h-24 w-auto object-contain"
-               title="{!! esc_attr(wp_specialchars_decode($mitra->post_title, ENT_QUOTES)) !!}">
+               title="{!! esc_attr($m_title_clean ?: 'Mitra Resmi Full Drone Solutions') !!}">
         </div>
       @endforeach
       @foreach($mitra_with_logo as $mitra)
@@ -395,7 +401,7 @@
         </h2>
       </div>
       <p class="text-[16px] text-white/80 max-w-[460px] leading-relaxed">
-        {!! nl2br(esc_html($solusi_data['desc'])) !!}
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $solusi_data['desc']))) !!}
       </p>
     </div>
   </x-reveal>
@@ -434,7 +440,7 @@
               {!! esc_html($card['title']) !!}
             </h3>
             <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed">
-              {!! nl2br(esc_html($card['desc'])) !!}
+              {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $card['desc']))) !!}
             </p>
           </div>
         </div>
@@ -600,10 +606,10 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="relative z-10">
           <span class="text-[11px] font-medium text-white/85 block mb-1 drop-shadow-sm">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') !!}</span>
           <h3 class="text-[19px] sm:text-[23px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2 max-w-[600px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-            {!! nl2br(esc_html($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")))) !!}
           </h3>
           <p class="text-[12.5px] sm:text-[13px] text-white/90 max-w-[560px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-            {!! nl2br(esc_html($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')))) !!}
           </p>
         </div>
       </div>
@@ -704,7 +710,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <span class="text-[11px] font-medium text-white/90 block mb-1">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software Kendali') !!}</span>
           
           <h3 class="text-[22px] sm:text-[25px] lg:text-[27px] font-semibold text-white tracking-[-0.03em] leading-snug my-2">
-            {!! nl2br(esc_html($hp['keunggulan_card3_title'] ?? "FDS STATION Ground Control GCS")) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card3_title'] ?? "FDS STATION Ground Control GCS")))) !!}
           </h3>
           
           <p class="text-[13px] text-white/85 leading-relaxed">
@@ -838,7 +844,7 @@ document.addEventListener('DOMContentLoaded', function() {
           {!! esc_html($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') !!}
         </h2>
         <p class="mt-4 text-[18px] text-[#515154] max-w-[540px] leading-relaxed">
-          {!! nl2br(esc_html($hp['produk_desc'] ?? 'TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.')) !!}
+          {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['produk_desc'] ?? 'TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.')))) !!}
         </p>
       </div>
     </x-reveal>
@@ -875,8 +881,15 @@ document.addEventListener('DOMContentLoaded', function() {
       $products = [];
       if (!empty($wp_drones)) {
           foreach ($wp_drones as $d) {
+              $d_slug_chk = strtolower((string) $d->post_name);
+              if (strpos($d_slug_chk, 'rebo') !== false || strpos($d_slug_chk, 'agrea') !== false) {
+                  continue;
+              }
               $terms    = get_the_terms($d->ID, 'kategori_drone');
               $d_cat    = (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : (get_post_meta($d->ID, 'drone_kategori', true) ?: 'Agrikultur');
+              if (stripos((string) $d_cat, 'rebo') !== false) {
+                  continue;
+              }
               $d_badge  = get_post_meta($d->ID, 'drone_badge', true) ?: 'Unggulan';
               $d_tagline= get_post_meta($d->ID, 'drone_tagline', true);
               $d_desc   = get_post_meta($d->ID, 'drone_desc', true) ?: $d->post_content;
@@ -1170,7 +1183,7 @@ function filterDrones(btn) {
         @endif
         @if(!empty($hp['layanan_desc']))
         <p class="text-[18px] text-white/80 leading-relaxed max-w-[380px] mb-8">
-          {!! nl2br(esc_html($hp['layanan_desc'])) !!}
+          {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $hp['layanan_desc']))) !!}
         </p>
         @endif
         @if(!empty($hp['layanan_cta_text']))
@@ -1198,7 +1211,7 @@ function filterDrones(btn) {
           </h3>
           @if(!empty($lItem['desc']))
           <p class="text-[15px] text-white/80 leading-relaxed">
-            {!! nl2br(esc_html(wp_specialchars_decode($lItem['desc']))) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) wp_specialchars_decode($lItem['desc'])))) !!}
           </p>
           @endif
         </div>
@@ -1259,11 +1272,19 @@ function filterDrones(btn) {
         <div class="news-carousel-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col justify-between select-none shadow-sm border border-black/[0.04]">
           <div>
             {{-- Image Box (Clean without covering tags) --}}
+            @php
+              $n_thumb_id = get_post_thumbnail_id($post->ID);
+              $n_alt = $n_thumb_id ? trim((string) get_post_meta($n_thumb_id, '_wp_attachment_image_alt', true)) : '';
+              if ($n_alt === '') {
+                  $n_alt = trim(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) . ' — Newsroom Full Drone Solutions';
+              }
+            @endphp
             <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
               @if(has_post_thumbnail($post->ID))
                 {!! get_the_post_thumbnail($post->ID, 'medium_large', [
-                  'class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
-                  'loading' => 'lazy',
+                  'class'    => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700',
+                  'alt'      => esc_attr($n_alt),
+                  'loading'  => 'lazy',
                   'decoding' => 'async',
                 ]) !!}
               @else
@@ -1424,7 +1445,7 @@ document.addEventListener('DOMContentLoaded', function() {
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
   $c_phone       = $global_c['phone'] ?? ($hp['kontak_phone'] ?? '+62 8112 748 882');
   $c_email       = $global_c['email'] ?? ($hp['kontak_email'] ?? 'marketing@fulldronesolutions.com');
-  $c_address     = $global_c['address'] ?? ($hp['kontak_address'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+  $c_address     = $global_c['address'] ?? ($hp['kontak_address'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285');
   $c_wa_link     = $global_c['wa_link'] ?? ($hp['kontak_wa_link'] ?? 'https://wa.me/628112748882');
   $c_maps        = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_home = isset($global_c['show_map_home']) ? (bool) $global_c['show_map_home'] : (isset($hp['show_map_home']) ? (bool) $hp['show_map_home'] : (bool) get_option('fds_show_map_home', 1));
@@ -1467,10 +1488,10 @@ document.addEventListener('DOMContentLoaded', function() {
           </div>
 
           <h2 class="text-[24px] sm:text-[28px] lg:text-[30px] font-semibold tracking-tight text-white leading-tight mb-2">
-            {!! nl2br(esc_html($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")))) !!}
           </h2>
           <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed max-w-[420px]">
-            {!! nl2br(esc_html($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')) !!}
+            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')))) !!}
           </p>
         </div>
 

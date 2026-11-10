@@ -97,10 +97,10 @@
         {!! esc_html(wp_specialchars_decode($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Pengalaman UAV Sejak 2012 · Yogyakarta')) !!}
       </p>
       <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px] fds-hero-entrance fds-hero-delay-2">
-        {!! nl2br(esc_html(wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology."))) !!}
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology.")))) !!}
       </h1>
-      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/65 max-w-[880px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
-        {!! nl2br(esc_html(wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'))) !!}
+      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/80 max-w-[880px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
+        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.')))) !!}
       </p>
     </div>
 
@@ -109,6 +109,12 @@
       <img
         src="{{ !empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80') }}"
         alt="Tim & Workshop PT Karya Solusi Angkasa (FDS)"
+        width="1400"
+        height="720"
+        loading="eager"
+        fetchpriority="high"
+        decoding="sync"
+        data-no-lazy="1"
         class="w-full h-[320px] sm:h-[480px] lg:h-[560px] object-cover"
       >
     </div>
@@ -340,7 +346,7 @@
               <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{!! esc_html($act['name']) !!}</h3>
             </div>
             <div class="sm:col-span-7">
-              <p class="text-[15px] text-[#515154] leading-relaxed">{!! nl2br(esc_html($act['desc'])) !!}</p>
+              <p class="text-[15px] text-[#515154] leading-relaxed">{!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($act['desc'] ?? '')))) !!}</p>
             </div>
           </div>
           @endif
@@ -790,7 +796,7 @@
 @php
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
   $c_entitas = $global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)');
-  $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Griya Perwita Asri No.15, Ngropoh, Condongcatur, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281');
+  $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285');
   $c_email   = $global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com');
   $c_phone   = $global_c['phone'] ?? '+62 8112 748 882';
   $c_wa_link      = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
@@ -852,7 +858,7 @@
             $btn2_label = $about['cta_btn2_text'] ?? 'Baca Studi Kasus';
             $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', html_entity_decode($btn2_label, ENT_QUOTES, 'UTF-8'));
           @endphp
-          <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog') }}"
+          <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog/') }}"
              class="inline-flex items-center text-white/70 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
             <span class="leading-none">{{ $btn2_label }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

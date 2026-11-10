@@ -172,9 +172,12 @@ add_filter('login_errors', function (): string {
     return 'Username atau password yang Anda masukkan tidak valid. Silakan coba lagi.';
 });
 
-// 10. NONAKTIFKAN APPLICATION PASSWORDS (JIKA TIDAK DIPAKAI MOBILE APP RESMI)
-// Menutup celah bypass otentikasi via REST API Application Passwords
-add_filter('wp_is_application_passwords_available', '__return_false');
+// 10. AKTIFKAN APPLICATION PASSWORDS KHUSUS ADMINISTRATOR (UNTUK KONEKSI MCP / API RESMI)
+// Non-admin tetap dilarang menggunakan Application Passwords
+add_filter('wp_is_application_passwords_available', '__return_true', 20);
+add_filter('wp_is_application_passwords_available_for_user', function (bool $available, \WP_User $user): bool {
+    return $user->has_cap('manage_options');
+}, 20, 2);
 
 // 11. MATIKAN EDITOR FILE THEME & PLUGIN DI WP ADMIN
 // Mencegah eksekusi kode arbiter jika kredensial admin sempat terkompromi
