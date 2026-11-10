@@ -338,6 +338,11 @@ html.lenis, html.lenis body {
   background: #fbfbfd;
 }
 
+.fds-seo-spec-table.fds-comparison-table thead th:first-child {
+  width: auto;
+  min-width: 190px;
+}
+
 .fds-seo-faq-group {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   margin-top: 1.25rem;
@@ -357,4 +362,164 @@ html.lenis, html.lenis body {
 
 .fds-faq-item p {
   margin-bottom: 0;
+}
+
+/* ========================================================== */
+/* Layanan Cards: Accessible Stretched Link & Motion Rules    */
+/* ========================================================== */
+.fds-service-card {
+  position: relative;
+  transition:
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.fds-stretched-link {
+  text-decoration: none;
+}
+
+.fds-stretched-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+
+.fds-stretched-link:focus-visible {
+  outline: none;
+}
+
+.fds-service-card:has(.fds-stretched-link:focus-visible) {
+  outline: 3px solid #0f808a;
+  outline-offset: 3px;
+}
+
+.fds-service-card--dark:has(.fds-stretched-link:focus-visible) {
+  outline-color: #75e6f0;
+}
+
+@supports not selector(:has(*)) {
+  .fds-stretched-link:focus-visible {
+    outline: 2px solid #0f808a;
+    outline-offset: 3px;
+  }
+}
+
+.fds-card-tag-link {
+  position: relative;
+  z-index: 2;
+}
+
+.fds-card-tag-link:focus-visible {
+  outline: 2px solid #0f808a;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.fds-service-card--dark .fds-card-tag-link:focus-visible {
+  outline-color: #75e6f0;
+}
+
+/* Card scroll-reveal & interactive motion overrides (GPU transform/opacity only, beat aos.css specificity) */
+[data-aos="fade-up"].fds-service-card {
+  transform: translate3d(0, 16px, 0);
+  transition-property: opacity, transform, border-color, background-color;
+  transition-duration: 0.42s, 0.42s, 0.2s, 0.2s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-aos][data-aos].fds-service-card.fds-aos-settled,
+[data-aos][data-aos].fds-service-card.aos-animate:hover {
+  transition-delay: 0ms !important;
+  transition-duration: 0.2s, 0.2s, 0.2s, 0.2s !important;
+}
+
+@media (hover: hover) {
+  .fds-service-card--interactive:hover,
+  [data-aos][data-aos].aos-animate.fds-service-card--interactive:hover {
+    transform: translateY(-4px);
+  }
+
+  .fds-service-card--light.fds-service-card--interactive:hover,
+  [data-aos][data-aos].aos-animate.fds-service-card--light.fds-service-card--interactive:hover {
+    border-color: rgba(15, 128, 138, 0.3);
+  }
+
+  .fds-service-card--interactive.fds-news-card:hover,
+  [data-aos][data-aos].aos-animate.fds-service-card--interactive.fds-news-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(15, 128, 138, 0.28);
+  }
+
+  .fds-service-card--dark.fds-service-card--interactive:hover,
+  [data-aos][data-aos].aos-animate.fds-service-card--dark.fds-service-card--interactive:hover {
+    border-color: rgba(117, 230, 240, 0.45);
+  }
+
+  .fds-service-card--interactive:hover .fds-card-cta-cue svg {
+    transform: translate(2.5px, -2.5px);
+  }
+}
+
+.fds-service-card--interactive:active,
+[data-aos][data-aos].aos-animate.fds-service-card--interactive:active {
+  transform: translateY(-1px) scale(0.992);
+}
+
+.fds-service-card--interactive:has(.fds-stretched-link:focus-visible) .fds-card-cta-cue svg {
+  transform: translate(2.5px, -2.5px);
+}
+
+.fds-card-cta-cue svg {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Native accessible FAQ accordion (<details>) */
+.fds-service-faq summary {
+  list-style: none;
+}
+
+.fds-service-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.fds-service-faq details[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.fds-service-faq summary svg {
+  transition: transform 0.22s ease;
+}
+
+.fds-service-faq summary:focus-visible {
+  outline: 2px solid #0f808a;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fds-service-card,
+  [data-aos].fds-service-card,
+  .fds-service-card img,
+  .fds-card-cta-cue svg,
+  .fds-service-faq summary svg {
+    transition: none !important;
+    transform: none !important;
+  }
+
+  .fds-service-card--interactive:active,
+  [data-aos][data-aos].aos-animate.fds-service-card--interactive:active {
+    transform: none !important;
+  }
+
+  @media (hover: hover) {
+    .fds-service-card--interactive:hover,
+    [data-aos][data-aos].aos-animate.fds-service-card--interactive:hover,
+    .fds-service-card--interactive:hover img,
+    .fds-service-card--interactive:hover .fds-card-cta-cue svg {
+      transform: none !important;
+    }
+  }
 }

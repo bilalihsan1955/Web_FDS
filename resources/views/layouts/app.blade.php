@@ -82,7 +82,58 @@
       if (function_exists('App\fds_render_schema_jsonld')) {
         \App\fds_render_schema_jsonld();
       }
+      $fds_track_cfg = function_exists('App\fds_get_tracking_config') ? \App\fds_get_tracking_config() : [];
+      $fds_ga4_id    = $fds_track_cfg['ga4_id'] ?? '';
+      $fds_gtm_id    = $fds_track_cfg['gtm_id'] ?? '';
+      $fds_gads_id   = $fds_track_cfg['gads_id'] ?? '';
+      $fds_gads_lbl  = $fds_track_cfg['gads_label'] ?? '';
+      $fds_meta_px   = $fds_track_cfg['meta_pixel_id'] ?? '';
+      $fds_tracking_js_payload = [
+        'ga4_id'        => $fds_ga4_id,
+        'gtm_id'        => $fds_gtm_id,
+        'gads_id'       => $fds_gads_id,
+        'gads_label'    => $fds_gads_lbl,
+        'meta_pixel_id' => $fds_meta_px,
+      ];
     @endphp
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.fdsTrackingConfig = {!! wp_json_encode($fds_tracking_js_payload) !!};
+    </script>
+    @if($fds_gtm_id !== '')
+      <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','{{ esc_js($fds_gtm_id) }}');</script>
+    @endif
+    @if($fds_ga4_id !== '' || $fds_gads_id !== '')
+      @php $gtag_primary = $fds_ga4_id !== '' ? $fds_ga4_id : $fds_gads_id; @endphp
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{ esc_attr($gtag_primary) }}"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        @if($fds_ga4_id !== '')
+        gtag('config', '{{ esc_js($fds_ga4_id) }}');
+        @endif
+        @if($fds_gads_id !== '')
+        gtag('config', '{{ esc_js($fds_gads_id) }}');
+        @endif
+      </script>
+    @endif
+    @if($fds_meta_px !== '')
+      <script>
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '{{ esc_js($fds_meta_px) }}');
+        fbq('track', 'PageView');
+      </script>
+    @endif
 
     <?php do_action('get_header'); ?>
     <?php wp_head(); ?>
@@ -90,6 +141,9 @@
 
   <body <?php body_class('bg-[#f5f5f7] text-[#1d1d1f] antialiased'); ?>>
     <?php wp_body_open(); ?>
+    @if(!empty($fds_gtm_id))
+      <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ esc_attr($fds_gtm_id) }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    @endif
 
     @php
       // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT (Cached via Transient)
@@ -257,31 +311,47 @@
             @php
               $is_active_home    = is_front_page() && !is_home();
               $is_active_produk  = is_singular('drone') || is_page('bandingkan') || is_tax('kategori_drone');
-              $is_active_layanan = is_page('layanan') || is_singular('layanan');
+              $is_active_layanan = is_page('layanan') || is_singular('layanan') || (function_exists('App\fds_get_current_layanan_context') && \App\fds_get_current_layanan_context() !== null);
               $is_active_about   = is_page('tentang-kami') || is_page('tentang-kami-2') || is_page('about') || is_page('about-2') || is_page('about-us');
               $is_active_blog    = is_home() || is_page('blog') || (is_single() && get_post_type() === 'post') || is_category() || is_tag();
               $is_active_kontak  = is_page('kontak') || is_page('contact') || is_page('hubungi-kami');
             @endphp
-            <nav class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
+            <nav aria-label="Navigasi utama" class="hidden lg:flex items-center gap-7 text-[13px] font-medium text-[#515154]">
               <a href="{{ home_url('/') }}" 
                  class="nav-direct-link transition-colors duration-150 py-2 relative {{ $is_active_home ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : 'hover:text-[#1d1d1f]' }}">
                 Beranda
               </a>
 
               <!-- Produk dropdown trigger -->
-              <div id="produk-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_produk ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
-                <span class="{{ $is_active_produk ? 'text-[#0f808a] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Produk</span>
-                <svg id="produk-chevron" class="w-3.5 h-3.5 flex-shrink-0 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                </svg>
+              <div id="produk-trigger" class="relative flex items-center py-2 {{ $is_active_produk ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
+                <button type="button"
+                        id="produk-toggle-btn"
+                        aria-expanded="false"
+                        aria-controls="mega-pane-produk"
+                        class="flex items-center gap-1 cursor-pointer group select-none bg-transparent border-0 p-0 text-[13px] font-medium focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:outline-offset-4 rounded {{ $is_active_produk ? 'text-[#0f808a] font-semibold' : 'text-[#515154] hover:text-[#1d1d1f] transition-colors duration-150' }}">
+                  <span>Produk</span>
+                  <svg id="produk-chevron" class="w-3.5 h-3.5 flex-shrink-0 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#6e6e73]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
               </div>
 
-              <!-- Layanan dropdown trigger -->
-              <div id="layanan-trigger" class="relative flex items-center gap-1 cursor-pointer group select-none py-2 {{ $is_active_layanan ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
-                <span class="{{ $is_active_layanan ? 'text-[#0f808a] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">Layanan</span>
-                <svg id="layanan-chevron" class="w-3.5 h-3.5 flex-shrink-0 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#86868b]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                </svg>
+              <!-- Layanan link + accessible submenu trigger -->
+              <div id="layanan-trigger" class="relative flex items-center gap-1 group select-none py-2 {{ $is_active_layanan ? 'text-[#0f808a] font-semibold after:content-[\'\'] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#0f808a] after:rounded-full' : '' }}">
+                <a href="{{ home_url('/layanan/') }}"
+                   class="py-0.5 focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:outline-offset-4 rounded {{ $is_active_layanan ? 'text-[#0f808a] font-semibold' : 'hover:text-[#1d1d1f] transition-colors duration-150' }}">
+                  Layanan
+                </a>
+                <button type="button"
+                        id="layanan-toggle-btn"
+                        aria-expanded="false"
+                        aria-controls="mega-pane-layanan"
+                        aria-label="Buka submenu Layanan"
+                        class="p-1 -my-1 -mr-1 rounded inline-flex items-center justify-center bg-transparent border-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:outline-offset-2">
+                  <svg id="layanan-chevron" class="w-3.5 h-3.5 flex-shrink-0 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#6e6e73]' }} transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                  </svg>
+                </button>
               </div>
 
               <a href="{{ home_url('/tentang-kami/') }}" 
@@ -490,93 +560,90 @@
               </div>
             </div>
 
-            <!-- 2. PANE LAYANAN (Editorial Multi-Column — 100% Dinamis dari WP Admin) -->
+            <!-- 2. PANE LAYANAN (Single Source of Truth: Hub, 6 Sektor Industri & 3 Kategori Layanan) -->
             @php
-              $all_layanan = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
-              $layanan_grp1 = [];
-              $layanan_grp2 = [];
-              
-              foreach ($all_layanan as $l) {
-                if (($l['group'] ?? '') === 'Survei & Inspeksi Teknis') {
-                  $layanan_grp2[] = $l;
-                } else {
-                  $layanan_grp1[] = $l;
-                }
-              }
-
-              if (empty($layanan_grp1) && !empty($layanan_grp2)) {
-                $half = ceil(count($layanan_grp2) / 2);
-                $layanan_grp1 = array_slice($layanan_grp2, 0, $half);
-                $layanan_grp2 = array_slice($layanan_grp2, $half);
-              } elseif (empty($layanan_grp2) && !empty($layanan_grp1)) {
-                $half = ceil(count($layanan_grp1) / 2);
-                $layanan_grp2 = array_slice($layanan_grp1, $half);
-                $layanan_grp1 = array_slice($layanan_grp1, 0, $half);
-              }
+              $menu_sectors    = function_exists('App\fds_get_layanan_sectors') ? \App\fds_get_layanan_sectors() : [];
+              $menu_categories = function_exists('App\fds_get_layanan_categories') ? \App\fds_get_layanan_categories() : [];
+              $menu_ui         = function_exists('App\fds_get_layanan_ui_texts') ? \App\fds_get_layanan_ui_texts() : [];
+              $menu_layanan_cta_href = trim((string) ($nb_brand['menu_layanan_cta_url'] ?? '')) ?: home_url('/kontak/#hubungi-form');
             @endphp
             <div id="mega-pane-layanan" class="mega-pane transition-opacity duration-150 opacity-0 hidden">
               <div class="grid grid-cols-12 gap-10">
-                
-                <!-- Column 1: Pelatihan & Operasional (Col 4) -->
-                <div class="col-span-4 border-r border-black/[0.06] pr-8">
-                  <p class="text-[12px] font-semibold text-[#86868b] mb-5">Pelatihan &amp; Operasional</p>
-                  
-                  <div class="space-y-4">
-                    @foreach($layanan_grp1 as $lItem)
-                    <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
-                        {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
-                      </div>
-                      @if(!empty($lItem['desc']))
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug line-clamp-2">
-                        {!! esc_html(wp_specialchars_decode($lItem['desc'])) !!}
-                      </div>
-                      @endif
+
+                <!-- Column 1: Solusi Industri (6 Sektor) (Col 5) -->
+                <div class="col-span-5 border-r border-black/[0.06] pr-8">
+                  <div class="mb-4 flex items-center justify-between">
+                    <a href="{{ home_url('/layanan/#solusi-industri') }}" class="text-[12px] font-semibold text-[#515154] hover:text-[#0f808a] transition-colors">
+                      {{ $menu_ui['menu_industries_heading'] ?? 'Solusi Industri (6 Sektor)' }}
                     </a>
+                    <a href="{{ home_url('/layanan/') }}" class="text-[11.5px] font-semibold text-[#0a555c] hover:underline">
+                      {{ $menu_ui['menu_hub_link_text'] ?? 'Hub Layanan' }} &rarr;
+                    </a>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-x-6 gap-y-3.5">
+                    @foreach($menu_sectors as $sec)
+                      <a href="{{ esc_url($sec['url']) }}" class="group py-0.5 block transition-colors">
+                        <div class="text-[14.5px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
+                          {{ $sec['card_title'] }}
+                        </div>
+                        <div class="text-[11.5px] text-[#6e6e73] mt-0.5 font-normal leading-snug line-clamp-2">
+                          {{ $sec['subtitle'] }}
+                        </div>
+                      </a>
                     @endforeach
                   </div>
                 </div>
 
-                <!-- Column 2: Survei Geospasial & Analitik (Col 5) -->
-                <div class="col-span-5 border-r border-black/[0.06] pr-8">
-                  <p class="text-[12px] font-semibold text-[#86868b] mb-5">Survei &amp; Inspeksi Teknis</p>
-                  
-                  <div class="space-y-4">
-                    @foreach($layanan_grp2 as $lItem)
-                    <a href="{{ esc_url($lItem['url']) }}" class="group py-1 block transition-colors">
-                      <div class="text-[16px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
-                        {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
-                      </div>
-                      @if(!empty($lItem['desc']))
-                      <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug line-clamp-2">
-                        {!! esc_html(wp_specialchars_decode($lItem['desc'])) !!}
-                      </div>
-                      @endif
+                <!-- Column 2: Layanan Spesialis & Pelatihan (3 Kategori) (Col 4) -->
+                <div class="col-span-4 border-r border-black/[0.06] pr-8 flex flex-col justify-between">
+                  <div>
+                    <p class="text-[12px] font-semibold text-[#515154] mb-4">{{ $menu_ui['menu_categories_heading'] ?? 'Layanan Spesialis & Pelatihan' }}</p>
+                    <div class="space-y-4">
+                      @foreach($menu_categories as $cat)
+                        <a href="{{ esc_url($cat['url']) }}" class="group py-0.5 block transition-colors">
+                          <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
+                            {{ $cat['short_title'] }}
+                          </div>
+                          <div class="text-[11.5px] text-[#6e6e73] mt-0.5 font-normal leading-snug line-clamp-2">
+                            {{ $cat['hero_summary'] }}
+                          </div>
+                        </a>
+                      @endforeach
+                    </div>
+                  </div>
+
+                  <div class="pt-5 mt-5 border-t border-black/[0.06]">
+                    <a href="{{ home_url('/layanan/') }}" class="inline-flex items-center text-[#0a555c] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                      <span class="leading-none">{{ $menu_ui['menu_all_services_text'] ?? 'Lihat Semua Layanan' }}</span>
+                      <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 6h12v12"/>
+                        <path d="M6 18 18 6"/>
+                      </svg>
                     </a>
-                    @endforeach
                   </div>
                 </div>
 
                 <!-- Column 3: Hubungi Spesialis Layanan (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-5">{!! esc_html($nb_brand['menu_layanan_heading'] ?? 'Dukungan Teknis Langsung') !!}</p>
-                    
+                    <p class="text-[12px] font-semibold text-[#515154] mb-4">{!! esc_html($nb_brand['menu_layanan_heading'] ?? 'Dukungan Teknis Langsung') !!}</p>
+
                     <div class="space-y-4">
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi') !!}</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item1_desc'] ?? 'Instruktur Berpengalaman di Ratusan Misi Lapangan') !!}</div>
+                        <div class="text-[12px] text-[#6e6e73] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item1_desc'] ?? 'Tim Operasional & Pemetaan Berpengalaman') !!}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{!! esc_html($nb_brand['menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta') !!}</div>
-                        <div class="text-[12px] text-[#86868b] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli') !!}</div>
+                        <div class="text-[12px] text-[#6e6e73] mt-0.5 font-normal leading-snug">{!! esc_html($nb_brand['menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli') !!}</div>
                       </div>
                     </div>
                   </div>
 
                   <div class="pt-6 border-t border-black/[0.06]">
-                    <a href="{{ esc_url($nb_brand['menu_layanan_cta_url'] ?? home_url('/#kontak')) }}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                    <a href="{{ esc_url($menu_layanan_cta_href) }}" class="inline-flex items-center text-[#0a555c] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
                       <span class="leading-none">{!! esc_html($nb_brand['menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi') !!}</span>
                       <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M6 6h12v12"/>
@@ -594,52 +661,62 @@
 
         <!-- Mobile nav — 100% Dinamis dari WordPress -->
         <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-2xl border-t border-black/[0.06] py-6 px-6 max-h-[85vh] overflow-y-auto">
-          <nav class="flex flex-col gap-3 text-[16px] font-medium text-[#1d1d1f]">
-            <a href="{{ home_url('/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0f808a] font-semibold' : '' }}">Beranda</a>
-            
+          <nav aria-label="Navigasi seluler" class="flex flex-col gap-3 text-[16px] font-medium text-[#1d1d1f]">
+            <a href="{{ home_url('/') }}" class="mobile-nav-link min-h-[44px] flex items-center border-b border-[#f5f5f7] {{ $is_active_home ? 'text-[#0f808a] font-semibold' : '' }}">Beranda</a>
+
             <details class="border-b border-[#f5f5f7]" {{ $is_active_produk ? 'open' : '' }}>
-              <summary class="py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">Produk Drone
-                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <summary class="min-h-[44px] py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">Produk Drone
+                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
+              <div class="pl-3 pb-3 mt-1 flex flex-col gap-1 text-[14px] text-[#515154]">
                 @foreach($drones_by_cat_slug as $cslug => $cdata)
                   @if(!empty($cdata['drones']))
-                    <p class="text-[12px] font-semibold text-[#86868b] mt-2">{!! wp_specialchars_decode($cdata['term']->name) !!}</p>
+                    <p class="text-[12px] font-semibold text-[#6e6e73] mt-2">{!! wp_specialchars_decode($cdata['term']->name) !!}</p>
                     @foreach($cdata['drones'] as $d)
                       @php
                         $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
                       @endphp
-                      <a href="{{ $d['url'] }}" class="mobile-nav-link py-2 flex items-center justify-between {{ $is_this_drone ? 'text-[#0f808a] font-semibold' : '' }}">
+                      <a href="{{ $d['url'] }}" class="mobile-nav-link min-h-[44px] flex items-center justify-between {{ $is_this_drone ? 'text-[#0f808a] font-semibold' : '' }}">
                         <span>{!! wp_specialchars_decode($d['name']) !!}</span>
                         @if($d['badge'])
-                        <span class="text-[10px] text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{{ $d['badge'] }}</span>
+                        <span class="text-[11px] font-semibold text-[#0a555c]">{{ $d['badge'] }}</span>
                         @endif
                       </a>
                     @endforeach
                   @endif
                 @endforeach
-                <a href="{{ home_url('/bandingkan/') }}" class="mobile-nav-link py-2 mt-2 border-t border-black/[0.06] text-[#0f808a] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0f808a]/10 px-2.5 rounded-lg' : '' }}">
+                <a href="{{ home_url('/bandingkan/') }}" class="mobile-nav-link min-h-[44px] mt-2 border-t border-black/[0.06] text-[#0a555c] font-semibold flex items-center justify-between {{ is_page('bandingkan') ? 'bg-[#0f808a]/10 px-2.5 rounded-lg' : '' }}">
                   <span>Bandingkan Semua Model</span>
-                  <svg class="w-4 h-4 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                  <svg class="w-4 h-4 text-[#0a555c]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
               </div>
             </details>
 
             <details class="border-b border-[#f5f5f7]" {{ $is_active_layanan ? 'open' : '' }}>
-              <summary class="py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">Layanan
-                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#86868b]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+              <summary class="min-h-[44px] py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">Layanan
+                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
-              <div class="pl-3 pb-3 mt-2 flex flex-col gap-1.5 text-[14px] text-[#515154]">
-                @foreach($all_layanan as $lItem)
-                  <a href="{{ esc_url($lItem['url']) }}" class="mobile-nav-link py-2">
-                    {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
+              <div class="pl-3 pb-3 mt-1 flex flex-col gap-1 text-[14px] text-[#515154]">
+                <a href="{{ home_url('/layanan/') }}" class="mobile-nav-link min-h-[44px] flex items-center font-semibold text-[#0a555c]">
+                  {{ $menu_ui['footer_hub_link_text'] ?? 'Semua Layanan UAV (Hub)' }}
+                </a>
+                <p class="text-[12px] font-semibold text-[#6e6e73] mt-1">{{ $menu_ui['menu_industries_heading'] ?? 'Solusi Industri (6 Sektor)' }}</p>
+                @foreach($menu_sectors as $sec)
+                  <a href="{{ esc_url($sec['url']) }}" class="mobile-nav-link min-h-[44px] flex items-center">
+                    {{ $sec['card_title'] }}
+                  </a>
+                @endforeach
+                <p class="text-[12px] font-semibold text-[#6e6e73] mt-2">{{ $menu_ui['menu_categories_heading'] ?? 'Layanan Spesialis & Pelatihan' }}</p>
+                @foreach($menu_categories as $cat)
+                  <a href="{{ esc_url($cat['url']) }}" class="mobile-nav-link min-h-[44px] flex items-center">
+                    {{ $cat['short_title'] }}
                   </a>
                 @endforeach
               </div>
             </details>
-            <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
-            <a href="{{ home_url('/blog/') }}" class="mobile-nav-link py-2 border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
-            <a href="{{ home_url('/kontak/') }}" class="mobile-nav-link py-2 {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
+            <a href="{{ home_url('/tentang-kami/') }}" class="mobile-nav-link min-h-[44px] flex items-center border-b border-[#f5f5f7] {{ $is_active_about ? 'text-[#0f808a] font-semibold' : '' }}">Tentang Kami</a>
+            <a href="{{ home_url('/blog/') }}" class="mobile-nav-link min-h-[44px] flex items-center border-b border-[#f5f5f7] {{ $is_active_blog ? 'text-[#0f808a] font-semibold' : '' }}">Blog</a>
+            <a href="{{ home_url('/kontak/') }}" class="mobile-nav-link min-h-[44px] flex items-center {{ $is_active_kontak ? 'text-[#0f808a] font-semibold' : 'text-[#1d1d1f]' }}">Kontak</a>
           </nav>
         </div>
       </header>
@@ -678,22 +755,29 @@
               </ul>
             </div>
             <div>
-              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Layanan</h4>
+              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $menu_ui['footer_layanan_heading'] ?? 'Layanan' }}</h4>
               <ul class="space-y-1 text-[12px] text-[#515154]">
-                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Kursus &amp; Sertifikasi Pilot</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pesewaan Drone</a></li>
-                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemetaan Aerial &amp; GIS</a></li>
-                <li><a href="{{ home_url('/#layanan') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Inspeksi Termal &amp; Industri</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">After-Sales &amp; Servis</a></li>
+                <li><a href="{{ home_url('/layanan/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $menu_ui['footer_hub_link_text'] ?? 'Semua Layanan UAV (Hub)' }}</a></li>
+                @foreach($menu_categories as $cat)
+                  <li><a href="{{ esc_url($cat['url']) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $cat['short_title'] }}</a></li>
+                @endforeach
+                @if(!empty($menu_sectors['pertambangan']))
+                  <li><a href="{{ esc_url($menu_sectors['pertambangan']['url']) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi {{ $menu_sectors['pertambangan']['card_title'] }}</a></li>
+                @endif
               </ul>
             </div>
             <div>
               <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">Perusahaan</h4>
               <ul class="space-y-1 text-[12px] text-[#515154]">
                 <li><a href="{{ home_url('/tentang-kami/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Tentang PT Karya Solusi Angkasa</a></li>
+                @if(!empty($menu_sectors['perkebunan-pertanian']))
+                  <li><a href="{{ esc_url($menu_sectors['perkebunan-pertanian']['url']) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi {{ $menu_sectors['perkebunan-pertanian']['card_title'] }}</a></li>
+                @endif
+                @if(!empty($menu_sectors['energi-infrastruktur']))
+                  <li><a href="{{ esc_url($menu_sectors['energi-infrastruktur']['url']) }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi {{ $menu_sectors['energi-infrastruktur']['card_title'] }}</a></li>
+                @endif
                 <li><a href="{{ home_url('/blog/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Newsroom &amp; Riset</a></li>
-                <li><a href="{{ home_url('/#kontak') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
-                <li><a href="{{ home_url('/#solusi') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Solusi Multi-Industri &amp; AI</a></li>
+                <li><a href="{{ home_url('/kontak/') }}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">Pemerintah, BUMN &amp; Korporasi</a></li>
               </ul>
             </div>
             <div class="relative flex flex-col justify-between h-full min-h-[160px] pb-10 md:pb-12">
@@ -860,9 +944,11 @@
       let open = false;
 
       if (btn && menu) {
+        btn.setAttribute('aria-expanded', 'false');
         btn.addEventListener('click', () => {
           open = !open;
           menu.classList.toggle('hidden', !open);
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
           document.body.style.overflow = open ? 'hidden' : '';
           if (open) {
             bar1.style.transform = 'translateY(6px) rotate(45deg)';
@@ -879,6 +965,7 @@
           link.addEventListener('click', () => {
             open = false;
             menu.classList.add('hidden');
+            btn.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
             bar1.style.transform = '';
             bar2.style.opacity = '';
@@ -887,21 +974,32 @@
         });
       }
 
-      // ── Unified Flicker-Free Mega Menu Controller ───────────
+      // ── Unified Flicker-Free & Keyboard-Accessible Mega Menu Controller ─
       const siteHeader = document.getElementById('site-header');
       const drawer     = document.getElementById('mega-menu-drawer');
       const overlay    = document.getElementById('layanan-overlay');
 
-      const produkTrigger = document.getElementById('produk-trigger');
-      const produkChevron = document.getElementById('produk-chevron');
-      const paneProduk    = document.getElementById('mega-pane-produk');
+      const produkTrigger   = document.getElementById('produk-trigger');
+      const produkToggleBtn = document.getElementById('produk-toggle-btn');
+      const produkChevron   = document.getElementById('produk-chevron');
+      const paneProduk      = document.getElementById('mega-pane-produk');
 
-      const layananTrigger = document.getElementById('layanan-trigger');
-      const layananChevron = document.getElementById('layanan-chevron');
-      const paneLayanan    = document.getElementById('mega-pane-layanan');
+      const layananTrigger   = document.getElementById('layanan-trigger');
+      const layananToggleBtn = document.getElementById('layanan-toggle-btn');
+      const layananChevron   = document.getElementById('layanan-chevron');
+      const paneLayanan      = document.getElementById('mega-pane-layanan');
 
       let currentMenu = null;
       let closeTimer  = null;
+
+      function syncAriaExpanded(activeType) {
+        if (produkToggleBtn) {
+          produkToggleBtn.setAttribute('aria-expanded', activeType === 'produk' ? 'true' : 'false');
+        }
+        if (layananToggleBtn) {
+          layananToggleBtn.setAttribute('aria-expanded', activeType === 'layanan' ? 'true' : 'false');
+        }
+      }
 
       function openMegaMenu(type) {
         cancelClose();
@@ -939,6 +1037,7 @@
         }
 
         currentMenu = type;
+        syncAriaExpanded(type);
 
         if (!isAlreadyOpen && drawer) {
           drawer.style.opacity = '1';
@@ -949,6 +1048,14 @@
             overlay.style.opacity = '1';
             overlay.style.pointerEvents = 'auto';
           }
+        }
+      }
+
+      function toggleMegaMenu(type) {
+        if (currentMenu === type) {
+          closeMegaMenu();
+        } else {
+          openMegaMenu(type);
         }
       }
 
@@ -981,13 +1088,28 @@
           overlay.style.pointerEvents = 'none';
         }
         currentMenu = null;
+        syncAriaExpanded(null);
       }
 
       if (produkTrigger) {
         produkTrigger.addEventListener('mouseenter', () => openMegaMenu('produk'));
       }
+      if (produkToggleBtn) {
+        produkToggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMegaMenu('produk');
+        });
+      }
       if (layananTrigger) {
         layananTrigger.addEventListener('mouseenter', () => openMegaMenu('layanan'));
+      }
+      if (layananToggleBtn) {
+        layananToggleBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleMegaMenu('layanan');
+        });
       }
 
       if (drawer) {
@@ -1007,10 +1129,22 @@
 
       document.querySelectorAll('.nav-direct-link').forEach(link => {
         link.addEventListener('mouseenter', () => closeMegaMenu());
+        link.addEventListener('focus', () => closeMegaMenu());
+      });
+
+      document.addEventListener('click', (e) => {
+        if (currentMenu && siteHeader && !siteHeader.contains(e.target)) {
+          closeMegaMenu();
+        }
       });
 
       document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeMegaMenu();
+        if (e.key === 'Escape' && currentMenu) {
+          const prev = currentMenu;
+          closeMegaMenu();
+          if (prev === 'produk' && produkToggleBtn) produkToggleBtn.focus();
+          if (prev === 'layanan' && layananToggleBtn) layananToggleBtn.focus();
+        }
       });
     });
     </script>

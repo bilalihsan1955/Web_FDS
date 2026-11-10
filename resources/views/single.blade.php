@@ -2,7 +2,10 @@
 
 @section('content')
 <div class="bg-white pt-[52px] pb-24 min-h-screen">
-  @while(have_posts()) @php(the_post())
+  @while(have_posts())
+    @php
+      the_post();
+    @endphp
     <article>
 
       {{-- Header --}}

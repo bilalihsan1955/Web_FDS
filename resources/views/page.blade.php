@@ -2,7 +2,10 @@
 
 @section('content')
 <div class="pt-[52px] bg-[#f5f5f7] min-h-[70vh]">
-  @while(have_posts()) @php(the_post())
+  @while(have_posts())
+    @php
+      the_post();
+    @endphp
     <article>
       {{-- Page Hero --}}
       <header class="bg-white border-b border-black/[0.06]">

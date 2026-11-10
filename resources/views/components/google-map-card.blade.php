@@ -18,7 +18,7 @@
       </p>
     </div>
     <div class="flex-shrink-0">
-      <a href="{{ esc_url($btnUrl) }}" target="_blank" rel="noopener noreferrer"
+      <a href="{!! esc_url($btnUrl) !!}" target="_blank" rel="noopener noreferrer"
          class="inline-flex items-center gap-2 text-[13px] font-semibold text-[#0f808a] hover:text-[#0a555c] bg-[#0f808a]/10 hover:bg-[#0f808a]/15 px-4.5 py-2 rounded-full transition-colors min-h-[38px] leading-none group">
         <span class="leading-none">{!! esc_html($btnText) !!}</span>
         <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -32,7 +32,7 @@
   {{-- Google Maps Iframe --}}
   <div class="w-full relative overflow-hidden bg-[#e5e3df]" style="height: 380px;">
     <iframe 
-      src="{{ esc_url($mapUrl) }}" 
+      src="{!! esc_url($mapUrl) !!}" 
       width="100%" 
       height="100%" 
       style="border:0;" 

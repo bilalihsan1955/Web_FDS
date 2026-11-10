@@ -46,41 +46,80 @@ function fds_get_default_layanan_items() {
     return [
         [
             'title' => 'Jasa Foto Udara & Survey LiDAR Akurasi Tinggi',
-            'desc'  => 'Akuisisi foto udara resolusi ultra-tinggi (GSD sub-sentimeter) dan survey drone LiDAR berpenetrasi vegetasi untuk menghasilkan peta ortomosaik, kontur topografi, DTM, dan DSM detail.',
-            'url'   => home_url('/#solusi'),
+            'desc'  => 'Akuisisi foto udara resolusi tinggi dan survey drone LiDAR untuk menghasilkan ortofoto, point cloud, kontur topografi, DTM, dan DSM detail.',
+            'url'   => home_url('/layanan/jasa-foto-udara-lidar/'),
             'group' => 'Foto Udara & LiDAR',
         ],
         [
             'title' => 'Konsultan GIS & Pemodelan Spasial',
-            'desc'  => 'Konsultan Sistem Informasi Geografis profesional untuk analisis spasial hidrologi DAS, perencanaan tata ruang RTRW/RDTR, kadastral batas HGU perkebunan/kehutanan, dan WebGIS enterprise.',
-            'url'   => home_url('/#layanan'),
+            'desc'  => 'Penyusunan sistem informasi geografis untuk analisis spasial, perencanaan tata ruang, pengembangan wilayah, dan dashboard pemantauan.',
+            'url'   => home_url('/layanan/perencanaan/'),
             'group' => 'Konsultan GIS',
         ],
         [
-            'title' => 'Pemetaan Kawasan KEK, Tambang, Kehutanan & Industri',
-            'desc'  => 'Survei terintegrasi untuk masterplan Kawasan Ekonomi Khusus (KEK), perhitungan volume stockpile & cut and fill tambang (±2.35%), inventarisasi karbon hutan, serta inspeksi utilitas kawasan industri.',
-            'url'   => home_url('/#layanan'),
+            'title' => 'Pemetaan Kawasan Tambang, Kehutanan & Infrastruktur',
+            'desc'  => 'Survei terintegrasi untuk pemantauan progres pit dan volume stockpile tambang, inventarisasi hutan dan karbon, serta inspeksi jaringan energi.',
+            'url'   => home_url('/layanan/pertambangan/'),
             'group' => 'Pemetaan Kawasan',
         ],
         [
             'title' => 'Produsen Drone Pertanian & Sprayer FERTO (TKDN 60,74%)',
             'desc'  => 'Manufaktur resmi drone pertanian sprayer dan granule spreader pupuk kapasitas 5L–50L dengan sertifikasi TKDN 60,74% & SNI 9199:2023 untuk efisiensi perkebunan dan pangan.',
-            'url'   => home_url('/#produk'),
+            'url'   => home_url('/kategori-drone/agrikultur/'),
             'group' => 'Produsen UAV',
         ],
         [
             'title' => 'Produsen Drone Pemetaan, Logistik & Surveillance',
             'desc'  => 'Perakitan UAV Fixed-Wing VTOL DELTAV jangkauan 60 km untuk mapping luas, drone kargo logistik DELFRO, serta drone surveillance termal inframerah FLIR untuk patroli malam.',
-            'url'   => home_url('/#produk'),
+            'url'   => home_url('/kategori-drone/pemetaan-gis/'),
             'group' => 'Produsen UAV',
         ],
         [
-            'title' => 'Pelatihan Pilot CASR 107 & After-Sales Resmi',
-            'desc'  => 'Program sertifikasi pilot drone DKPPU CASR 107 melalui FDS Academy, didukung jaminan servis resmi dan stok suku cadang lokal ready stock tanpa inden impor.',
-            'url'   => home_url('/#kontak'),
+            'title' => 'Pelatihan, Bootcamp & Sertifikasi Pilot Drone',
+            'desc'  => 'Program pelatihan operasional drone, bootcamp pemetaan dan aplikasi sektoral, serta persiapan sertifikasi operator UAV untuk tim internal perusahaan dan institusi.',
+            'url'   => home_url('/layanan/pelatihan-sertifikasi/'),
             'group' => 'Pelatihan & Operasional',
         ],
     ];
+}
+
+function fds_resolve_legacy_layanan_item_url(string $title, string $raw_url): string {
+    $trimmed = trim($raw_url);
+    $is_legacy_anchor = (
+        $trimmed === ''
+        || str_starts_with($trimmed, '#')
+        || (bool) preg_match('#/\#(solusi|layanan|produk|kontak)/?$#i', $trimmed)
+    );
+    if (!$is_legacy_anchor) {
+        return $trimmed;
+    }
+
+    $lower = strtolower($title);
+    if (str_contains($lower, 'lidar') || str_contains($lower, 'foto udara')) {
+        return home_url('/layanan/jasa-foto-udara-lidar/');
+    }
+    if (str_contains($lower, 'multispectral') || str_contains($lower, 'hyperspectral')) {
+        return home_url('/layanan/jasa-multispectral-hyperspectral/');
+    }
+    if (str_contains($lower, 'pelatihan') || str_contains($lower, 'sertifikasi') || str_contains($lower, 'bootcamp') || str_contains($lower, 'academy') || str_contains($lower, 'casr')) {
+        return home_url('/layanan/pelatihan-sertifikasi/');
+    }
+    if (str_contains($lower, 'gis') || str_contains($lower, 'tata ruang') || str_contains($lower, 'perencanaan')) {
+        return home_url('/layanan/perencanaan/');
+    }
+    if (str_contains($lower, 'tambang')) {
+        return home_url('/layanan/pertambangan/');
+    }
+    if (str_contains($lower, 'kebun') || str_contains($lower, 'tani') || str_contains($lower, 'ferto')) {
+        return home_url('/kategori-drone/agrikultur/');
+    }
+    if (str_contains($lower, 'deltav') || str_contains($lower, 'pemetaan') || str_contains($lower, 'surveillance')) {
+        return home_url('/kategori-drone/pemetaan-gis/');
+    }
+    if (str_contains($lower, 'delfro') || str_contains($lower, 'kargo') || str_contains($lower, 'logistik')) {
+        return home_url('/kategori-drone/kargo/');
+    }
+    return home_url('/layanan/');
 }
 
 function fds_get_layanan_items() {
@@ -89,15 +128,21 @@ function fds_get_layanan_items() {
         return fds_get_default_layanan_items();
     }
 
+    $items_customized = (bool) get_option('fds_layanan_items_customized', false);
     $items = [];
     if (is_array($saved)) {
         foreach ($saved as $item) {
-            $t = trim($item['title'] ?? '');
+            $t = trim((string) ($item['title'] ?? ''));
             if (!empty($t)) {
+                $decoded_title = wp_specialchars_decode($t, ENT_QUOTES);
+                $raw_url       = trim((string) ($item['url'] ?? ''));
+                $resolved_url  = $items_customized
+                    ? ($raw_url !== '' ? $raw_url : home_url('/layanan/'))
+                    : fds_resolve_legacy_layanan_item_url($decoded_title, $raw_url);
                 $items[] = [
-                    'title' => wp_specialchars_decode($t, ENT_QUOTES),
-                    'desc'  => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
-                    'url'   => !empty($item['url']) ? $item['url'] : home_url('/#layanan'),
+                    'title' => $decoded_title,
+                    'desc'  => wp_specialchars_decode((string) ($item['desc'] ?? ''), ENT_QUOTES),
+                    'url'   => $resolved_url,
                     'group' => !empty($item['group']) ? $item['group'] : 'Pelatihan & Operasional',
                 ];
             }
@@ -106,16 +151,36 @@ function fds_get_layanan_items() {
     return $items;
 }
 
-function fds_get_homepage_content() {
+function fds_get_homepage_content(bool $fresh = false) {
     static $static_hp = null;
-    if ($static_hp !== null) {
+    if (!$fresh && $static_hp !== null) {
         return $static_hp;
     }
 
-    $cached = get_transient('fds_homepage_content_cache');
-    if ($cached !== false && is_array($cached)) {
-        $static_hp = $cached;
-        return $cached;
+    if (!$fresh) {
+        $cached = get_transient('fds_homepage_content_cache');
+        if ($cached !== false && is_array($cached)) {
+            $static_hp = $cached;
+            return $cached;
+        }
+    }
+
+    $solusi_title_customized    = (bool) get_option('fds_solusi_title_customized', false);
+    $homelayanan_cta_customized = (bool) get_option('fds_homelayanan_cta_customized', false);
+
+    $solusi_title_saved = get_option('fds_solusi_title', 'Satu Platform UAV. Enam Sektor Kerja Strategis.');
+    if (!$solusi_title_customized && $solusi_title_saved === 'Satu Platform UAV. 4 Sektor Kerja Strategis.') {
+        $solusi_title_saved = 'Satu Platform UAV. Enam Sektor Kerja Strategis.';
+    }
+
+    $layanan_cta_url_saved = trim((string) get_option('fds_layanan_cta_url', ''));
+    if (!$homelayanan_cta_customized && ($layanan_cta_url_saved === '' || $layanan_cta_url_saved === '#kontak' || $layanan_cta_url_saved === '#layanan' || $layanan_cta_url_saved === '#')) {
+        $layanan_cta_url_saved = home_url('/layanan/');
+    }
+
+    $layanan_cta_text_saved = get_option('fds_layanan_cta_text', 'Lihat Semua Layanan');
+    if (!$homelayanan_cta_customized && $layanan_cta_text_saved === 'Konsultasi Kebutuhan Lapangan' && $layanan_cta_url_saved === home_url('/layanan/')) {
+        $layanan_cta_text_saved = 'Lihat Semua Layanan';
     }
 
     $data = [
@@ -132,9 +197,9 @@ function fds_get_homepage_content() {
         'mitra_heading'     => get_option('fds_mitra_heading', 'Dipercaya & Digunakan oleh Institusi Nasional dan Lembaga Riset'),
 
         // SOLUSI INDUSTRI
-        'solusi_badge'      => get_option('fds_solusi_badge', 'Solusi Berdasarkan Industri'),
-        'solusi_title'      => get_option('fds_solusi_title', 'Satu Platform UAV. 4 Sektor Kerja Strategis.'),
-        'solusi_desc'       => get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari perkebunan sawit berbukit, tambang terbuka, hingga area bencana terisolasi.'),
+        'solusi_badge'      => get_option('fds_solusi_badge', 'Solusi Industri FDS'),
+        'solusi_title'      => $solusi_title_saved,
+        'solusi_desc'       => get_option('fds_solusi_desc', 'Dirancang khusus mengatasi kondisi medan terberat di Indonesia: dari area tambang terbuka, perkebunan, kehutanan, koridor energi, hingga tata ruang & tanggap bencana.'),
 
         // PRODUK DRONE
         'produk_badge'      => get_option('fds_produk_badge', 'Spesifikasi & Sertifikasi'),
@@ -158,10 +223,11 @@ function fds_get_homepage_content() {
         'keunggulan_card1_desc'  => get_option('fds_keunggulan_card1_desc', 'Setiap unit dirakit dan diuji terbang langsung di fasilitas workshop kami di Sleman, Yogyakarta di bawah audit Sistem Manajemen Mutu ISO 9001:2015.'),
         'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80')),
 
-        'keunggulan_card2_badge' => get_option('fds_keunggulan_card2_badge', 'Legalitas Pengadaan'),
-        'keunggulan_card2_stat'  => get_option('fds_keunggulan_card2_stat', '60,74%'),
-        'keunggulan_card2_desc'  => get_option('fds_keunggulan_card2_desc', 'Sertifikat resmi TKDN Kemenperin RI. Memenuhi syarat prioritas belanja APBN/APBD di e-Katalog LKPP.'),
-        'keunggulan_card2_img'   => get_option('fds_keunggulan_card2_img', get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg'),
+        'keunggulan_card2_badge'   => get_option('fds_keunggulan_card2_badge', 'Legalitas Pengadaan'),
+        'keunggulan_card2_stat'    => get_option('fds_keunggulan_card2_stat', '60,74%'),
+        'keunggulan_card2_substat' => get_option('fds_keunggulan_card2_substat', 'Nilai TKDN + BMP Kemenperin RI'),
+        'keunggulan_card2_desc'    => get_option('fds_keunggulan_card2_desc', 'Sertifikat resmi TKDN Kemenperin RI. Memenuhi syarat prioritas belanja APBN/APBD di e-Katalog LKPP.'),
+        'keunggulan_card2_img'     => get_option('fds_keunggulan_card2_img', get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg'),
 
         'keunggulan_card3_badge' => get_option('fds_keunggulan_card3_badge', 'Software Kendali'),
         'keunggulan_card3_title' => get_option('fds_keunggulan_card3_title', "FDS STATION GCS\nBahasa Indonesia."),
@@ -186,14 +252,15 @@ function fds_get_homepage_content() {
         'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Skalabilitas Armada'),
         'keunggulan_card7_title' => get_option('fds_keunggulan_card7_title', 'Satu ekosistem. Banyak solusi.'),
         'keunggulan_card7_desc'  => get_option('fds_keunggulan_card7_desc', 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.'),
+        'keunggulan_card7_chips' => get_option('fds_keunggulan_card7_chips', 'Agri, Mapping, Inspeksi, Tambang, Hutan, BUMN'),
         'keunggulan_card7_img'   => get_option('fds_keunggulan_card7_img', get_template_directory_uri() . '/public/images/drone-ecosystem-3d.jpg'),
 
         // LAYANAN ENTERPRISE
         'layanan_badge'          => get_option('fds_layanan_badge', 'Dukungan Operasional'),
         'layanan_title'          => get_option('fds_layanan_title', 'Layanan Lengkap untuk Kelancaran Operasi Lapangan.'),
         'layanan_desc'           => get_option('fds_layanan_desc', 'Kami tidak hanya menjual hardware. Kami mendampingi tim Anda mulai dari instalasi awal, sertifikasi pilot, hingga pemeliharaan armada secara berkala.'),
-        'layanan_cta_text'       => get_option('fds_layanan_cta_text', 'Konsultasi Kebutuhan Lapangan'),
-        'layanan_cta_url'        => get_option('fds_layanan_cta_url', '#kontak'),
+        'layanan_cta_text'       => $layanan_cta_text_saved,
+        'layanan_cta_url'        => $layanan_cta_url_saved,
 
         // NEWSROOM
         'blog_badge'             => get_option('fds_blog_badge', 'Newsroom & Edukasi'),
@@ -241,9 +308,9 @@ function render_homepage_content_admin_page() {
         $fields_text = [
             'fds_hero_badge', 'fds_hero_cta1_text', 'fds_hero_cta1_url', 'fds_hero_cta2_text', 'fds_hero_cta2_url',
             'fds_mitra_heading',
-            'fds_solusi_badge', 'fds_solusi_title',
+            'fds_solusi_badge', 'fds_solusi_title', 'fds_solusi_cta_text', 'fds_solusi_cta_url',
             'fds_produk_badge', 'fds_produk_title', 'fds_produk_stat1_num', 'fds_produk_stat1_lbl', 'fds_produk_stat2_num', 'fds_produk_stat2_lbl', 'fds_produk_stat3_num', 'fds_produk_stat3_lbl', 'fds_produk_stat4_num', 'fds_produk_stat4_lbl',
-            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card6_img', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_img',
+            'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_substat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card6_img', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_chips', 'fds_keunggulan_card7_img',
             'fds_layanan_badge', 'fds_layanan_title', 'fds_layanan_cta_text', 'fds_layanan_cta_url',
             'fds_blog_badge', 'fds_blog_title', 'fds_blog_cta_text',
             'fds_kontak_badge', 'fds_kontak_wa_text', 'fds_kontak_form_title', 'fds_kontak_form_btn_text',
@@ -259,15 +326,19 @@ function render_homepage_content_admin_page() {
         ];
 
         foreach ($fields_text as $f) {
-            update_option($f, sanitize_text_field($_POST[$f] ?? ''));
+            update_option($f, sanitize_text_field(wp_unslash((string) ($_POST[$f] ?? ''))));
         }
 
+        update_option('fds_solusi_title_customized', 1, 'no');
+        update_option('fds_solusi_cta_customized', 1, 'no');
+        update_option('fds_homelayanan_cta_customized', 1, 'no');
+
         if (!empty($_POST['fds_keunggulan_card1_img'])) {
-            update_option('fds_img_keunggulan', esc_url_raw($_POST['fds_keunggulan_card1_img']));
+            update_option('fds_img_keunggulan', esc_url_raw(wp_unslash((string) $_POST['fds_keunggulan_card1_img'])));
         }
 
         foreach ($fields_textarea as $f) {
-            update_option($f, sanitize_textarea_field($_POST[$f] ?? ''));
+            update_option($f, sanitize_textarea_field(wp_unslash((string) ($_POST[$f] ?? ''))));
         }
 
         // Simpan Tampilan Google Maps Beranda
@@ -277,12 +348,12 @@ function render_homepage_content_admin_page() {
         if (isset($_POST['fds_slide_url']) && is_array($_POST['fds_slide_url'])) {
             $saved_slides = [];
             foreach ($_POST['fds_slide_url'] as $idx => $url) {
-                $clean_url = esc_url_raw($url);
+                $clean_url = esc_url_raw(wp_unslash((string) $url));
                 if (!empty($clean_url)) {
                     $saved_slides[] = [
                         'url'   => $clean_url,
-                        'title' => sanitize_text_field($_POST['fds_slide_title'][$idx] ?? ''),
-                        'alt'   => sanitize_text_field($_POST['fds_slide_alt'][$idx] ?? 'Full Drone Solutions Hero Slide'),
+                        'title' => sanitize_text_field(wp_unslash((string) ($_POST['fds_slide_title'][$idx] ?? ''))),
+                        'alt'   => sanitize_text_field(wp_unslash((string) ($_POST['fds_slide_alt'][$idx] ?? 'Full Drone Solutions Hero Slide'))),
                     ];
                 }
             }
@@ -290,44 +361,119 @@ function render_homepage_content_admin_page() {
         }
 
         // 3. Simpan Kartu Solusi Industri
-        if (isset($_POST['fds_card_title']) && is_array($_POST['fds_card_title'])) {
+        if (isset($_POST['fds_solusi_resync']) && wp_unslash((string) $_POST['fds_solusi_resync']) === '1') {
+            delete_option('fds_solusi_cards');
+            update_option('fds_solusi_cards_customized', 0, 'no');
+        } elseif (isset($_POST['fds_card_title']) && is_array($_POST['fds_card_title'])) {
+            $existing_cards   = get_option('fds_solusi_cards', []);
+            $existing_by_slug = [];
+            if (is_array($existing_cards)) {
+                foreach ($existing_cards as $ec) {
+                    if (!empty($ec['slug'])) {
+                        $existing_by_slug[(string) $ec['slug']] = $ec;
+                    }
+                }
+            }
+            $sectors_map   = function_exists(__NAMESPACE__ . '\\fds_get_layanan_sectors') ? fds_get_layanan_sectors() : [];
+            $default_cards = function_exists(__NAMESPACE__ . '\\fds_get_default_solusi_cards') ? fds_get_default_solusi_cards() : [];
+
             $saved_cards = [];
             foreach ($_POST['fds_card_title'] as $idx => $title) {
+                $clean_title = sanitize_text_field(wp_unslash((string) $title));
+                $clean_desc  = sanitize_textarea_field(wp_unslash((string) ($_POST['fds_card_desc'][$idx] ?? '')));
+                $clean_slug  = sanitize_title(wp_unslash((string) ($_POST['fds_card_slug'][$idx] ?? '')));
+                $clean_num   = sanitize_text_field(wp_unslash((string) ($_POST['fds_card_num'][$idx] ?? '')));
+                $clean_url   = sanitize_text_field(wp_unslash((string) ($_POST['fds_card_link_url'][$idx] ?? '')));
+
+                if ($clean_slug === '' && $clean_url !== '' && preg_match('#/layanan/([a-z0-9-]+)/?#i', $clean_url, $sm)) {
+                    if (isset($sectors_map[$sm[1]])) {
+                        $clean_slug = $sm[1];
+                    }
+                }
+
+                $preserved_tags = [];
+                if ($clean_slug !== '' && !empty($existing_by_slug[$clean_slug]['tags'])) {
+                    $preserved_tags = $existing_by_slug[$clean_slug]['tags'];
+                } elseif ($clean_slug !== '' && !empty($sectors_map[$clean_slug]['card_tags'])) {
+                    $preserved_tags = $sectors_map[$clean_slug]['card_tags'];
+                }
+
+                if ($clean_num === '' && $clean_slug !== '' && !empty($sectors_map[$clean_slug]['num'])) {
+                    $clean_num = (string) $sectors_map[$clean_slug]['num'];
+                }
+
                 $saved_cards[] = [
-                    'image'     => esc_url_raw($_POST['fds_card_image'][$idx] ?? ''),
-                    'title'     => sanitize_text_field($title),
-                    'desc'      => sanitize_textarea_field($_POST['fds_card_desc'][$idx] ?? ''),
-                    'tag'       => sanitize_text_field($_POST['fds_card_tag'][$idx] ?? ''),
-                    'link_text' => sanitize_text_field($_POST['fds_card_link_text'][$idx] ?? 'Pelajari Selengkapnya'),
-                    'link_url'  => sanitize_text_field($_POST['fds_card_link_url'][$idx] ?? '#kontak'),
+                    'num'       => $clean_num,
+                    'slug'      => $clean_slug,
+                    'image'     => esc_url_raw(wp_unslash((string) ($_POST['fds_card_image'][$idx] ?? ''))),
+                    'image_alt' => sanitize_text_field(wp_unslash((string) ($_POST['fds_card_image_alt'][$idx] ?? ''))),
+                    'title'     => $clean_title,
+                    'desc'      => $clean_desc,
+                    'tags'      => $preserved_tags,
+                    'tag'       => sanitize_text_field(wp_unslash((string) ($_POST['fds_card_tag'][$idx] ?? ''))),
+                    'link_text' => sanitize_text_field(wp_unslash((string) ($_POST['fds_card_link_text'][$idx] ?? ''))),
+                    'link_url'  => $clean_url,
                 ];
             }
-            update_option('fds_solusi_cards', $saved_cards, 'no');
+
+            $was_customized = (bool) get_option('fds_solusi_cards_customized', false);
+            $norm_cmp = function ($cards_arr) {
+                $out = [];
+                foreach ((array) $cards_arr as $item) {
+                    $t = str_replace("\r\n", "\n", trim((string) ($item['title'] ?? '')));
+                    $d = str_replace("\r\n", "\n", trim((string) ($item['desc'] ?? '')));
+                    if ($t === '' && $d === '') {
+                        continue;
+                    }
+                    $out[] = [
+                        'image'     => trim((string) ($item['image'] ?? '')),
+                        'image_alt' => str_replace("\r\n", "\n", trim(wp_specialchars_decode((string) ($item['image_alt'] ?? ''), ENT_QUOTES))),
+                        'title'     => wp_specialchars_decode($t, ENT_QUOTES),
+                        'desc'      => wp_specialchars_decode($d, ENT_QUOTES),
+                        'tag'       => wp_specialchars_decode(trim((string) ($item['tag'] ?? '')), ENT_QUOTES),
+                        'link_text' => wp_specialchars_decode(trim((string) ($item['link_text'] ?? '')), ENT_QUOTES),
+                        'link_url'  => trim((string) ($item['link_url'] ?? '')),
+                    ];
+                }
+                return $out;
+            };
+
+            if (!$was_customized && !empty($default_cards) && $norm_cmp($saved_cards) === $norm_cmp($default_cards)) {
+                update_option('fds_solusi_cards_customized', 0, 'no');
+            } else {
+                update_option('fds_solusi_cards', $saved_cards, 'no');
+                update_option('fds_solusi_cards_customized', 1, 'no');
+            }
         }
 
         // 4. Simpan Item Layanan Enterprise Dinamis (Bisa Ditambah & Dikurangi)
         if (isset($_POST['fds_layanan_item_title']) && is_array($_POST['fds_layanan_item_title'])) {
             $saved_layanan = [];
             foreach ($_POST['fds_layanan_item_title'] as $idx => $title) {
-                $t = sanitize_text_field($title);
+                $t = sanitize_text_field(wp_unslash((string) $title));
                 if (!empty($t)) {
                     $saved_layanan[] = [
                         'title' => $t,
-                        'desc'  => sanitize_textarea_field($_POST['fds_layanan_item_desc'][$idx] ?? ''),
-                        'url'   => sanitize_text_field($_POST['fds_layanan_item_url'][$idx] ?? ''),
-                        'group' => sanitize_text_field($_POST['fds_layanan_item_group'][$idx] ?? 'Pelatihan & Operasional'),
+                        'desc'  => sanitize_textarea_field(wp_unslash((string) ($_POST['fds_layanan_item_desc'][$idx] ?? ''))),
+                        'url'   => sanitize_text_field(wp_unslash((string) ($_POST['fds_layanan_item_url'][$idx] ?? ''))),
+                        'group' => sanitize_text_field(wp_unslash((string) ($_POST['fds_layanan_item_group'][$idx] ?? 'Pelatihan & Operasional'))),
                     ];
                 }
             }
             update_option('fds_layanan_items', $saved_layanan, 'no');
+            update_option('fds_layanan_items_customized', 1, 'no');
         }
 
         delete_transient('fds_homepage_content_cache');
+        if (function_exists(__NAMESPACE__ . '\\fds_flush_layanan_cache')) {
+            fds_flush_layanan_cache();
+        }
         $message = 'Semua perubahan konten Beranda berhasil disimpan!';
     }
 
-    $c = fds_get_homepage_content();
-    $raw_slides = function_exists('App\fds_get_hero_slides') ? fds_get_hero_slides() : (get_option('fds_hero_slides', []));
+    $c = fds_get_homepage_content(true);
+    $solusi_admin = function_exists('App\\fds_get_solusi_data') ? fds_get_solusi_data() : [];
+    $raw_slides = function_exists('App\\fds_get_hero_slides') ? fds_get_hero_slides() : (get_option('fds_hero_slides', []));
     if (empty($raw_slides)) {
         $raw_slides = [
             ['url' => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80', 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor', 'alt' => 'Full Drone Solutions'],
@@ -345,8 +491,8 @@ function render_homepage_content_admin_page() {
         }
     }
 
-    $raw_cards = function_exists('App\fds_get_solusi_data') ? fds_get_solusi_data()['cards'] : (get_option('fds_solusi_cards', []));
-    if (empty($raw_cards) && function_exists('App\fds_get_default_solusi_cards')) {
+    $raw_cards = !empty($solusi_admin['cards']) ? $solusi_admin['cards'] : (get_option('fds_solusi_cards', []));
+    if (empty($raw_cards) && function_exists('App\\fds_get_default_solusi_cards')) {
         $raw_cards = fds_get_default_solusi_cards();
     }
     $solusi_cards = [];
@@ -357,12 +503,15 @@ function render_homepage_content_admin_page() {
                 $tag_val = '';
             }
             $solusi_cards[] = [
+                'num'       => $c_item['num'] ?? '',
+                'slug'      => $c_item['slug'] ?? '',
                 'image'     => $c_item['image'] ?? '',
+                'image_alt' => $c_item['image_alt'] ?? '',
                 'title'     => $c_item['title'] ?? '',
                 'desc'      => $c_item['desc'] ?? '',
                 'tag'       => $tag_val,
-                'link_text' => $c_item['link_text'] ?? 'Pelajari Selengkapnya',
-                'link_url'  => $c_item['link_url'] ?? '#kontak',
+                'link_text' => $c_item['link_text'] ?? 'Pelajari solusi sektor',
+                'link_url'  => $c_item['link_url'] ?? home_url('/layanan/'),
             ];
         }
     }
@@ -495,36 +644,54 @@ function render_homepage_content_admin_page() {
                 <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                     3. Section Solusi Industri &amp; Kartu Layanan
                 </h2>
+                <input type="hidden" id="fds_solusi_resync" name="fds_solusi_resync" value="0">
                 <div style="display: grid; gap: 16px; margin-bottom: 28px;">
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Badge Sub-Heading</label>
-                        <input type="text" name="fds_solusi_badge" value="<?php echo esc_attr(get_option('fds_solusi_badge', 'Solusi Industri FDS')); ?>" style="width: 100%; font-size: 13px;">
+                        <input type="text" name="fds_solusi_badge" value="<?php echo esc_attr($solusi_admin['badge'] ?? $c['solusi_badge']); ?>" style="width: 100%; font-size: 13px;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Judul Utama Solusi</label>
-                        <input type="text" name="fds_solusi_title" value="<?php echo esc_attr(get_option('fds_solusi_title', 'Satu platform. Berbagai industri strategis.')); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
+                        <input type="text" name="fds_solusi_title" value="<?php echo esc_attr($solusi_admin['title'] ?? $c['solusi_title']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
                     </div>
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Deskripsi Solusi</label>
-                        <textarea name="fds_solusi_desc" rows="2" style="width: 100%; font-size: 13px;"><?php echo esc_textarea(get_option('fds_solusi_desc', 'Solusi rekayasa UAV terintegrasi hardware, software FDS STATION, sensor AI, dan layanan operasional bersertifikasi untuk efisiensi maksimal di lapangan.')); ?></textarea>
+                        <textarea name="fds_solusi_desc" rows="2" style="width: 100%; font-size: 13px;"><?php echo esc_textarea($solusi_admin['desc'] ?? $c['solusi_desc']); ?></textarea>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol CTA Kanan Atas</label>
+                            <input type="text" name="fds_solusi_cta_text" value="<?php echo esc_attr($solusi_admin['cta_text'] ?? 'Lihat semua layanan'); ?>" placeholder="Kosongkan untuk menyembunyikan tombol" style="width: 100%; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Target URL Tombol CTA</label>
+                            <input type="text" name="fds_solusi_cta_url" value="<?php echo esc_attr($solusi_admin['cta_url'] ?? home_url('/layanan/')); ?>" placeholder="/layanan/" style="width: 100%; font-size: 13px;">
+                        </div>
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px; margin-bottom: 16px; border-top: 1px solid #f1f5f9; padding-top: 18px;">
-                    <div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 24px; margin-bottom: 16px; border-top: 1px solid #f1f5f9; padding-top: 18px;">
+                    <div style="max-width: 680px;">
                         <h3 style="font-size: 15px; font-weight: 700; color: #0f172a; margin: 0;">
-                            🃏 Daftar Kartu Solusi Industri (Bisa Ditambah &amp; Dihapus Tanpa Batas)
+                            🃏 Daftar Kartu Solusi Industri (Carousel Slide Horizontal Beranda)
                         </h3>
-                        <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">Tambahkan kartu solusi sebanyak yang Anda butuhkan. Di halaman beranda, kartu akan otomatis berjejer rapi di slider horizontal bergaya Apple.</p>
+                        <p style="margin: 4px 0 0; color: #64748b; font-size: 12px;">Tampil di beranda dalam tata letak carousel slide horizontal. Default mengikuti 6 sektor utama di Hub Layanan (<code>/layanan/{sektor}/</code>). Setiap perubahan di sini langsung berlaku sebagai pengaturan khusus beranda.</p>
                     </div>
-                    <button type="button" class="button button-primary" onclick="fdsAddSolusiCard()" style="font-size: 12px; font-weight: 600;">
-                        + Tambah Kartu Solusi Baru
-                    </button>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                        <button type="button" class="button" onclick="fdsSyncSolusiCardsFromSectors()" style="font-size: 12px; font-weight: 600;">
+                            &#8635; Sinkronkan Ulang dari 6 Sektor
+                        </button>
+                        <button type="button" class="button button-primary" onclick="fdsAddSolusiCard()" style="font-size: 12px; font-weight: 600;">
+                            + Tambah Kartu Solusi Baru
+                        </button>
+                    </div>
                 </div>
 
                 <div id="fds-solusi-cards-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <?php foreach ($solusi_cards as $idx => $card): ?>
                     <div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">
+                        <input type="hidden" name="fds_card_num[]" value="<?php echo esc_attr($card['num'] ?? ''); ?>">
+                        <input type="hidden" name="fds_card_slug[]" value="<?php echo esc_attr($card['slug'] ?? ''); ?>">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
                             <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0f808a;">Kartu Solusi #<span class="solusi-number"><?php echo ($idx + 1); ?></span></h4>
                             <div style="display: flex; gap: 6px;">
@@ -538,17 +705,18 @@ function render_homepage_content_admin_page() {
                         <div style="margin-bottom: 12px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Gambar Kartu</label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <img src="<?php echo esc_url($card['image'] ?? 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
-                                <div>
+                                <img src="<?php echo esc_url(!empty($card['image']) ? $card['image'] : 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                <div style="flex: 1;">
                                     <input type="hidden" name="fds_card_image[]" class="card-image-input" value="<?php echo esc_attr($card['image'] ?? ''); ?>">
-                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>
+                                    <button type="button" class="button btn-upload-card-img" style="font-size: 11px; margin-bottom: 6px;">Pilih Gambar</button>
+                                    <input type="text" name="fds_card_image_alt[]" value="<?php echo esc_attr($card['image_alt'] ?? ''); ?>" placeholder="Alt text gambar (SEO)" style="width: 100%; font-size: 11.5px;">
                                 </div>
                             </div>
                         </div>
 
                         <div style="margin-bottom: 10px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu</label>
-                            <input type="text" name="fds_card_title[]" value="<?php echo esc_attr($card['title'] ?? ''); ?>" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Penyemprotan & Analisis NDVI">
+                            <input type="text" name="fds_card_title[]" value="<?php echo esc_attr($card['title'] ?? ''); ?>" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Pertambangan">
                         </div>
 
                         <div style="margin-bottom: 10px;">
@@ -558,18 +726,18 @@ function render_homepage_content_admin_page() {
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                             <div>
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Produk / Spek</label>
-                                <input type="text" name="fds_card_tag[]" value="<?php echo esc_attr($card['tag'] ?? ''); ?>" placeholder="FERTO 5L – 50L" style="width: 100%; font-size: 12px;">
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Internal / Catatan (Opsional — tidak tampil di kartu beranda)</label>
+                                <input type="text" name="fds_card_tag[]" value="<?php echo esc_attr($card['tag'] ?? ''); ?>" placeholder="Pertambangan • LiDAR" style="width: 100%; font-size: 12px;">
                             </div>
                             <div>
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Link</label>
-                                <input type="text" name="fds_card_link_text[]" value="<?php echo esc_attr($card['link_text'] ?? 'Pelajari Selengkapnya'); ?>" style="width: 100%; font-size: 12px;">
+                                <input type="text" name="fds_card_link_text[]" value="<?php echo esc_attr($card['link_text'] ?? 'Pelajari solusi sektor'); ?>" style="width: 100%; font-size: 12px;">
                             </div>
                         </div>
 
                         <div>
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Target URL Link</label>
-                            <input type="text" name="fds_card_link_url[]" value="<?php echo esc_attr($card['link_url'] ?? '#kontak'); ?>" placeholder="#kontak" style="width: 100%; font-size: 12px;">
+                            <input type="text" name="fds_card_link_url[]" value="<?php echo esc_attr($card['link_url'] ?? home_url('/layanan/')); ?>" placeholder="/layanan/sektor/" style="width: 100%; font-size: 12px;">
                         </div>
                     </div>
                     <?php endforeach; ?>
@@ -647,6 +815,10 @@ function render_homepage_content_admin_page() {
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat</label>
                                 <input type="text" name="fds_keunggulan_card2_stat" value="<?php echo esc_attr($c['keunggulan_card2_stat']); ?>" style="width: 100%;">
                             </div>
+                        </div>
+                        <div style="margin-bottom: 8px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Sub-Label Bawah Nilai Stat</label>
+                            <input type="text" name="fds_keunggulan_card2_substat" value="<?php echo esc_attr($c['keunggulan_card2_substat'] ?? 'Nilai TKDN + BMP Kemenperin RI'); ?>" style="width: 100%;">
                         </div>
                         <div style="margin-bottom: 8px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
@@ -729,9 +901,13 @@ function render_homepage_content_admin_page() {
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Utama</label>
                                 <input type="text" name="fds_keunggulan_card7_title" value="<?php echo esc_attr($c['keunggulan_card7_title']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
                             </div>
-                            <div>
+                            <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Singkat</label>
                                 <textarea name="fds_keunggulan_card7_desc" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['keunggulan_card7_desc']); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Chip Sektor (pisahkan dengan koma)</label>
+                                <input type="text" name="fds_keunggulan_card7_chips" value="<?php echo esc_attr($c['keunggulan_card7_chips'] ?? 'Agri, Mapping, Inspeksi, Tambang, Hutan, BUMN'); ?>" style="width: 100%; font-size: 12px;">
                             </div>
                         </div>
                     </div>
@@ -841,12 +1017,16 @@ function render_homepage_content_admin_page() {
                                 <select name="fds_layanan_item_group[]" style="width: 100%; font-size: 12px;">
                                     <option value="Pelatihan & Operasional" <?php selected($lItem['group'] ?? '', 'Pelatihan & Operasional'); ?>>Pelatihan &amp; Operasional</option>
                                     <option value="Survei & Inspeksi Teknis" <?php selected($lItem['group'] ?? '', 'Survei & Inspeksi Teknis'); ?>>Survei &amp; Inspeksi Teknis</option>
+                                    <option value="Foto Udara & LiDAR" <?php selected($lItem['group'] ?? '', 'Foto Udara & LiDAR'); ?>>Foto Udara &amp; LiDAR</option>
+                                    <option value="Konsultan GIS" <?php selected($lItem['group'] ?? '', 'Konsultan GIS'); ?>>Konsultan GIS</option>
+                                    <option value="Pemetaan Kawasan" <?php selected($lItem['group'] ?? '', 'Pemetaan Kawasan'); ?>>Pemetaan Kawasan</option>
+                                    <option value="Produsen UAV" <?php selected($lItem['group'] ?? '', 'Produsen UAV'); ?>>Produsen UAV</option>
                                     <option value="Lainnya" <?php selected($lItem['group'] ?? '', 'Lainnya'); ?>>Lainnya</option>
                                 </select>
                             </div>
                             <div>
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Link Target (URL)</label>
-                                <input type="text" name="fds_layanan_item_url[]" value="<?php echo esc_attr($lItem['url'] ?? ''); ?>" style="width: 100%; font-size: 12px;" placeholder="#layanan atau #kontak">
+                                <input type="text" name="fds_layanan_item_url[]" value="<?php echo esc_attr($lItem['url'] ?? ''); ?>" style="width: 100%; font-size: 12px;" placeholder="/layanan/ atau /kontak/">
                             </div>
                         </div>
                         <div>
@@ -1093,12 +1273,16 @@ function render_homepage_content_admin_page() {
                         '<select name="fds_layanan_item_group[]" style="width: 100%; font-size: 12px;">' +
                             '<option value="Pelatihan & Operasional">Pelatihan &amp; Operasional</option>' +
                             '<option value="Survei & Inspeksi Teknis">Survei &amp; Inspeksi Teknis</option>' +
+                            '<option value="Foto Udara & LiDAR">Foto Udara &amp; LiDAR</option>' +
+                            '<option value="Konsultan GIS">Konsultan GIS</option>' +
+                            '<option value="Pemetaan Kawasan">Pemetaan Kawasan</option>' +
+                            '<option value="Produsen UAV">Produsen UAV</option>' +
                             '<option value="Lainnya">Lainnya</option>' +
                         '</select>' +
                     '</div>' +
                     '<div>' +
                         '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Link Target (URL)</label>' +
-                        '<input type="text" name="fds_layanan_item_url[]" value="#layanan" style="width: 100%; font-size: 12px;" placeholder="#layanan atau #kontak">' +
+                        '<input type="text" name="fds_layanan_item_url[]" value="/layanan/" style="width: 100%; font-size: 12px;" placeholder="/layanan/ atau /kontak/">' +
                     '</div>' +
                 '</div>' +
                 '<div>' +
@@ -1145,9 +1329,25 @@ function render_homepage_content_admin_page() {
         };
 
         // Dynamic Repeater untuk Kartu Solusi Industri
-        window.fdsAddSolusiCard = function() {
-            var count = $('#fds-solusi-cards-container .fds-solusi-card-item').length + 1;
-            var html = '<div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
+        var fdsDefaultSolusiCards = <?php
+            $sync_default_cards = function_exists(__NAMESPACE__ . '\\fds_get_default_solusi_cards') ? fds_get_default_solusi_cards() : [];
+            echo wp_json_encode($sync_default_cards, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        ?>;
+
+        function fdsEscHtml(str) {
+            return String(str || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        window.fdsBuildSolusiCardHtml = function(card, count) {
+            var img = card.image || 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80';
+            return '<div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
+                '<input type="hidden" name="fds_card_num[]" value="' + fdsEscHtml(card.num || '') + '">' +
+                '<input type="hidden" name="fds_card_slug[]" value="' + fdsEscHtml(card.slug || '') + '">' +
                 '<div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">' +
                     '<h4 style="margin: 0; font-size: 14px; font-weight: 700; color: #0f808a;">Kartu Solusi #<span class="solusi-number">' + count + '</span></h4>' +
                     '<div style="display: flex; gap: 6px;">' +
@@ -1159,37 +1359,71 @@ function render_homepage_content_admin_page() {
                 '<div style="margin-bottom: 12px;">' +
                     '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Gambar Kartu</label>' +
                     '<div style="display: flex; gap: 10px; align-items: center;">' +
-                        '<img src="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">' +
-                        '<div>' +
-                            '<input type="hidden" name="fds_card_image[]" class="card-image-input" value="https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80">' +
-                            '<button type="button" class="button btn-upload-card-img" style="font-size: 11px;">Pilih Gambar</button>' +
+                        '<img src="' + fdsEscHtml(img) + '" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">' +
+                        '<div style="flex: 1;">' +
+                            '<input type="hidden" name="fds_card_image[]" class="card-image-input" value="' + fdsEscHtml(img) + '">' +
+                            '<button type="button" class="button btn-upload-card-img" style="font-size: 11px; margin-bottom: 6px;">Pilih Gambar</button>' +
+                            '<input type="text" name="fds_card_image_alt[]" value="' + fdsEscHtml(card.image_alt || '') + '" placeholder="Alt text gambar (SEO)" style="width: 100%; font-size: 11.5px;">' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
                 '<div style="margin-bottom: 10px;">' +
                     '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Judul Kartu</label>' +
-                    '<input type="text" name="fds_card_title[]" value="Judul Solusi Baru" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Pemantauan Karhutla & Konservasi">' +
+                    '<input type="text" name="fds_card_title[]" value="' + fdsEscHtml(card.title || '') + '" style="width: 100%; font-size: 13px; font-weight: 600;" required placeholder="Contoh: Pertambangan">' +
                 '</div>' +
                 '<div style="margin-bottom: 10px;">' +
                     '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Deskripsi Kartu</label>' +
-                    '<textarea name="fds_card_desc[]" rows="3" style="width: 100%; font-size: 12px;" placeholder="Tuliskan deskripsi ringkas solusi..."></textarea>' +
+                    '<textarea name="fds_card_desc[]" rows="3" style="width: 100%; font-size: 12px;" placeholder="Tuliskan deskripsi ringkas solusi...">' + fdsEscHtml(card.desc || '') + '</textarea>' +
                 '</div>' +
                 '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">' +
                     '<div>' +
-                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Produk / Spek</label>' +
-                        '<input type="text" name="fds_card_tag[]" value="FDS UAV" placeholder="FERTO 5L – 50L" style="width: 100%; font-size: 12px;">' +
+                        '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Tag Internal / Catatan (Opsional — tidak tampil di kartu beranda)</label>' +
+                        '<input type="text" name="fds_card_tag[]" value="' + fdsEscHtml(card.tag || '') + '" placeholder="Pertambangan • LiDAR" style="width: 100%; font-size: 12px;">' +
                     '</div>' +
                     '<div>' +
                         '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Teks Link</label>' +
-                        '<input type="text" name="fds_card_link_text[]" value="Pelajari Selengkapnya" style="width: 100%; font-size: 12px;">' +
+                        '<input type="text" name="fds_card_link_text[]" value="' + fdsEscHtml(card.link_text !== undefined ? card.link_text : 'Pelajari solusi sektor') + '" style="width: 100%; font-size: 12px;">' +
                     '</div>' +
                 '</div>' +
                 '<div>' +
                     '<label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Target URL Link</label>' +
-                    '<input type="text" name="fds_card_link_url[]" value="#kontak" placeholder="#kontak" style="width: 100%; font-size: 12px;">' +
+                    '<input type="text" name="fds_card_link_url[]" value="' + fdsEscHtml(card.link_url || '/layanan/') + '" placeholder="/layanan/sektor/" style="width: 100%; font-size: 12px;">' +
                 '</div>' +
             '</div>';
+        };
+
+        $('#fds-solusi-cards-container').on('input change', 'input, textarea', function() {
+            $('#fds_solusi_resync').val('0');
+        });
+
+        window.fdsSyncSolusiCardsFromSectors = function() {
+            if (!fdsDefaultSolusiCards || !fdsDefaultSolusiCards.length) return;
+            if (!confirm('Muat ulang seluruh kartu solusi dari 6 Sektor Hub (/layanan/)? Klik Simpan di bagian bawah setelahnya untuk menerapkan.')) {
+                return;
+            }
+            var container = $('#fds-solusi-cards-container');
+            container.empty();
+            $.each(fdsDefaultSolusiCards, function(idx, card) {
+                container.append(fdsBuildSolusiCardHtml(card, idx + 1));
+            });
+            $('#fds_solusi_resync').val('1');
+        };
+
+        window.fdsAddSolusiCard = function() {
+            var count = $('#fds-solusi-cards-container .fds-solusi-card-item').length + 1;
+            var html = fdsBuildSolusiCardHtml({
+                num: '',
+                slug: '',
+                image: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80',
+                image_alt: '',
+                title: 'Judul Solusi Baru',
+                desc: '',
+                tag: 'FDS UAV',
+                link_text: 'Pelajari solusi sektor',
+                link_url: '/layanan/'
+            }, count);
             $('#fds-solusi-cards-container').append(html);
+            $('#fds_solusi_resync').val('0');
             fdsRenumberSolusiCards();
         };
 
@@ -1200,6 +1434,7 @@ function render_homepage_content_admin_page() {
             }
             if (confirm('Yakin ingin menghapus kartu solusi ini?')) {
                 $(btn).closest('.fds-solusi-card-item').remove();
+                $('#fds_solusi_resync').val('0');
                 fdsRenumberSolusiCards();
             }
         };
@@ -1210,12 +1445,14 @@ function render_homepage_content_admin_page() {
                 var prev = row.prev('.fds-solusi-card-item');
                 if (prev.length) {
                     row.insertBefore(prev);
+                    $('#fds_solusi_resync').val('0');
                     fdsRenumberSolusiCards();
                 }
             } else if (direction === 1) {
                 var next = row.next('.fds-solusi-card-item');
                 if (next.length) {
                     row.insertAfter(next);
+                    $('#fds_solusi_resync').val('0');
                     fdsRenumberSolusiCards();
                 }
             }

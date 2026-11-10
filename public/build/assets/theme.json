@@ -409,14 +409,9 @@
           "color": "#e8fbfd"
         },
         {
-          "name": "Teal (400)",
-          "slug": "teal-400",
-          "color": "#46deec"
-        },
-        {
-          "name": "Teal (500)",
-          "slug": "teal-500",
-          "color": "#18d6e7"
+          "name": "Teal (200)",
+          "slug": "teal-200",
+          "color": "#a3eef5"
         },
         {
           "name": "Teal (600)",

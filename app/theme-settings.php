@@ -117,6 +117,13 @@ add_action('admin_bar_menu', function ($wp_admin_bar) {
     ]);
 
     $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-layanan',
+        'parent' => 'fds-quick-settings',
+        'title'  => '🛠️ Konten Layanan',
+        'href'   => admin_url('admin.php?page=fds-layanan-content'),
+    ]);
+
+    $wp_admin_bar->add_node([
         'id'     => 'fds-edit-about',
         'parent' => 'fds-quick-settings',
         'title'  => '🏢 Konten Tentang Kami',
@@ -152,16 +159,18 @@ add_action('admin_enqueue_scripts', function ($hook) {
 });
 
 // 4. HELPER UNTUK MENGAMBIL DATA LOGO & BRAND NAVBAR DI FRONTEND
-function fds_get_navbar_brand() {
+function fds_get_navbar_brand(bool $fresh = false) {
     static $memo = null;
-    if ($memo !== null) {
+    if (!$fresh && $memo !== null) {
         return $memo;
     }
 
-    $cached = get_transient('fds_navbar_brand_cache_v3');
-    if (is_array($cached) && !empty($cached)) {
-        $memo = $cached;
-        return $memo;
+    if (!$fresh) {
+        $cached = get_transient('fds_navbar_brand_cache_v3');
+        if (is_array($cached) && !empty($cached)) {
+            $memo = $cached;
+            return $memo;
+        }
     }
 
     $custom_logo_id = get_theme_mod('custom_logo');
@@ -251,7 +260,14 @@ function fds_get_navbar_brand() {
         'menu_layanan_item2_title'=> get_option('fds_menu_layanan_item2_title', 'Workshop Sleman Yogyakarta'),
         'menu_layanan_item2_desc' => get_option('fds_menu_layanan_item2_desc', 'Pusat Perakitan, Riset, & Suku Cadang Asli'),
         'menu_layanan_cta_text'   => get_option('fds_menu_layanan_cta_text', 'Jadwalkan Demo & Konsultasi'),
-        'menu_layanan_cta_url'    => get_option('fds_menu_layanan_cta_url', home_url('/#kontak')),
+        'menu_layanan_cta_url'    => (function () {
+            $raw        = trim((string) get_option('fds_menu_layanan_cta_url', ''));
+            $customized = (bool) get_option('fds_navbar_cta_customized', false);
+            if (!$customized && ($raw === '' || $raw === '#kontak' || preg_match('#/\#kontak/?$#i', $raw))) {
+                return home_url('/kontak/#hubungi-form');
+            }
+            return $raw !== '' ? $raw : home_url('/kontak/#hubungi-form');
+        })(),
     ];
 
     set_transient('fds_navbar_brand_cache_v3', $memo, 12 * HOUR_IN_SECONDS);
@@ -426,42 +442,42 @@ function render_navbar_settings_admin_page() {
 
     $message = '';
     if (isset($_POST['fds_navbar_save']) && check_admin_referer('fds_navbar_nonce_action', 'fds_navbar_nonce')) {
-        $logo_url          = esc_url_raw($_POST['fds_navbar_logo_url'] ?? '');
-        $brand_text        = sanitize_text_field($_POST['fds_navbar_brand_text'] ?? '');
-        $display_mode      = sanitize_text_field($_POST['fds_navbar_display_mode'] ?? 'both');
+        $logo_url          = esc_url_raw(wp_unslash((string) ($_POST['fds_navbar_logo_url'] ?? '')));
+        $brand_text        = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_brand_text'] ?? '')));
+        $display_mode      = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_display_mode'] ?? 'both')));
         $logo_height       = max(16, min(60, (int) ($_POST['fds_navbar_logo_height'] ?? 28)));
-        $favicon_url       = esc_url_raw($_POST['fds_site_favicon_url'] ?? '');
-        $drone_icon_url    = esc_url_raw($_POST['fds_navbar_drone_icon_url'] ?? '');
-        $home_tab_title    = sanitize_text_field($_POST['fds_home_tab_title'] ?? '');
-        $about_tab_title   = sanitize_text_field($_POST['fds_about_tab_title'] ?? '');
-        $compare_tab_title = sanitize_text_field($_POST['fds_compare_tab_title'] ?? '');
-        $blog_tab_title    = sanitize_text_field($_POST['fds_blog_tab_title'] ?? '');
-        $drone_tab_suffix  = sanitize_text_field($_POST['fds_drone_tab_suffix'] ?? '');
-        $site_tagline      = sanitize_text_field($_POST['fds_site_tagline'] ?? '');
-        $title_separator   = sanitize_text_field($_POST['fds_tab_title_separator'] ?? '–');
-        $custom_keywords   = sanitize_textarea_field($_POST['fds_custom_keywords'] ?? '');
+        $favicon_url       = esc_url_raw(wp_unslash((string) ($_POST['fds_site_favicon_url'] ?? '')));
+        $drone_icon_url    = esc_url_raw(wp_unslash((string) ($_POST['fds_navbar_drone_icon_url'] ?? '')));
+        $home_tab_title    = sanitize_text_field(wp_unslash((string) ($_POST['fds_home_tab_title'] ?? '')));
+        $about_tab_title   = sanitize_text_field(wp_unslash((string) ($_POST['fds_about_tab_title'] ?? '')));
+        $compare_tab_title = sanitize_text_field(wp_unslash((string) ($_POST['fds_compare_tab_title'] ?? '')));
+        $blog_tab_title    = sanitize_text_field(wp_unslash((string) ($_POST['fds_blog_tab_title'] ?? '')));
+        $drone_tab_suffix  = sanitize_text_field(wp_unslash((string) ($_POST['fds_drone_tab_suffix'] ?? '')));
+        $site_tagline      = sanitize_text_field(wp_unslash((string) ($_POST['fds_site_tagline'] ?? '')));
+        $title_separator   = sanitize_text_field(wp_unslash((string) ($_POST['fds_tab_title_separator'] ?? '–')));
+        $custom_keywords   = sanitize_textarea_field(wp_unslash((string) ($_POST['fds_custom_keywords'] ?? '')));
 
         // CTA & Mega Menu Fields
-        $navbar_cta_text        = sanitize_text_field($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone');
-        $navbar_cta_url         = sanitize_text_field($_POST['fds_navbar_cta_url'] ?? '#kontak');
-        $menu_prod_heading      = sanitize_text_field($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu');
-        $menu_prod_item1_title  = sanitize_text_field($_POST['fds_menu_prod_item1_title'] ?? 'FDS STATION GCS');
-        $menu_prod_item1_desc   = sanitize_text_field($_POST['fds_menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia');
-        $menu_prod_item2_title  = sanitize_text_field($_POST['fds_menu_prod_item2_title'] ?? 'Sertifikasi TKDN 60,74%');
-        $menu_prod_item2_desc   = sanitize_text_field($_POST['fds_menu_prod_item2_desc'] ?? 'Prioritas Pengadaan Pemerintah & LPSE');
-        $menu_prod_item3_title  = sanitize_text_field($_POST['fds_menu_prod_item3_title'] ?? 'Standar SNI 9199:2023');
-        $menu_prod_item3_desc   = sanitize_text_field($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional');
-        $menu_prod_compare_text = sanitize_text_field($_POST['fds_menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone');
-        $raw_compare_url        = sanitize_text_field($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan/');
+        $navbar_cta_text        = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone')));
+        $navbar_cta_url         = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_url'] ?? '#kontak')));
+        $menu_prod_heading      = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')));
+        $menu_prod_item1_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_title'] ?? 'FDS STATION GCS')));
+        $menu_prod_item1_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')));
+        $menu_prod_item2_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_title'] ?? 'Sertifikasi TKDN 60,74%')));
+        $menu_prod_item2_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_desc'] ?? 'Prioritas Pengadaan Pemerintah & LPSE')));
+        $menu_prod_item3_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item3_title'] ?? 'Standar SNI 9199:2023')));
+        $menu_prod_item3_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional')));
+        $menu_prod_compare_text = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone')));
+        $raw_compare_url        = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan/')));
         $menu_prod_compare_url  = preg_match('#^/?bandingkan/?$#i', trim($raw_compare_url)) ? '/bandingkan/' : $raw_compare_url;
 
-        $menu_layanan_heading    = sanitize_text_field($_POST['fds_menu_layanan_heading'] ?? 'Dukungan Teknis Langsung');
-        $menu_layanan_item1_title= sanitize_text_field($_POST['fds_menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi');
-        $menu_layanan_item1_desc = sanitize_text_field($_POST['fds_menu_layanan_item1_desc'] ?? 'Instruktur Berpengalaman di Ratusan Misi Lapangan');
-        $menu_layanan_item2_title= sanitize_text_field($_POST['fds_menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta');
-        $menu_layanan_item2_desc = sanitize_text_field($_POST['fds_menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli');
-        $menu_layanan_cta_text   = sanitize_text_field($_POST['fds_menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi');
-        $menu_layanan_cta_url    = sanitize_text_field($_POST['fds_menu_layanan_cta_url'] ?? '#kontak');
+        $menu_layanan_heading    = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_heading'] ?? 'Dukungan Teknis Langsung')));
+        $menu_layanan_item1_title= sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi')));
+        $menu_layanan_item1_desc = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_item1_desc'] ?? 'Instruktur Berpengalaman di Ratusan Misi Lapangan')));
+        $menu_layanan_item2_title= sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta')));
+        $menu_layanan_item2_desc = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli')));
+        $menu_layanan_cta_text   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi')));
+        $menu_layanan_cta_url    = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_layanan_cta_url'] ?? home_url('/kontak/#hubungi-form'))));
 
         update_option('fds_navbar_logo_url', $logo_url);
         update_option('fds_navbar_brand_text', $brand_text);
@@ -497,8 +513,10 @@ function render_navbar_settings_admin_page() {
         update_option('fds_menu_layanan_item2_desc', $menu_layanan_item2_desc);
         update_option('fds_menu_layanan_cta_text', $menu_layanan_cta_text);
         update_option('fds_menu_layanan_cta_url', $menu_layanan_cta_url);
+        update_option('fds_navbar_cta_customized', 1, 'no');
         delete_transient('fds_navbar_brand_cache_v2');
         delete_transient('fds_navbar_brand_cache_v3');
+        delete_transient('fds_mega_menu_data_v2');
 
         // Logo-Logo Footer (Dinamis)
         $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);
@@ -509,9 +527,9 @@ function render_navbar_settings_admin_page() {
         if (isset($_POST['fds_footer_logos']) && is_array($_POST['fds_footer_logos'])) {
             $cleaned_logos = [];
             foreach ($_POST['fds_footer_logos'] as $item) {
-                $img       = esc_url_raw($item['img'] ?? '');
-                $name      = sanitize_text_field($item['name'] ?? '');
-                $url       = esc_url_raw($item['url'] ?? '');
+                $img       = esc_url_raw(wp_unslash((string) ($item['img'] ?? '')));
+                $name      = sanitize_text_field(wp_unslash((string) ($item['name'] ?? '')));
+                $url       = esc_url_raw(wp_unslash((string) ($item['url'] ?? '')));
                 $max_width = !empty($item['max_width']) ? intval($item['max_width']) : 0;
                 if (!empty($img) || !empty($name)) {
                     $cleaned_logos[] = [
@@ -543,10 +561,14 @@ function render_navbar_settings_admin_page() {
             delete_option('site_icon');
         }
 
+        if (function_exists(__NAMESPACE__ . '\\fds_flush_layanan_cache')) {
+            fds_flush_layanan_cache();
+        }
+
         $message = 'Pengaturan Logo, Navbar, Icon Tab, Kata Kunci SEO, Mega Menu &amp; Logo Footer berhasil disimpan!';
     }
 
-    $brand_data           = fds_get_navbar_brand();
+    $brand_data           = fds_get_navbar_brand(true);
     $footer_logos         = function_exists('\App\fds_get_footer_logos') ? fds_get_footer_logos() : [];
     $footer_logo_height   = intval(get_option('fds_footer_logo_height', 28)) ?: 28;
     $home_tab_title       = get_option('fds_home_tab_title', '');

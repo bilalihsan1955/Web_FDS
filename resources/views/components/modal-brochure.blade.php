@@ -156,6 +156,13 @@ document.addEventListener('DOMContentLoaded', function() {
       readyBox.classList.remove('hidden');
       readyBox.classList.add('flex');
       updateDescToReady();
+
+      if (typeof window.fdsTrackEvent === 'function') {
+        window.fdsTrackEvent('download_brochure', {
+          drone_id: '{{ (int) $droneId }}',
+          drone_name: '{{ esc_js(wp_specialchars_decode($droneName)) }}'
+        });
+      }
     })
     .catch(() => {
       localStorage.setItem('fds_brochure_email', emailVal);
@@ -164,6 +171,13 @@ document.addEventListener('DOMContentLoaded', function() {
       readyBox.classList.remove('hidden');
       readyBox.classList.add('flex');
       updateDescToReady();
+
+      if (typeof window.fdsTrackEvent === 'function') {
+        window.fdsTrackEvent('download_brochure', {
+          drone_id: '{{ (int) $droneId }}',
+          drone_name: '{{ esc_js(wp_specialchars_decode($droneName)) }}'
+        });
+      }
     })
     .finally(() => {
       if (submitBtn) {

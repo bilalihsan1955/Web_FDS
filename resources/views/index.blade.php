@@ -158,8 +158,8 @@
             'excerpt'   => get_the_excerpt(),
             'date'      => get_the_date('d M Y'),
             'cat'       => $cat_label,
-            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
-            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
+            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 1024px) 100vw, 760px', 'alt' => esc_attr($thumb_alt)]) : null,
+            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 768px) 92vw, 440px', 'alt' => esc_attr($thumb_alt)]) : null,
           ];
         }
       }
@@ -193,7 +193,7 @@
           $grid_posts = array_slice($all_posts, 1);
         @endphp
 
-        <x-reveal :delay="100" as="article" class="bg-[#f5f5f7] rounded-[2rem] overflow-hidden mb-8 group hover:-translate-y-0.5 transition-all duration-300 border border-black/[0.05] hover:bg-[#ededf0]">
+        <x-reveal :delay="100" as="article" class="fds-service-card fds-service-card--light fds-service-card--interactive fds-news-card bg-[#f5f5f7] rounded-[2rem] overflow-hidden mb-8 group transition-all duration-300 border border-black/[0.05] hover:bg-[#ededf0] cursor-pointer">
           <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
             <div class="lg:col-span-7 aspect-[16/10] lg:aspect-auto lg:min-h-[380px] bg-[#e8e8ed] overflow-hidden relative">
@@ -215,7 +215,7 @@
                   <span class="text-[#86868b]">{{ $featured['date'] }}</span>
                 </div>
                 <h2 class="text-[24px] sm:text-[30px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.25] mb-3.5 group-hover:text-[#0f808a] transition-colors">
-                  <a href="{{ $featured['permalink'] }}">{!! esc_html(wp_specialchars_decode($featured['title'], ENT_QUOTES)) !!}</a>
+                  <a href="{{ $featured['permalink'] }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode($featured['title'], ENT_QUOTES)) !!}</a>
                 </h2>
                 <p class="text-[14px] sm:text-[15px] text-[#515154] leading-relaxed line-clamp-3 mb-6">
                   {!! esc_html(wp_specialchars_decode($featured['excerpt'], ENT_QUOTES)) !!}
@@ -223,14 +223,13 @@
               </div>
 
               <div>
-                <a href="{{ $featured['permalink'] }}"
-                   class="inline-flex items-center gap-2 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] hover:underline leading-none group">
+                <span class="fds-card-cta-cue inline-flex items-center gap-2 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
                   <span class="leading-none">Baca artikel lengkap</span>
-                  <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
                     <path d="M6 18 18 6"/>
                   </svg>
-                </a>
+                </span>
               </div>
             </div>
 
@@ -244,7 +243,7 @@
       @if(!empty($grid_posts))
         <x-reveal-group :step="100" :modulo="3" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           @foreach($grid_posts as $post)
-            <article class="bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between border border-black/[0.05] hover:bg-[#ededf0]">
+            <article class="fds-service-card fds-service-card--light fds-service-card--interactive fds-news-card bg-[#f5f5f7] rounded-[1.5rem] overflow-hidden group transition-all duration-300 flex flex-col justify-between border border-black/[0.05] hover:bg-[#ededf0] cursor-pointer">
               <div>
                 <div class="aspect-[16/9] overflow-hidden bg-[#e8e8ed] relative">
                   @if($post['thumb_med'])
@@ -263,7 +262,7 @@
                     <span class="text-[#86868b]">{{ $post['date'] }}</span>
                   </div>
                   <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
-                    <a href="{{ $post['permalink'] }}">{!! esc_html(wp_specialchars_decode($post['title'], ENT_QUOTES)) !!}</a>
+                    <a href="{{ $post['permalink'] }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode($post['title'], ENT_QUOTES)) !!}</a>
                   </h2>
                   <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
                     {!! esc_html(wp_specialchars_decode($post['excerpt'], ENT_QUOTES)) !!}
@@ -272,14 +271,13 @@
               </div>
 
               <div class="px-6 sm:px-7 pb-6 pt-0">
-                <a href="{{ $post['permalink'] }}"
-                   class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none group">
+                <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
                   <span class="leading-none">Baca selengkapnya</span>
-                  <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
                     <path d="M6 18 18 6"/>
                   </svg>
-                </a>
+                </span>
               </div>
             </article>
           @endforeach
