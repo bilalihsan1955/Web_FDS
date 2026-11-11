@@ -124,6 +124,13 @@ add_action('admin_bar_menu', function ($wp_admin_bar) {
     ]);
 
     $wp_admin_bar->add_node([
+        'id'     => 'fds-edit-produk-catalog',
+        'parent' => 'fds-quick-settings',
+        'title'  => '📦 Konten Katalog Produk',
+        'href'   => admin_url('edit.php?post_type=drone&page=fds-produk-content'),
+    ]);
+
+    $wp_admin_bar->add_node([
         'id'     => 'fds-edit-about',
         'parent' => 'fds-quick-settings',
         'title'  => '🏢 Konten Tentang Kami',
@@ -166,8 +173,11 @@ function fds_get_navbar_brand(bool $fresh = false) {
     }
 
     if (!$fresh) {
-        $cached = get_transient('fds_navbar_brand_cache_v3');
+        $cached = get_transient('fds_navbar_brand_cache_v4');
         if (is_array($cached) && !empty($cached)) {
+            if (function_exists('fds_deep_decode')) {
+                $cached = \fds_deep_decode($cached);
+            }
             $memo = $cached;
             return $memo;
         }
@@ -223,6 +233,9 @@ function fds_get_navbar_brand(bool $fresh = false) {
             $favicon_url = wp_get_attachment_image_url($site_icon_id, 'thumbnail') ?: wp_get_attachment_image_url($site_icon_id, 'full') ?: '';
         }
     }
+    if (empty($favicon_url)) {
+        $favicon_url = get_template_directory_uri() . '/public/images/fds-logo-512.png';
+    }
 
     $drone_icon_url = get_option('fds_navbar_drone_icon_url', '');
 
@@ -236,15 +249,21 @@ function fds_get_navbar_brand(bool $fresh = false) {
         'drone_icon_url'          => $drone_icon_url,
         // CTA & Mega Menu Content
         'cta_text'                => get_option('fds_navbar_cta_text', 'Konsultasi Drone'),
-        'cta_url'                 => get_option('fds_navbar_cta_url', home_url('/#kontak')),
+        'cta_url'                 => (function () {
+            $raw = trim((string) get_option('fds_navbar_cta_url', ''));
+            if ($raw === '' || $raw === '#kontak' || preg_match('#/\#kontak/?$#i', $raw)) {
+                return home_url('/kontak/#hubungi-form');
+            }
+            return $raw;
+        })(),
         // Mega Menu Produk Right Sidebar
         'menu_prod_heading'       => get_option('fds_menu_prod_heading', 'Ekosistem & Standar Mutu'),
-        'menu_prod_item1_title'   => get_option('fds_menu_prod_item1_title', 'FDS STATION GCS'),
+        'menu_prod_item1_title'   => get_option('fds_menu_prod_item1_title', 'FDS Station GCS'),
         'menu_prod_item1_desc'    => get_option('fds_menu_prod_item1_desc', 'Software Ground Control Bahasa Indonesia'),
-        'menu_prod_item2_title'   => get_option('fds_menu_prod_item2_title', 'Sertifikasi TKDN 60,74%'),
-        'menu_prod_item2_desc'    => get_option('fds_menu_prod_item2_desc', 'Prioritas Pengadaan Pemerintah & LPSE'),
+        'menu_prod_item2_title'   => get_option('fds_menu_prod_item2_title', 'TKDN + BMP 60,74%'),
+        'menu_prod_item2_desc'    => get_option('fds_menu_prod_item2_desc', 'Berlaku untuk seluruh seri FERTO'),
         'menu_prod_item3_title'   => get_option('fds_menu_prod_item3_title', 'Standar SNI 9199:2023'),
-        'menu_prod_item3_desc'    => get_option('fds_menu_prod_item3_desc', 'Teruji Resmi Mutu Pertanian Nasional'),
+        'menu_prod_item3_desc'    => get_option('fds_menu_prod_item3_desc', 'Teruji resmi pada FERTO 15 & FERTO 22'),
         'menu_prod_compare_text'  => get_option('fds_menu_prod_compare_text', 'Bandingkan Semua Model Drone'),
         'menu_prod_compare_url'   => (function () {
             $raw = trim((string) get_option('fds_menu_prod_compare_url', ''));
@@ -270,7 +289,11 @@ function fds_get_navbar_brand(bool $fresh = false) {
         })(),
     ];
 
-    set_transient('fds_navbar_brand_cache_v3', $memo, 12 * HOUR_IN_SECONDS);
+    if (function_exists('fds_deep_decode')) {
+        $memo = \fds_deep_decode($memo);
+    }
+
+    set_transient('fds_navbar_brand_cache_v4', $memo, 12 * HOUR_IN_SECONDS);
     return $memo;
 }
 
@@ -303,20 +326,23 @@ add_action('admin_head', function () {
 
 // 4c. PENGATURAN NAMA TAB BROWSER & DOCUMENT TITLE SETIAP HALAMAN
 add_filter('document_title_parts', function ($title_parts) {
-    $brand_text = get_option('fds_navbar_brand_text', null);
+    $clean = function ($s) {
+        return function_exists('fds_clean_string') ? \fds_clean_string((string) $s) : (string) $s;
+    };
+    $brand_text = $clean(get_option('fds_navbar_brand_text', null));
     if (empty($brand_text) || $brand_text === 'FDS') {
         $brand_text = 'Full Drone Solutions';
     }
 
     // 1. HALAMAN UTAMA / BERANDA (HOME)
     if (is_front_page()) {
-        $custom_home_title = get_option('fds_home_tab_title', '');
+        $custom_home_title = $clean(get_option('fds_home_tab_title', ''));
         if (!empty($custom_home_title)) {
             return ['title' => $custom_home_title];
         }
-        $site_tagline = get_option('fds_site_tagline', '');
+        $site_tagline = $clean(get_option('fds_site_tagline', ''));
         if (empty($site_tagline)) {
-            $site_tagline = get_bloginfo('description') ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia';
+            $site_tagline = $clean(get_bloginfo('description')) ?: 'Solusi Drone Industri, Agrikultur & Pemetaan Indonesia';
         }
         return [
             'title'   => $brand_text,
@@ -326,11 +352,11 @@ add_filter('document_title_parts', function ($title_parts) {
 
     // 2. HALAMAN TENTANG KAMI
     if (is_page('tentang-kami') || is_page('tentang-kami-2') || is_page('about') || is_page('about-2') || is_page('about-us')) {
-        $custom_page_title = get_post_meta(get_the_ID(), '_fds_custom_tab_title', true);
+        $custom_page_title = $clean(get_post_meta(get_the_ID(), '_fds_custom_tab_title', true));
         if (!empty($custom_page_title)) {
             return ['title' => $custom_page_title];
         }
-        $about_title = get_option('fds_about_tab_title', '');
+        $about_title = $clean(get_option('fds_about_tab_title', ''));
         if (!empty($about_title)) {
             return ['title' => $about_title];
         }
@@ -342,11 +368,11 @@ add_filter('document_title_parts', function ($title_parts) {
 
     // 3. HALAMAN PERBANDINGAN MODEL DRONE
     if (is_page('bandingkan')) {
-        $custom_page_title = get_post_meta(get_the_ID(), '_fds_custom_tab_title', true);
+        $custom_page_title = $clean(get_post_meta(get_the_ID(), '_fds_custom_tab_title', true));
         if (!empty($custom_page_title)) {
             return ['title' => $custom_page_title];
         }
-        $compare_title = get_option('fds_compare_tab_title', '');
+        $compare_title = $clean(get_option('fds_compare_tab_title', ''));
         if (!empty($compare_title)) {
             return ['title' => $compare_title];
         }
@@ -356,13 +382,25 @@ add_filter('document_title_parts', function ($title_parts) {
         ];
     }
 
-    // 4. BLOG / ARTIKEL
-    if (is_home() || is_page('blog')) {
-        $custom_page_title = is_page('blog') ? get_post_meta(get_the_ID(), '_fds_custom_tab_title', true) : '';
+    // 3b. HALAMAN KATALOG PRODUK DRONE (/produk/)
+    if (is_page('produk')) {
+        $custom_page_title = $clean(get_post_meta(get_the_ID(), '_fds_custom_tab_title', true));
         if (!empty($custom_page_title)) {
             return ['title' => $custom_page_title];
         }
-        $blog_title = get_option('fds_blog_tab_title', '');
+        return [
+            'title' => 'Katalog Produk Drone Industri & Pertanian',
+            'site'  => $brand_text,
+        ];
+    }
+
+    // 4. BLOG / ARTIKEL
+    if (is_home() || is_page('blog')) {
+        $custom_page_title = is_page('blog') ? $clean(get_post_meta(get_the_ID(), '_fds_custom_tab_title', true)) : '';
+        if (!empty($custom_page_title)) {
+            return ['title' => $custom_page_title];
+        }
+        $blog_title = $clean(get_option('fds_blog_tab_title', ''));
         if (!empty($blog_title)) {
             return ['title' => $blog_title];
         }
@@ -375,15 +413,15 @@ add_filter('document_title_parts', function ($title_parts) {
     // 5. DETAIL DRONE (CPT DRONE)
     if (is_singular('drone')) {
         $post_id = get_the_ID();
-        $custom_drone_title = get_post_meta($post_id, '_fds_custom_tab_title', true);
+        $custom_drone_title = $clean(get_post_meta($post_id, '_fds_custom_tab_title', true));
         if (!empty($custom_drone_title)) {
             return ['title' => $custom_drone_title];
         }
 
-        $drone_name = get_the_title($post_id);
-        $badge = get_post_meta($post_id, 'drone_badge', true);
+        $drone_name = $clean(get_the_title($post_id));
+        $badge = $clean(get_post_meta($post_id, 'drone_badge', true));
         $badge_str = !empty($badge) ? ' (' . $badge . ')' : '';
-        $custom_suffix = get_option('fds_drone_tab_suffix', '');
+        $custom_suffix = $clean(get_option('fds_drone_tab_suffix', ''));
         if (!empty($custom_suffix)) {
             return ['title' => $drone_name . $badge_str . ' ' . $custom_suffix];
         }
@@ -396,13 +434,13 @@ add_filter('document_title_parts', function ($title_parts) {
     // 6. HALAMAN TUNGGAL LAINNYA (SINGLE POST / PAGE)
     if (is_singular()) {
         $post_id = get_the_ID();
-        $custom_tab_title = get_post_meta($post_id, '_fds_custom_tab_title', true);
+        $custom_tab_title = $clean(get_post_meta($post_id, '_fds_custom_tab_title', true));
         if (!empty($custom_tab_title)) {
             return ['title' => $custom_tab_title];
         }
 
         return [
-            'title' => get_the_title($post_id),
+            'title' => $clean(get_the_title($post_id)),
             'site'  => $brand_text,
         ];
     }
@@ -411,7 +449,7 @@ add_filter('document_title_parts', function ($title_parts) {
     if (is_tax('kategori_drone')) {
         $term = get_queried_object();
         return [
-            'title' => 'Kategori Drone ' . ($term ? $term->name : ''),
+            'title' => 'Kategori Drone ' . ($term ? $clean($term->name) : ''),
             'site'  => $brand_text,
         ];
     }
@@ -423,6 +461,9 @@ add_filter('document_title_parts', function ($title_parts) {
         ];
     }
 
+    if (isset($title_parts['title'])) {
+        $title_parts['title'] = $clean($title_parts['title']);
+    }
     if (isset($title_parts['site'])) {
         $title_parts['site'] = $brand_text;
     }
@@ -431,7 +472,8 @@ add_filter('document_title_parts', function ($title_parts) {
 }, 30);
 
 add_filter('document_title_separator', function ($sep) {
-    return get_option('fds_tab_title_separator', '–');
+    $raw = get_option('fds_tab_title_separator', '–');
+    return function_exists('fds_clean_string') ? \fds_clean_string((string) $raw) : $raw;
 });
 
 // 5. TAMPILAN HALAMAN PENGATURAN WP ADMIN
@@ -459,14 +501,14 @@ function render_navbar_settings_admin_page() {
 
         // CTA & Mega Menu Fields
         $navbar_cta_text        = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone')));
-        $navbar_cta_url         = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_url'] ?? '#kontak')));
+        $navbar_cta_url         = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_url'] ?? home_url('/kontak/#hubungi-form'))));
         $menu_prod_heading      = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')));
-        $menu_prod_item1_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_title'] ?? 'FDS STATION GCS')));
+        $menu_prod_item1_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_title'] ?? 'FDS Station GCS')));
         $menu_prod_item1_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')));
-        $menu_prod_item2_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_title'] ?? 'Sertifikasi TKDN 60,74%')));
-        $menu_prod_item2_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_desc'] ?? 'Prioritas Pengadaan Pemerintah & LPSE')));
+        $menu_prod_item2_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_title'] ?? 'TKDN + BMP 60,74%')));
+        $menu_prod_item2_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_desc'] ?? 'Berlaku untuk seluruh seri FERTO')));
         $menu_prod_item3_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item3_title'] ?? 'Standar SNI 9199:2023')));
-        $menu_prod_item3_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji Resmi Mutu Pertanian Nasional')));
+        $menu_prod_item3_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item3_desc'] ?? 'Teruji resmi pada FERTO 15 & FERTO 22')));
         $menu_prod_compare_text = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone')));
         $raw_compare_url        = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_compare_url'] ?? '/bandingkan/')));
         $menu_prod_compare_url  = preg_match('#^/?bandingkan/?$#i', trim($raw_compare_url)) ? '/bandingkan/' : $raw_compare_url;
@@ -516,7 +558,11 @@ function render_navbar_settings_admin_page() {
         update_option('fds_navbar_cta_customized', 1, 'no');
         delete_transient('fds_navbar_brand_cache_v2');
         delete_transient('fds_navbar_brand_cache_v3');
+        delete_transient('fds_navbar_brand_cache_v4');
         delete_transient('fds_mega_menu_data_v2');
+        delete_transient('fds_mega_menu_data_v3');
+        delete_transient('fds_bandingkan_catalog_cache_v2');
+        delete_transient('fds_bandingkan_catalog_cache_v3');
 
         // Logo-Logo Footer (Dinamis)
         $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);
@@ -1083,7 +1129,7 @@ function render_navbar_settings_admin_page() {
                         </div>
                         <div>
                             <label for="fds_navbar_cta_url" style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Link Tujuan (URL)</label>
-                            <input type="text" id="fds_navbar_cta_url" name="fds_navbar_cta_url" value="<?php echo esc_attr($brand_data['cta_url']); ?>" style="width: 100%; font-size: 13px;" placeholder="#kontak atau /tentang-kami">
+                            <input type="text" id="fds_navbar_cta_url" name="fds_navbar_cta_url" value="<?php echo esc_attr($brand_data['cta_url']); ?>" style="width: 100%; font-size: 13px;" placeholder="/kontak/#hubungi-form atau /tentang-kami/">
                         </div>
                     </div>
                 </div>
@@ -1539,9 +1585,12 @@ add_action('add_meta_boxes', function () {
 
 function render_tab_title_meta_box($post) {
     wp_nonce_field('fds_tab_title_meta_nonce_action', 'fds_tab_title_meta_nonce');
-    $current_custom_title = get_post_meta($post->ID, '_fds_custom_tab_title', true);
-    $brand_text = get_option('fds_navbar_brand_text', null) ?: (get_bloginfo('name') ?: 'Full Drone Solutions');
-    $default_preview = get_the_title($post->ID) . ' – ' . $brand_text;
+    $clean = function ($s) {
+        return function_exists('fds_clean_string') ? \fds_clean_string((string) $s) : (string) $s;
+    };
+    $current_custom_title = $clean(get_post_meta($post->ID, '_fds_custom_tab_title', true));
+    $brand_text = $clean(get_option('fds_navbar_brand_text', null) ?: (get_bloginfo('name') ?: 'Full Drone Solutions'));
+    $default_preview = $clean(get_the_title($post->ID)) . ' – ' . $brand_text;
     ?>
     <div style="padding: 10px 0;">
         <label for="fds_custom_tab_title" style="display: block; font-size: 13px; font-weight: 600; color: #1e293b; margin-bottom: 6px;">
@@ -1572,7 +1621,7 @@ add_action('save_post', function ($post_id) {
     }
 
     if (isset($_POST['fds_custom_tab_title'])) {
-        $custom_title = sanitize_text_field($_POST['fds_custom_tab_title']);
+        $custom_title = sanitize_text_field(wp_unslash((string) $_POST['fds_custom_tab_title']));
         if (!empty($custom_title)) {
             update_post_meta($post_id, '_fds_custom_tab_title', $custom_title);
         } else {

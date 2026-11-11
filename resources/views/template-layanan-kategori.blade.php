@@ -29,7 +29,10 @@
   $wa_prefill = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan ' . ($cat['short_title'] ?? 'Layanan FDS') . '.');
   $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
   $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
-  $kontak_form_url = home_url('/kontak/#hubungi-form');
+  $kontak_form_url = home_url('/kontak/?layanan=' . rawurlencode((string) $cat_slug) . '#hubungi-form');
+  $kat_trust_bar   = function_exists('fds_scrub_legacy_text')
+      ? fds_scrub_legacy_text((string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)'))
+      : (string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)');
 
   $resolved_reading_links = [];
   foreach (($cat['reading_links'] ?? []) as $rl) {
@@ -64,17 +67,6 @@
   </div>
 
   <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="mb-6">
-      <x-breadcrumbs
-        theme="dark"
-        :items="[
-          ['name' => 'Beranda', 'url' => home_url('/')],
-          ['name' => 'Layanan', 'url' => home_url('/layanan/')],
-          ['name' => $cat['short_title'] ?? 'Layanan Spesialis', 'url' => ''],
-        ]"
-      />
-    </div>
-
     <h1 class="text-[36px] sm:text-[48px] lg:text-[56px] font-semibold tracking-[-0.03em] text-white leading-[1.08] max-w-[920px]">
       {{ $cat['h1'] ?? $cat['short_title'] }}
     </h1>
@@ -92,7 +84,7 @@
     @endif
 
     <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="{{ esc_url($kontak_form_url) }}"
+      <a href="{!! esc_url($kontak_form_url) !!}"
          class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
         {{ $p_join((string) ($ui['kat_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($cat['short_title'] ?? '')) }}
       </a>
@@ -108,9 +100,9 @@
       </a>
     </div>
 
-    @if(!empty($ui['trust_bar'] ?? 'Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015'))
+    @if(!empty($kat_trust_bar))
     <p class="mt-6 text-[13px] sm:text-[13.5px] text-white/75">
-      {{ $ui['trust_bar'] ?? 'Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015' }}
+      {{ $kat_trust_bar }}
     </p>
     @endif
   </div>
@@ -383,8 +375,12 @@
         @endif
 
         <div class="mt-6">
-          <a href="{{ esc_url($kontak_form_url) }}" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
-            {{ $ui['kat_cost_cta_text'] ?? 'Kirim rincian kebutuhan untuk estimasi penawaran →' }}
+          <a href="{!! esc_url($kontak_form_url) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
+            <span>{{ $ui['kat_cost_cta_text'] ?? 'Kirim rincian kebutuhan untuk estimasi penawaran' }}</span>
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
       </div>
@@ -425,8 +421,12 @@
             <ul class="space-y-1.5">
               @foreach($resolved_reading_links as $rl)
                 <li>
-                  <a href="{{ esc_url($rl['url']) }}" class="inline-flex items-center min-h-[44px] sm:min-h-[32px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
-                    {{ $rl['label'] }} &rarr;
+                  <a href="{!! esc_url($rl['url']) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[32px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
+                    <span>{{ $rl['label'] }}</span>
+                    <svg class="w-[15px] h-[15px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M6 6h12v12"/>
+                      <path d="M6 18 18 6"/>
+                    </svg>
                   </a>
                 </li>
               @endforeach
@@ -449,12 +449,7 @@
   :sectionBg="$faq_bg"
 />
 
-{{-- 9. MOBILE STICKY CTA BAR --}}
-<x-service-sticky-bar
-  :ctaLabel="$ui['sticky_cta_label'] ?? 'Minta Penawaran'"
-  :ctaUrl="$kontak_form_url"
-  :waPrefill="$wa_prefill"
-/>
+{{-- Mobile sticky CTA bar dirender terpusat oleh layouts/app.blade.php --}}
 
 @endif
 

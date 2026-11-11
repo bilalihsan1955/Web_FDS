@@ -28,7 +28,10 @@
   $wa_prefill = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan sektor ' . ($sector['card_title'] ?? 'Industri') . '.');
   $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
   $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
-  $kontak_form_url = home_url('/kontak/#hubungi-form');
+  $kontak_form_url  = home_url('/kontak/?layanan=' . rawurlencode((string) $sec_slug) . '#hubungi-form');
+  $sektor_trust_bar = function_exists('fds_scrub_legacy_text')
+      ? fds_scrub_legacy_text((string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)'))
+      : (string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)');
 
   $resolved_reading_links = [];
   foreach (($sector['reading_links'] ?? []) as $rl) {
@@ -63,17 +66,6 @@
   </div>
 
   <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="mb-6">
-      <x-breadcrumbs
-        theme="dark"
-        :items="[
-          ['name' => 'Beranda', 'url' => home_url('/')],
-          ['name' => 'Layanan', 'url' => home_url('/layanan/')],
-          ['name' => $sector['card_title'] ?? 'Sektor Industri', 'url' => ''],
-        ]"
-      />
-    </div>
-
     <p class="text-[14px] sm:text-[15px] font-semibold text-[#a3eef5] mb-3 tracking-wide">
       {{ $sector['num'] ?? '' }} &middot; {{ $sector['subtitle'] ?? '' }}
     </p>
@@ -89,7 +81,7 @@
     @endif
 
     <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="{{ esc_url($kontak_form_url) }}"
+      <a href="{!! esc_url($kontak_form_url) !!}"
          class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
         {{ $p_join((string) ($ui['sektor_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($sector['card_title'] ?? '')) }}
       </a>
@@ -105,9 +97,9 @@
       </a>
     </div>
 
-    @if(!empty($ui['trust_bar'] ?? 'Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015'))
+    @if(!empty($sektor_trust_bar))
     <p class="mt-6 text-[13px] sm:text-[13.5px] text-white/75">
-      {{ $ui['trust_bar'] ?? 'Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015' }}
+      {{ $sektor_trust_bar }}
     </p>
     @endif
   </div>
@@ -193,7 +185,7 @@
           <div>
             <h3 class="text-[19px] sm:text-[20px] font-semibold tracking-[-0.015em] text-[#1d1d1f] leading-snug mb-2.5 {{ $has_sol_link ? 'group-hover:text-[#0a555c]' : '' }} transition-colors">
               @if($has_sol_link)
-                <a href="{{ esc_url($sol_url) }}" class="fds-stretched-link">
+                <a href="{!! esc_url($sol_url) !!}" class="fds-stretched-link">
                   {{ $sol['name'] }}
                 </a>
               @else
@@ -241,7 +233,7 @@
               @foreach($sector['products_tech'] as $pt)
                 <li class="py-4 text-[15.5px] text-[#1d1d1f]">
                   @if(!empty($pt['url']))
-                    <a href="{{ esc_url($pt['url']) }}" class="inline-flex items-center min-h-[44px] sm:min-h-0 font-semibold text-[#0a555c] hover:underline underline-offset-4">
+                    <a href="{!! esc_url($pt['url']) !!}" class="inline-flex items-center min-h-[44px] sm:min-h-0 font-semibold text-[#0a555c] hover:underline underline-offset-4">
                       {{ $pt['name'] }}
                     </a>
                   @else
@@ -251,8 +243,12 @@
                   @if(!empty($pt['sublinks']))
                     <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px]">
                       @foreach($pt['sublinks'] as $sub)
-                        <a href="{{ esc_url($sub['url']) }}" class="inline-flex items-center min-h-[44px] sm:min-h-0 font-semibold text-[#0f808a] hover:underline underline-offset-4">
-                          Detail spesifikasi {{ $sub['label'] }} &rarr;
+                        <a href="{!! esc_url($sub['url']) !!}" class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-0 font-semibold text-[#0f808a] hover:underline underline-offset-4 group leading-none">
+                          <span>Detail spesifikasi {{ $sub['label'] }}</span>
+                          <svg class="w-[15px] h-[15px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 6h12v12"/>
+                            <path d="M6 18 18 6"/>
+                          </svg>
                         </a>
                       @endforeach
                     </div>
@@ -474,8 +470,12 @@
         @endif
 
         <div class="mt-6">
-          <a href="{{ esc_url($kontak_form_url) }}" class="inline-flex items-center min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
-            {{ $ui['sektor_cost_cta_text'] ?? 'Kirim lokasi & batas AOI untuk estimasi resmi →' }}
+          <a href="{!! esc_url($kontak_form_url) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
+            <span>{{ $ui['sektor_cost_cta_text'] ?? 'Kirim lokasi & batas AOI untuk estimasi resmi' }}</span>
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
         </div>
       </div>
@@ -516,8 +516,12 @@
             <ul class="space-y-1.5">
               @foreach($resolved_reading_links as $rl)
                 <li>
-                  <a href="{{ esc_url($rl['url']) }}" class="inline-flex items-center min-h-[44px] sm:min-h-[32px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4">
-                    {{ $rl['label'] }} &rarr;
+                  <a href="{!! esc_url($rl['url']) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[32px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
+                    <span>{{ $rl['label'] }}</span>
+                    <svg class="w-[15px] h-[15px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M6 6h12v12"/>
+                      <path d="M6 18 18 6"/>
+                    </svg>
                   </a>
                 </li>
               @endforeach
@@ -546,8 +550,12 @@
         </p>
       </div>
       <a href="{{ home_url('/layanan/') }}"
-         class="inline-flex items-center min-h-[44px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 flex-shrink-0">
-        {{ $ui['sektor_related_all_link'] ?? 'Semua Layanan FDS →' }}
+         class="inline-flex items-center gap-1.5 min-h-[44px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 flex-shrink-0 group leading-none">
+        <span>{{ $ui['sektor_related_all_link'] ?? 'Semua Layanan FDS' }}</span>
+        <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6h12v12"/>
+          <path d="M6 18 18 6"/>
+        </svg>
       </a>
     </div>
 
@@ -578,12 +586,7 @@
   :sectionBg="$faq_bg"
 />
 
-{{-- 11. MOBILE STICKY CTA BAR --}}
-<x-service-sticky-bar
-  :ctaLabel="$ui['sticky_cta_label'] ?? 'Minta Penawaran'"
-  :ctaUrl="$kontak_form_url"
-  :waPrefill="$wa_prefill"
-/>
+{{-- Mobile sticky CTA bar dirender terpusat oleh layouts/app.blade.php --}}
 
 @endif
 

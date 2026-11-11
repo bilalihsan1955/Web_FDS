@@ -5,10 +5,16 @@
 ])
 
 @php
+  $clean_sb       = static function ($v): string {
+      $str = (string) $v;
+      return function_exists('fds_clean_string') ? fds_clean_string($str) : html_entity_decode(wp_specialchars_decode($str, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  };
+  $ctaLabel       = $clean_sb($ctaLabel);
+  $waPrefill      = $clean_sb($waPrefill);
   $gc             = function_exists('App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
   $c_wa_link      = $gc['wa_link'] ?? 'https://wa.me/628112748882';
   $wa_sep         = strpos($c_wa_link, '?') === false ? '?' : '&';
-  $wa_full_url    = $c_wa_link . $wa_sep . 'text=' . rawurlencode((string) $waPrefill);
+  $wa_full_url    = $c_wa_link . $wa_sep . 'text=' . rawurlencode($waPrefill);
   $raw_cta_url    = trim((string) $ctaUrl);
   $target_cta_url = ($raw_cta_url !== '' && $raw_cta_url !== '#form-penawaran') ? $raw_cta_url : home_url('/kontak/#hubungi-form');
 @endphp

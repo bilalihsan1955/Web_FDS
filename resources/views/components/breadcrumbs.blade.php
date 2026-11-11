@@ -17,12 +17,12 @@
         <span aria-hidden="true" class="{{ $sep_cls }}">/</span>
       @endif
       @if(!empty($item['url']) && !$loop->last)
-        <a href="{{ esc_url($item['url']) }}" class="inline-flex items-center min-h-[44px] sm:min-h-0 py-1 sm:py-0 {{ $link_cls }} hover:underline underline-offset-4 transition-colors">
-          {{ $item['name'] ?? '' }}
+        <a href="{!! esc_url($item['url']) !!}" class="inline-flex items-center min-h-[44px] sm:min-h-0 py-1 sm:py-0 {{ $link_cls }} hover:underline underline-offset-4 transition-colors">
+          {{ function_exists('fds_clean_string') ? fds_clean_string((string) ($item['name'] ?? '')) : ($item['name'] ?? '') }}
         </a>
       @else
         <span aria-current="page" class="{{ $curr_cls }}">
-          {{ $item['name'] ?? '' }}
+          {{ function_exists('fds_clean_string') ? fds_clean_string((string) ($item['name'] ?? '')) : ($item['name'] ?? '') }}
         </span>
       @endif
     @endforeach

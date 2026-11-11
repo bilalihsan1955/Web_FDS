@@ -97,9 +97,16 @@ function fds_merge_layanan_data(array $default, array $override): array {
  */
 function fds_flush_layanan_cache(): void {
     delete_transient('fds_homepage_content_cache');
+    delete_transient('fds_homepage_content_cache_v2');
+    delete_transient('fds_navbar_brand_cache_v2');
     delete_transient('fds_navbar_brand_cache_v3');
+    delete_transient('fds_navbar_brand_cache_v4');
     delete_transient('fds_mega_menu_data_v2');
+    delete_transient('fds_mega_menu_data_v3');
+    delete_transient('fds_bandingkan_catalog_cache_v2');
+    delete_transient('fds_bandingkan_catalog_cache_v3');
     delete_transient('fds_llms_txt_cache_v3');
+    delete_transient('fds_llms_txt_cache_v4');
 
     if (function_exists(__NAMESPACE__ . '\\fds_get_layanan_sectors')) {
         fds_get_layanan_sectors(true);
@@ -161,7 +168,7 @@ function fds_get_default_layanan_hub_data(): array {
                 ],
                 [
                     'title' => 'Kebutuhan Skalabilitas dari Jasa Proyek ke Armada Mandiri',
-                    'desc'  => 'Perusahaan yang beralih dari jasa survei berkala ke kepemilikan armada internal sering kesulitan mencari mitra yang sanggup menyediakan unit berstandar TKDN/ISO sekaligus pelatihannya.',
+                    'desc'  => 'Perusahaan yang beralih dari jasa survei berkala ke kepemilikan armada internal sering kesulitan mencari mitra yang sanggup menyediakan unit berstandar mutu ISO (dan TKDN untuk lini pertanian FERTO) sekaligus pelatihannya.',
                 ],
             ],
         ],
@@ -182,8 +189,8 @@ function fds_get_default_layanan_hub_data(): array {
                     'desc'  => 'Merekomendasikan teknologi paling efisien—baik foto udara fotogrametri, survei LiDAR penembus kanopi, pencitraan multispectral/hyperspectral, maupun inspeksi visual/termal sesuai karakter site.',
                 ],
                 [
-                    'title' => 'Produsen UAV Nasional TKDN 60,74% & ISO 9001:2015',
-                    'desc'  => 'Didukung fasilitas riset, perakitan, dan persediaan suku cadang di Sleman, Yogyakarta sejak 2012 beserta standar SNI 9199:2023 dan kesiapan pengadaan e-Katalog LKPP untuk korporasi, BUMN, dan instansi.',
+                    'title' => 'Produsen UAV Nasional ISO 9001:2015 & TKDN (Seri FERTO)',
+                    'desc'  => 'Didukung fasilitas riset, perakitan, dan persediaan suku cadang di Sleman, Yogyakarta dengan standar ISO 9001:2015, TKDN 60,74% untuk lini FERTO, SNI 9199:2023 pada FERTO 15 & FERTO 22, serta kesiapan pengadaan e-Katalog LKPP.',
                 ],
             ],
         ],
@@ -229,8 +236,8 @@ function fds_get_default_layanan_hub_data(): array {
             'steps' => [
                 [
                     'step'  => '01',
-                    'title' => 'Konsultasi, Review AOI & Assessment Kebutuhan',
-                    'desc'  => 'Evaluasi file batas wilayah (.kml/.kmz/.shp), tutupan vegetasi, skala atau interval kontur yang dibutuhkan, akses perizinan, dan penentuan metode akuisisi paling tepat guna.',
+                    'title' => 'Konsultasi, Review Area & Assessment Kebutuhan',
+                    'desc'  => 'Evaluasi batas wilayah kerja dan koordinat proyek, tutupan vegetasi, skala atau interval kontur yang dibutuhkan, akses perizinan, dan penentuan metode akuisisi paling tepat guna.',
                 ],
                 [
                     'step'  => '02',
@@ -240,7 +247,7 @@ function fds_get_default_layanan_hub_data(): array {
                 [
                     'step'  => '03',
                     'title' => 'Akuisisi Data Udara & Pengukuran Titik Kontrol (GCP/ICP)',
-                    'desc'  => 'Pengumpulan data di lokasi memakai platform UAV dan sensor terkalibrasi (didukung sistem kendali FDS STATION) bersamaan dengan pengukuran titik kontrol dan titik uji independen di tanah.',
+                    'desc'  => 'Pengumpulan data di lokasi memakai platform UAV dan sensor terkalibrasi (didukung sistem kendali FDS Station) bersamaan dengan pengukuran titik kontrol dan titik uji independen di tanah.',
                 ],
                 [
                     'step'  => '04',
@@ -277,7 +284,7 @@ function fds_get_default_layanan_hub_data(): array {
                 ],
             ],
             'kak_checklist' => [
-                'Lampiran batas area kerja (AOI) dalam format .kml, .kmz, atau .shp beserta lokasi kabupaten/provinsi.',
+                'Informasi lokasi proyek (kota/kabupaten dan provinsi) serta perkiraan luas area atau panjang koridor.',
                 'Pilihan sektor proyek dan jenis layanan utama (Foto Udara, LiDAR, Multispectral, Inspeksi Aset, atau Pelatihan).',
                 'Target output data (Ortofoto, DTM/DSM, Point Cloud LAS, kontur DWG interval tertentu, volume stockpile, atau NDVI) serta datum koordinat.',
                 'Perkiraan jadwal pelaksanaan lapangan dan skema pengadaan yang direncanakan (jasa proyek atau pengadaan unit + pelatihan).',
@@ -286,9 +293,9 @@ function fds_get_default_layanan_hub_data(): array {
         'eeat_proof' => [
             'eyebrow'  => 'Keandalan Produsen UAV Nasional',
             'title'    => 'Dari Manufaktur Wahana Yogyakarta Hingga Operasi Lapangan Seluruh Indonesia',
-            'intro'    => 'PT Karya Solusi Angkasa (Full Drone Solutions / FDS) mengembangkan teknologi pesawat nirawak sejak 2012 dengan fasilitas manufaktur di Sleman, Daerah Istimewa Yogyakarta, yang mengantongi sertifikasi TKDN + BMP hingga 60,74%, SNI 9199:2023, serta manajemen mutu ISO 9001:2015.',
+            'intro'    => 'PT Karya Solusi Angkasa (Full Drone Solutions / FDS) mengoperasikan fasilitas manufaktur pesawat nirawak di Sleman, Daerah Istimewa Yogyakarta dengan sistem manajemen mutu ISO 9001:2015, sertifikasi TKDN + BMP 60,74% pada lini pertanian FERTO, serta SNI 9199:2023 pada FERTO 15 dan FERTO 22.',
             'bullets'  => [
-                'Mandiri secara perangkat keras & lunak: lini wahana produksi lokal meliputi seri pertanian FERTO (5L–50L), Fixed-Wing VTOL DELTAV (daya jelajah 60 km), drone logistik DELFRO, dan platform inspeksi MULTIPURPOSE berbasis GCS berbahasa Indonesia FDS STATION.',
+                'Mandiri secara perangkat keras & lunak: lini wahana produksi lokal meliputi seri pertanian FERTO (5L–50L), Fixed-Wing VTOL DELTAV (daya jelajah 60 km), drone logistik DELFRO, dan platform inspeksi MULTIPURPOSE berbasis GCS berbahasa Indonesia FDS Station.',
                 'Kesiapan administrasi B2B, BUMN, dan pengadaan pemerintah melalui kelengkapan legalitas perusahaan serta registrasi produk pada ekosistem pengadaan nasional e-Katalog LKPP.',
                 'Transparansi teknis di setiap kontrak: seluruh parameter penerbangan, pengikatan jaring kontrol tanah GCP/ICP, serta batasan fisik sensor disampaikan terbuka sesuai KAK/TOR yang disepakati.',
             ],
@@ -298,7 +305,7 @@ function fds_get_default_layanan_hub_data(): array {
             ['label' => 'Layanan Spesialis: Jasa Pemetaan & Survey LiDAR Indonesia', 'url' => home_url('/layanan/jasa-foto-udara-lidar/')],
             ['label' => 'Solusi Pertambangan: Jasa Survey LiDAR Tambang & Volume Stockpile', 'url' => home_url('/layanan/pertambangan/')],
             ['label' => 'Bandingkan Lini Armada UAV Produksi FDS (FERTO, DELTAV, DELFRO, MULTIPURPOSE)', 'url' => home_url('/bandingkan/')],
-            ['label' => 'Profil PT Karya Solusi Angkasa & Sertifikasi TKDN/SNI/ISO', 'url' => home_url('/tentang-kami/')],
+            ['label' => 'Profil PT Karya Solusi Angkasa & Sertifikasi ISO/TKDN', 'url' => home_url('/tentang-kami/')],
             ['label' => 'Sertifikasi TKDN Manufaktur UAV FDS Kemenperin RI', 'slug' => 'fds-resmi-raih-sertifikasi-tkdn-4485-dari-kemenperin-ri'],
         ],
         'faqs' => [
@@ -324,15 +331,15 @@ function fds_get_default_layanan_hub_data(): array {
             ],
             [
                 'q' => 'Bagaimana prosedur permintaan penawaran proyek, apakah bisa sekaligus konsultasi pengadaan unit drone?',
-                'a' => 'Anda dapat mengirimkan informasi lokasi proyek, lampiran poligon AOI (.kml/.kmz/.shp), perkiraan luasan area, dan kebutuhan output melalui halaman Kontak resmi FDS atau melalui WhatsApp resmi FDS. Tim kami akan menjadwalkan diskusi teknis baik untuk skema jasa survei maupun pengadaan armada UAV mandiri beserta pelatihan.',
+                'a' => 'Anda dapat mengirimkan informasi lokasi proyek (kota/provinsi), perkiraan luasan area, dan kebutuhan output melalui halaman Kontak resmi FDS atau melalui WhatsApp resmi FDS. Tim kami akan menjadwalkan diskusi teknis baik untuk skema jasa survei maupun pengadaan armada UAV mandiri beserta pelatihan.',
             ],
         ],
         'quote_defaults' => [
             'eyebrow'      => 'Konsultasi & Request for Proposal (RFP)',
             'title'        => 'Ajukan Kebutuhan Pemetaan, Survei LiDAR, Inspeksi, atau Pelatihan Tim Anda',
-            'subtitle'     => 'Pilih sektor atau kategori layanan di samping, lampirkan batas poligon AOI (.kml/.kmz/.shp/.pdf) bila tersedia, dan tim engineering FDS akan mengevaluasi kebutuhan teknis Anda.',
+            'subtitle'     => 'Pilih layanan atau sektor proyek pada formulir ini dan jelaskan lokasi serta ringkasan kebutuhan agar tim engineering FDS menyusun evaluasi awal.',
             'wa_prefill'   => 'Halo tim Enterprise FDS, kami ingin berkonsultasi mengenai layanan UAV dan pemetaan udara untuk proyek perusahaan kami.',
-            'placeholder'  => 'Jelaskan ruang lingkup kebutuhan (sektor proyek, metode foto udara/LiDAR/multispectral/inspeksi, output yang diharapkan, atau kebutuhan pelatihan tim)...',
+            'placeholder'  => 'Jelaskan ruang lingkup kebutuhan (sektor proyek, metode foto udara/LiDAR/multispectral/inspeksi, estimasi luas area, atau kebutuhan pelatihan tim)...',
         ],
         'seo' => [
             'meta_title' => 'Jasa Drone Mapping Indonesia & Solusi UAV | FDS',
@@ -367,6 +374,10 @@ function fds_get_layanan_hub_data(bool $fresh = false): array {
         $memo['cta_primary_url'] = home_url('/kontak/#hubungi-form');
     }
 
+    if (function_exists('fds_deep_decode')) {
+        $memo = \fds_deep_decode($memo);
+    }
+
     return $memo;
 }
 
@@ -378,7 +389,7 @@ function fds_get_default_layanan_ui_texts(): array {
     return [
         // Bersama & Hero
         'cta_wa_text'                    => 'Konsultasi via WhatsApp',
-        'trust_bar'                      => 'Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015',
+        'trust_bar'                      => 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO)',
         'sticky_cta_label'               => 'Minta Penawaran',
 
         // Mega Menu & Footer Kolom Layanan
@@ -402,7 +413,7 @@ function fds_get_default_layanan_ui_texts(): array {
         'hub_category_card_cta'          => 'Lihat detail layanan',
         'hub_why_eyebrow'                => 'Keunggulan Terpadu',
         'hub_workflow_eyebrow'           => 'Metodologi Kerja',
-        'hub_cost_cta_text'              => 'Kirim batas poligon AOI & KAK untuk estimasi resmi →',
+        'hub_cost_cta_text'              => 'Kirim rincian lokasi & KAK untuk estimasi resmi',
         'hub_reading_heading'            => 'Tautan Teknis & Armada Terkait',
         'hub_faq_title'                  => 'Pertanyaan Umum Layanan FDS',
         'hub_faq_subtitle'               => 'Informasi awal terkait ruang lingkup proyek, pemilihan metode survei udara, integrasi data spasial GIS, dan prosedur konsultasi.',
@@ -422,11 +433,11 @@ function fds_get_default_layanan_ui_texts(): array {
         'sektor_workflow_heading_prefix' => 'Alur Kerja Survei & Pengendalian Mutu Sektor ',
         'sektor_formats_heading'         => 'Format File Penyerahan',
         'sektor_tools_heading'           => 'Perangkat Lunak Penerima',
-        'sektor_cost_cta_text'           => 'Kirim lokasi & batas AOI untuk estimasi resmi →',
+        'sektor_cost_cta_text'           => 'Kirim lokasi & kebutuhan proyek untuk estimasi resmi',
         'sektor_reading_heading'         => 'Referensi Armada & Artikel Teknis',
         'sektor_related_heading'         => 'Layanan & Sektor Terkait',
         'sektor_related_subtitle'        => 'Telusuri metode sensor dan solusi lintas industri lainnya dari Full Drone Solutions.',
-        'sektor_related_all_link'        => 'Semua Layanan FDS →',
+        'sektor_related_all_link'        => 'Semua Layanan FDS',
         'sektor_related_card_cta'        => 'Jelajahi layanan terkait',
         'sektor_faq_prefix'              => 'Pertanyaan Umum: ',
         'sektor_faq_subtitle'            => 'Jawaban ringkas terkait metodologi, deliverables, integrasi software, dan tahapan kerja lapangan.',
@@ -444,7 +455,7 @@ function fds_get_default_layanan_ui_texts(): array {
         'kat_outputs_heading'            => 'Output & Deliverables Utama',
         'kat_sectors_heading'            => 'Penerapan di Sektor Industri',
         'kat_sector_card_cta'            => 'Lihat sektor',
-        'kat_cost_cta_text'              => 'Kirim rincian kebutuhan untuk estimasi penawaran →',
+        'kat_cost_cta_text'              => 'Kirim rincian kebutuhan untuk estimasi penawaran',
         'kat_reading_heading'            => 'Referensi Teknis & Armada Terkait',
         'kat_faq_prefix'                 => 'Pertanyaan Umum: ',
         'kat_faq_subtitle'               => 'Penjelasan teknis, format file keluaran, dan informasi yang dapat Anda konsultasikan bersama tim FDS.',
@@ -454,20 +465,20 @@ function fds_get_default_layanan_ui_texts(): array {
         'quote_wa_btn'                   => 'Diskusi via WhatsApp',
         'quote_phone_label'              => 'Telepon Langsung',
         'quote_email_label'              => 'Email Resmi',
-        'quote_trust_footer'             => 'PT Karya Solusi Angkasa (FDS) · Manufaktur UAV sejak 2012 · TKDN 60,74% · SNI 9199:2023 · ISO 9001:2015',
+        'quote_trust_footer'             => 'PT Karya Solusi Angkasa (FDS) · Manufaktur UAV Sleman, Yogyakarta · ISO 9001:2015',
         'quote_form_heading'             => 'Formulir Permintaan Penawaran & Konsultasi Proyek',
         'quote_form_subtitle'            => 'Lengkapi rincian berikut agar proposal teknis disusun sesuai kondisi lapangan Anda. Bidang bertanda * wajib diisi.',
         'quote_form_submit_text'         => 'Kirim Permintaan Penawaran',
-        'quote_form_privacy_note'        => 'Seluruh dokumen proyek dijaga kerahasiaannya.',
+        'quote_form_privacy_note'        => 'Seluruh informasi proyek dijaga kerahasiaannya sesuai kebijakan privasi FDS.',
 
         // Halaman Konfirmasi (/terima-kasih/)
         'ty_badge'                       => 'Permintaan Penawaran Tercatat di Sistem FDS',
         'ty_h1'                          => 'Terima Kasih, Permintaan Konsultasi Anda Telah Kami Terima',
-        'ty_subtitle'                    => 'Tim Full Drone Solutions (PT Karya Solusi Angkasa) akan meninjau kebutuhan sektor, detail lokasi, serta lampiran poligon AOI yang Anda kirimkan untuk menyiapkan diskusi teknis dan estimasi penawaran yang relevan.',
+        'ty_subtitle'                    => 'Tim Full Drone Solutions (PT Karya Solusi Angkasa) akan meninjau fokus layanan, detail lokasi proyek, serta rincian kebutuhan yang Anda kirimkan untuk menyiapkan diskusi teknis dan estimasi penawaran yang relevan.',
         'ty_ref_label'                   => 'Nomor Referensi Inquiry',
         'ty_steps_heading'               => 'Tahapan Peninjauan Berikutnya oleh Tim FDS',
-        'ty_step1_title'                 => 'Verifikasi Data & Batas AOI',
-        'ty_step1_desc'                  => 'Tim kami memastikan kelengkapan koordinat atau poligon wilayah kerja serta memeriksa kejelasan format output data yang Anda butuhkan.',
+        'ty_step1_title'                 => 'Verifikasi Data & Lokasi Proyek',
+        'ty_step1_desc'                  => 'Tim kami memastikan kelengkapan lokasi wilayah kerja serta memeriksa kejelasan cakupan kebutuhan atau format output data yang Anda butuhkan.',
         'ty_step2_title'                 => 'Evaluasi Metode & Kesiapan Lapangan',
         'ty_step2_desc'                  => 'Tim geospasial mengevaluasi karakteristik tutupan lahan, pilihan metode akuisisi (fotogrametri, LiDAR, atau multispectral), kebutuhan titik kontrol, dan izin ruang udara.',
         'ty_step3_title'                 => 'Koordinasi Diskusi Teknis & Proposal',
@@ -488,11 +499,33 @@ function fds_get_layanan_ui_texts(bool $fresh = false): array {
     $default  = fds_get_default_layanan_ui_texts();
     $override = get_option('fds_layanan_ui_overrides_v1', null);
     if (is_array($override) && !empty($override)) {
-        $memo = array_merge($default, $override);
+        $merged = array_merge($default, $override);
     } else {
-        $memo = $default;
+        $merged = $default;
     }
 
+    // Pastikan label CTA tidak menyimpan karakter panah horizontal/siku lama dari DB
+    // karena template Blade merender ikon SVG panah serong sistem secara konsisten.
+    $arrow_keys = [
+        'menu_hub_link_text',
+        'menu_all_services_text',
+        'hub_cost_cta_text',
+        'sektor_cost_cta_text',
+        'sektor_related_all_link',
+        'kat_cost_cta_text',
+    ];
+    foreach ($arrow_keys as $ak) {
+        if (isset($merged[$ak]) && is_string($merged[$ak])) {
+            $decoded = function_exists('fds_clean_string') ? \fds_clean_string($merged[$ak]) : html_entity_decode($merged[$ak], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $merged[$ak] = trim((string) preg_replace('/(?:\s*(?:→|↗|›|»|->|&rarr;|&rsaquo;|&raquo;|&gt;|>))+$/u', '', $decoded));
+        }
+    }
+
+    if (function_exists('fds_deep_decode')) {
+        $merged = \fds_deep_decode($merged);
+    }
+
+    $memo = $merged;
     return $memo;
 }
 
@@ -529,7 +562,7 @@ function fds_get_layanan_service_options(): array {
         $options[$slug] = 'Sektor ' . (string) ($sec['card_title'] ?? ucfirst(str_replace('-', ' ', $slug)));
     }
 
-    $options['pengadaan-armada-uav'] = 'Pengadaan Armada Drone TKDN / Kustomisasi UAV FDS';
+    $options['pengadaan-armada-uav'] = 'Pengadaan Armada Drone FDS (Seri FERTO TKDN / VTOL DELTAV / MULTIPURPOSE)';
 
     return $options;
 }

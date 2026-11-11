@@ -1,4 +1,17 @@
 @php
+  $fds_comment_clean = static function ($val) {
+    $s = (string) $val;
+    if (function_exists('fds_clean_string')) {
+      return fds_clean_string($s);
+    }
+    $prev = '';
+    while ($prev !== $s) {
+      $prev = $s;
+      $s = wp_specialchars_decode($s, ENT_QUOTES);
+      $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    return $s;
+  };
   $post_id = get_the_ID();
   $comments_count = (int) get_comments_number($post_id);
   $comments = get_comments([
@@ -48,9 +61,10 @@
     <div class="space-y-4 mb-12">
       @foreach($comments as $comment)
         @php
-          $author_name = $comment->comment_author ?: 'Anonim';
+          $author_name = $fds_comment_clean($comment->comment_author ?: 'Anonim') ?: 'Anonim';
           $initial = strtoupper(mb_substr($author_name, 0, 1));
           $comment_date = date_i18n('j F Y - H:i', strtotime($comment->comment_date));
+          $comment_body = $fds_comment_clean($comment->comment_content);
         @endphp
         <div class="bg-[#f9f9fb] border border-black/[0.05] rounded-2xl p-5 sm:p-6 transition-all duration-150 hover:border-black/[0.09]">
           <div class="flex items-center gap-3.5 mb-3.5">
@@ -59,7 +73,7 @@
             </div>
             <div>
               <h4 class="text-[15px] font-semibold text-[#1d1d1f] leading-tight">
-                {{ esc_html($author_name) }}
+                {{ $author_name }}
               </h4>
               <p class="text-[12px] text-[#86868b] mt-0.5">
                 {{ $comment_date }} WIB
@@ -67,7 +81,7 @@
             </div>
           </div>
           <div class="text-[14.5px] text-[#334155] leading-relaxed pl-0 sm:pl-[52px]">
-            {!! nl2br(esc_html($comment->comment_content)) !!}
+            {!! nl2br(e($comment_body)) !!}
           </div>
         </div>
       @endforeach
@@ -94,7 +108,7 @@
         Alamat email Anda tidak akan dipublikasikan. Ruas yang wajib ditandai <span class="text-red-500">*</span>
       </p>
 
-      <form action="{{ esc_url(site_url('/wp-comments-post.php')) }}" method="post" class="space-y-4">
+      <form action="{!! esc_url(site_url('/wp-comments-post.php')) !!}" method="post" class="space-y-4">
         
         {{-- Anti-Bot Honeypot Trap (Hidden from humans, traps spambots) --}}
         <div style="display:none !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
@@ -105,8 +119,8 @@
         {{-- Status login --}}
         @if(is_user_logged_in())
           <div class="text-[13px] text-[#64748b] pb-1">
-            Masuk sebagai <strong class="text-[#1d1d1f]">{{ $current_user->display_name }}</strong>. 
-            <a href="{{ wp_logout_url(get_permalink()) }}" class="text-[#0f808a] hover:underline ml-1">Keluar?</a>
+            Masuk sebagai <strong class="text-[#1d1d1f]">{{ $fds_comment_clean($current_user->display_name) }}</strong>. 
+            <a href="{!! esc_url(wp_logout_url(get_permalink())) !!}" class="text-[#0f808a] hover:underline ml-1">Keluar?</a>
           </div>
         @else
           {{-- Field Nama & Email untuk Tamu --}}

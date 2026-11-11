@@ -40,9 +40,9 @@ add_action('save_post', function ($post_id) {
 
         foreach ($custom_keys as $key) {
             if (isset($_POST[$key])) {
-                update_post_meta($post_id, $key, sanitize_text_field($_POST[$key]));
+                update_post_meta($post_id, $key, sanitize_text_field(wp_unslash((string) $_POST[$key])));
             } elseif (isset($_REQUEST[$key])) {
-                update_post_meta($post_id, $key, sanitize_text_field($_REQUEST[$key]));
+                update_post_meta($post_id, $key, sanitize_text_field(wp_unslash((string) $_REQUEST[$key])));
             }
         }
     }

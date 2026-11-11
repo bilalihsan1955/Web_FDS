@@ -153,16 +153,10 @@ add_filter('preprocess_comment', function ($commentdata) {
         wp_die(__('Aktivitas otomatis mencurigakan terdeteksi.', 'sage'), 'Akses Ditolak', ['response' => 403]);
     }
 
-    // 2. IP Rate Limiting (Anti-Flood / Anti-DoS)
-    $ip = '';
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } elseif (!empty($_SERVER['REMOTE_ADDR'])) {
-        $ip = $_SERVER['REMOTE_ADDR'];
-    }
-    $ip = sanitize_text_field($ip);
+    // 2. IP Rate Limiting (Anti-Flood / Anti-DoS via trusted socket/CF IP helper)
+    $ip = function_exists(__NAMESPACE__ . '\\fds_get_client_ip')
+        ? fds_get_client_ip()
+        : sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? ''));
 
     if (!empty($ip) && !is_user_logged_in()) {
         $rate_key = 'fds_comment_rate_' . md5($ip);

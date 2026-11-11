@@ -41,8 +41,11 @@ function fds_get_global_contact() {
         return $static_contact;
     }
 
-    $cached = get_transient('fds_global_contact_cache_v2');
+    $cached = get_transient('fds_global_contact_cache_v3');
     if ($cached !== false && is_array($cached)) {
+        if (function_exists('fds_deep_decode')) {
+            $cached = \fds_deep_decode($cached);
+        }
         $static_contact = $cached;
         return $cached;
     }
@@ -71,20 +74,20 @@ function fds_get_global_contact() {
         'show_map_about' => (bool) get_option('fds_show_map_about', 1),
 
         // SOSIAL MEDIA (URL & TOGGLE AKTIF)
-        'instagram'        => get_option('fds_sosmed_instagram_url', get_option('fds_footer_instagram', 'https://instagram.com/fulldronesolutions')),
+        'instagram'        => get_option('fds_sosmed_instagram_url', get_option('fds_footer_instagram', 'https://www.instagram.com/fulldronesolutions/')),
         'instagram_active' => (bool) get_option('fds_sosmed_instagram_active', 1),
 
-        'youtube'          => get_option('fds_sosmed_youtube_url', get_option('fds_footer_youtube', 'https://youtube.com/@fulldronesolutions')),
+        'youtube'          => get_option('fds_sosmed_youtube_url', get_option('fds_footer_youtube', 'https://www.youtube.com/@fulldronesolutions')),
         'youtube_active'   => (bool) get_option('fds_sosmed_youtube_active', 1),
 
-        'linkedin'         => get_option('fds_sosmed_linkedin_url', get_option('fds_footer_linkedin', 'https://linkedin.com/company/fulldronesolutions')),
-        'linkedin_active'  => (bool) get_option('fds_sosmed_linkedin_active', 1),
+        'linkedin'         => get_option('fds_sosmed_linkedin_url', get_option('fds_footer_linkedin', '')),
+        'linkedin_active'  => (bool) get_option('fds_sosmed_linkedin_active', 0),
 
-        'tiktok'           => get_option('fds_sosmed_tiktok_url', get_option('fds_footer_tiktok', 'https://tiktok.com/@fulldronesolutions')),
+        'tiktok'           => get_option('fds_sosmed_tiktok_url', get_option('fds_footer_tiktok', 'https://www.tiktok.com/@fulldronesolutions')),
         'tiktok_active'    => (bool) get_option('fds_sosmed_tiktok_active', 1),
 
-        'twitter'          => get_option('fds_sosmed_twitter_url', 'https://x.com/fulldronesolutions'),
-        'twitter_active'   => (bool) get_option('fds_sosmed_twitter_active', 1),
+        'twitter'          => get_option('fds_sosmed_twitter_url', ''),
+        'twitter_active'   => (bool) get_option('fds_sosmed_twitter_active', 0),
 
         'whatsapp'         => get_option('fds_sosmed_whatsapp_url', get_option('fds_footer_whatsapp', 'https://wa.me/628112748882')),
         'whatsapp_active'  => (bool) get_option('fds_sosmed_whatsapp_active', 1),
@@ -99,14 +102,14 @@ function fds_get_global_contact() {
         'page_kontak_title'       => get_option('fds_page_kontak_title', 'Hubungi Kami.'),
         'page_kontak_desc'        => get_option('fds_page_kontak_desc', 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.'),
         'page_kontak_panel_label' => get_option('fds_page_kontak_panel_label', 'Kantor & Workshop Resmi'),
-        'page_kontak_panel_desc'  => get_option('fds_page_kontak_panel_desc', 'Produsen UAV nasional bersertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berlokasi di Sleman, Yogyakarta.'),
+        'page_kontak_panel_desc'  => get_option('fds_page_kontak_panel_desc', 'Produsen UAV nasional dengan TKDN + BMP 60,74% (Seri FERTO), SNI 9199:2023 (FERTO 15 & FERTO 22), dan sistem manajemen mutu ISO 9001:2015 di Sleman, Yogyakarta.'),
         'page_kontak_hours_wd'    => get_option('fds_page_kontak_hours_wd', 'Senin – Jumat: 08:30 – 17:00 WIB'),
         'page_kontak_hours_sat'   => get_option('fds_page_kontak_hours_sat', 'Sabtu: 08:30 – 13:00 WIB'),
         'page_kontak_wa_btn'      => get_option('fds_page_kontak_wa_btn', 'Chat WhatsApp Kami'),
         'page_kontak_form_title'  => get_option('fds_page_kontak_form_title', 'Kirim Pesan atau Permintaan Penawaran'),
         'page_kontak_form_desc'   => get_option('fds_page_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
         'page_kontak_form_btn'    => get_option('fds_page_kontak_form_btn', 'Kirim Pesan'),
-        'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Respons 1×24 jam kerja. Data terjamin aman.'),
+        'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Tim kami merespons pada jam kerja Senin–Sabtu. Data Anda terlindungi.'),
         'page_kontak_map_title'   => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
         'page_kontak_map_btn'     => get_option('fds_page_kontak_map_btn', 'Buka di Google Maps'),
         'page_kontak_map_link'    => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta'),
@@ -115,15 +118,19 @@ function fds_get_global_contact() {
     // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
     $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
+        if (function_exists('fds_clean_string')) {
+            return \fds_clean_string($v);
+        }
         $prev = '';
         while ($prev !== $v) {
             $prev = $v;
             $v = wp_specialchars_decode($v, ENT_QUOTES);
+            $v = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         return $v;
     }, $data);
 
-    set_transient('fds_global_contact_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_global_contact_cache_v3', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_contact = $clean_data;
     return $clean_data;
 }
@@ -150,12 +157,12 @@ function fds_get_footer_logos() {
     if (is_string($raw)) {
         $decoded = json_decode($raw, true);
         if (is_array($decoded)) {
-            return $decoded;
+            return function_exists('fds_deep_decode') ? \fds_deep_decode($decoded) : $decoded;
         }
     }
 
     if (is_array($raw)) {
-        return $raw;
+        return function_exists('fds_deep_decode') ? \fds_deep_decode($raw) : $raw;
     }
 
     return [];
@@ -170,12 +177,12 @@ function render_global_contact_admin_page() {
     $message = '';
     if (isset($_POST['fds_global_contact_save']) && check_admin_referer('fds_global_contact_nonce_action', 'fds_global_contact_nonce')) {
         // 1. Simpan Kontak Global
-        $company_name = sanitize_text_field($_POST['fds_global_company_name'] ?? '');
-        $address      = sanitize_textarea_field($_POST['fds_global_address'] ?? '');
-        $phone        = sanitize_text_field($_POST['fds_global_phone'] ?? '');
-        $email        = sanitize_email($_POST['fds_global_email'] ?? '');
-        $wa_link      = esc_url_raw($_POST['fds_global_wa_link'] ?? '');
-        $maps_url     = esc_url_raw($_POST['fds_global_maps_url'] ?? '');
+        $company_name = sanitize_text_field(wp_unslash((string) ($_POST['fds_global_company_name'] ?? '')));
+        $address      = sanitize_textarea_field(wp_unslash((string) ($_POST['fds_global_address'] ?? '')));
+        $phone        = sanitize_text_field(wp_unslash((string) ($_POST['fds_global_phone'] ?? '')));
+        $email        = sanitize_email(wp_unslash((string) ($_POST['fds_global_email'] ?? '')));
+        $wa_link      = esc_url_raw(wp_unslash((string) ($_POST['fds_global_wa_link'] ?? '')));
+        $maps_url     = esc_url_raw(wp_unslash((string) ($_POST['fds_global_maps_url'] ?? '')));
 
         update_option('fds_global_company_name', $company_name);
         update_option('fds_global_address', $address);
@@ -203,51 +210,55 @@ function render_global_contact_admin_page() {
         update_option('fds_about_info_maps', $maps_url);
 
         // 2. Simpan Sosial Media & Status Aktif
-        update_option('fds_sosmed_instagram_url', esc_url_raw($_POST['fds_sosmed_instagram_url'] ?? ''));
+        update_option('fds_sosmed_instagram_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_instagram_url'] ?? ''))));
         update_option('fds_sosmed_instagram_active', isset($_POST['fds_sosmed_instagram_active']) ? 1 : 0);
 
-        update_option('fds_sosmed_youtube_url', esc_url_raw($_POST['fds_sosmed_youtube_url'] ?? ''));
+        update_option('fds_sosmed_youtube_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_youtube_url'] ?? ''))));
         update_option('fds_sosmed_youtube_active', isset($_POST['fds_sosmed_youtube_active']) ? 1 : 0);
 
-        update_option('fds_sosmed_linkedin_url', esc_url_raw($_POST['fds_sosmed_linkedin_url'] ?? ''));
+        update_option('fds_sosmed_linkedin_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_linkedin_url'] ?? ''))));
         update_option('fds_sosmed_linkedin_active', isset($_POST['fds_sosmed_linkedin_active']) ? 1 : 0);
 
-        update_option('fds_sosmed_tiktok_url', esc_url_raw($_POST['fds_sosmed_tiktok_url'] ?? ''));
+        update_option('fds_sosmed_tiktok_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_tiktok_url'] ?? ''))));
         update_option('fds_sosmed_tiktok_active', isset($_POST['fds_sosmed_tiktok_active']) ? 1 : 0);
 
-        update_option('fds_sosmed_twitter_url', esc_url_raw($_POST['fds_sosmed_twitter_url'] ?? ''));
+        update_option('fds_sosmed_twitter_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_twitter_url'] ?? ''))));
         update_option('fds_sosmed_twitter_active', isset($_POST['fds_sosmed_twitter_active']) ? 1 : 0);
 
-        update_option('fds_sosmed_whatsapp_url', esc_url_raw($_POST['fds_sosmed_whatsapp_url'] ?? ''));
+        update_option('fds_sosmed_whatsapp_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_whatsapp_url'] ?? ''))));
         update_option('fds_sosmed_whatsapp_active', isset($_POST['fds_sosmed_whatsapp_active']) ? 1 : 0);
 
         // 3. Simpan Footer Hak Cipta
-        $raw_priv = trim((string) ($_POST['fds_footer_privacy_url'] ?? ''));
-        $raw_term = trim((string) ($_POST['fds_footer_terms_url'] ?? ''));
-        update_option('fds_footer_copyright', sanitize_text_field($_POST['fds_footer_copyright'] ?? ''));
+        $raw_priv = trim(wp_unslash((string) ($_POST['fds_footer_privacy_url'] ?? '')));
+        $raw_term = trim(wp_unslash((string) ($_POST['fds_footer_terms_url'] ?? '')));
+        update_option('fds_footer_copyright', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_copyright'] ?? ''))));
         update_option('fds_footer_privacy_url', ($raw_priv !== '' && $raw_priv !== '#') ? esc_url_raw($raw_priv) : '');
         update_option('fds_footer_terms_url', ($raw_term !== '' && $raw_term !== '#') ? esc_url_raw($raw_term) : '');
 
         // 4. Simpan Kustomisasi Narasi Halaman Kontak (/kontak/)
-        update_option('fds_page_kontak_badge', sanitize_text_field($_POST['fds_page_kontak_badge'] ?? ''));
-        update_option('fds_page_kontak_title', sanitize_text_field($_POST['fds_page_kontak_title'] ?? ''));
-        update_option('fds_page_kontak_desc', sanitize_textarea_field($_POST['fds_page_kontak_desc'] ?? ''));
-        update_option('fds_page_kontak_panel_label', sanitize_text_field($_POST['fds_page_kontak_panel_label'] ?? ''));
-        update_option('fds_page_kontak_panel_desc', sanitize_textarea_field($_POST['fds_page_kontak_panel_desc'] ?? ''));
-        update_option('fds_page_kontak_hours_wd', sanitize_text_field($_POST['fds_page_kontak_hours_wd'] ?? ''));
-        update_option('fds_page_kontak_hours_sat', sanitize_text_field($_POST['fds_page_kontak_hours_sat'] ?? ''));
-        update_option('fds_page_kontak_wa_btn', sanitize_text_field($_POST['fds_page_kontak_wa_btn'] ?? ''));
-        update_option('fds_page_kontak_form_title', sanitize_text_field($_POST['fds_page_kontak_form_title'] ?? ''));
-        update_option('fds_page_kontak_form_desc', sanitize_textarea_field($_POST['fds_page_kontak_form_desc'] ?? ''));
-        update_option('fds_page_kontak_form_btn', sanitize_text_field($_POST['fds_page_kontak_form_btn'] ?? ''));
-        update_option('fds_page_kontak_form_note', sanitize_text_field($_POST['fds_page_kontak_form_note'] ?? ''));
-        update_option('fds_page_kontak_map_title', sanitize_text_field($_POST['fds_page_kontak_map_title'] ?? ''));
-        update_option('fds_page_kontak_map_btn', sanitize_text_field($_POST['fds_page_kontak_map_btn'] ?? ''));
-        update_option('fds_page_kontak_map_link', esc_url_raw($_POST['fds_page_kontak_map_link'] ?? ''));
+        update_option('fds_page_kontak_badge', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_badge'] ?? ''))));
+        update_option('fds_page_kontak_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_title'] ?? ''))));
+        update_option('fds_page_kontak_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_desc'] ?? ''))));
+        update_option('fds_page_kontak_panel_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_panel_label'] ?? ''))));
+        update_option('fds_page_kontak_panel_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_panel_desc'] ?? ''))));
+        update_option('fds_page_kontak_hours_wd', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_hours_wd'] ?? ''))));
+        update_option('fds_page_kontak_hours_sat', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_hours_sat'] ?? ''))));
+        update_option('fds_page_kontak_wa_btn', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_wa_btn'] ?? ''))));
+        update_option('fds_page_kontak_form_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_title'] ?? ''))));
+        update_option('fds_page_kontak_form_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_form_desc'] ?? ''))));
+        update_option('fds_page_kontak_form_btn', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_btn'] ?? ''))));
+        update_option('fds_page_kontak_form_note', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_note'] ?? ''))));
+        update_option('fds_page_kontak_map_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_map_title'] ?? ''))));
+        update_option('fds_page_kontak_map_btn', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_map_btn'] ?? ''))));
+        update_option('fds_page_kontak_map_link', esc_url_raw(wp_unslash((string) ($_POST['fds_page_kontak_map_link'] ?? ''))));
 
         delete_transient('fds_global_contact_cache');
         delete_transient('fds_global_contact_cache_v2');
-        $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak &amp; Hak Cipta berhasil diperbarui!';
+        delete_transient('fds_global_contact_cache_v3');
+        delete_transient('fds_about_content_cache');
+        delete_transient('fds_about_content_cache_v2');
+        delete_transient('fds_about_content_cache_v3');
+        $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak & Hak Cipta berhasil diperbarui!';
     }
 
     $c = fds_get_global_contact();
@@ -270,7 +281,7 @@ function render_global_contact_admin_page() {
         <?php if (!empty($message)): ?>
             <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 14px 20px; border-radius: 8px; margin-bottom: 24px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
                 <span class="dashicons dashicons-yes-alt" style="color: #10b981;"></span>
-                <?php echo $message; ?>
+                <?php echo esc_html($message); ?>
             </div>
         <?php endif; ?>
 
@@ -418,7 +429,7 @@ function render_global_contact_admin_page() {
                         </div>
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Catatan Jaminan &amp; Keamanan Data</label>
-                            <input type="text" name="fds_page_kontak_form_note" value="<?php echo esc_attr($c['page_kontak_form_note']); ?>" placeholder="Respons 1×24 jam kerja. Data terjamin aman." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                            <input type="text" name="fds_page_kontak_form_note" value="<?php echo esc_attr($c['page_kontak_form_note']); ?>" placeholder="Tim kami merespons pada jam kerja Senin–Sabtu. Data Anda terlindungi." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
                         </div>
                     </div>
                 </div>

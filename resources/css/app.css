@@ -350,7 +350,7 @@ html.lenis, html.lenis body {
 
 .fds-faq-item {
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 1.25rem 0;
+  padding: 1.15rem 0;
 }
 
 .fds-faq-item h3 {
@@ -362,6 +362,80 @@ html.lenis, html.lenis body {
 
 .fds-faq-item p {
   margin-bottom: 0;
+}
+
+.fds-drone-guide details.fds-faq-item {
+  padding: 0;
+}
+
+.fds-drone-guide details.fds-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1.25rem 0;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  text-align: left;
+  font-size: 16.5px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #1d1d1f;
+  transition: color 0.2s ease;
+}
+
+.fds-drone-guide details.fds-faq-item summary::-webkit-details-marker,
+.fds-drone-guide details.fds-faq-item summary::marker {
+  display: none;
+  content: "";
+}
+
+.fds-drone-guide details.fds-faq-item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23515154' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transition: transform 0.22s ease;
+}
+
+.fds-drone-guide details.fds-faq-item[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.fds-drone-guide details.fds-faq-item summary:hover {
+  color: #0f808a;
+}
+
+.fds-drone-guide details.fds-faq-item summary:focus-visible {
+  outline: 2px solid #0f808a;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.fds-drone-guide details.fds-faq-item > div {
+  padding: 0 1.5rem 1.5rem 0;
+  color: #424245;
+  font-size: 15px;
+  line-height: 1.625;
+}
+
+.fds-drone-guide details.fds-faq-item > div p:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .fds-drone-guide details.fds-faq-item summary {
+    font-size: 17.5px;
+  }
+
+  .fds-drone-guide details.fds-faq-item > div {
+    font-size: 15.5px;
+  }
 }
 
 /* ========================================================== */
@@ -503,10 +577,14 @@ html.lenis, html.lenis body {
   .fds-service-card,
   [data-aos].fds-service-card,
   .fds-service-card img,
-  .fds-card-cta-cue svg,
-  .fds-service-faq summary svg {
+  .fds-card-cta-cue svg {
     transition: none !important;
     transform: none !important;
+  }
+
+  .fds-service-faq summary svg,
+  .fds-drone-guide details.fds-faq-item summary::after {
+    transition: none !important;
   }
 
   .fds-service-card--interactive:active,

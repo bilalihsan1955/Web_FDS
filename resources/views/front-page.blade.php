@@ -4,6 +4,16 @@
 
 @php
   $hp = function_exists('App\fds_get_homepage_content') ? \App\fds_get_homepage_content() : [];
+  $fds_clean = static function ($text): string {
+      $val = (string) $text;
+      return function_exists('fds_clean_string')
+          ? fds_clean_string($val)
+          : html_entity_decode(wp_specialchars_decode($val, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  };
+  $fds_hp_scrub = static function ($text, bool $allowTkdn = true, bool $allowSni = true) use ($fds_clean): string {
+      $val = $fds_clean($text);
+      return function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($val, $allowTkdn, $allowSni) : $val;
+  };
 @endphp
 
 {{-- ========================================================== --}}
@@ -20,7 +30,7 @@
     <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
       <img
         @if($i === 0)
-        src="{{ fds_optimized_img_url($slide['url'], 'full') }}"
+        src="{!! esc_url(fds_optimized_img_url($slide['url'], 'full')) !!}"
         fetchpriority="high"
         loading="eager"
         decoding="sync"
@@ -28,14 +38,14 @@
         class="w-full h-full object-cover object-center no-lazy"
         @else
         src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
-        data-slide-src="{{ fds_optimized_img_url($slide['url'], 'full') }}"
+        data-slide-src="{!! esc_url(fds_optimized_img_url($slide['url'], 'full')) !!}"
         loading="lazy"
         decoding="async"
         class="w-full h-full object-cover object-center"
         @endif
         width="1920"
         height="1080"
-        alt="{!! esc_attr(wp_specialchars_decode($slide['alt'] ?: 'Full Drone Solutions', ENT_QUOTES)) !!}"
+        alt="{{ $fds_clean($slide['alt'] ?: 'Full Drone Solutions') }}"
       >
       {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
       <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
@@ -48,26 +58,26 @@
     
     @if(!empty($hp['hero_badge']))
     <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all fds-hero-entrance fds-hero-delay-1">
-      <span>{!! esc_html($hp['hero_badge'] ?? 'Produsen Drone Pertanian & UAV Indonesia') !!}</span>
+      <span>{{ $fds_hp_scrub($hp['hero_badge'] ?? 'Produsen Drone Pertanian & UAV Indonesia') }}</span>
     </div>
     @endif
 
     <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-medium tracking-[-0.03em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] fds-hero-entrance fds-hero-delay-2">
-      {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")))) !!}
+      {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")))) !!}
     </h1>
 
     <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/90 font-normal max-w-[700px] mx-auto leading-[1.5] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] fds-hero-entrance fds-hero-delay-3">
-      {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['hero_desc'] ?? 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.')))) !!}
+      {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['hero_desc'] ?? 'Produsen UAV berstandar ISO 9001:2015 serta TKDN 60,74% (seri FERTO) dan SNI 9199:2023 (FERTO 15 & FERTO 22). Solusi drone pertanian sprayer, pemetaan LiDAR, dan inspeksi industri.')))) !!}
     </p>
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap fds-hero-entrance fds-hero-delay-4">
-      <a href="{{ esc_url($hp['hero_cta1_url'] ?? '#solusi') }}" 
+      <a href="{!! esc_url($hp['hero_cta1_url'] ?? '#solusi') !!}" 
          class="inline-flex items-center justify-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 shadow-lg shadow-black/25 hover:shadow-xl hover:shadow-black/35 hover:-translate-y-0.5">
-        {!! esc_html($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') !!}
+        {{ $fds_hp_scrub($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') }}
       </a>
-      <a href="{{ esc_url($hp['hero_cta2_url'] ?? '#kontak') }}" 
+      <a href="{!! esc_url($hp['hero_cta2_url'] ?? '#kontak') !!}" 
          class="group inline-flex items-center justify-center bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/30 text-[15px] sm:text-[16px] font-medium px-8 py-4 rounded-full transition-all duration-200 gap-2.5 leading-none hover:-translate-y-0.5 shadow-lg">
-        <span>{!! esc_html($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') !!}</span>
+        <span>{{ $fds_hp_scrub($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') }}</span>
         <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 6h12v12"/>
           <path d="M6 18 18 6"/>
@@ -261,7 +271,7 @@
       }
     @endphp
     <p class="text-[13px] font-semibold text-[#86868b] tracking-wide">
-      {!! esc_html($mitra_title) !!}
+      {{ $fds_clean($mitra_title) }}
     </p>
   </div>
 
@@ -279,25 +289,25 @@
         @php
           $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
           $m_thumb_id = get_post_thumbnail_id($mitra->ID);
-          $m_alt_meta = $m_thumb_id ? trim((string) get_post_meta($m_thumb_id, '_wp_attachment_image_alt', true)) : '';
-          $m_title_clean = trim(wp_specialchars_decode((string) $mitra->post_title, ENT_QUOTES));
+          $m_alt_meta = $m_thumb_id ? trim($fds_clean(get_post_meta($m_thumb_id, '_wp_attachment_image_alt', true))) : '';
+          $m_title_clean = trim($fds_clean($mitra->post_title));
           $m_alt = $m_alt_meta !== '' ? $m_alt_meta : ($m_title_clean !== '' ? $m_title_clean . ' — Mitra Full Drone Solutions' : 'Mitra Resmi Full Drone Solutions');
         @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10">
-          <img src="{{ $logo }}"
-               alt="{{ esc_attr($m_alt) }}"
+          <img src="{!! esc_url($logo) !!}"
+               alt="{{ $m_alt }}"
                width="180"
                height="96"
                loading="lazy"
                decoding="async"
                class="h-24 w-auto object-contain"
-               title="{!! esc_attr($m_title_clean ?: 'Mitra Resmi Full Drone Solutions') !!}">
+               title="{{ $m_title_clean ?: 'Mitra Resmi Full Drone Solutions' }}">
         </div>
       @endforeach
       @foreach($mitra_with_logo as $mitra)
         @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10" aria-hidden="true">
-          <img src="{{ $logo }}" alt="" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
+          <img src="{!! esc_url($logo) !!}" alt="" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
         </div>
       @endforeach
     </div>
@@ -397,19 +407,19 @@
   <x-reveal id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12 sm:mb-14 relative z-10">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-3">{!! esc_html($solusi_data['badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-3">{{ $fds_clean($solusi_data['badge']) }}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
-          {!! esc_html($solusi_data['title']) !!}
+          {{ $fds_clean($solusi_data['title']) }}
         </h2>
       </div>
       <div class="flex flex-col items-start md:items-end gap-4 max-w-[460px]">
         <p class="text-[16px] text-white/85 leading-relaxed md:text-right">
-          {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $solusi_data['desc']))) !!}
+          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($solusi_data['desc'])))) !!}
         </p>
         @if(!empty($solusi_data['cta_text']))
         <a href="{!! esc_url(!empty($solusi_data['cta_url']) ? $solusi_data['cta_url'] : home_url('/layanan/')) !!}"
            class="inline-flex items-center justify-center min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#052b2e] text-[14px] font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md">
-          {!! esc_html($solusi_data['cta_text']) !!}
+          {{ $fds_clean($solusi_data['cta_text']) }}
         </a>
         @endif
       </div>
@@ -424,16 +434,24 @@
 
       @foreach($solusi_data['cards'] as $card)
       @php
-        $card_img_raw = !empty($card['image'])
-          ? $card['image']
-          : 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=720&q=80';
+        $card_href      = !empty($card['link_url']) ? $card['link_url'] : home_url('/layanan/');
+        $slug_match     = trim((string) basename(parse_url((string) $card_href, PHP_URL_PATH) ?: ''), '/');
+        $sector_img_map = [
+            'pertambangan'           => 'pertambangan.webp',
+            'perkebunan-pertanian'   => 'perkebunan-pertanian.webp',
+            'kehutanan-lingkungan'   => 'kehutanan-lingkungan.webp',
+            'energi-infrastruktur'   => 'energi-infrastruktur.webp',
+            'perencanaan'            => 'perencanaan.webp',
+            'bencana-lingkungan'     => 'bencana-lingkungan.webp',
+        ];
+        $local_sector_img = get_template_directory_uri() . '/public/images/sectors/' . ($sector_img_map[$slug_match] ?? 'perencanaan.webp');
+        $raw_card_img     = trim((string) ($card['image'] ?? ''));
+        $card_img_raw     = ($raw_card_img !== '' && stripos($raw_card_img, 'unsplash.com') === false)
+            ? $raw_card_img
+            : $local_sector_img;
         $card_img_url = function_exists('App\fds_optimized_img_url')
           ? \App\fds_optimized_img_url($card_img_raw, 'large')
           : (function_exists('fds_optimized_img_url') ? fds_optimized_img_url($card_img_raw, 'large') : $card_img_raw);
-        if (is_string($card_img_url) && stripos($card_img_url, 'images.unsplash.com/') !== false) {
-            $card_img_url = preg_replace('/([?&]w=)\d+/i', '${1}720', $card_img_url);
-        }
-        $card_href    = !empty($card['link_url']) ? $card['link_url'] : home_url('/layanan/');
         $card_alt_raw = !empty($card['image_alt']) ? $card['image_alt'] : ($card['title'] ?? '');
         $card_cta_lbl = trim((string) ($card['link_text'] ?? ''));
         if ($card_cta_lbl === '') {
@@ -445,7 +463,7 @@
           {{-- Image Box --}}
           <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#031e20]">
             <img src="{!! esc_url($card_img_url) !!}"
-                 alt="{!! esc_attr(wp_specialchars_decode($card_alt_raw, ENT_QUOTES)) !!}"
+                 alt="{{ $fds_clean($card_alt_raw) }}"
                  width="720"
                  height="380"
                  loading="lazy"
@@ -458,12 +476,12 @@
           <div class="p-5 sm:p-6 pb-3">
             <h3 class="text-[17px] sm:text-[19px] font-semibold text-white mb-2 leading-snug">
               <a href="{!! esc_url($card_href) !!}" class="fds-stretched-link text-white group-hover:text-[#75e6f0] transition-colors">
-                {!! esc_html($card['title'] ?? '') !!}
+                {{ $fds_clean($card['title'] ?? '') }}
               </a>
             </h3>
             @if(!empty($card['desc']))
             <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed">
-              {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $card['desc']))) !!}
+              {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($card['desc'])))) !!}
             </p>
             @endif
           </div>
@@ -473,7 +491,7 @@
         <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
           <div class="pt-3.5 border-t border-white/[0.12] flex items-center justify-end gap-2">
             <span class="fds-card-cta-cue text-[12.5px] font-semibold text-white group-hover:text-[#75e6f0] inline-flex items-center gap-1.5 transition-colors leading-none flex-shrink-0" aria-hidden="true">
-              <span>{!! esc_html($card_cta_lbl) !!}</span>
+              <span>{{ $fds_clean($card_cta_lbl) }}</span>
               <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 6h12v12"/>
                 <path d="M6 18 18 6"/>
@@ -603,10 +621,10 @@ document.addEventListener('DOMContentLoaded', function() {
     {{-- Section header --}}
     <x-reveal class="mb-12 sm:mb-14">
       <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
-        {!! esc_html($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') !!}
+        {{ $fds_hp_scrub($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') }}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[700px]">
-        {!! $hp['keunggulan_title'] ?? 'Mengapa Memilih Produsen Drone Lokal?' !!}
+        {{ $fds_hp_scrub($hp['keunggulan_title'] ?? 'Mengapa Memilih Produsen Drone Lokal?') }}
       </h2>
     </x-reveal>
 
@@ -614,9 +632,16 @@ document.addEventListener('DOMContentLoaded', function() {
     <x-reveal-group :step="90" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
       {{-- Card 1: Kiri Atas Lebar (md:col-span-2 lg:col-span-2) — Manufaktur Sleman --}}
+      @php
+        $card1_default_img = get_template_directory_uri() . '/public/images/site/workshop-deltav.webp';
+        $card1_raw_img     = trim((string) ($hp['keunggulan_card1_img'] ?? fds_img('keunggulan', '')));
+        $card1_final_img   = ($card1_raw_img !== '' && stripos($card1_raw_img, 'unsplash.com') === false)
+            ? $card1_raw_img
+            : $card1_default_img;
+      @endphp
       <div class="md:col-span-2 lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[340px] sm:min-h-[280px] lg:min-h-[240px] group flex flex-col justify-end p-5 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         <div class="absolute inset-0 z-0">
-          <img src="{!! esc_url(fds_optimized_img_url(!empty($hp['keunggulan_card1_img']) ? $hp['keunggulan_card1_img'] : fds_img('keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80'), 'large')) !!}"
+          <img src="{!! esc_url(fds_optimized_img_url($card1_final_img, 'large')) !!}"
                alt="Pabrik &amp; Workshop FDS"
                width="1200"
                height="675"
@@ -627,12 +652,12 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/65 via-45% to-transparent sm:from-[#070b14]/90 sm:via-[#070b14]/55 sm:via-45% lg:from-[#070b14]/90 lg:via-[#070b14]/50 lg:via-45% lg:to-transparent"></div>
         </div>
         <div class="relative z-10">
-          <span class="text-[11px] font-medium text-white/85 block mb-1 drop-shadow-sm">{!! esc_html($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') !!}</span>
+          <span class="text-[11px] font-medium text-white/85 block mb-1 drop-shadow-sm">{{ $fds_hp_scrub($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') }}</span>
           <h3 class="text-[19px] sm:text-[23px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2 max-w-[600px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")))) !!}
           </h3>
           <p class="text-[12.5px] sm:text-[13px] text-white/90 max-w-[560px] leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')))) !!}
           </p>
         </div>
       </div>
@@ -640,7 +665,9 @@ document.addEventListener('DOMContentLoaded', function() {
       {{-- Card 2: Kolom Kanan Tinggi Gabung 2 Baris di Desktop (md:col-span-2 lg:col-span-1 lg:row-span-2) — TKDN & Bangga Buatan Indonesia --}}
       @php
         $card2_default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
-        $card2_img = !empty($hp['keunggulan_card2_img']) ? $hp['keunggulan_card2_img'] : $card2_default_img;
+        $card2_raw_img     = trim((string) ($hp['keunggulan_card2_img'] ?? ''));
+        $card2_img         = ($card2_raw_img !== '' && stripos($card2_raw_img, 'unsplash.com') === false) ? $card2_raw_img : $card2_default_img;
+        $card2_desc_text   = $fds_hp_scrub($hp['keunggulan_card2_desc'] ?? 'Sertifikat resmi TKDN + BMP untuk seluruh model drone pertanian seri FERTO. Memenuhi prioritas belanja pemerintah di e-Katalog LKPP.');
       @endphp
       <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
         
@@ -665,17 +692,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         {{-- Bagian Atas / Kiri: Stat & Teks Deskripsi (Di Mobile & Tablet: Deskripsi Langsung di Samping/Bawah Stat Tanpa Divider) --}}
         <div class="relative z-10 flex-1 md:max-w-[58%] lg:max-w-full">
-          <span class="text-[11px] font-medium text-white/80 block mb-2">{!! esc_html($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') !!}</span>
+          <span class="text-[11px] font-medium text-white/80 block mb-2">{{ $fds_hp_scrub($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') }}</span>
           
           {{-- Persentase TKDN --}}
           <div class="my-1.5">
-            <p class="text-[48px] sm:text-[56px] font-semibold text-white tracking-[-0.04em] leading-none">{!! esc_html($hp['keunggulan_card2_stat'] ?? '60,74%') !!}</p>
-            <p class="text-[12px] font-medium text-white/85 mt-1">{!! esc_html($hp['keunggulan_card2_substat'] ?? 'Nilai TKDN + BMP Kemenperin RI') !!}</p>
+            <p class="text-[48px] sm:text-[56px] font-semibold text-white tracking-[-0.04em] leading-none">{{ $fds_hp_scrub($hp['keunggulan_card2_stat'] ?? '60,74%') }}</p>
+            <p class="text-[12px] font-medium text-white/85 mt-1">{{ $fds_hp_scrub($hp['keunggulan_card2_substat'] ?? 'TKDN + BMP Seri FERTO Kemenperin RI') }}</p>
           </div>
 
           {{-- Teks Deskripsi Khusus Mobile & Tablet (Tanpa Garis Divider) --}}
           <p class="block lg:hidden text-[12.5px] sm:text-[13px] text-white/90 leading-relaxed mt-2.5">
-            {!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI. Prioritas e-Katalog LKPP untuk belanja instansi pemerintah dan BUMN.') !!}
+            {{ $card2_desc_text }}
           </p>
         </div>
 
@@ -693,7 +720,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {{-- Teks Deskripsi Khusus Layar Besar / Desktop (Posisi di Bawah Gambar Logo dengan Divider) --}}
         <div class="hidden lg:block relative z-10 pt-3 border-t border-white/15">
           <p class="text-[12px] sm:text-[13px] text-white/90 leading-relaxed">
-            {!! esc_html($hp['keunggulan_card2_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan resmi Kementerian Perindustrian RI. Prioritas e-Katalog LKPP untuk belanja instansi pemerintah dan BUMN.') !!}
+            {{ $card2_desc_text }}
           </p>
         </div>
       </div>
@@ -730,14 +757,14 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <div class="relative z-10">
-          <span class="text-[11px] font-medium text-white/90 block mb-1">{!! esc_html($hp['keunggulan_card3_badge'] ?? 'Software Kendali') !!}</span>
+          <span class="text-[11px] font-medium text-white/90 block mb-1">{{ $fds_hp_scrub($hp['keunggulan_card3_badge'] ?? 'Software Kendali') }}</span>
           
           <h3 class="text-[22px] sm:text-[25px] lg:text-[27px] font-semibold text-white tracking-[-0.03em] leading-snug my-2">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['keunggulan_card3_title'] ?? "FDS STATION Ground Control GCS")))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card3_title'] ?? "FDS Station GCS\nBahasa Indonesia.")))) !!}
           </h3>
           
           <p class="text-[13px] text-white/85 leading-relaxed">
-            {!! esc_html($hp['keunggulan_card3_desc'] ?? 'Misi otomatis & telemetri Bahasa Indonesia.') !!}
+            {{ $fds_hp_scrub($hp['keunggulan_card3_desc'] ?? 'Misi otomatis & telemetri Bahasa Indonesia.') }}
           </p>
         </div>
       </div>
@@ -760,17 +787,26 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <div class="relative z-10">
-          <p class="text-[50px] sm:text-[60px] lg:text-[66px] xl:text-[72px] font-medium text-white tracking-[-0.03em] leading-[0.92] mb-2.5">{!! esc_html($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') !!}</p>
+          <p class="text-[50px] sm:text-[60px] lg:text-[66px] xl:text-[72px] font-medium text-white tracking-[-0.03em] leading-[0.92] mb-2.5">{{ $fds_hp_scrub($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') }}</p>
           <p class="text-[13px] sm:text-[14px] text-white/85 leading-relaxed max-w-[380px]">
-            {!! esc_html($hp['keunggulan_card4_desc'] ?? 'Tersertifikasi ISO 9001:2015 dan Standar Nasional Indonesia SNI 9199:2023.') !!}
+            {{ $fds_hp_scrub($hp['keunggulan_card4_desc'] ?? 'Manajemen mutu manufaktur ISO 9001:2015 serta standar keselamatan nasional SNI 9199:2023 pada FERTO 15 dan FERTO 22.') }}
           </p>
         </div>
       </div>
 
-      {{-- Card 6 / 2012: Bawah Kiri (md:col-span-1 lg:col-span-1) — Teks Stat Raksasa & Deskripsi (Tanpa Badge) --}}
+      {{-- Card 6: Bawah Kiri (md:col-span-1 lg:col-span-1) — Akademi Pilot & Regulasi DKPPU --}}
       @php
-        $card6_default_img = 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80';
-        $card6_img = !empty($hp['keunggulan_card6_img']) ? $hp['keunggulan_card6_img'] : $card6_default_img;
+        $card6_default_img = get_template_directory_uri() . '/public/images/site/about-team.webp';
+        $card6_raw_img     = trim((string) ($hp['keunggulan_card6_img'] ?? ''));
+        $card6_img         = ($card6_raw_img !== '' && stripos($card6_raw_img, 'unsplash.com') === false) ? $card6_raw_img : $card6_default_img;
+        $card6_stat_raw    = trim((string) ($hp['keunggulan_card6_stat'] ?? ''));
+        $card6_stat        = ($card6_stat_raw !== '' && $card6_stat_raw !== '2012') ? $fds_hp_scrub($card6_stat_raw) : 'DKPPU';
+        $card6_desc_raw    = trim((string) ($hp['keunggulan_card6_desc'] ?? ''));
+        if ($card6_desc_raw === '' || preg_match('/sejak\s*(?:tahun\s*)?2012|\b2012\b/i', $card6_desc_raw)) {
+            $card6_desc = 'Pelatihan operator drone industri dan pendampingan persiapan sertifikasi pilot sesuai regulasi CASR Part 107.';
+        } else {
+            $card6_desc = $fds_hp_scrub($card6_desc_raw);
+        }
       @endphp
       <div class="md:col-span-1 lg:col-span-1 bg-[#0a0c10] rounded-3xl overflow-hidden relative min-h-[185px] sm:min-h-[200px] group flex flex-col justify-end p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
         {{-- Background Image Foto Pilot/Operasional --}}
@@ -787,9 +823,9 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
 
         <div class="relative z-10">
-          <p class="text-[64px] sm:text-[80px] lg:text-[96px] xl:text-[104px] font-medium text-white tracking-[-0.04em] leading-[0.85] mb-3 drop-shadow-md">{!! esc_html($hp['keunggulan_card6_stat'] ?? '2012') !!}</p>
+          <p class="text-[64px] sm:text-[76px] lg:text-[88px] xl:text-[96px] font-medium text-white tracking-[-0.04em] leading-[0.88] mb-3 drop-shadow-md">{{ $card6_stat }}</p>
           <p class="text-[13px] sm:text-[14px] text-white/95 leading-relaxed drop-shadow-sm max-w-[380px]">
-            {!! esc_html($hp['keunggulan_card6_desc'] ?? 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.') !!}
+            {{ $card6_desc }}
           </p>
         </div>
       </div>
@@ -832,10 +868,10 @@ document.addEventListener('DOMContentLoaded', function() {
         {{-- Left: Content Heading & Description (Tanpa Badge) --}}
         <div class="flex-1 relative z-10">
           <h3 class="text-[20px] sm:text-[24px] lg:text-[26px] font-semibold text-white tracking-[-0.02em] leading-snug mb-1.5">
-            {!! esc_html($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') !!}
+            {{ $fds_hp_scrub($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') }}
           </h3>
           <p class="text-[13px] text-white/85 leading-relaxed max-w-[500px]">
-            {!! esc_html($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') !!}
+            {{ $fds_hp_scrub($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') }}
           </p>
         </div>
 
@@ -850,7 +886,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="flex flex-wrap gap-2 max-w-full sm:max-w-[320px] flex-shrink-0 relative z-10">
           @foreach($chips_arr as $sector)
             <span class="bg-white/10 hover:bg-white/20 text-white rounded-full px-3.5 py-1 text-[11px] font-medium border border-white/15 hover:border-[#46deec]/40 transition-all backdrop-blur-md cursor-default shadow-sm">
-              {{ $sector }}
+              {{ $fds_hp_scrub($sector) }}
             </span>
           @endforeach
         </div>
@@ -869,13 +905,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     <x-reveal class="mb-12 flex flex-wrap items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{!! esc_html($hp['produk_badge'] ?? 'Lini Produk Drone') !!}</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{{ $fds_hp_scrub($hp['produk_badge'] ?? 'Lini Produk Drone') }}</p>
         <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
-          {!! esc_html($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') !!}
+          {{ $fds_hp_scrub($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') }}
         </h2>
-        <p class="mt-4 text-[18px] text-[#515154] max-w-[540px] leading-relaxed">
-          {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['produk_desc'] ?? 'TKDN + BMP hingga 60,74%, SNI 9199:2023, software FDS STATION Bahasa Indonesia, dan garansi purna jual resmi.')))) !!}
+        <p class="mt-4 text-[18px] text-[#515154] max-w-[580px] leading-relaxed">
+          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['produk_desc'] ?? 'TKDN + BMP 60,74% pada seri FERTO, SNI 9199:2023 untuk FERTO 15 & 22, software FDS Station Bahasa Indonesia, dan garansi purna jual resmi.')))) !!}
         </p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 flex-shrink-0">
+        <a href="{!! esc_url(home_url('/bandingkan/')) !!}"
+           class="inline-flex items-center justify-center min-h-[44px] bg-[#f5f5f7] hover:bg-black/[0.06] text-[#1d1d1f] text-[14px] font-semibold px-5 py-2.5 rounded-full border border-black/[0.08] transition-colors">
+          Bandingkan Model
+        </a>
+        <a href="{!! esc_url(home_url('/produk/')) !!}"
+           class="inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] text-white text-[14px] font-semibold px-5.5 py-2.5 rounded-full transition-colors group">
+          <span>Lihat Semua Katalog</span>
+          <svg class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
+        </a>
       </div>
     </x-reveal>
 
@@ -894,7 +944,10 @@ document.addEventListener('DOMContentLoaded', function() {
               if (strtolower((string) $t->slug) === 'reboisasi') {
                   continue;
               }
-              $categories[] = $t->name;
+              $t_clean = $fds_clean($t->name);
+              if ($t_clean !== '' && !in_array($t_clean, $categories, true)) {
+                  $categories[] = $t_clean;
+              }
           }
       } else {
           $categories = ['Semua', 'Agrikultur', 'Pemetaan & GIS', 'Kargo'];
@@ -907,6 +960,9 @@ document.addEventListener('DOMContentLoaded', function() {
           'orderby'        => 'ID',
           'order'          => 'ASC',
       ]);
+      if (function_exists('fds_sort_drone_posts') && !empty($wp_drones)) {
+          $wp_drones = fds_sort_drone_posts($wp_drones);
+      }
 
       $products = [];
       if (!empty($wp_drones)) {
@@ -920,40 +976,63 @@ document.addEventListener('DOMContentLoaded', function() {
               if (stripos((string) $d_cat, 'rebo') !== false) {
                   continue;
               }
-              $d_badge  = get_post_meta($d->ID, 'drone_badge', true) ?: 'Unggulan';
-              $d_tagline= get_post_meta($d->ID, 'drone_tagline', true);
-              $d_desc   = get_post_meta($d->ID, 'drone_desc', true) ?: $d->post_content;
-              $d_specs  = get_post_meta($d->ID, 'drone_specs_raw', true);
-              $d_thumb  = get_the_post_thumbnail_url($d->ID, 'thumbnail');
+              $d_cat_clean = $fds_clean($d_cat);
 
-              // Extract first 2-3 lines of specs for row preview
+              $s_lower   = $d_slug_chk;
+              $is_ferto  = (strpos($s_lower, 'ferto') === 0);
+              $has_sni   = in_array($s_lower, ['ferto-15l', 'ferto-22l', 'ferto-15', 'ferto-22'], true);
+
+              $d_badge   = get_post_meta($d->ID, 'drone_badge', true) ?: 'Unggulan';
+              $d_tagline = get_post_meta($d->ID, 'drone_tagline', true);
+              $d_desc    = get_post_meta($d->ID, 'drone_desc', true) ?: $d->post_content;
+              $d_specs   = get_post_meta($d->ID, 'drone_specs_raw', true);
+              $d_thumb   = get_the_post_thumbnail_url($d->ID, 'thumbnail');
+
+              $d_name_clean  = $fds_hp_scrub(get_the_title($d->ID), $is_ferto, $has_sni);
+              $d_badge_clean = $fds_hp_scrub($d_badge, $is_ferto, $has_sni);
+              $d_desc_plain  = $fds_hp_scrub(wp_strip_all_tags((string) ($d_tagline ?: wp_trim_words((string) $d_desc, 18))), $is_ferto, $has_sni);
+
+              // Extract first 2-3 lines of specs for row preview (guardrail-safe)
               $spec_summary = '';
               if ($d_specs) {
-                  $lines = array_slice(array_filter(map_deep(explode("\n", $d_specs), 'trim')) ?: array_filter(array_map('trim', explode("\n", $d_specs))), 0, 3);
+                  $raw_lines = array_filter(array_map('trim', explode("\n", (string) $d_specs)));
                   $parts = [];
-                  foreach ($lines as $l) {
+                  foreach ($raw_lines as $l) {
                       $sp = explode(':', $l, 2);
                       if (count($sp) === 2) {
-                          $parts[] = trim($sp[1]);
+                          $sp_lbl = $fds_hp_scrub(trim($sp[0]), $is_ferto, $has_sni);
+                          $sp_val = $fds_hp_scrub(trim($sp[1]), $is_ferto, $has_sni);
+                          if (in_array($s_lower, ['ferto-15l', 'ferto-15'], true) && (stripos($sp_lbl, 'kapasitas') !== false || stripos($sp_lbl, 'payload') !== false || stripos($sp_lbl, 'tangki') !== false)) {
+                              if (stripos($sp_val, '17') === false) {
+                                  $sp_val = '17 Liter';
+                              }
+                          }
+                          if ($sp_val !== '') {
+                              $parts[] = $sp_val;
+                          }
                       }
+                      if (count($parts) >= 3) break;
                   }
-                  $spec_summary = implode(' &middot; ', $parts);
+                  $spec_summary = implode(' · ', $parts);
               }
+              $spec_fallback = $has_sni
+                  ? 'TKDN 60,74% · SNI 9199:2023 · FDS Station'
+                  : ($is_ferto ? 'TKDN 60,74% · ISO 9001:2015 · FDS Station' : 'ISO 9001:2015 · FDS Station');
 
               $products[] = [
                   'id'    => $d->ID,
                   'url'   => get_permalink($d->ID),
                   'slug'  => $d->post_name,
-                  'name'  => html_entity_decode($d->post_title, ENT_QUOTES, 'UTF-8'),
-                  'cat'   => html_entity_decode($d_cat, ENT_QUOTES, 'UTF-8'),
-                  'badge' => html_entity_decode($d_badge, ENT_QUOTES, 'UTF-8'),
-                  'desc'  => html_entity_decode($d_tagline ?: wp_trim_words($d_desc, 18), ENT_QUOTES, 'UTF-8'),
-                  'specs' => html_entity_decode($spec_summary ?: 'Spesifikasi Lengkap · SNI 9199:2023', ENT_QUOTES, 'UTF-8'),
+                  'name'  => $d_name_clean,
+                  'cat'   => $d_cat_clean,
+                  'badge' => $d_badge_clean !== '' ? $d_badge_clean : 'Unggulan',
+                  'desc'  => $d_desc_plain,
+                  'specs' => $spec_summary !== '' ? $spec_summary : $spec_fallback,
                   'thumb' => $d_thumb,
               ];
 
-              if (!in_array($d_cat, $categories)) {
-                  $categories[] = $d_cat;
+              if ($d_cat_clean !== '' && !in_array($d_cat_clean, $categories, true)) {
+                  $categories[] = $d_cat_clean;
               }
           }
       }
@@ -963,10 +1042,11 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="flex flex-wrap gap-2 mb-10" id="drone-cat-tabs" data-aos="fade-up" data-aos-delay="100">
       @foreach($categories as $cat)
       <button
-        data-cat="{!! esc_attr(strip_tags($cat)) !!}"
+        type="button"
+        data-cat="{{ strip_tags($cat) }}"
         onclick="filterDrones(this)"
         class="drone-tab {{ $loop->first ? 'active' : '' }}">
-        {!! $cat !!}
+        {{ $cat }}
       </button>
       @endforeach
     </div>
@@ -996,23 +1076,24 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     </style>
 
-    {{-- Product rows (Dinamis dari WordPress) --}}
+    {{-- Product rows (Horizontal list layout original di beranda) --}}
     <x-reveal-group :step="50" class="space-y-0 border-t border-black/[0.06]" id="drone-list">
       @php
         $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
       @endphp
 
       @foreach($products as $p)
-      <div class="drone-row border-b border-black/[0.06]" data-cat="{!! esc_attr($p['cat']) !!}">
+      <div class="drone-row border-b border-black/[0.06]" data-cat="{{ $p['cat'] }}">
         <div class="grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#f5f5f7] rounded-2xl px-4 -mx-4 transition-colors duration-150 cursor-pointer"
-             onclick="location.href='{{ $p['url'] }}'">
+             data-href="{!! esc_url($p['url']) !!}"
+             onclick="location.href=this.getAttribute('data-href')">
 
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
             <div class="w-11 h-11 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
               @if(!empty($global_drone_icon))
                 <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
-                     style="-webkit-mask-image: url('{{ esc_url($global_drone_icon) }}'); mask-image: url('{{ esc_url($global_drone_icon) }}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
+                     style="-webkit-mask-image: url('{!! esc_url($global_drone_icon) !!}'); mask-image: url('{!! esc_url($global_drone_icon) !!}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
                      role="img" aria-label="Drone Icon"></div>
               @else
                 <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
@@ -1023,22 +1104,22 @@ document.addEventListener('DOMContentLoaded', function() {
           {{-- Name + category --}}
           <div class="col-span-7 sm:col-span-3">
             <div class="flex items-center gap-2 mb-0.5">
-              <p class="text-[11px] font-semibold text-[#86868b] tracking-wide">{!! $p['cat'] !!}</p>
-              <span class="text-[10px] font-semibold text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{!! $p['badge'] !!}</span>
+              <p class="text-[11px] font-semibold text-[#86868b] tracking-wide">{{ $p['cat'] }}</p>
+              <span class="text-[10px] font-semibold text-[#0f808a] bg-[#0f808a]/10 px-2 py-0.5 rounded-full">{{ $p['badge'] }}</span>
             </div>
-            <h3 class="text-[20px] font-semibold text-[#1d1d1f] tracking-tight">{!! $p['name'] !!}</h3>
+            <h3 class="text-[20px] font-semibold text-[#1d1d1f] tracking-tight">{{ $p['name'] }}</h3>
           </div>
 
           {{-- Description --}}
           <div class="hidden md:block col-span-4">
-            <p class="text-[15px] text-[#515154]">{!! $p['desc'] !!}</p>
+            <p class="text-[15px] text-[#515154]">{{ $p['desc'] }}</p>
           </div>
 
           {{-- Specs + CTA --}}
           <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
-            <p class="hidden lg:block text-[13px] text-[#86868b]">{!! $p['specs'] !!}</p>
-            <a href="{{ $p['url'] }}"
-               aria-label="Detail {!! esc_attr(strip_tags($p['name'])) !!}"
+            <p class="hidden lg:block text-[13px] text-[#86868b]">{{ $p['specs'] }}</p>
+            <a href="{!! esc_url($p['url']) !!}"
+               aria-label="Detail {{ strip_tags($p['name']) }}"
                class="text-[13px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 py-1.5 leading-none group"
                onclick="event.stopPropagation()">
               <span>Detail</span>
@@ -1055,9 +1136,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
       {{-- Empty state untuk kategori yang belum ada produk --}}
       <div id="drone-empty" class="hidden py-16 text-center border-b border-black/[0.06]">
-        <p class="text-[15px] text-[#86868b]">Produk kategori ini akan segera hadir.</p>
-        <a href="{{ home_url('/#kontak') }}" class="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group">
-          <span>Daftar notifikasi</span>
+        <p class="text-[15px] text-[#515154]">Produk kategori ini akan segera hadir.</p>
+        <a href="{!! esc_url(home_url('/kontak/#hubungi-form')) !!}" class="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group">
+          <span>Hubungi Tim Sales FDS</span>
           <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
@@ -1075,8 +1156,8 @@ document.addEventListener('DOMContentLoaded', function() {
           $uLbl = trim((string)($hp["produk_stat{$ui}_lbl"] ?? ''));
           if ($uNum !== '' || $uLbl !== '') {
               $usp_stats_list[] = [
-                  'num' => $uNum,
-                  'lbl' => $uLbl,
+                  'num' => $fds_hp_scrub($uNum),
+                  'lbl' => $fds_hp_scrub($uLbl),
               ];
           }
       }
@@ -1088,10 +1169,10 @@ document.addEventListener('DOMContentLoaded', function() {
       @foreach($usp_stats_list as $ust)
       <div class="text-center">
         @if(!empty($ust['num']))
-        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{!! esc_html($ust['num']) !!}</p>
+        <p class="text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{{ $ust['num'] }}</p>
         @endif
         @if(!empty($ust['lbl']))
-        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{!! esc_html($ust['lbl']) !!}</p>
+        <p class="text-[13px] text-[#86868b] mt-1 font-medium">{{ $ust['lbl'] }}</p>
         @endif
       </div>
       @endforeach
@@ -1109,14 +1190,17 @@ function filterDrones(btn) {
   document.querySelectorAll('.drone-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
 
-  // Filter rows
+  // Filter grid cards
   const rows = document.querySelectorAll('.drone-row');
   let visible = 0;
   rows.forEach(row => {
     const rcat = (row.dataset.cat || '').trim();
     const match = (cat.toLowerCase() === 'semua') || (rcat.toLowerCase() === cat.toLowerCase());
     row.style.display = match ? '' : 'none';
-    if (match) visible++;
+    if (match) {
+      row.classList.add('aos-init', 'aos-animate');
+      visible++;
+    }
   });
   const emptyEl = document.getElementById('drone-empty');
   if (emptyEl) {
@@ -1204,16 +1288,16 @@ function filterDrones(btn) {
 
       <x-reveal-group :step="100" class="lg:sticky lg:top-28">
         @if(!empty($hp['layanan_badge']))
-        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{!! esc_html($hp['layanan_badge']) !!}</p>
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{{ $fds_hp_scrub($hp['layanan_badge']) }}</p>
         @endif
         @if(!empty($hp['layanan_title']))
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
-          {!! esc_html($hp['layanan_title']) !!}
+          {{ $fds_hp_scrub($hp['layanan_title']) }}
         </h2>
         @endif
         @if(!empty($hp['layanan_desc']))
         <p class="text-[18px] text-white/80 leading-relaxed max-w-[380px] mb-8">
-          {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $hp['layanan_desc']))) !!}
+          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['layanan_desc'])))) !!}
         </p>
         @endif
         @if(!empty($hp['layanan_cta_text']))
@@ -1223,7 +1307,7 @@ function filterDrones(btn) {
         <div>
           <a href="{!! esc_url($layanan_cta_href) !!}"
              class="inline-flex items-center justify-center min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-md">
-            {!! esc_html($hp['layanan_cta_text']) !!}
+            {{ $fds_hp_scrub($hp['layanan_cta_text']) }}
           </a>
         </div>
         @endif
@@ -1238,7 +1322,7 @@ function filterDrones(btn) {
         <article class="fds-service-card fds-service-card--dark py-7 cursor-pointer">
           <h3 class="text-[17px] font-semibold text-white mb-1.5 flex items-center justify-between gap-4">
             <a href="{!! esc_url($item_href) !!}" class="fds-stretched-link text-white">
-              {!! esc_html(wp_specialchars_decode($lItem['title'])) !!}
+              {{ $fds_clean($lItem['title']) }}
             </a>
             <span class="fds-card-cta-cue text-[12.5px] font-semibold text-[#a3eef5] inline-flex items-center gap-1.5 leading-none flex-shrink-0" aria-hidden="true">
               <span>Lihat Detail</span>
@@ -1250,7 +1334,7 @@ function filterDrones(btn) {
           </h3>
           @if(!empty($lItem['desc']))
           <p class="text-[15px] text-white/85 leading-relaxed">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) wp_specialchars_decode($lItem['desc'])))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($lItem['desc'])))) !!}
           </p>
           @endif
         </article>
@@ -1280,14 +1364,14 @@ function filterDrones(btn) {
   <x-reveal id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{!! esc_html($hp['blog_badge'] ?? 'Newsroom') !!}</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{{ $fds_hp_scrub($hp['blog_badge'] ?? 'Newsroom') }}</p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[640px]">
-          {!! esc_html($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') !!}
+          {{ $fds_hp_scrub($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') }}
         </h2>
       </div>
-      <a href="{{ home_url('/blog/') }}"
+      <a href="{!! esc_url(home_url('/blog/')) !!}"
          class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline flex-shrink-0 group leading-none">
-        <span>{!! esc_html($hp['blog_cta_text'] ?? 'Lihat semua artikel') !!}</span>
+        <span>{{ $fds_hp_scrub($hp['blog_cta_text'] ?? 'Lihat semua artikel') }}</span>
         <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6 6h12v12"/>
           <path d="M6 18 18 6"/>
@@ -1306,16 +1390,16 @@ function filterDrones(btn) {
         @php
           setup_postdata($post);
           $categories = get_the_category($post->ID);
-          $cat_name = !empty($categories) ? $categories[0]->name : 'Berita';
+          $cat_name = !empty($categories) ? $fds_clean($categories[0]->name) : 'Berita';
         @endphp
         <article class="news-carousel-card fds-service-card fds-service-card--light fds-service-card--interactive fds-news-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white rounded-[1.5rem] overflow-hidden group transition-[transform,border-color] duration-200 flex flex-col justify-between select-none shadow-sm border border-black/[0.04] cursor-pointer">
           <div>
             {{-- Image Box (Clean without covering tags) --}}
             @php
               $n_thumb_id = get_post_thumbnail_id($post->ID);
-              $n_alt = $n_thumb_id ? trim((string) get_post_meta($n_thumb_id, '_wp_attachment_image_alt', true)) : '';
+              $n_alt = $n_thumb_id ? trim($fds_clean(get_post_meta($n_thumb_id, '_wp_attachment_image_alt', true))) : '';
               if ($n_alt === '') {
-                  $n_alt = trim(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) . ' — Newsroom Full Drone Solutions';
+                  $n_alt = trim($fds_clean(get_the_title($post->ID))) . ' — Newsroom Full Drone Solutions';
               }
             @endphp
             <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
@@ -1323,7 +1407,7 @@ function filterDrones(btn) {
                 {!! get_the_post_thumbnail($post->ID, 'medium_large', [
                   'class'    => 'w-full h-full object-cover',
                   'sizes'    => '(max-width: 640px) 280px, 360px',
-                  'alt'      => esc_attr($n_alt),
+                  'alt'      => $n_alt,
                   'loading'  => 'lazy',
                   'decoding' => 'async',
                 ]) !!}
@@ -1338,19 +1422,19 @@ function filterDrones(btn) {
             <div class="p-6 sm:p-7 pb-4">
               {{-- Category & Date Inline Meta --}}
               <div class="flex items-center gap-2 text-[12px] mb-2.5">
-                <span class="font-semibold text-[#0f808a]">{!! esc_html($cat_name) !!}</span>
+                <span class="font-semibold text-[#0f808a]">{{ $cat_name }}</span>
                 <span class="text-[#cbd5e1]">&bull;</span>
                 <span class="text-[#86868b]">{{ get_the_date('d M Y', $post->ID) }}</span>
               </div>
 
               {{-- Article Title (Primary Stretched Link for Full-Card Click Area) --}}
               <h3 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] mb-2.5 leading-snug group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
-                <a href="{{ get_permalink($post->ID) }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode(get_the_title($post->ID), ENT_QUOTES)) !!}</a>
+                <a href="{!! esc_url(get_permalink($post->ID)) !!}" class="fds-stretched-link">{{ $fds_clean(get_the_title($post->ID)) }}</a>
               </h3>
 
               {{-- Article Excerpt --}}
               <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
-                {!! esc_html(wp_specialchars_decode(get_the_excerpt($post->ID), ENT_QUOTES)) !!}
+                {{ $fds_clean(get_the_excerpt($post->ID)) }}
               </p>
             </div>
           </div>
@@ -1523,15 +1607,15 @@ document.addEventListener('DOMContentLoaded', function() {
         <div class="relative z-10">
           <div class="mb-2">
             <span class="text-[12px] font-semibold text-white/75 tracking-wide">
-              {!! esc_html($hp['kontak_badge'] ?? 'Enterprise Sales') !!}
+              {{ $fds_hp_scrub($hp['kontak_badge'] ?? 'Enterprise Sales') }}
             </span>
           </div>
 
           <h2 class="text-[24px] sm:text-[28px] lg:text-[30px] font-semibold tracking-tight text-white leading-tight mb-2">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")))) !!}
           </h2>
           <p class="text-[13px] sm:text-[13.5px] text-white/80 leading-relaxed max-w-[420px]">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')))) !!}
           </p>
         </div>
 
@@ -1542,16 +1626,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="text-[11px] font-medium text-white/70 mb-1">Telepon / WhatsApp</p>
             <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener"
                class="text-[15.5px] sm:text-[16.5px] font-bold text-white hover:text-white/80 transition-colors">
-              {!! esc_html($c_phone) !!}
+              {{ $fds_clean($c_phone) }}
             </a>
           </div>
 
           {{-- Email Channel --}}
           <div>
             <p class="text-[11px] font-medium text-white/70 mb-1">Email Bisnis</p>
-            <a href="mailto:{{ esc_attr($c_email) }}"
+            <a href="mailto:{{ $fds_clean($c_email) }}"
                class="text-[14px] sm:text-[15px] font-bold text-white hover:text-white/80 transition-colors break-all">
-              {!! esc_html($c_email) !!}
+              {{ $fds_clean($c_email) }}
             </a>
           </div>
 
@@ -1559,7 +1643,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div>
             <p class="text-[11px] font-medium text-white/70 mb-1">Lokasi Workshop &amp; Testing Center</p>
             <p class="text-[12.5px] sm:text-[13px] text-white/85 leading-relaxed max-w-[400px]">
-              {!! esc_html($c_address) !!}
+              {{ $fds_clean($c_address) }}
             </p>
           </div>
 
@@ -1568,7 +1652,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener"
                class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.97] text-white font-bold text-[13.5px] px-5 py-2.5 rounded-full transition-all duration-150 shadow-md min-h-[44px]">
               <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              <span>{!! esc_html($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') !!}</span>
+              <span>{{ $fds_hp_scrub($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') }}</span>
             </a>
           </div>
         </div>
@@ -1579,9 +1663,9 @@ document.addEventListener('DOMContentLoaded', function() {
         {{-- Form Header --}}
         <div class="mb-4 sm:mb-5">
           <h3 class="text-[19px] sm:text-[21px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
-            {!! esc_html($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') !!}
+            {{ $fds_hp_scrub($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') }}
           </h3>
-          <p class="text-[12.5px] text-[#64748b]">{!! esc_html($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') !!}</p>
+          <p class="text-[12.5px] text-[#64748b]">{{ $fds_hp_scrub($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') }}</p>
         </div>
 
         {{-- Form Body (Flex-1 to fill space evenly and balance with left panel) --}}
@@ -1642,7 +1726,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             @if($_fds_home_use_ts)
               <div class="pt-1">
-                <div class="cf-turnstile" data-sitekey="{{ esc_attr($_fds_home_ts_key) }}" data-theme="light"></div>
+                <div class="cf-turnstile" data-sitekey="{{ $_fds_home_ts_key }}" data-theme="light"></div>
               </div>
               @once
                 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -1654,7 +1738,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="pt-2 mt-auto">
             <button type="submit" id="fds-inquiry-btn"
               class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[13.5px] px-6 py-2.5 rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center justify-center gap-2 leading-none cursor-pointer group">
-              <span id="fds-inquiry-btn-text">{!! esc_html($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') !!}</span>
+              <span id="fds-inquiry-btn-text">{{ $fds_hp_scrub($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') }}</span>
               <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0">
                 <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M6 6h12v12"/>
@@ -1662,10 +1746,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 </svg>
               </span>
             </button>
-            @if(!empty($hp['kontak_form_note']))
+            @php
+              $home_form_note_raw = trim($fds_hp_scrub($hp['kontak_form_note'] ?? ''));
+              if ($home_form_note_raw !== '' && preg_match('/1[×x]24|48\s*jam|24\s*jam/i', $home_form_note_raw)) {
+                  $home_form_note_raw = 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.';
+              }
+            @endphp
+            @if($home_form_note_raw !== '')
             <p class="text-[11.5px] text-[#64748b] mt-2.5 flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              <span>{!! esc_html($hp['kontak_form_note']) !!}</span>
+              <span>{{ $home_form_note_raw }}</span>
             </p>
             @endif
           </div>
@@ -1792,7 +1882,7 @@ function fdsSubmitInquiry(e) {
   btn.classList.add('opacity-70', 'cursor-not-allowed');
   btnText.textContent = 'Mengirim Pesan...';
 
-  fetch('{{ admin_url("admin-ajax.php") }}', {
+  fetch({!! wp_json_encode(admin_url("admin-ajax.php")) !!}, {
     method: 'POST',
     body: formData
   })
@@ -1800,7 +1890,7 @@ function fdsSubmitInquiry(e) {
   .then(function(data) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = '{!! esc_js($hp["kontak_form_btn_text"] ?? "Kirim Pesan") !!}';
+    btnText.textContent = {!! wp_json_encode($fds_hp_scrub($hp["kontak_form_btn_text"] ?? "Kirim Permintaan Konsultasi")) !!};
 
     if (data.success) {
       if (typeof window.fdsTrackEvent === 'function') {
@@ -1810,6 +1900,13 @@ function fdsSubmitInquiry(e) {
           lead_ref: (data.data && data.data.lead_ref) ? data.data.lead_ref : ''
         });
       }
+      try {
+        sessionStorage.setItem('fds_last_lead_summary', JSON.stringify({
+          lead_ref: (data.data && data.data.lead_ref) ? data.data.lead_ref : '',
+          service_label: (data.data && data.data.service_label) ? data.data.service_label : 'Inquiry Beranda',
+          company: company.trim()
+        }));
+      } catch (storageErr) {}
       fdsShowSnackbar(true, 'Pesan Berhasil Terkirim', data.data.message || 'Pesan Anda telah berhasil disimpan di sistem kami.');
       form.reset();
       if (window.turnstile && typeof window.turnstile.reset === 'function') {
@@ -1822,7 +1919,7 @@ function fdsSubmitInquiry(e) {
   .catch(function(err) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = '{!! esc_js($hp["kontak_form_btn_text"] ?? "Kirim Pesan") !!}';
+    btnText.textContent = {!! wp_json_encode($fds_hp_scrub($hp["kontak_form_btn_text"] ?? "Kirim Permintaan Konsultasi")) !!};
     fdsShowSnackbar(false, 'Gangguan Jaringan', 'Gagal terhubung ke server. Silakan coba lagi atau hubungi kami via WhatsApp.');
   });
 }

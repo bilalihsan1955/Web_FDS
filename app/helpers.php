@@ -138,6 +138,74 @@ if (!function_exists('fds_clean_string')) {
     }
 }
 
+if (!function_exists('fds_scrub_legacy_text')) {
+    /**
+     * Sanitasi defensif output SSR dari klaim lama yang tidak terverifikasi.
+     */
+    function fds_scrub_legacy_text($text, bool $allowTkdn = true, bool $allowSni = true) {
+        if (!is_string($text) || $text === '') {
+            return $text;
+        }
+
+        $text = str_ireplace('FDS STATION', 'FDS Station', $text);
+        $text = preg_replace('/\bBest\s+UAV\b/i', 'UAV Industri', $text);
+        $text = preg_replace('/\bsejak\s*(?:tahun\s*)?2012\b/i', 'dengan rekayasa lokal Indonesia', $text);
+        $text = preg_replace('/\b(?:kamera\s+termal\s+(?:inframerah\s+)?FLIR|FLIR)\b/i', 'kamera termal inframerah', $text);
+        $text = preg_replace('/\s*[|·,;\/-]?\s*\b(?:Tahan\s+(?:Air|Debu)(?:\s*(?:&|dan)\s*Debu)?\s*)?IP\s?(?:54|67|68)\b(?:\s*[^\n|]*)?/i', '', $text);
+        $text = str_ireplace(['/#produk', '/#kontak'], ['/produk/', '/kontak/#hubungi-form'], $text);
+
+        if (!$allowSni) {
+            $text = preg_replace('/\s*[|·,;\/&]?\s*\bSNI\s*9199:2023\b\s*/i', ' ', $text);
+        }
+        if (!$allowTkdn) {
+            $text = preg_replace('/\s*[|·,;\/&]?\s*\b(?:sertifikat\s+|bersertifikat\s+)?TKDN(?:\s*\+\s*BMP)?(?:\s*60[,.]74%)?\b\s*/i', ' ', $text);
+        }
+
+        $text = preg_replace('/^[|\s·\/,;]+|[|\s·\/,;]+$/u', '', $text);
+        $text = preg_replace('/\s{2,}/', ' ', (string) $text);
+
+        return trim((string) $text);
+    }
+}
+
+if (!function_exists('fds_sort_drone_posts')) {
+    /**
+     * Mengurutkan post CPT drone secara logis (FERTO 5 -> 10 -> 15 -> 22 -> 30 -> 50 -> DELTAV -> MULTIPURPOSE -> DELFRO).
+     */
+    function fds_sort_drone_posts(array $posts): array {
+        $priority = [
+            'ferto-5l'     => 10,
+            'ferto-5'      => 10,
+            'ferto-10l'    => 20,
+            'ferto-10'     => 20,
+            'ferto-15l'    => 30,
+            'ferto-15'     => 30,
+            'ferto-22l'    => 40,
+            'ferto-22'     => 40,
+            'ferto-30l'    => 50,
+            'ferto-30'     => 50,
+            'ferto-50l'    => 60,
+            'ferto-50'     => 60,
+            'deltav'       => 70,
+            'multipurpose' => 80,
+            'delfro'       => 90,
+        ];
+
+        usort($posts, function ($a, $b) use ($priority) {
+            $sa = is_object($a) ? strtolower((string) $a->post_name) : '';
+            $sb = is_object($b) ? strtolower((string) $b->post_name) : '';
+            $wa = $priority[$sa] ?? 500;
+            $wb = $priority[$sb] ?? 500;
+            if ($wa === $wb) {
+                return strcmp($sa, $sb);
+            }
+            return $wa <=> $wb;
+        });
+
+        return array_values($posts);
+    }
+}
+
 if (!function_exists('fds_deep_decode')) {
     /**
      * Recursively clean and decode HTML entities from arrays or strings

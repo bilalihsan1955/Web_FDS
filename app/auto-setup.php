@@ -148,22 +148,23 @@ function fds_run_theme_auto_provision() {
 
     // 6. SEED DEFAULT HERO SLIDER JIKA BELUM ADA
     if (!get_option('fds_hero_slides')) {
+        $site_img_uri = get_template_directory_uri() . '/public/images/site';
         $default_hero_slides = [
             [
                 'badge'      => 'Platform UAV Pertanian Presisi',
                 'title'      => 'FERTO Series — Efisiensi Semprot & Sebar Maksimal.',
-                'desc'       => 'Drone pertanian berstandar SNI 9199:2023 dengan kapasitas tangki 5L hingga 50L. Produktivitas tinggi hingga 15 Ha/jam dan efisiensi bahan kimia >50%.',
-                'img'        => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80',
+                'desc'       => 'Seri drone pertanian ber-TKDN + BMP 60,74% dengan kapasitas tangki 5L hingga 50L (varian FERTO 15 & FERTO 22 berstandar SNI 9199:2023).',
+                'img'        => $site_img_uri . '/hero-1.webp',
                 'btn1_text'  => 'Lihat Katalog Drone',
-                'btn1_url'   => '#katalog',
+                'btn1_url'   => home_url('/produk/'),
                 'btn2_text'  => 'Konsultasi Tim FDS',
-                'btn2_url'   => '#kontak',
+                'btn2_url'   => home_url('/kontak/#hubungi-form'),
             ],
             [
                 'badge'      => 'Platform Pemetaan & Inspeksi',
                 'title'      => 'DELTAV VTOL & MULTIPURPOSE UAV.',
                 'desc'       => 'Pesawat sayap tetap VTOL jangkauan 60 km untuk pemetaan ortofoto skala luas, dan drone modular dengan sensor termal untuk inspeksi transmisi 150 kV.',
-                'img'        => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80',
+                'img'        => $site_img_uri . '/hero-2.webp',
                 'btn1_text'  => 'Pelajari DELTAV',
                 'btn1_url'   => home_url('/drone/deltav/'),
                 'btn2_text'  => 'Bandingkan Model',
@@ -171,9 +172,9 @@ function fds_run_theme_auto_provision() {
             ],
             [
                 'badge'      => 'Kemandirian Teknologi Nasional',
-                'title'      => 'Inovasi Kedirgantaraan Berstandar TKDN & SNI Resmi.',
-                'desc'       => 'Pencapaian nilai TKDN + BMP Kemenperin hingga 60,74%, sertifikasi ISO 9001:2015, dan SNI 9199:2023 dengan workshop riset & manufaktur lokal di Yogyakarta.',
-                'img'        => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80',
+                'title'      => 'Inovasi Kedirgantaraan & Standar Mutu Resmi.',
+                'desc'       => 'Nilai TKDN + BMP 60,74% untuk lini FERTO, sertifikasi SNI 9199:2023 pada FERTO 15 & FERTO 22, serta ISO 9001:2015 dari workshop Sleman, Yogyakarta.',
+                'img'        => $site_img_uri . '/hero-3.webp',
                 'btn1_text'  => 'Tentang FDS',
                 'btn1_url'   => home_url('/tentang-kami/'),
                 'btn2_text'  => 'Aktivitas & Kemitraan',

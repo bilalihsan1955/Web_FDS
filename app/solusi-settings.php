@@ -37,11 +37,13 @@ function fds_get_default_solusi_cards() {
         }
     }
 
+    $theme_img = get_template_directory_uri() . '/public/images/sectors';
+
     return [
         [
             'num'       => '01',
             'slug'      => 'pertambangan',
-            'image'     => 'https://images.unsplash.com/photo-1578319439584-104c94d37305?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/pertambangan.webp',
             'image_alt' => 'Pemetaan area pertambangan dan survei topografi tambang menggunakan drone UAV FDS',
             'title'     => 'Pertambangan',
             'desc'      => 'Solusi drone mapping, survei topografi, pengukuran volume, dan monitoring progres tambang untuk mendukung produktivitas serta efisiensi operasional.',
@@ -53,7 +55,7 @@ function fds_get_default_solusi_cards() {
         [
             'num'       => '02',
             'slug'      => 'perkebunan-pertanian',
-            'image'     => 'https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/perkebunan-pertanian.webp',
             'image_alt' => 'Penerapan drone pertanian presisi, penyemprotan sprayer, dan pemantauan blok perkebunan oleh FDS',
             'title'     => 'Perkebunan dan Pertanian',
             'desc'      => 'Teknologi drone monitoring, multispectral imaging, dan smart spraying untuk meningkatkan produktivitas serta efisiensi pengelolaan lahan.',
@@ -65,7 +67,7 @@ function fds_get_default_solusi_cards() {
         [
             'num'       => '03',
             'slug'      => 'kehutanan-lingkungan',
-            'image'     => 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/kehutanan-lingkungan.webp',
             'image_alt' => 'Survei drone kehutanan, penilaian stok karbon, dan pemantauan lingkungan hutan di Indonesia',
             'title'     => 'Kehutanan dan Lingkungan',
             'desc'      => 'Pemetaan hutan, estimasi karbon, pemantauan keanekaragaman hayati, serta analisis dampak lingkungan menggunakan drone dan sensor geospasial.',
@@ -77,7 +79,7 @@ function fds_get_default_solusi_cards() {
         [
             'num'       => '04',
             'slug'      => 'energi-infrastruktur',
-            'image'     => 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/energi-infrastruktur.webp',
             'image_alt' => 'Inspeksi udara infrastruktur jaringan energi, panel surya, dan pemetaan koridor menggunakan drone FDS',
             'title'     => 'Energi dan Infrastruktur',
             'desc'      => 'Layanan inspeksi udara dan pemetaan drone untuk jaringan listrik, pembangkit energi, jalur pipa, serta berbagai aset infrastruktur.',
@@ -89,7 +91,7 @@ function fds_get_default_solusi_cards() {
         [
             'num'       => '05',
             'slug'      => 'perencanaan',
-            'image'     => 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/perencanaan.webp',
             'image_alt' => 'Pemodelan geospasial dan survei topografi drone untuk perencanaan wilayah dan konstruksi',
             'title'     => 'Perencanaan',
             'desc'      => 'Penyediaan data geospasial resolusi tinggi untuk mendukung perencanaan tata ruang, pengembangan wilayah, konstruksi, dan masterplan.',
@@ -101,7 +103,7 @@ function fds_get_default_solusi_cards() {
         [
             'num'       => '06',
             'slug'      => 'bencana-lingkungan',
-            'image'     => 'https://images.unsplash.com/photo-1547683905-f686c993aae5?auto=format&fit=crop&w=900&q=80',
+            'image'     => $theme_img . '/bencana-lingkungan.webp',
             'image_alt' => 'Survei udara drone dan pemetaan area terdampak bencana serta evaluasi risiko lingkungan oleh FDS',
             'title'     => 'Bencana dan Lingkungan',
             'desc'      => 'Pemetaan area terdampak bencana, monitoring perubahan lahan, pemantauan garis pantai, serta evaluasi risiko lingkungan berbasis drone.',
@@ -227,10 +229,14 @@ function fds_get_solusi_data() {
     // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
     $fds_deep_decode = function ($str) {
         if (!is_string($str)) return $str;
+        if (function_exists('fds_clean_string')) {
+            return \fds_clean_string($str);
+        }
         $prev = '';
         while ($prev !== $str) {
             $prev = $str;
             $str = wp_specialchars_decode($str, ENT_QUOTES);
+            $str = html_entity_decode($str, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         return $str;
     };

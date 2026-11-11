@@ -13,6 +13,15 @@
 ])
 
 @php
+  $clean_sc       = static function ($v): string {
+      $str = (string) $v;
+      return function_exists('fds_clean_string') ? fds_clean_string($str) : html_entity_decode(wp_specialchars_decode($str, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  };
+  $num            = $clean_sc($num);
+  $title          = $clean_sc($title);
+  $desc           = $clean_sc($desc);
+  $ctaLabel       = $clean_sc($ctaLabel);
+  $imageAlt       = $clean_sc($imageAlt);
   $is_dark        = ($variant === 'dark');
   $has_link       = is_string($url) && $url !== '';
   $card_base      = $is_dark
@@ -36,12 +45,12 @@
       foreach ($tags as $t) {
           if (is_array($t) && !empty($t['label'])) {
               $norm_tags[] = [
-                  'label' => (string) $t['label'],
+                  'label' => $clean_sc((string) $t['label']),
                   'url'   => (string) ($t['url'] ?? ''),
               ];
           } elseif (is_string($t) && trim($t) !== '') {
               $norm_tags[] = [
-                  'label' => trim($t),
+                  'label' => $clean_sc(trim($t)),
                   'url'   => '',
               ];
           }
@@ -55,7 +64,7 @@
     @if($showImage && !empty($image))
       <div class="h-[185px] sm:h-[200px] overflow-hidden relative {{ $is_dark ? 'bg-[#031e20]' : 'bg-[#f5f5f7]' }}">
         <img src="{!! esc_url($image) !!}"
-             alt="{{ esc_attr($imageAlt !== '' ? $imageAlt : $title) }}"
+             alt="{{ $imageAlt !== '' ? $imageAlt : $title }}"
              width="720"
              height="400"
              loading="lazy"

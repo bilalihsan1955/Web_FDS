@@ -23,10 +23,38 @@ if (!defined('ABSPATH')) {
 // Matikan kebocoran header versi Acorn / Laravel
 add_filter('acorn/powered_by', '__return_false');
 
+// 0. STAGING DOMAIN NOINDEX GUARD (compro.fulldronesolutions.co.id)
+function fds_is_staging_host(): bool {
+    $host = strtolower((string) ($_SERVER['HTTP_HOST'] ?? wp_parse_url(home_url(), PHP_URL_HOST) ?? ''));
+    return $host !== '' && (str_starts_with($host, 'compro.') || str_contains($host, 'staging.') || str_contains($host, '.local'));
+}
+
+add_filter('wp_robots', function (array $robots): array {
+    if (fds_is_staging_host()) {
+        $robots['noindex'] = true;
+        $robots['nofollow'] = true;
+        unset($robots['index'], $robots['follow']);
+    }
+    return $robots;
+}, 999);
+
+add_filter('rank_math/frontend/robots', function (array $robots): array {
+    if (fds_is_staging_host()) {
+        $robots['index'] = 'noindex';
+        $robots['follow'] = 'nofollow';
+    }
+    return $robots;
+}, 999);
+
 // 1. INJEKSI HTTP SECURITY HEADERS TERPUSAT
 add_action('send_headers', function (): void {
     if (headers_sent()) {
         return;
+    }
+
+    // Proteksi staging agar tidak pernah terindeks Google
+    if (fds_is_staging_host()) {
+        header('X-Robots-Tag: noindex, nofollow', true);
     }
 
     // Suppress signature headers
@@ -63,7 +91,7 @@ add_action('send_headers', function (): void {
 // 2. PROTEKSI DYNAMIC AJAX AGAR TIDAK DI-CACHE OLEH LITESPEED / REVERSE PROXY
 add_action('admin_init', function (): void {
     if (wp_doing_ajax()) {
-        $action = sanitize_text_field($_REQUEST['action'] ?? '');
+        $action = sanitize_text_field(wp_unslash((string) ($_REQUEST['action'] ?? '')));
         $protected_actions = ['fds_submit_inquiry', 'fds_download_brochure'];
 
         if (in_array($action, $protected_actions, true)) {

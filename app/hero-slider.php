@@ -31,10 +31,12 @@ function fds_get_hero_slides() {
     if (is_array($slides)) {
         foreach ($slides as $s) {
             if (!empty($s['url'])) {
+                $raw_title = !empty($s['title']) ? sanitize_text_field((string) $s['title']) : '';
+                $raw_alt   = !empty($s['alt']) ? sanitize_text_field((string) $s['alt']) : 'Full Drone Solutions Hero Slide';
                 $valid_slides[] = [
                     'url'   => esc_url($s['url']),
-                    'title' => !empty($s['title']) ? sanitize_text_field($s['title']) : '',
-                    'alt'   => !empty($s['alt']) ? sanitize_text_field($s['alt']) : 'Full Drone Solutions Hero Slide',
+                    'title' => function_exists('fds_clean_string') ? \fds_clean_string($raw_title) : $raw_title,
+                    'alt'   => function_exists('fds_clean_string') ? \fds_clean_string($raw_alt) : $raw_alt,
                 ];
             }
         }
@@ -42,21 +44,22 @@ function fds_get_hero_slides() {
 
     // Default fallback jika admin belum mengunggah gambar
     if (empty($valid_slides)) {
+        $theme_uri = get_template_directory_uri();
         $valid_slides = [
             [
-                'url'   => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80',
+                'url'   => $theme_uri . '/public/images/site/hero-1.webp',
                 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor',
-                'alt'   => 'Full Drone Solutions Industrial Drone',
+                'alt'   => 'Drone pertanian Full Drone Solutions beroperasi di lahan pertanian presisi',
             ],
             [
-                'url'   => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80',
-                'title' => 'Teknologi Presisi Pertanian & Perkebunan',
-                'alt'   => 'Drone Pertanian FERTO FDS',
-            ],
-            [
-                'url'   => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80',
+                'url'   => $theme_uri . '/public/images/site/hero-2.webp',
                 'title' => 'Pemetaan Topografi & Akuisisi Data Geospasial',
-                'alt'   => 'Drone Pemetaan DELTAV VTOL',
+                'alt'   => 'Drone VTOL DELTAV FDS memetakan wilayah hutan dan koridor sungai',
+            ],
+            [
+                'url'   => $theme_uri . '/public/images/site/hero-3.webp',
+                'title' => 'Teknologi Presisi Buatan Engineer Indonesia',
+                'alt'   => 'Tim teknis Full Drone Solutions di workshop Sleman Yogyakarta',
             ],
         ];
     }
@@ -73,14 +76,14 @@ function render_hero_slider_admin_page() {
     // PROSES SIMPAN FORM
     $message = '';
     if (isset($_POST['fds_hero_slider_save']) && check_admin_referer('fds_hero_slider_nonce_action', 'fds_hero_slider_nonce')) {
-        $posted_slides = $_POST['slides'] ?? [];
+        $posted_slides = isset($_POST['slides']) && is_array($_POST['slides']) ? wp_unslash($_POST['slides']) : [];
         $sanitized_slides = [];
 
         if (is_array($posted_slides)) {
             foreach ($posted_slides as $item) {
-                $url   = esc_url_raw($item['url'] ?? '');
-                $title = sanitize_text_field($item['title'] ?? '');
-                $alt   = sanitize_text_field($item['alt'] ?? '');
+                $url   = esc_url_raw((string) ($item['url'] ?? ''));
+                $title = sanitize_text_field((string) ($item['title'] ?? ''));
+                $alt   = sanitize_text_field((string) ($item['alt'] ?? ''));
 
                 if (!empty($url)) {
                     $sanitized_slides[] = [
@@ -97,6 +100,9 @@ function render_hero_slider_admin_page() {
     }
 
     $current_slides = get_option('fds_hero_slides', []);
+    if (is_array($current_slides) && function_exists('fds_deep_decode')) {
+        $current_slides = \fds_deep_decode($current_slides);
+    }
     ?>
     <div class="wrap" style="max-width: 100%; margin-top: 20px; box-sizing: border-box;">
         <h1 style="display: flex; align-items: center; gap: 10px; font-weight: 700; color: #1d1d1f; margin-bottom: 8px;">

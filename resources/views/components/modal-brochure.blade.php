@@ -9,18 +9,31 @@
   'fileUrl'     => '',
 ])
 
+@php
+  $clean_bro = static function ($v): string {
+      $str = (string) $v;
+      return function_exists('fds_clean_string') ? fds_clean_string($str) : html_entity_decode(wp_specialchars_decode($str, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  };
+  $title       = $clean_bro($title);
+  $descInitial = $clean_bro($descInitial);
+  $descReady   = $clean_bro($descReady);
+  $placeholder = $clean_bro($placeholder);
+  $btnText     = $clean_bro($btnText);
+  $droneName   = $clean_bro($droneName);
+@endphp
+
 <div class="bg-[#f5f5f7] rounded-3xl p-8 sm:p-10 border border-black/[0.08] shadow-sm">
   <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
     
     {{-- Left: Big Heading & Subtitle --}}
     <div class="max-w-2xl">
       <h3 class="text-[26px] sm:text-[32px] lg:text-[36px] font-bold text-[#1d1d1f] tracking-tight leading-[1.18]">
-        {!! esc_html($title) !!}
+        {{ $title }}
       </h3>
       <p class="fds-brochure-desc-text text-[15px] sm:text-[17px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
-         data-desc-initial="{!! esc_attr(wp_specialchars_decode($descInitial)) !!}"
-         data-desc-ready="{!! esc_attr(wp_specialchars_decode($descReady)) !!}">
-        {!! esc_html(wp_specialchars_decode($descInitial)) !!}
+         data-desc-initial="{{ $descInitial }}"
+         data-desc-ready="{{ $descReady }}">
+        {{ $descInitial }}
       </p>
     </div>
 
@@ -32,14 +45,14 @@
         <input type="hidden" name="action" value="fds_download_brochure">
         <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
         <input type="hidden" name="drone_id" value="{{ (int) $droneId }}">
-        <input type="hidden" name="drone_name" value="{{ esc_attr(wp_specialchars_decode($droneName)) }}">
+        <input type="hidden" name="drone_name" value="{{ $droneName }}">
 
         <div class="relative w-full sm:w-[320px] lg:w-[340px]">
           <input type="email" 
                  id="brochure_email" 
                  name="email" 
                  required 
-                 placeholder="{{ esc_attr($placeholder) }}" 
+                 placeholder="{{ $placeholder }}" 
                  class="w-full h-[54px] sm:h-[58px] px-6 bg-white border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
         </div>
 
@@ -57,14 +70,14 @@
       {{-- STATE 2: TOMBOL DOWNLOAD AKTIF --}}
       <div id="fds-brochure-download-ready" class="hidden items-center">
         <a id="fds-brochure-download-link" 
-           href="{{ esc_url($fileUrl ?: '#') }}" 
+           href="{!! esc_url($fileUrl ?: '#') !!}" 
            target="_blank" 
            rel="noopener noreferrer"
            class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer shadow-md shadow-black/15 min-h-[44px]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
           </svg>
-          <span>{!! esc_html(wp_specialchars_decode($btnText)) !!}</span>
+          <span>{{ $btnText }}</span>
         </a>
       </div>
 
@@ -83,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitBtn = document.getElementById('fds-brochure-submit-btn');
   const msgBox = document.getElementById('fds-brochure-msg');
   const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
-  const initialPdf = '{{ esc_js($fileUrl) }}';
+  const initialPdf = {!! wp_json_encode((string) $fileUrl) !!};
 
   if (!form || !readyBox) return;
 
@@ -160,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof window.fdsTrackEvent === 'function') {
         window.fdsTrackEvent('download_brochure', {
           drone_id: '{{ (int) $droneId }}',
-          drone_name: '{{ esc_js(wp_specialchars_decode($droneName)) }}'
+          drone_name: {!! wp_json_encode($droneName) !!}
         });
       }
     })
@@ -175,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (typeof window.fdsTrackEvent === 'function') {
         window.fdsTrackEvent('download_brochure', {
           drone_id: '{{ (int) $droneId }}',
-          drone_name: '{{ esc_js(wp_specialchars_decode($droneName)) }}'
+          drone_name: {!! wp_json_encode($droneName) !!}
         });
       }
     })

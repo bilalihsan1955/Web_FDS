@@ -1,0 +1,23 @@
+# ==========================================
+# FDS THEME ENTERPRISE SECURITY HARDENING
+# ==========================================
+Options -Indexes
+
+# Block direct HTTP access to hidden/dev directories inside theme (allow nothing starting with dot)
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(scratch|node_modules|vendor|app|storage|tests|database|bootstrap)(/|$) - [F,L]
+RewriteRule ^resources/(views|lang|css|js)(/|$) - [F,L]
+</IfModule>
+
+# Block direct HTTP access to documentation, config, lock, backup, log, and source files
+<FilesMatch "(?i)(\.(md|txt|sql|bak|log|env|lock|neon|ya?ml|dist|xml|zip|gz|tar|sh|ps1|py|blade\.php)|^(composer|package|package-lock|vite\.config|tailwind\.config|postcss\.config|phpunit|phpstan)\.(json|lock|js|mjs|cjs|xml|dist)|^functions\.php|^index\.php|^style\.css)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>

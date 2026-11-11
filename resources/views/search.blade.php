@@ -4,26 +4,39 @@
 
 @php
   global $wp_query;
+  $fds_search_clean = static function ($val) {
+    $s = (string) $val;
+    if (function_exists('fds_clean_string')) {
+      return fds_clean_string($s);
+    }
+    $prev = '';
+    while ($prev !== $s) {
+      $prev = $s;
+      $s = wp_specialchars_decode($s, ENT_QUOTES);
+      $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    return $s;
+  };
   $found_count = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
   $all_posts = [];
   if (have_posts()) {
     while (have_posts()) {
       the_post();
       $cats = get_the_category(get_the_ID());
-      $cat_label = !empty($cats) ? $cats[0]->name : 'Berita';
+      $cat_label = !empty($cats) ? $fds_search_clean($cats[0]->name) : 'Berita';
       $thumb_id  = get_post_thumbnail_id(get_the_ID());
-      $thumb_alt = $thumb_id ? trim((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true)) : '';
+      $thumb_alt = $thumb_id ? trim($fds_search_clean((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true))) : '';
       if ($thumb_alt === '') {
-        $thumb_alt = trim(wp_specialchars_decode(get_the_title(), ENT_QUOTES)) . ' — Full Drone Solutions';
+        $thumb_alt = trim($fds_search_clean(get_the_title())) . ' — Full Drone Solutions';
       }
       $all_posts[] = [
         'id'        => get_the_ID(),
-        'title'     => get_the_title(),
+        'title'     => $fds_search_clean(get_the_title()),
         'permalink' => get_permalink(),
-        'excerpt'   => get_the_excerpt(),
+        'excerpt'   => $fds_search_clean(get_the_excerpt()),
         'date'      => get_the_date('d M Y'),
         'cat'       => $cat_label,
-        'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => esc_attr($thumb_alt)]) : null,
+        'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => $thumb_alt]) : null,
       ];
     }
   }
@@ -90,7 +103,7 @@
       <div class="max-w-[680px]">
         <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">Hasil Pencarian Artikel</p>
         <h1 class="text-[32px] sm:text-[44px] lg:text-[50px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3 fds-hero-entrance fds-hero-delay-2">
-          &ldquo;{{ get_search_query() }}&rdquo;
+          &ldquo;{{ $fds_search_clean(get_search_query(false)) }}&rdquo;
         </h1>
         <p class="text-[15px] sm:text-[16px] text-white/85 leading-relaxed fds-hero-entrance fds-hero-delay-3">
           @if($found_count > 0)
@@ -102,14 +115,14 @@
       </div>
 
       {{-- Search Bar to Refine: Centered Vertically --}}
-      <form action="{{ home_url('/') }}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
+      <form action="{!! esc_url(home_url('/')) !!}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
         <div class="relative flex items-center">
           <div class="absolute left-4 pointer-events-none text-[#86868b]">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
+          <input type="text" name="s" value="{{ $fds_search_clean(get_search_query(false)) }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
                  class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
           <button type="submit"
                   class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
@@ -120,7 +133,7 @@
     </div>
 
     <div class="pt-4">
-      <a href="{{ esc_url($blog_url) }}"
+      <a href="{!! esc_url($blog_url) !!}"
          class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         <span>Kembali ke semua artikel</span>
@@ -146,7 +159,7 @@
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-8">
           Silakan coba kata kunci lain yang lebih umum atau jelajahi seluruh topik di ruang berita kami.
         </p>
-        <a href="{{ esc_url($blog_url) }}"
+        <a href="{!! esc_url($blog_url) !!}"
            class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm leading-none group">
           <span class="leading-none">Lihat Semua Berita</span>
           <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -172,15 +185,15 @@
 
               <div class="p-6 sm:p-7 pb-4">
                 <div class="flex items-center gap-2 text-[12px] mb-2.5">
-                  <span class="font-semibold text-[#0f808a]">{!! esc_html($post['cat']) !!}</span>
+                  <span class="font-semibold text-[#0f808a]">{{ $post['cat'] }}</span>
                   <span class="text-[#cbd5e1]">&bull;</span>
                   <span class="text-[#86868b]">{{ $post['date'] }}</span>
                 </div>
                 <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
-                  <a href="{{ $post['permalink'] }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode($post['title'], ENT_QUOTES)) !!}</a>
+                  <a href="{!! esc_url($post['permalink']) !!}" class="fds-stretched-link">{{ $post['title'] }}</a>
                 </h2>
                 <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
-                  {!! esc_html(wp_specialchars_decode($post['excerpt'], ENT_QUOTES)) !!}
+                  {{ $post['excerpt'] }}
                 </p>
               </div>
             </div>

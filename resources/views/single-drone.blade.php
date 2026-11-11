@@ -2,230 +2,37 @@
 
 @section('content')
 @php
-  $post_id = get_the_ID();
+  $post_id    = (int) get_the_ID();
   $preview_id = $post_id;
   if (is_preview()) {
       $autosave = wp_get_post_autosave($post_id);
       if ($autosave) {
-          $preview_id = $autosave->ID;
-      }
-  }
-  $slug = get_post_field('post_name', $post_id);
-
-  $drones = function_exists('fds_get_default_drone_catalog') ? fds_get_default_drone_catalog() : \App\fds_get_default_drone_catalog();
-
-  $drone = $drones[$slug] ?? null;
-  $droneImgKey      = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
-  $droneImgFallback = 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1600&q=80';
-
-  // --- DYNAMIC POST META RESOLUTION (FOR BOTH EXISTING & NEW DRONES) ---
-  $get_meta = function($key) use ($preview_id, $post_id) {
-      $val = get_post_meta($preview_id, $key, true);
-      if ($val === '' || $val === false || $val === null) {
-          $val = get_post_meta($post_id, $key, true);
-      }
-      return $val;
-  };
-
-  $meta_has = function($key) use ($preview_id, $post_id) {
-      return metadata_exists('post', $preview_id, $key) || metadata_exists('post', $post_id, $key);
-  };
-
-  $featuredImg = get_the_post_thumbnail_url($preview_id, 'full') ?: get_the_post_thumbnail_url($post_id, 'full');
-  
-  if (!$drone) {
-      $drone = [
-          'name'      => get_the_title($preview_id) ?: get_the_title($post_id),
-          'kategori'  => $get_meta('drone_kategori') ?: 'Agrikultur',
-          'badge'     => $get_meta('drone_badge'),
-          'tagline'   => $get_meta('drone_tagline') ?: get_the_excerpt($preview_id),
-          'color'     => '#0f808a',
-          'specs'     => [],
-          'desc'      => $get_meta('drone_desc') ?: get_the_content(null, false, $preview_id),
-          'for'       => [],
-          'stat1_num' => $get_meta('drone_stat1_num'),
-          'stat1_lbl' => $get_meta('drone_stat1_lbl'),
-          'stat2_num' => $get_meta('drone_stat2_num'),
-          'stat2_lbl' => $get_meta('drone_stat2_lbl'),
-          'stat3_num' => $get_meta('drone_stat3_num'),
-          'stat3_lbl' => $get_meta('drone_stat3_lbl'),
-          'stat4_num' => $get_meta('drone_stat4_num'),
-          'stat4_lbl' => $get_meta('drone_stat4_lbl'),
-      ];
-  } else {
-      // Jika metadata ada di database (bahkan jika disengaja dikosongkan), timpa nilai default katalog
-      if ($meta_has('drone_stat1_num')) $drone['stat1_num'] = $get_meta('drone_stat1_num');
-      if ($meta_has('drone_stat1_lbl')) $drone['stat1_lbl'] = $get_meta('drone_stat1_lbl');
-      if ($meta_has('drone_stat2_num')) $drone['stat2_num'] = $get_meta('drone_stat2_num');
-      if ($meta_has('drone_stat2_lbl')) $drone['stat2_lbl'] = $get_meta('drone_stat2_lbl');
-      if ($meta_has('drone_stat3_num')) $drone['stat3_num'] = $get_meta('drone_stat3_num');
-      if ($meta_has('drone_stat3_lbl')) $drone['stat3_lbl'] = $get_meta('drone_stat3_lbl');
-      if ($meta_has('drone_stat4_num')) $drone['stat4_num'] = $get_meta('drone_stat4_num');
-      if ($meta_has('drone_stat4_lbl')) $drone['stat4_lbl'] = $get_meta('drone_stat4_lbl');
-      if ($meta_has('drone_badge'))     $drone['badge']     = $get_meta('drone_badge');
-      if ($meta_has('drone_tagline'))   $drone['tagline']   = $get_meta('drone_tagline');
-      if ($meta_has('drone_desc'))      $drone['desc']      = $get_meta('drone_desc');
-  }
-
-  // Override / Enrich with DB / Preview meta if present
-  $cpt_title = get_the_title($preview_id) ?: get_the_title($post_id);
-  if (!empty($cpt_title)) {
-      $drone['name'] = $cpt_title;
-  }
-
-  $cpt_desc = $get_meta('drone_desc');
-  if ($meta_has('drone_desc')) {
-      $drone['desc'] = $cpt_desc;
-  } elseif (empty($drone['desc'])) {
-      $drone['desc'] = get_the_content(null, false, $preview_id) ?: get_the_content(null, false, $post_id);
-  }
-
-  $terms = get_the_terms($preview_id, 'kategori_drone') ?: get_the_terms($post_id, 'kategori_drone');
-  $cat_url = home_url('/#produk');
-  if (!empty($terms) && !is_wp_error($terms)) {
-      $drone['kategori'] = $terms[0]->name;
-      $term_link = get_term_link($terms[0]);
-      if (!is_wp_error($term_link) && is_string($term_link)) {
-          $cat_url = $term_link;
-      }
-  } else {
-      $cpt_kategori = $get_meta('drone_kategori');
-      if ($cpt_kategori) $drone['kategori'] = $cpt_kategori;
-  }
-  
-  $cpt_badge = $get_meta('drone_badge');
-  if ($meta_has('drone_badge')) $drone['badge'] = $cpt_badge;
-  
-  $cpt_tagline = $get_meta('drone_tagline');
-  if ($meta_has('drone_tagline')) $drone['tagline'] = $cpt_tagline;
-
-  $cpt_specs_raw = $get_meta('drone_specs_raw');
-  if ($cpt_specs_raw) {
-      $parsed_specs = [];
-      $lines = explode("\n", $cpt_specs_raw);
-      foreach ($lines as $line) {
-          $line = trim($line);
-          if (empty($line)) continue;
-          $parts = explode(':', $line, 2);
-          if (count($parts) === 2) {
-              $parsed_specs[] = [trim($parts[0]), trim($parts[1])];
-          }
-      }
-      if (!empty($parsed_specs)) {
-          $drone['specs'] = $parsed_specs;
+          $preview_id = (int) $autosave->ID;
       }
   }
 
-  // Fallback to structured spec fields if specs empty
-  if (empty($drone['specs'])) {
-      $spec_fields = [
-          'Payload'                    => $get_meta('drone_spec_kapasitas') ?: $get_meta('drone_kapasitas'),
-          'Durasi Terbang'             => $get_meta('drone_spec_durasi'),
-          'Sistem Daya (Baterai)'      => $get_meta('drone_spec_baterai') ?: $get_meta('drone_baterai'),
-          'Produktivitas / Jangkauan'  => $get_meta('drone_spec_produktivitas') ?: $get_meta('drone_cakupan'),
-          'Kecepatan Jelajah'          => $get_meta('drone_spec_kecepatan'),
-          'Ketahanan Lingkungan'       => $get_meta('drone_spec_ketahanan'),
-          'Sistem Otonomi & Navigasi'  => $get_meta('drone_spec_otonomi'),
-          'Ground Control Station'     => $get_meta('drone_spec_gcs'),
-          'Sertifikasi & Standar'      => $get_meta('drone_spec_sertifikasi'),
-      ];
-      $custom_specs = [];
-      foreach ($spec_fields as $lbl => $val) {
-          if ($val) $custom_specs[] = [$lbl, $val];
-      }
-      if (!empty($custom_specs)) {
-          $drone['specs'] = $custom_specs;
-      }
-  }
+  $drone = function_exists('\App\fds_get_drone_detail_data')
+      ? \App\fds_get_drone_detail_data($post_id, $preview_id)
+      : [];
 
-  $cpt_for = $get_meta('drone_for');
-  if ($cpt_for) {
-      $parsed_for = array_filter(array_map('trim', explode("\n", $cpt_for)));
-      if (!empty($parsed_for)) {
-          $drone['for'] = $parsed_for;
-      }
-  }
-
-  // Fallback to structured use-case fields if for empty
-  if (empty($drone['for'])) {
-      $uc_list = [];
-      for ($i = 1; $i <= 4; $i++) {
-          $t = $get_meta("drone_uc{$i}_t");
-          $d = $get_meta("drone_uc{$i}_d");
-          if ($t) $uc_list[] = $d ? "$t — $d" : $t;
-      }
-      if (!empty($uc_list)) {
-          $drone['for'] = $uc_list;
-      }
-  }
-
-  if ($meta_has('drone_stat1_num')) $drone['stat1_num'] = $get_meta('drone_stat1_num');
-  if ($meta_has('drone_stat1_lbl')) $drone['stat1_lbl'] = $get_meta('drone_stat1_lbl');
-  if ($meta_has('drone_stat2_num')) $drone['stat2_num'] = $get_meta('drone_stat2_num');
-  if ($meta_has('drone_stat2_lbl')) $drone['stat2_lbl'] = $get_meta('drone_stat2_lbl');
-  if ($meta_has('drone_stat3_num')) $drone['stat3_num'] = $get_meta('drone_stat3_num');
-  if ($meta_has('drone_stat3_lbl')) $drone['stat3_lbl'] = $get_meta('drone_stat3_lbl');
-  if ($meta_has('drone_stat4_num')) $drone['stat4_num'] = $get_meta('drone_stat4_num');
-  if ($meta_has('drone_stat4_lbl')) $drone['stat4_lbl'] = $get_meta('drone_stat4_lbl');
-
-  $fds_deep_decode = function($val) use (&$fds_deep_decode) {
-      if (is_array($val)) {
-          return array_map($fds_deep_decode, $val);
-      }
-      if (!is_string($val)) return $val;
-      $prev = '';
-      while ($prev !== $val) {
-          $prev = $val;
-          $val = wp_specialchars_decode($val, ENT_QUOTES);
-      }
-      return $val;
-  };
-  if ($drone) {
-      $drone = $fds_deep_decode($drone);
-
-      // Normalisasi semua label spesifikasi agar selalu menjadi 'Payload'
-      if (!empty($drone['specs']) && is_array($drone['specs'])) {
-          foreach ($drone['specs'] as &$spItem) {
-              if (is_array($spItem) && count($spItem) >= 2) {
-                  $spLabel = trim((string)$spItem[0]);
-                  if (
-                      $spLabel === 'Kapasitas Tangki' || 
-                      $spLabel === 'Kapasitas Tangki / Payload' || 
-                      $spLabel === 'Kapasitas Payload' || 
-                      $spLabel === 'Kapasitas Payload Biji' || 
-                      stripos($spLabel, 'kapasitas tangki') === 0 || 
-                      stripos($spLabel, 'kapasitas payload') === 0
-                  ) {
-                      $spItem[0] = 'Payload';
-                  }
-              }
-          }
-          unset($spItem);
-      }
-
-      // Normalisasi label statistik bawah jika ada yang bertuliskan Kapasitas Tangki / Kapasitas Payload
-      for ($sIdx = 1; $sIdx <= 4; $sIdx++) {
-          $stKey = "stat{$sIdx}_lbl";
-          if (!empty($drone[$stKey])) {
-              $stVal = trim((string)$drone[$stKey]);
-              if (
-                  $stVal === 'Kapasitas Tangki' || 
-                  $stVal === 'Kapasitas Tangki / Payload' || 
-                  $stVal === 'Kapasitas Payload' || 
-                  stripos($stVal, 'kapasitas tangki') === 0 || 
-                  stripos($stVal, 'kapasitas payload') === 0
-              ) {
-                  $drone[$stKey] = 'Payload';
-              }
-          }
-      }
-  }
+  $slug           = (string) ($drone['slug'] ?? get_post_field('post_name', $post_id));
+  $modelKey       = (string) ($drone['model_key'] ?? strtolower($slug));
+  $isFerto        = !empty($drone['is_ferto']);
+  $hasSni         = !empty($drone['has_sni']);
+  $cat_url        = (string) ($drone['cat_url'] ?? home_url('/produk/'));
+  $heroMedia      = is_array($drone['hero_media'] ?? null) ? $drone['hero_media'] : [];
+  $heroSrc        = (string) ($heroMedia['url'] ?? ($drone['hero_url'] ?? ''));
+  $heroSrcset     = (string) ($heroMedia['srcset'] ?? ($drone['hero_srcset'] ?? ''));
+  $specs_img      = (string) ($drone['specs_img'] ?? '');
+  $cleanDroneName = function_exists('fds_clean_string')
+      ? fds_clean_string((string) ($drone['name'] ?? get_the_title($preview_id ?: $post_id)))
+      : (string) ($drone['name'] ?? get_the_title($preview_id ?: $post_id));
 @endphp
 
-@if(!$drone)
+@if(empty($drone))
   <div class="pt-[52px] bg-[#f5f5f7] min-h-[70vh]">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-20">
-      <h1 class="text-[40px] font-semibold text-[#1d1d1f] mb-8">{!! get_the_title() !!}</h1>
+      <h1 class="text-[40px] font-semibold text-[#1d1d1f] mb-8">{{ fds_clean_string(get_the_title()) }}</h1>
       <div class="prose text-[18px] text-[#515154] leading-[1.7]">{!! get_the_content() !!}</div>
     </div>
   </div>
@@ -279,37 +86,37 @@
       </div>
 
       {{-- Top: text block (STRUKTUR ASLI TIDAK DIUBAH) --}}
-      <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-16 sm:pt-20 w-full">
+      <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12 pt-14 sm:pt-16 w-full">
         {{-- Badge chips --}}
         <div class="flex flex-wrap items-start gap-3 mb-8 fds-hero-entrance fds-hero-delay-1">
-          <a href="{{ esc_url($cat_url) }}" class="inline-flex items-center text-[12px] font-semibold text-white/80 hover:text-white tracking-wide border border-white/[0.15] hover:border-white/35 bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm transition-colors">
-            {!! wp_specialchars_decode($drone['kategori'] ?? 'Agrikultur') !!}
+          <a href="{!! esc_url($cat_url) !!}" class="inline-flex items-center text-[12px] font-semibold text-white/80 hover:text-white tracking-wide border border-white/[0.15] hover:border-white/35 bg-white/[0.04] rounded-full px-3.5 py-1 backdrop-blur-sm transition-colors">
+            {{ fds_clean_string((string) ($drone['kategori'] ?? 'Agrikultur')) }}
           </a>
           @if(!empty($drone['badge']))
           <span class="inline-flex items-center text-[12px] font-semibold text-[#18d6e7] tracking-wide bg-[#0f808a]/20 border border-[#46deec]/30 rounded-full px-3.5 py-1 backdrop-blur-sm">
-            {!! wp_specialchars_decode($drone['badge']) !!}
+            {{ fds_clean_string((string) $drone['badge']) }}
           </span>
           @endif
         </div>
 
         {{-- Nama produk --}}
         <h1 class="text-[72px] sm:text-[100px] lg:text-[128px] font-semibold tracking-[-0.05em] text-white leading-[0.9] mb-8 drop-shadow-sm fds-hero-entrance fds-hero-delay-2">
-          {!! wp_specialchars_decode($drone['name']) !!}
+          {{ fds_clean_string((string) $drone['name']) }}
         </h1>
 
         @if(!empty($drone['tagline']))
         <p class="text-[18px] sm:text-[20px] text-white/75 max-w-[580px] leading-[1.6] mb-10 fds-hero-entrance fds-hero-delay-3">
-          {!! wp_specialchars_decode($drone['tagline']) !!}
+          {{ fds_clean_string((string) $drone['tagline']) }}
         </p>
         @endif
 
         {{-- CTAs --}}
         <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10 fds-hero-entrance fds-hero-delay-4">
-          <a href="{{ home_url('/#kontak') }}"
+          <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}"
              class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-black/15">
             Minta Penawaran
           </a>
-          <a href="{{ home_url('/bandingkan/?d1=' . $slug) }}"
+          <a href="{!! esc_url(home_url('/bandingkan/?d1=' . $slug)) !!}"
              class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-2 px-3 py-3 leading-none group">
             <span class="leading-none">Bandingkan model</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -320,17 +127,11 @@
         </div>
       </div>
 
-      {{-- Hero image (STRUKTUR ASLI TIDAK DIUBAH) --}}
+      {{-- Hero image (Single Canonical Media Resolver — Identik 1:1 dengan Kartu Katalog) --}}
       <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px] fds-hero-entrance fds-hero-delay-5">
-        @php
-          $thumb_id = get_post_thumbnail_id($preview_id) ?: get_post_thumbnail_id($post_id);
-          $heroSrc = $featuredImg ?: (get_the_post_thumbnail_url($post_id, 'large') ?: get_the_post_thumbnail_url($post_id, 'full'));
-          $heroSrc = $heroSrc ?: fds_img($droneImgKey, $droneImgFallback);
-          $heroSrcset = $thumb_id ? wp_get_attachment_image_srcset($thumb_id, 'large') : '';
-        @endphp
-        <img src="{{ $heroSrc }}"
-             @if($heroSrcset) srcset="{{ $heroSrcset }}" sizes="(max-width: 768px) 100vw, 1200px" @endif
-             alt="{!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
+        <img src="{!! esc_url($heroSrc) !!}"
+             @if($heroSrcset !== '') srcset="{{ $heroSrcset }}" sizes="(max-width: 768px) 100vw, 1200px" @endif
+             alt="{{ $cleanDroneName }} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
              width="1200"
              height="720"
              loading="eager"
@@ -346,10 +147,6 @@
     @if(!empty($drone['specs']) || !empty($drone['desc']))
     <section class="bg-white pt-16 sm:pt-20 pb-10 sm:pb-12 relative z-20 overflow-visible">
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative overflow-visible">
-        @php
-          $specs_img_meta = $get_meta('drone_specs_img');
-          $specs_img = $specs_img_meta ?: ($featuredImg ?: fds_img($droneImgKey, "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1400&q=80"));
-        @endphp
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start relative overflow-visible">
           
@@ -370,7 +167,7 @@
                 Direkayasa untuk <br>performa nyata.
               </h2>
               <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed max-w-xl mb-4">
-                {!! wp_specialchars_decode($drone['desc'] ?: "Setiap spesifikasi {$drone['name']} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.") !!}
+                {{ fds_clean_string((string) ($drone['desc'] ?: "Setiap spesifikasi {$cleanDroneName} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.")) }}
               </p>
             </div>
 
@@ -378,8 +175,8 @@
             @if($specs_img)
             <div class="mt-4 sm:mt-6 w-full select-none lg:h-0 lg:relative flex justify-center lg:block overflow-visible">
               <div class="relative lg:absolute lg:top-0 lg:left-0 lg:-ml-2 xl:-ml-4 w-full max-w-[540px] lg:max-w-[620px] pointer-events-none z-30 flex justify-center lg:block mx-auto lg:mx-0 overflow-visible">
-                <img src="{{ $specs_img }}" 
-                     alt="Spesifikasi Teknis {!! esc_attr(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} — Full Drone Solutions" 
+                <img src="{!! esc_url($specs_img) !!}" 
+                     alt="Spesifikasi Teknis {{ $cleanDroneName }} — Full Drone Solutions" 
                      loading="lazy"
                      decoding="async"
                      class="w-full h-auto object-contain object-center lg:object-left select-none drop-shadow-[0_20px_45px_rgba(255,255,255,0.35)] lg:drop-shadow-[0_30px_60px_rgba(255,255,255,0.42)]">
@@ -393,7 +190,7 @@
             @if(!empty($drone['specs']))
               @foreach($drone['specs'] as [$label, $value])
               @php
-                $lblClean = trim(wp_specialchars_decode((string)$label));
+                $lblClean = trim(fds_clean_string((string) $label));
                 if (
                   $lblClean === 'Kapasitas Tangki' || 
                   $lblClean === 'Kapasitas Tangki / Payload' || 
@@ -406,8 +203,8 @@
                 }
               @endphp
               <div class="py-4 sm:py-5 first:pt-0 grid grid-cols-2 gap-4 sm:gap-6 items-baseline">
-                <p class="text-[13px] sm:text-[14px] font-medium text-[#86868b] leading-tight">{!! $lblClean !!}</p>
-                <p class="text-[15px] sm:text-[16px] font-semibold text-[#1d1d1f] leading-tight">{!! wp_specialchars_decode($value) !!}</p>
+                <p class="text-[13px] sm:text-[14px] font-medium text-[#86868b] leading-tight">{{ $lblClean }}</p>
+                <p class="text-[15px] sm:text-[16px] font-semibold text-[#1d1d1f] leading-tight">{{ fds_clean_string((string) $value) }}</p>
               </div>
               @endforeach
             @else
@@ -424,12 +221,12 @@
     @php
       $brochure_enable        = get_option('fds_brochure_enable', '1');
       $brochure_layout        = get_option('fds_brochure_layout', 'horizontal');
-      $raw_title              = get_option('fds_brochure_title', 'Brosur Spesifikasi {drone_name}');
-      $brochure_title         = str_replace('{drone_name}', wp_specialchars_decode($drone['name']), $raw_title);
-      $brochure_desc_initial  = get_option('fds_brochure_desc', 'Masukkan email Anda untuk mengunduh brosur spesifikasi teknis resmi (PDF).');
-      $brochure_desc_ready    = get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.');
-      $brochure_ph            = get_option('fds_brochure_placeholder', 'Masukkan email Anda...');
-      $brochure_btn           = get_option('fds_brochure_button_text', 'Download Brosur (PDF)');
+      $raw_title              = fds_clean_string((string) get_option('fds_brochure_title', 'Brosur Spesifikasi {drone_name}'));
+      $brochure_title         = str_replace('{drone_name}', $cleanDroneName, $raw_title);
+      $brochure_desc_initial  = fds_clean_string((string) get_option('fds_brochure_desc', 'Masukkan email Anda untuk mengunduh brosur spesifikasi teknis resmi (PDF).'));
+      $brochure_desc_ready    = fds_clean_string((string) get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.'));
+      $brochure_ph            = fds_clean_string((string) get_option('fds_brochure_placeholder', 'Masukkan email Anda...'));
+      $brochure_btn           = fds_clean_string((string) get_option('fds_brochure_button_text', 'Download Brosur (PDF)'));
       $brochure_file_url      = get_post_meta($post_id, 'drone_brosur_url', true) ?: get_option('fds_brochure_default_pdf', '');
     @endphp
 
@@ -438,7 +235,7 @@
       <x-reveal class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-0">
         <x-modal-brochure
           :drone-id="$post_id"
-          :drone-name="$drone['name']"
+          :drone-name="$cleanDroneName"
           :title="$brochure_title"
           :desc-initial="$brochure_desc_initial"
           :desc-ready="$brochure_desc_ready"
@@ -453,10 +250,10 @@
     {{-- ── APLIKASI & USE-CASES (AERODYNAMIC FLOW STRATA VECTOR BACKGROUND) ─────── --}}
     @php
       $usecases_list = !empty($drone['for']) && is_array($drone['for']) ? $drone['for'] : [
-        'Kelompok tani & Gapoktan — Titik temu terbaik antara kapasitas operasional dan efisiensi investasi.',
-        'Koperasi pertanian — Mengurangi beban biaya tenaga kerja semprot manual hingga 60%.',
-        'Program ketahanan pangan Bappenas & BI — Terbukti andal di berbagai proyek percontohan nasional.',
-        'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Yogyakarta.',
+        'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
+        'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
+        'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
+        'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
       ];
     @endphp
 
@@ -542,7 +339,7 @@
           <x-reveal type="fade-right">
             <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Aplikasi &amp; Use-Cases</span>
             <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
-              {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!} cocok untuk Anda.
+              {{ $cleanDroneName }} cocok untuk Anda.
             </h2>
           </x-reveal>
           <div class="relative">
@@ -554,7 +351,7 @@
                 <div class="w-5 h-5 bg-white/10 text-white rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 border border-white/20">
                   <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <p class="text-[14px] font-medium text-white/90 leading-snug">{!! wp_specialchars_decode($usecase, ENT_QUOTES) !!}</p>
+                <p class="text-[14px] font-medium text-white/90 leading-snug">{{ fds_clean_string((string) $usecase) }}</p>
               </div>
               @endforeach
             </x-reveal-group>
@@ -586,10 +383,10 @@
           @foreach($stats_list as $st)
           <div>
             @if(!empty($st['num']))
-            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{!! esc_html(wp_specialchars_decode($st['num'], ENT_QUOTES)) !!}</p>
+            <p class="text-[40px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">{{ fds_clean_string((string) $st['num']) }}</p>
             @endif
             @if(!empty($st['lbl']))
-            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{!! esc_html(wp_specialchars_decode($st['lbl'], ENT_QUOTES)) !!}</p>
+            <p class="text-[12px] font-semibold text-[#86868b] tracking-wide mt-1">{{ fds_clean_string((string) $st['lbl']) }}</p>
             @endif
           </div>
           @endforeach
@@ -601,7 +398,13 @@
     {{-- ── PANDUAN TEKNIS & FAQ RESMI (VISIBLE SSR CONTENT) ─────── --}}
     @php
       $raw_guide_body = trim((string) get_post_field('post_content', $preview_id ?: $post_id));
-      if ($raw_guide_body !== '') {
+      $has_legacy_guide_marker = ($raw_guide_body !== '') && (
+          stripos($raw_guide_body, 'fds-seo-spec-table') !== false ||
+          preg_match('/(Best UAV|sejak\s*(?:tahun\s*)?2012|IP\s?(?:54|67|68)|\bFLIR\b|FDS STATION|>\s*50%|Bappenas)/i', $raw_guide_body) ||
+          (!$isFerto && preg_match('/TKDN|SNI\s*9199:2023/i', $raw_guide_body)) ||
+          ($isFerto && !$hasSni && stripos($raw_guide_body, 'SNI 9199:2023') !== false)
+      );
+      if ($raw_guide_body !== '' && !$has_legacy_guide_marker) {
           $drone_guide_html = apply_filters('the_content', $raw_guide_body);
       } else {
           $drone_guide_html = function_exists('App\fds_generate_drone_seo_content')
@@ -660,13 +463,13 @@
 
       <x-reveal-group :step="90" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
         <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
-          Siap mengoperasikan {!! esc_html(wp_specialchars_decode($drone['name'], ENT_QUOTES)) !!}?
+          Siap mengoperasikan {{ $cleanDroneName }}?
         </h2>
         <p class="text-[16px] sm:text-[18px] lg:text-[19px] text-white/80 max-w-[540px] mx-auto mb-9 leading-relaxed">
           Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.
         </p>
         <div class="flex flex-wrap gap-4 items-center justify-center">
-          <a href="{{ home_url('/#kontak') }}"
+          <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}"
              class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
             Hubungi Tim Sales
           </a>

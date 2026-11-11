@@ -8,8 +8,8 @@
   </g>
   <!-- Text Label Directly On Card Background -->
   <g transform="translate(84, 20)">
-    <text x="0" y="14" fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.5">BANGGA</text>
-    <text x="0" y="32" fill="#FFE4E6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="800" letter-spacing="0.5">BUATAN INDONESIA</text>
+    <text x="0" y="14" fill="white" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" letter-spacing="1.2">Bangga</text>
+    <text x="0" y="32" fill="#FFE4E6" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="800" letter-spacing="0.4">Buatan Indonesia</text>
     <text x="0" y="47" fill="white" fill-opacity="0.8" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="9.5" font-weight="500">Produk Dalam Negeri · Kemenperin</text>
   </g>
 </svg>

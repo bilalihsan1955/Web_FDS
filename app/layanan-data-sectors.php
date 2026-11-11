@@ -21,6 +21,7 @@ if (!defined('ABSPATH')) {
  * - Zero fabrikasi harga, model sensor LiDAR fiktif, klaim RMSE palsu, atau SLA fiktif.
  */
 function fds_get_default_layanan_sectors(): array {
+    $theme_uri = get_template_directory_uri();
     return [
         // =====================================================================
         // SEKTOR 01: PERTAMBANGAN
@@ -40,7 +41,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => 'Perencanaan Tambang', 'url' => home_url('/layanan/perencanaan/')],
             ],
             'home_tag'   => 'Pertambangan • LiDAR',
-            'image'      => 'https://images.unsplash.com/photo-1578319439584-104c94d37305?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/pertambangan.webp',
             'image_alt'  => 'Pemetaan area pertambangan terbuka dan survei topografi tambang menggunakan drone UAV FDS',
 
             'h1'           => 'Jasa Survey LiDAR Tambang & Pemetaan Topografi UAV',
@@ -290,7 +291,7 @@ function fds_get_default_layanan_sectors(): array {
                     ],
                 ],
                 'kak_checklist' => [
-                    'Lampiran batas area proyek (poligon AOI dalam format .kml, .kmz, atau .shp).',
+                    'Informasi lokasi proyek (kota/kabupaten dan provinsi) atau koordinat batas wilayah kerja.',
                     'Pembagian sub-area target (active pit, waste dump/disposal, stockpile, hauling road, atau lahan reklamasi).',
                     'Sistem koordinat acuan perusahaan (UTM WGS84 atau parameter mine grid lokal beserta ketersediaan titik BM).',
                     'Kebutuhan interval kontur, metode survei yang diinginkan (fotogrametri vs LiDAR), serta target jadwal pelaporan.',
@@ -299,9 +300,9 @@ function fds_get_default_layanan_sectors(): array {
             'eeat_proof' => [
                 'eyebrow'  => 'Otoritas Rekayasa & Standar Mutu',
                 'title'    => 'Didukung Manufaktur UAV Dalam Negeri & Protokol Audit Data',
-                'intro'    => 'Berbeda dari pelaksana lapangan yang hanya bergantung pada pasokan unit pihak ketiga, Full Drone Solutions (PT Karya Solusi Angkasa) mengelola rekayasa armada UAV di Sleman, Yogyakarta sejak 2012 dengan standar TKDN 60,74%, SNI 9199:2023, dan sistem manajemen mutu ISO 9001:2015.',
+                'intro'    => 'Berbeda dari pelaksana lapangan yang hanya bergantung pada pasokan unit pihak ketiga, Full Drone Solutions (PT Karya Solusi Angkasa) mengelola rekayasa armada UAV di Sleman, Yogyakarta dengan sistem manajemen mutu ISO 9001:2015 serta sertifikasi TKDN 60,74% pada lini pertanian FERTO dan SNI 9199:2023 pada FERTO 15 & FERTO 22.',
                 'bullets'  => [
-                    'Dukungan armada wahana seperti Fixed-Wing VTOL DELTAV untuk koridor dan area tambang luas maupun platform multirotor modular untuk area pit bertingkat, lengkap dengan sistem kendali FDS STATION berbahasa Indonesia.',
+                    'Dukungan armada wahana seperti Fixed-Wing VTOL DELTAV untuk koridor dan area tambang luas maupun platform multirotor modular untuk area pit bertingkat, lengkap dengan sistem kendali FDS Station berbahasa Indonesia.',
                     'Fleksibilitas kerja sama B2B: mulai dari jasa survei terjadwal hingga opsi evaluasi pengadaan armada mandiri beserta pelatihan tim surveyor internal tambang.',
                     'Setiap hasil pemetaan disertai dokumentasi pemeriksaan kualitas data berbasis titik kontrol lapangan (GCP/ICP) sebelum diserahkan kepada tim mine survey klien.',
                 ],
@@ -327,7 +328,7 @@ function fds_get_default_layanan_sectors(): array {
             'reading_links' => [
                 ['label' => 'Spesifikasi Fixed-Wing VTOL DELTAV untuk Pemetaan Luas', 'url' => home_url('/drone/deltav/')],
                 ['label' => 'Platform Multirotor MULTIPURPOSE untuk Inspeksi & Pit Detail', 'url' => home_url('/drone/multipurpose/')],
-                ['label' => 'Software Ground Control System FDS STATION Berbahasa Indonesia', 'slug' => 'ground-control-app-software-misi-drone-sepenuhnya-berbahasa-indonesia'],
+                ['label' => 'Software Ground Control System FDS Station Berbahasa Indonesia', 'slug' => 'ground-control-app-software-misi-drone-sepenuhnya-berbahasa-indonesia'],
                 ['label' => 'Panduan Teknis LiDAR untuk Tambang (Artikel Pilar)', 'slug' => 'lidar-untuk-tambang-manfaat-metode'],
                 ['label' => 'Faktor Pembentuk Biaya Survei LiDAR di Indonesia', 'slug' => 'biaya-survei-lidar-indonesia'],
             ],
@@ -354,7 +355,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana prosedur pengajuan survei lokasi tambang atau penjadwalan monitoring berkala?',
-                    'a' => 'Proses dimulai dengan pengiriman batas area (AOI dalam format .kml/.kmz/.shp) dan target output melalui halaman Kontak atau WhatsApp resmi FDS. Tim kami akan melakukan mining site assessment guna menyusun rekomendasi metode, rencana K3, dan estimasi kerja.',
+                    'a' => 'Proses dimulai dengan penyampaian lokasi IUP/site, perkiraan luas area target, dan kebutuhan output melalui halaman Kontak atau WhatsApp resmi FDS. Tim kami akan melakukan mining site assessment guna menyusun rekomendasi metode, rencana K3, dan estimasi kerja.',
                 ],
             ],
             'quote_defaults' => [
@@ -393,7 +394,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => 'Plantation Mapping', 'url' => ''],
             ],
             'home_tag'   => 'Agrikultur • Multispectral',
-            'image'      => 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/perkebunan-pertanian.webp',
             'image_alt'  => 'Pemetaan kesehatan tanaman dan penyemprotan perkebunan presisi dengan drone UAV FDS',
 
             'h1'           => 'Drone Pemetaan Kebun Sawit & Pertanian Presisi FDS',
@@ -488,12 +489,12 @@ function fds_get_default_layanan_sectors(): array {
                     'url'  => home_url('/layanan/jasa-multispectral-hyperspectral/'),
                 ],
                 [
-                    'name' => 'Deltav dan Avero Mapping UAV.',
+                    'name' => 'Fixed-Wing VTOL DELTAV Mapping UAV.',
                     'url'  => '',
                     'sublinks' => [
                         ['label' => 'Deltav', 'url' => home_url('/drone/deltav/')],
                     ],
-                    'note' => 'Konfigurasi wahana Avero Mapping UAV serta opsi kapasitas Ferto seri lebih besar tersedia sesuai konsultasi spesifikasi teknis.',
+                    'note' => 'Tersedia pula opsi kapasitas Ferto seri komersial lain (22L–50L) sesuai kebutuhan luasan perkebunan.',
                 ],
                 [
                     'name' => 'FDS Ground Control Station dan sistem pendukung operasi.',
@@ -598,7 +599,7 @@ function fds_get_default_layanan_sectors(): array {
                 [
                     'step'  => '02',
                     'title' => 'Pemilihan Wahana & Kalibrasi Sensor Operasional',
-                    'desc'  => 'Penetapan konfigurasi Deltav/Avero Mapping UAV, sensor FigSpec FS50/FS60, maupun unit sprayer seri Ferto sesuai karakter tajuk dan topografi kebun.',
+                    'desc'  => 'Penetapan konfigurasi Fixed-Wing VTOL DELTAV Mapping UAV, sensor FigSpec FS50/FS60, maupun unit sprayer seri Ferto sesuai karakter tajuk dan topografi kebun.',
                 ],
                 [
                     'step'  => '03',
@@ -617,7 +618,7 @@ function fds_get_default_layanan_sectors(): array {
                 'subtitle' => 'Seluruh hasil diserahkan dalam format spasial standar yang mudah digabungkan dengan arsip afdeling perusahaan.',
                 'formats'  => [
                     'Plantation Base Map & Ortofoto Blok (GeoTIFF tergeoreferensi)',
-                    'Peta Batas Lahan, Blok, Jaringan Irigasi & Jalan Produksi (.SHP / GeoJSON / .KML / .DWG)',
+                    'Peta Batas Lahan, Blok, Jaringan Irigasi & Jalan Produksi (.SHP / GeoJSON / .DWG)',
                     'Peta Indeks Vegetasi (NDVI & indeks spektral sesuai kebutuhan proyek)',
                     'Basis Data Inventarisasi Tanaman & Titik Area Kosong (Tabular .XLSX/.CSV + Layer Spasial)',
                     'Laporan Kondisi Tanaman, Dokumentasi Penyemprotan & Visualisasi Dashboard GIS',
@@ -648,15 +649,15 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 'kak_checklist' => [
                     'Jenis komoditas dan umur rata-rata tanaman di blok target.',
-                    'Peta batas kebun/afdeling (.kml, .kmz, atau .shp) serta perkiraan total hektar.',
+                    'Lokasi kabupaten/provinsi kebun/afdeling serta perkiraan total hektar.',
                     'Layanan yang diprioritaskan (Plantation Mapping, Multispectral Crop Health, Drone Spraying, atau pengadaan unit Ferto + Training).',
                     'Target jadwal musim tanam/pemupukan atau periode pelaporan manajemen.',
                 ],
             ],
             'eeat_proof' => [
                 'eyebrow'  => 'Otoritas Teknologi Agribisnis Nasional',
-                'title'    => 'Produsen Drone Pertanian Tersertifikasi SNI 9199:2023 & TKDN 60,74%',
-                'intro'    => 'PT Karya Solusi Angkasa (FDS) memproduksi lini drone sprayer pertanian di Indonesia dengan standar SNI 9199:2023 (Alat Semprot Tanpa Awak Pertanian) dan TKDN hingga 60,74%, terdaftar pada ekosistem pengadaan pemerintah e-Katalog LKPP.',
+                'title'    => 'Produsen Drone Pertanian Seri FERTO Bersertifikasi TKDN 60,74% & SNI',
+                'intro'    => 'PT Karya Solusi Angkasa (FDS) memproduksi lini drone sprayer pertanian seri FERTO dengan TKDN + BMP 60,74% serta standar SNI 9199:2023 pada FERTO 15 dan FERTO 22, terdaftar pada ekosistem pengadaan pemerintah e-Katalog LKPP.',
                 'bullets'  => [
                     'Selain layanan jasa pemetaan dan pemantauan kebun, FDS merancang langsung wahana seri Ferto (5L hingga 50L) serta menyediakan dukungan suku cadang dan pelatihan operator melalui kategori Pelatihan & Bootcamp.',
                     'Pengalaman implementasi lapangan mencakup uji aplikasi di lahan tebu komersial serta dukungan kendali berbahasa Indonesia melalui FDS Ground Control Station.',
@@ -694,7 +695,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Platform drone dan sensor apa yang digunakan pada solusi pertanian dan perkebunan FDS?',
-                    'a' => 'Teknologi yang dirujuk mencakup Ferto Agricultural Spraying Drone (termasuk Ferto 5, Ferto 10, dan Ferto 15 serta kapasitas lebih besar di katalog agrikultur), FigSpec FS50 / FS60 Multispectral & Hyperspectral Sensor, Deltav dan Avero Mapping UAV, serta FDS Ground Control Station.',
+                    'a' => 'Teknologi yang dirujuk mencakup Ferto Agricultural Spraying Drone (seri FERTO 5, FERTO 10, FERTO 15 hingga kapasitas besar 50L), FigSpec FS50 / FS60 Multispectral & Hyperspectral Sensor, Fixed-Wing VTOL DELTAV Mapping UAV, serta FDS Ground Control Station.',
                 ],
                 [
                     'q' => 'Apa saja hasil akhir (output pekerjaan) yang diterima tim perkebunan?',
@@ -710,7 +711,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bisakah perusahaan perkebunan membeli unit drone sekaligus melatih tim operator internal?',
-                    'a' => 'Ya. Selain layanan survei dan aplikasi berbasis proyek, PT Karya Solusi Angkasa menyediakan pengadaan unit resmi bersertifikat TKDN + SNI disertai pelatihan operasional melalui program Pelatihan, Bootcamp, dan Sertifikasi.',
+                    'a' => 'Ya. Selain layanan survei dan aplikasi berbasis proyek, PT Karya Solusi Angkasa menyediakan pengadaan unit drone pertanian seri FERTO bersertifikat TKDN 60,74% (serta SNI 9199:2023 pada FERTO 15 & FERTO 22) disertai pelatihan operasional melalui program Pelatihan, Bootcamp, dan Sertifikasi.',
                 ],
             ],
             'quote_defaults' => [
@@ -726,7 +727,7 @@ function fds_get_default_layanan_sectors(): array {
                 'service_type' => 'Precision Agriculture Drone Spraying and Plantation Mapping',
             ],
             'placeholders' => [
-                'Konfirmasi detail halaman produk atau lembar datasheet resmi untuk Avero Mapping UAV dan spesifikasi panjang gelombang aktif sensor FigSpec FS50/FS60.',
+                'Konfirmasi spesifikasi rentang panjang gelombang aktif resmi untuk sensor FigSpec FS50/FS60 yang dioperasikan tim.',
                 'Ketentuan luas minimum pengerjaan jasa penyemprotan/pemetaan per kontrak layanan dan paket harga B2B apabila dipublikasikan.',
                 'Portofolio resmi klien perkebunan/estate sawit beserta izin publikasi studi kasus.',
             ],
@@ -748,7 +749,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => 'Environmental Monitoring', 'url' => ''],
             ],
             'home_tag'   => 'Kehutanan • LiDAR & Karbon',
-            'image'      => 'https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/kehutanan-lingkungan.webp',
             'image_alt'  => 'Pemetaan kanopi hutan, estimasi biomassa, dan inventarisasi vegetasi menggunakan drone LiDAR FDS',
 
             'h1'           => 'Jasa LiDAR Kehutanan, Inventarisasi Hutan & Stok Karbon',
@@ -954,7 +955,7 @@ function fds_get_default_layanan_sectors(): array {
                 'formats'  => [
                     'Point Cloud Struktur Tajuk & Ground (.LAS / .LAZ)',
                     'Digital Terrain Model (DTM), DSM & Canopy Height Model (CHM GeoTIFF)',
-                    'Peta Stratifikasi Tutupan Lahan, Mangrove & Area Rehabilitasi (.SHP / GeoJSON / .KML)',
+                    'Peta Stratifikasi Tutupan Lahan, Mangrove & Area Rehabilitasi (.SHP / .GeoJSON)',
                     'Peta Sebaran Biomassa (AGB) & Estimasi Stok Karbon beserta Laporan Metodologi (.PDF / .XLSX)',
                     'Carbon Spatial Database & Environmental Monitoring Dashboard berbasis GIS',
                 ],
@@ -983,7 +984,7 @@ function fds_get_default_layanan_sectors(): array {
                     ],
                 ],
                 'kak_checklist' => [
-                    'Peta poligon areal konsesi, blok RKL/RKT, atau DAS target (.shp / .kml / .kmz).',
+                    'Lokasi kabupaten/provinsi areal konsesi, blok RKL/RKT, atau DAS target beserta estimasi luasan.',
                     'Tipe ekosistem dominan (hutan produksi, hutan alam, lahan gambut, kawasan mangrove, atau area rehabilitasi pascatambang).',
                     'Tujuan utama data (inventarisasi tegakan, baseline estimasi karbon, atau monitoring keberhasilan penanaman).',
                     'Ketersediaan data plot pengukuran lapangan eksisting yang perlu diintegrasikan.',
@@ -1045,13 +1046,13 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana memulai diskusi penyusunan metode survei untuk areal hutan atau program restorasi kami?',
-                    'a' => 'Kirimkan poligon batas kawasan (.kml/.shp), jenis ekosistem target, serta ketersediaan data plot darat melalui halaman Kontak atau WhatsApp resmi FDS agar tim FDS dapat menyusun rekomendasi metode dan rancangan kebutuhan kerja.',
+                    'a' => 'Kirimkan informasi lokasi dan perkiraan luas kawasan, jenis ekosistem target, serta ketersediaan data plot darat melalui halaman Kontak atau WhatsApp resmi FDS agar tim FDS dapat menyusun rekomendasi metode dan rancangan kebutuhan kerja.',
                 ],
             ],
             'quote_defaults' => [
                 'eyebrow'      => 'Konsultasi Survei Kehutanan & Karbon',
                 'title'        => 'Diskusikan Strategi Pemetaan Hutan, Mangrove & Monitoring Karbon',
-                'subtitle'     => 'Lampirkan batas areal kawasan (.kml/.shp) atau sampaikan tujuan inventarisasi untuk menyusun rancangan integrasi LiDAR, multispectral, dan validasi plot.',
+                'subtitle'     => 'Sampaikan lokasi kawasan dan tujuan inventarisasi untuk menyusun rancangan integrasi LiDAR, multispectral, dan validasi plot.',
                 'wa_prefill'   => 'Halo tim FDS, kami ingin berkonsultasi mengenai layanan pemetaan kehutanan / LiDAR hutan / monitoring karbon.',
                 'placeholder'  => 'Jelaskan jenis tutupan lahan (hutan produksi, mangrove, gambut, atau area rehabilitasi/reklamasi), luas area target, serta kebutuhan analisis AGB/karbon...',
             ],
@@ -1083,7 +1084,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => 'Infrastructure Mapping', 'url' => ''],
             ],
             'home_tag'   => 'Energi • Inspeksi Termal',
-            'image'      => 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/energi-infrastruktur.webp',
             'image_alt'  => 'Inspeksi visual dan termal fasilitas pembangkit surya dan koridor infrastruktur menggunakan drone FDS',
 
             'h1'           => 'Jasa Inspeksi Drone Infrastruktur, Termal & LiDAR Koridor',
@@ -1280,7 +1281,7 @@ function fds_get_default_layanan_sectors(): array {
                 'subtitle' => 'Setiap foto inspeksi, titik anomali termal, dan peta koridor tergeoreferensi agar mudah dilacak langsung ke lokasi menara, blok PV, atau STA proyek.',
                 'formats'  => [
                     'Point Cloud & Model Koridor Transmisi (.LAS / .LAZ & DSM GeoTIFF)',
-                    'Peta Lokasi Tower, Akses Koridor & Vegetation Encroachment (.SHP / .KML / .DWG)',
+                    'Peta Lokasi Tower, Akses Koridor & Vegetation Encroachment (.SHP / .GeoJSON / .DWG)',
                     'Citra Ortofoto Proyek Konstruksi & Model Permukaan Earthwork (Cut & Fill)',
                     'Laporan Anomali Termal Solar Farm / Struktur Industri Terkoordinat (.PDF + Tag Lokasi)',
                     'As-Built Documentation & Historical Inspection Database terintegrasi GIS',
@@ -1310,7 +1311,7 @@ function fds_get_default_layanan_sectors(): array {
                     ],
                 ],
                 'kak_checklist' => [
-                    'Jalur koridor atau batas poligon fasilitas (.kml, .kmz, atau .shp), panjang kilometer/hektar, atau jumlah unit menara/kapasitas PLTS.',
+                    'Lokasi jalur koridor atau fasilitas (kota/provinsi), panjang kilometer/hektar, atau jumlah unit menara/kapasitas PLTS.',
                     'Tujuan inspeksi (vegetation encroachment ROW, inspeksi visual menara, thermal anomaly solar farm, atau cut & fill konstruksi).',
                     'Ketentuan HSE site, izin lingkungan objek vital, atau kebutuhan koordinasi dengan tim operasi listrik/konstruksi.',
                     'Format laporan inspeksi atau CAD/GIS yang diharapkan oleh tim internal.',
@@ -1319,7 +1320,7 @@ function fds_get_default_layanan_sectors(): array {
             'eeat_proof' => [
                 'eyebrow'  => 'Kesiapan Rekayasa & Operasi Lapangan',
                 'title'    => 'Dukungan Wahana UAV Multipurpose & Pengawasan Mutu Indonesia',
-                'intro'    => 'Sebagai produsen UAV dengan standar TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015, FDS merancang platform seperti MULTIPURPOSE serta Fixed-Wing VTOL DELTAV untuk menjangkau skenario inspeksi industri maupun koridor panjang di Indonesia.',
+                'intro'    => 'Sebagai produsen UAV dengan sistem manajemen mutu ISO 9001:2015, FDS merancang platform seperti MULTIPURPOSE serta Fixed-Wing VTOL DELTAV untuk menjangkau skenario inspeksi industri maupun koridor panjang di Indonesia.',
                 'bullets'  => [
                     'Laporan anomali termal dan inspeksi visual disusun secara objektif sebagai alat bantu penapisan kondisi (screening) untuk pemeriksaan teknis lanjutan oleh engineer utilitas bersertifikat.',
                     'Seluruh dokumentasi koridor maupun as-built konstruksi dipadukan dengan kerangka kendali geodetik agar posisi objek dan infrastruktur sesuai koordinat desain.',
@@ -1372,13 +1373,13 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bagaimana cara mengajukan permintaan penawaran untuk inspeksi jalur transmisi atau PLTS?',
-                    'a' => 'Kirimkan jalur .kml atau batas lokasi aset, perkiraan panjang koridor atau kapasitas PLTS, dan jenis output inspeksi yang dibutuhkan melalui halaman Kontak atau WhatsApp resmi FDS untuk evaluasi teknis awal.',
+                    'a' => 'Sampaikan lokasi aset, perkiraan panjang koridor atau kapasitas PLTS, dan jenis output inspeksi yang dibutuhkan melalui halaman Kontak atau WhatsApp resmi FDS untuk evaluasi teknis awal.',
                 ],
             ],
             'quote_defaults' => [
                 'eyebrow'      => 'Permintaan Penawaran Energi & Infrastruktur',
                 'title'        => 'Konsultasikan Inspeksi Aset, Termal PLTS, atau LiDAR Koridor',
-                'subtitle'     => 'Kirimkan jalur koridor (.kml/.kmz) atau koordinat fasilitas industri beserta cakupan inspeksi untuk menyusun metode kerja dan estimasi.',
+                'subtitle'     => 'Kirimkan lokasi proyek, perkiraan panjang koridor atau kapasitas fasilitas, beserta cakupan inspeksi untuk menyusun metode kerja dan estimasi.',
                 'wa_prefill'   => 'Halo tim FDS, kami ingin berkonsultasi mengenai jasa inspeksi aset / termal / pemetaan koridor infrastruktur.',
                 'placeholder'  => 'Sebutkan jenis aset (transmisi SUTT/SUTET, PLTS/solar farm, jalan/jembatan, atau kawasan industri), panjang koridor/kapasitas, dan jenis inspeksi...',
             ],
@@ -1410,7 +1411,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => '3D Mapping', 'url' => ''],
             ],
             'home_tag'   => 'Perencanaan • Topografi & GIS',
-            'image'      => 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/perencanaan.webp',
             'image_alt'  => 'Survei topografi dan pemetaan udara 3D untuk perencanaan kawasan dan tata ruang wilayah FDS',
 
             'h1'           => 'Jasa Survei Topografi Drone, Peta Kontur & Data Spasial',
@@ -1602,7 +1603,7 @@ function fds_get_default_layanan_sectors(): array {
                 'formats'  => [
                     'High-Resolution Orthophoto & Digital Elevation Model (GeoTIFF / .ECW)',
                     'Peta Kontur, Drainase, Jalan & As-Built Survey (.DWG / .DXF siap buka di AutoCAD Civil 3D)',
-                    'Layer Tematik Tata Ruang, Penggunaan Lahan & Batas Kawasan (.SHP / GeoJSON / .KML)',
+                    'Layer Tematik Tata Ruang, Penggunaan Lahan & Batas Kawasan (.SHP / .GeoJSON)',
                     'Surface Model untuk Desain Rekayasa & Estimasi Cut and Fill Volume (.PDF + Tabular + Model 3D)',
                     'GIS Database Development & Interactive GIS Visualization',
                 ],
@@ -1631,7 +1632,7 @@ function fds_get_default_layanan_sectors(): array {
                     ],
                 ],
                 'kak_checklist' => [
-                    'Batas lokasi perencanaan dalam format .kml, .kmz, atau .shp beserta perkiraan luas kawasan.',
+                    'Lokasi kawasan perencanaan (kota/kabupaten dan provinsi) beserta perkiraan luas kawasan.',
                     'Kondisi tutupan lahan dominan (tanah terbuka, perkebunan/semak, atau kawasan urban terbangun).',
                     'Target penggunaan peta (studi kelayakan, DED masterplan, analisis drainase/cut-and-fill, atau tata ruang).',
                     'Format file desain yang dibutuhkan (DWG/DXF, GeoTIFF, SHP, atau WebGIS) beserta referensi datum/koordinat.',
@@ -1640,7 +1641,7 @@ function fds_get_default_layanan_sectors(): array {
             'eeat_proof' => [
                 'eyebrow'  => 'Kapabilitas Geospasial & Rekayasa Nasional',
                 'title'    => 'Menggabungkan Keahlian Pemetaan UAV & Pengembangan Sistem GIS',
-                'intro'    => 'Full Drone Solutions (PT Karya Solusi Angkasa) mendukung sektor perencanaan tata ruang dan konstruksi melalui kesatuan tim manufaktur UAV (TKDN 60,74%, SNI 9199:2023, ISO 9001:2015) serta spesialis pengolahan data geospasial.',
+                'intro'    => 'Full Drone Solutions (PT Karya Solusi Angkasa) mendukung sektor perencanaan tata ruang dan konstruksi melalui kesatuan tim manufaktur UAV berstandar ISO 9001:2015 serta spesialis pengolahan data geospasial.',
                 'bullets'  => [
                     'Jaringan kontrol lapangan tetap menjadi prasyarat pada proyek desain rekayasa agar model permukaan (DTM/DEM) selaras dengan acuan elevasi konsultan sipil maupun Jaring Kontrol Geodesi Nasional.',
                     'Pendekatan jujur dalam konsultasi awal: tim kami membantu mengevaluasi apakah lahan target cukup dengan foto udara fotogrametri atau memang wajib memakai LiDAR sebelum kontrak disepakati.',
@@ -1693,7 +1694,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Apa dokumen awal yang dibutuhkan agar FDS bisa menghitung estimasi survei topografi kawasan?',
-                    'a' => 'Kirimkan file batas lokasi (.kml/.kmz/.shp), informasi kondisi lahan saat ini, serta skala/tujuan perencanaan (studi kelayakan, DED, tata ruang, atau konstruksi) melalui halaman Kontak atau WhatsApp resmi kami.',
+                    'a' => 'Sampaikan informasi lokasi proyek (kota/kabupaten dan koordinat area), kondisi lahan saat ini, perkiraan luas hektar, serta skala/tujuan perencanaan (studi kelayakan, DED, tata ruang, atau konstruksi) melalui halaman Kontak atau WhatsApp resmi kami.',
                 ],
             ],
             'quote_defaults' => [
@@ -1730,7 +1731,7 @@ function fds_get_default_layanan_sectors(): array {
                 ['label' => 'Search & Rescue Support', 'url' => ''],
             ],
             'home_tag'   => 'Kebencanaan • SAR & Lingkungan',
-            'image'      => 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=900&q=80',
+            'image'      => $theme_uri . '/public/images/sectors/bencana-lingkungan.webp',
             'image_alt'  => 'Pemetaan udara cepat area terdampak banjir, longsor, dan kondisi lingkungan menggunakan drone UAV FDS',
 
             'h1'           => 'Jasa Pemetaan Drone Bencana, Banjir, Longsor & SAR',
@@ -1913,7 +1914,7 @@ function fds_get_default_layanan_sectors(): array {
                 'subtitle' => 'File keluaran dibuat agar mudah dibuka pada sistem GIS instansi maupun perangkat pemetaan lapangan.',
                 'formats'  => [
                     'Peta Area Terdampak, Sebaran Genangan & Akses Jalan Terputus (GeoTIFF / .PDF Siap Cetak)',
-                    'Layer Batas Genangan, Alur Sungai, Tanggul & Titik Infrastruktur Kritis (.SHP / .KML / GeoJSON)',
+                    'Layer Batas Genangan, Alur Sungai, Tanggul & Titik Infrastruktur Kritis (.SHP / .GeoJSON)',
                     'Model Permukaan 3D & Estimasi Volume Material Longsor (.TIF / .DWG sesuai cakupan)',
                     'Dokumentasi Visual & Termal Area Search & Rescue Terkoordinat',
                     'Baseline Geospatial Database untuk Pemantauan Rehabilitasi Wilayah & Ekosistem',
@@ -1943,7 +1944,7 @@ function fds_get_default_layanan_sectors(): array {
                     ],
                 ],
                 'kak_checklist' => [
-                    'Koordinat atau batas wilayah kajian/terdampak (.kml, .shp, atau nama kecamatan/kabupaten).',
+                    'Koordinat atau nama wilayah kajian/terdampak (kecamatan, kabupaten/kota, dan provinsi).',
                     'Jenis kejadian atau fokus kajian (pemetaan banjir/DAS, kajian longsor, dukungan SAR, atau baseline mitigasi).',
                     'Kebutuhan layanan: penugasan tim pemetaan FDS vs pengadaan unit UAV siaga + pelatihan tim daerah.',
                     'Pihak penanggung jawab koordinasi izin area atau pos komando di lapangan.',
@@ -1952,10 +1953,10 @@ function fds_get_default_layanan_sectors(): array {
             'eeat_proof' => [
                 'eyebrow'  => 'Kesiapan Teknologi Dalam Negeri',
                 'title'    => 'Wahana MULTIPURPOSE, Pengalaman Riset DAS & Kepatuhan e-Katalog',
-                'intro'    => 'Sebagai produsen UAV Indonesia dengan pengalaman riset sejak 2012, PT Karya Solusi Angkasa (FDS) merancang lini platform termasuk UAV MULTIPURPOSE serta Fixed-Wing VTOL DELTAV untuk skenario pemetaan udara luas maupun pengamatan visual dan termal di medan sulit.',
+                'intro'    => 'Sebagai produsen UAV nasional di Sleman, Yogyakarta, PT Karya Solusi Angkasa (FDS) merancang lini platform termasuk UAV MULTIPURPOSE serta Fixed-Wing VTOL DELTAV untuk skenario pemetaan udara luas maupun pengamatan visual dan termal di medan sulit.',
                 'bullets'  => [
                     'Kolaborasi riset manajemen Daerah Aliran Sungai (DAS) memperkuat pemahaman tim kami terhadap pemetaan hidrologi, tanggul, dan dinamika alur sungai.',
-                    'Status sertifikasi TKDN + BMP 60,74% dan ISO 9001:2015 mendukung kesiapan mekanisme pengadaan resmi instansi pemerintah pusat/daerah maupun BUMN melalui e-Katalog LKPP.',
+                    'Sistem manajemen mutu ISO 9001:2015 mendukung kesiapan mekanisme pengadaan resmi instansi pemerintah pusat/daerah maupun BUMN.',
                     'Transparansi teknis: dukungan Search & Rescue berbasis drone berfungsi sebagai alat bantu pengamatan udara bagi tim SAR berwenang di lapangan.',
                 ],
                 'portfolio_note' => 'Dokumentasi pemetaan kebencanaan dan lingkungan mencatat batas wilayah terdampak, waktu akuisisi lapangan, titik infrastruktur akses kritis, serta pembaruan kondisi selama program rehabilitasi berjalan.',
@@ -2002,11 +2003,11 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bisakah pemerintah daerah atau instansi kebencanaan membeli armada UAV siaga beserta pelatihan tim?',
-                    'a' => 'Bisa. FDS menyediakan pengadaan unit UAV buatan dalam negeri berstandar TKDN + ISO (seperti seri MULTIPURPOSE, DELTAV, dan DELFRO) disertai program pelatihan dan bootcamp bagi tim operasional instansi.',
+                    'a' => 'Bisa. FDS menyediakan pengadaan unit UAV buatan dalam negeri berstandar manajemen mutu ISO 9001:2015 (seperti seri MULTIPURPOSE, DELTAV, dan DELFRO) disertai program pelatihan dan bootcamp bagi tim operasional instansi.',
                 ],
                 [
                     'q' => 'Bagaimana cara mengajukan permintaan pemetaan baseline mitigasi maupun pemulihan pascabencana?',
-                    'a' => 'Anda dapat mengirimkan lokasi wilayah (.kml/.shp) atau deskripsi kebutuhan kajian hidrologi, longsor, dan lingkungan melalui halaman Kontak atau WhatsApp resmi PT Karya Solusi Angkasa.',
+                    'a' => 'Anda dapat mengirimkan informasi lokasi wilayah (koordinat/kabupaten/provinsi) atau deskripsi kebutuhan kajian hidrologi, longsor, dan lingkungan melalui halaman Kontak atau WhatsApp resmi PT Karya Solusi Angkasa.',
                 ],
             ],
             'quote_defaults' => [
@@ -2023,7 +2024,7 @@ function fds_get_default_layanan_sectors(): array {
             ],
             'placeholders' => [
                 'Konfirmasi tag/keyword resmi pilihan tim internal untuk Kartu 06 di Hub Layanan apabila berbeda dari 4 tag saat ini.',
-                'Protokol respon cepat khusus atau nomor hotline siaga bencana 24 jam apabila manajemen menyediakan jalur komunikasi tanggap darurat terpisah.',
+                'Protokol respon cepat khusus atau nomor hotline siaga tanggap darurat apabila manajemen menyediakan jalur komunikasi terpisah.',
                 'Studi kasus pemetaan banjir, longsor, atau kajian DAS/lingkungan yang diizinkan instansi mitra untuk dipublikasikan.',
             ],
         ],
@@ -2061,6 +2062,10 @@ function fds_get_layanan_sectors(bool $fresh = false): array {
         }
 
         $merged[$slug] = $merged_sec;
+    }
+
+    if (function_exists('fds_deep_decode')) {
+        $merged = \fds_deep_decode($merged);
     }
 
     $memo = $merged;

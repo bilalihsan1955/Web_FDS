@@ -63,12 +63,15 @@ function fds_get_about_activities() {
     $items = [];
     if (is_array($saved)) {
         foreach ($saved as $item) {
-            $name = trim($item['name'] ?? '');
+            $name = trim((string) ($item['name'] ?? ''));
             if (!empty($name)) {
+                $decode_fn = function ($s) {
+                    return function_exists('fds_clean_string') ? \fds_clean_string((string) $s) : html_entity_decode(wp_specialchars_decode((string) $s, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                };
                 $items[] = [
-                    'cat'  => wp_specialchars_decode($item['cat'] ?? '', ENT_QUOTES),
-                    'name' => wp_specialchars_decode($name, ENT_QUOTES),
-                    'desc' => wp_specialchars_decode($item['desc'] ?? '', ENT_QUOTES),
+                    'cat'  => $decode_fn($item['cat'] ?? ''),
+                    'name' => $decode_fn($name),
+                    'desc' => $decode_fn($item['desc'] ?? ''),
                 ];
             }
         }
@@ -78,46 +81,47 @@ function fds_get_about_activities() {
 
 // Default Galeri Dokumentasi Foto (Simpel: Hanya Judul, Kategori & Gambar — Variasi Rasio untuk Pinterest Masonry)
 function fds_get_default_about_gallery() {
+    $theme_uri = get_template_directory_uri();
     return [
         [
             'cat'   => 'workshop',
             'title' => 'Fasilitas Workshop & Manufaktur Presisi FDS Sleman',
-            'img'   => 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=800&h=1000&q=80',
+            'img'   => $theme_uri . '/public/images/site/workshop-deltav.webp',
         ],
         [
             'cat'   => 'lapangan',
             'title' => 'Uji Ketahanan & Jelajah DELTAV VTOL',
-            'img'   => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&h=600&q=80',
+            'img'   => $theme_uri . '/public/images/site/hero-2.webp',
         ],
         [
             'cat'   => 'lapangan',
             'title' => 'Implementasi Presisi Drone Sprayer Ferto di Perkebunan',
-            'img'   => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&h=800&q=80',
+            'img'   => $theme_uri . '/public/images/sectors/perkebunan-pertanian.webp',
         ],
         [
             'cat'   => 'pelatihan',
             'title' => 'Pelatihan & Sertifikasi Pilot Drone Korporasi B2B',
-            'img'   => 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&h=480&q=80',
+            'img'   => $theme_uri . '/public/images/site/engineer-ops.webp',
         ],
         [
             'cat'   => 'workshop',
             'title' => 'Riset Komposit Karbon & Pemodelan CFD Wahana Udara',
-            'img'   => 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&h=1000&q=80',
+            'img'   => $theme_uri . '/public/images/site/hero-1.webp',
         ],
         [
             'cat'   => 'lapangan',
             'title' => 'Pemetaan LiDAR & Fotogrametri Kawasan Tambang',
-            'img'   => 'https://images.unsplash.com/photo-1517420704952-d9f39e95b43e?auto=format&fit=crop&w=800&h=600&q=80',
+            'img'   => $theme_uri . '/public/images/sectors/pertambangan.webp',
         ],
         [
             'cat'   => 'workshop',
             'title' => 'Perakitan Avionik Presisi & Sistem Telemetri GCS',
-            'img'   => 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=800&h=800&q=80',
+            'img'   => $theme_uri . '/public/images/site/about-team.webp',
         ],
         [
             'cat'   => 'pelatihan',
             'title' => 'Simulasi Misi Terbang & Analisis Data Geospasial',
-            'img'   => 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&h=480&q=80',
+            'img'   => $theme_uri . '/public/images/sectors/perencanaan.webp',
         ],
     ];
 }
@@ -148,11 +152,9 @@ function fds_get_about_gallery() {
     // Recursively decode all HTML entities (e.g. &amp;amp; -> &)
     foreach ($items as &$it) {
         if (!empty($it['title']) && is_string($it['title'])) {
-            $prev = '';
-            while ($prev !== $it['title'] && strpos($it['title'], '&') !== false) {
-                $prev = $it['title'];
-                $it['title'] = wp_specialchars_decode($it['title'], ENT_QUOTES);
-            }
+            $it['title'] = function_exists('fds_clean_string')
+                ? \fds_clean_string($it['title'])
+                : html_entity_decode(wp_specialchars_decode($it['title'], ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
     }
     unset($it);
@@ -167,26 +169,29 @@ function fds_get_about_content() {
         return $static_about;
     }
 
-    $cached = get_transient('fds_about_content_cache_v2');
+    $cached = get_transient('fds_about_content_cache_v3');
     if ($cached !== false && is_array($cached)) {
+        if (function_exists('fds_deep_decode')) {
+            $cached = \fds_deep_decode($cached);
+        }
         $static_about = $cached;
         return $cached;
     }
 
     $data = [
         // HERO
-        'hero_sub'        => get_option('fds_about_hero_sub', 'PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Pengalaman UAV Sejak 2012 &middot; Yogyakarta'),
+        'hero_sub'        => get_option('fds_about_hero_sub', 'PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Yogyakarta'),
         'hero_title'      => get_option('fds_about_hero_title', "Advanced UAV Engineering,\nManufacturing & AI Technology."),
-        'hero_desc'       => get_option('fds_about_hero_desc', 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'),
+        'hero_desc'       => get_option('fds_about_hero_desc', 'Perusahaan manufaktur pesawat nirawak (UAV) nasional berbadan hukum PT Karya Solusi Angkasa sejak 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.'),
         'hero_img'        => get_option('fds_about_hero_img', ''),
 
         // STATS
-        'stat1_num'       => get_option('fds_about_stat1_num', '2012'),
-        'stat1_lbl'       => get_option('fds_about_stat1_lbl', 'Pengalaman UAV (PT Sejak 2019)'),
+        'stat1_num'       => get_option('fds_about_stat1_num', '2019'),
+        'stat1_lbl'       => get_option('fds_about_stat1_lbl', 'Berbadan Hukum PT Resmi'),
         'stat2_num'       => get_option('fds_about_stat2_num', '60,74%'),
-        'stat2_lbl'       => get_option('fds_about_stat2_lbl', 'Nilai TKDN + BMP Kemenperin'),
+        'stat2_lbl'       => get_option('fds_about_stat2_lbl', 'TKDN + BMP (Seri FERTO)'),
         'stat3_num'       => get_option('fds_about_stat3_num', 'ISO & SNI'),
-        'stat3_lbl'       => get_option('fds_about_stat3_lbl', 'ISO 9001:2015 & SNI 9199:2023'),
+        'stat3_lbl'       => get_option('fds_about_stat3_lbl', 'ISO 9001:2015 & SNI (FERTO 15 & 22)'),
         'stat4_num'       => get_option('fds_about_stat4_num', '100%'),
         'stat4_lbl'       => get_option('fds_about_stat4_lbl', 'Rekayasa & Software Lokal'),
 
@@ -194,10 +199,10 @@ function fds_get_about_content() {
         'story_badge'     => get_option('fds_about_story_badge', 'Cerita Kami'),
         'story_title'     => get_option('fds_about_story_title', 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.'),
         'story_img'       => get_option('fds_about_story_img', ''),
-        'story_p1'        => get_option('fds_about_story_p1', 'Perjalanan kami dimulai pada tahun 2012 dari sebuah riset aeromodelling dan rekayasa wahana terbang tanpa awak. Didorong oleh komitmen kuat terhadap kemandirian teknologi nasional, tim kami resmi berbadan hukum pada tahun 2019 sebagai PT Karya Solusi Angkasa dengan merek dagang Full Drone Solutions (FDS).'),
+        'story_p1'        => get_option('fds_about_story_p1', 'Berawal dari riset aeromodelling dan rekayasa wahana terbang tanpa awak di Yogyakarta, tim kami resmi berbadan hukum pada tahun 2019 sebagai PT Karya Solusi Angkasa dengan merek dagang Full Drone Solutions (FDS).'),
         'story_p2'        => get_option('fds_about_story_p2', 'Berpusat di Sleman, Daerah Istimewa Yogyakarta, FDS mengintegrasikan fasilitas perancangan aerodinamika, pencetakan rangka karbon komposit lokal, perakitan avionik in-house, serta pengembangan perangkat lunak sistem kendali stasiun darat (GCS) berbahasa Indonesia.'),
-        'story_p3'        => get_option('fds_about_story_p3', 'Kami adalah pionir produsen drone pertanian presisi di Indonesia dengan sertifikasi Standar Nasional Indonesia (SNI 9199:2023) dan mengantongi sertifikat Manajemen Mutu Internasional ISO 9001:2015.'),
-        'story_p4'        => get_option('fds_about_story_p4', 'Melalui sertifikasi Tingkat Komponen Dalam Negeri (TKDN) dan Bobot Manfaat Perusahaan (BMP) dari Kementerian Perindustrian RI yang menembus 60,74%, FDS membuktikan bahwa inovasi kedirgantaraan berstandar global lahir dari tangan talenta terbaik bangsa.'),
+        'story_p3'        => get_option('fds_about_story_p3', 'PT Karya Solusi Angkasa menerapkan Sistem Manajemen Mutu Internasional ISO 9001:2015 serta standar nasional SNI 9199:2023 pada model drone pertanian FERTO 15 dan FERTO 22.'),
+        'story_p4'        => get_option('fds_about_story_p4', 'Melalui sertifikasi Tingkat Komponen Dalam Negeri (TKDN) dan Bobot Manfaat Perusahaan (BMP) dari Kementerian Perindustrian RI mencapai 60,74% untuk lini drone agrikultur FERTO, FDS membuktikan bahwa inovasi kedirgantaraan berstandar nasional lahir dari tangan talenta terbaik bangsa.'),
         'story_cta_text'  => get_option('fds_about_story_cta_text', 'Lihat kemitraan strategis & portofolio klien'),
         'story_cta_url'   => get_option('fds_about_story_cta_url', '#aktivitas'),
 
@@ -258,21 +263,21 @@ function fds_get_about_content() {
         
         'cert1_badge'     => get_option('fds_about_cert1_badge', 'Kemenperin RI'),
         'cert1_val'       => get_option('fds_about_cert1_val', '60,74%'),
-        'cert1_desc'      => get_option('fds_about_cert1_desc', 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.'),
+        'cert1_desc'      => get_option('fds_about_cert1_desc', 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) Kemenperin RI untuk lini drone pertanian seri FERTO.'),
 
         'cert2_badge'     => get_option('fds_about_cert2_badge', 'Standar Produk & Manajemen'),
         'cert2_val'       => get_option('fds_about_cert2_val', 'ISO & SNI'),
-        'cert2_desc'      => get_option('fds_about_cert2_desc', 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 (Standar Nasional Drone Pertanian).'),
+        'cert2_desc'      => get_option('fds_about_cert2_desc', 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 pada FERTO 15 & FERTO 22.'),
 
         'cert3_badge'     => get_option('fds_about_cert3_badge', 'Jaminan Layanan'),
-        'cert3_val'       => get_option('fds_about_cert3_val', '24/7'),
-        'cert3_desc'      => get_option('fds_about_cert3_desc', 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.'),
+        'cert3_val'       => get_option('fds_about_cert3_val', 'Nasional'),
+        'cert3_desc'      => get_option('fds_about_cert3_desc', 'Dukungan servis, suku cadang asli, dan pelatihan pilot resmi di seluruh Indonesia.'),
 
         // CTA & WORKSHOP
         'cta_title'       => get_option('fds_about_cta_title', 'Siap bermitra dengan PT Karya Solusi Angkasa?'),
         'cta_desc'        => get_option('fds_about_cta_desc', 'Baik instansi pemerintah, BUMN, perkebunan agrikultur besar, atau mitra industri — tim engineering kami siap memberikan solusi terbaik.'),
         'cta_btn1_text'   => get_option('fds_about_cta_btn1_text', 'Mulai Konsultasi'),
-        'cta_btn1_url'    => get_option('fds_about_cta_btn1_url', '#kontak'),
+        'cta_btn1_url'    => get_option('fds_about_cta_btn1_url', home_url('/kontak/#hubungi-form')),
         'cta_btn2_text'   => get_option('fds_about_cta_btn2_text', 'Baca Studi Kasus ›'),
         'cta_btn2_url'    => get_option('fds_about_cta_btn2_url', '/blog/'),
 
@@ -289,15 +294,19 @@ function fds_get_about_content() {
     // Decode semua HTML entities berulang (&amp;amp; → &amp; → &, dll)
     $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
+        if (function_exists('fds_clean_string')) {
+            return \fds_clean_string($v);
+        }
         $prev = '';
         while ($prev !== $v) {
             $prev = $v;
             $v = wp_specialchars_decode($v, ENT_QUOTES);
+            $v = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         return $v;
     }, $data);
 
-    set_transient('fds_about_content_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_about_content_cache_v3', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_about = $clean_data;
     return $clean_data;
 }
@@ -368,18 +377,18 @@ function render_about_content_admin_page() {
         // Simpan Dynamic Repeater Aktivitas & Kemitraan
         if (isset($_POST['fds_about_activity_name']) && is_array($_POST['fds_about_activity_name'])) {
             $activity_items = [];
-            $names = $_POST['fds_about_activity_name'];
-            $cats  = $_POST['fds_about_activity_cat'] ?? [];
-            $descs = $_POST['fds_about_activity_desc'] ?? [];
+            $names = wp_unslash($_POST['fds_about_activity_name']);
+            $cats  = isset($_POST['fds_about_activity_cat']) && is_array($_POST['fds_about_activity_cat']) ? wp_unslash($_POST['fds_about_activity_cat']) : [];
+            $descs = isset($_POST['fds_about_activity_desc']) && is_array($_POST['fds_about_activity_desc']) ? wp_unslash($_POST['fds_about_activity_desc']) : [];
 
             foreach ($names as $idx => $name) {
-                $name_clean = sanitize_text_field($name);
+                $name_clean = sanitize_text_field((string) $name);
                 if (empty($name_clean)) continue;
 
                 $activity_items[] = [
-                    'cat'  => sanitize_text_field($cats[$idx] ?? ''),
+                    'cat'  => sanitize_text_field((string) ($cats[$idx] ?? '')),
                     'name' => $name_clean,
-                    'desc' => sanitize_textarea_field($descs[$idx] ?? ''),
+                    'desc' => sanitize_textarea_field((string) ($descs[$idx] ?? '')),
                 ];
             }
             update_option('fds_about_activity_items', $activity_items);
@@ -388,17 +397,21 @@ function render_about_content_admin_page() {
         // Simpan Dynamic Repeater Galeri Dokumentasi (Ultra Sederhana: Hanya Judul & Gambar)
         if (isset($_POST['fds_about_gallery_title_item']) && is_array($_POST['fds_about_gallery_title_item'])) {
             $gallery_items = [];
-            $titles = $_POST['fds_about_gallery_title_item'];
-            $imgs   = $_POST['fds_about_gallery_img'] ?? [];
+            $titles = wp_unslash($_POST['fds_about_gallery_title_item']);
+            $imgs   = isset($_POST['fds_about_gallery_img']) && is_array($_POST['fds_about_gallery_img']) ? wp_unslash($_POST['fds_about_gallery_img']) : [];
 
             foreach ($titles as $idx => $title) {
-                $title_clean = sanitize_text_field($title);
-                $prev = '';
-                while ($prev !== $title_clean && strpos($title_clean, '&') !== false) {
-                    $prev = $title_clean;
-                    $title_clean = wp_specialchars_decode($title_clean, ENT_QUOTES);
+                $title_clean = sanitize_text_field((string) $title);
+                if (function_exists('fds_clean_string')) {
+                    $title_clean = \fds_clean_string($title_clean);
+                } else {
+                    $prev = '';
+                    while ($prev !== $title_clean && strpos($title_clean, '&') !== false) {
+                        $prev = $title_clean;
+                        $title_clean = html_entity_decode(wp_specialchars_decode($title_clean, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                    }
                 }
-                $img_clean   = esc_url_raw($imgs[$idx] ?? '');
+                $img_clean   = esc_url_raw((string) ($imgs[$idx] ?? ''));
                 if (empty($title_clean) && empty($img_clean)) continue;
 
                 $gallery_items[] = [
@@ -411,32 +424,41 @@ function render_about_content_admin_page() {
 
         // Sinkronisasi otomatis ke Kontak Global
         if (!empty($_POST['fds_about_info_entitas'])) {
-            update_option('fds_global_company_name', sanitize_text_field($_POST['fds_about_info_entitas']));
-            update_option('fds_footer_company_name', sanitize_text_field($_POST['fds_about_info_entitas']));
+            $ent = sanitize_text_field(wp_unslash((string) $_POST['fds_about_info_entitas']));
+            update_option('fds_global_company_name', $ent);
+            update_option('fds_footer_company_name', $ent);
         }
         if (!empty($_POST['fds_about_info_alamat'])) {
-            update_option('fds_global_address', sanitize_textarea_field($_POST['fds_about_info_alamat']));
-            update_option('fds_footer_address', sanitize_textarea_field($_POST['fds_about_info_alamat']));
-            update_option('fds_kontak_address', sanitize_textarea_field($_POST['fds_about_info_alamat']));
+            $alm = sanitize_textarea_field(wp_unslash((string) $_POST['fds_about_info_alamat']));
+            update_option('fds_global_address', $alm);
+            update_option('fds_footer_address', $alm);
+            update_option('fds_kontak_address', $alm);
         }
         if (!empty($_POST['fds_about_info_email'])) {
-            update_option('fds_global_email', sanitize_email($_POST['fds_about_info_email']));
-            update_option('fds_footer_email', sanitize_email($_POST['fds_about_info_email']));
-            update_option('fds_kontak_email', sanitize_email($_POST['fds_about_info_email']));
+            $eml = sanitize_email(wp_unslash((string) $_POST['fds_about_info_email']));
+            update_option('fds_global_email', $eml);
+            update_option('fds_footer_email', $eml);
+            update_option('fds_kontak_email', $eml);
         }
         if (!empty($_POST['fds_about_info_phone'])) {
-            update_option('fds_global_phone', sanitize_text_field($_POST['fds_about_info_phone']));
-            update_option('fds_footer_phone', sanitize_text_field($_POST['fds_about_info_phone']));
-            update_option('fds_kontak_phone', sanitize_text_field($_POST['fds_about_info_phone']));
+            $phn = sanitize_text_field(wp_unslash((string) $_POST['fds_about_info_phone']));
+            update_option('fds_global_phone', $phn);
+            update_option('fds_footer_phone', $phn);
+            update_option('fds_kontak_phone', $phn);
         }
         if (!empty($_POST['fds_about_info_maps'])) {
-            update_option('fds_global_maps_url', esc_url_raw($_POST['fds_about_info_maps']));
-            update_option('fds_kontak_maps', esc_url_raw($_POST['fds_about_info_maps']));
+            $mps = esc_url_raw(wp_unslash((string) $_POST['fds_about_info_maps']));
+            update_option('fds_global_maps_url', $mps);
+            update_option('fds_kontak_maps', $mps);
         }
 
         $saved = true;
         delete_transient('fds_about_content_cache');
         delete_transient('fds_about_content_cache_v2');
+        delete_transient('fds_about_content_cache_v3');
+        delete_transient('fds_global_contact_cache');
+        delete_transient('fds_global_contact_cache_v2');
+        delete_transient('fds_global_contact_cache_v3');
     }
 
     wp_enqueue_media();
@@ -510,7 +532,7 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Sub-Headline / Tagline Atas</label>
               <input type="text" name="fds_about_hero_sub" value="<?php echo esc_attr($data['hero_sub']); ?>">
-              <p class="description">Contoh: PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Pengalaman UAV Sejak 2012 &middot; Yogyakarta</p>
+              <p class="description">Contoh: PT Karya Solusi Angkasa (Full Drone Solutions) &middot; Yogyakarta</p>
             </div>
 
             <div class="fds-field">
@@ -527,11 +549,11 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Gambar Hero (Workshop / Tim FDS)</label>
               <div class="fds-img-preview-box">
-                <img id="preview_hero_img" class="fds-img-preview" src="<?php echo esc_url($data['hero_img'] ?: fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80')); ?>">
+                <img id="preview_hero_img" class="fds-img-preview" src="<?php echo esc_url($data['hero_img'] ?: fds_img('tk_hero', get_template_directory_uri() . '/public/images/site/workshop-deltav.webp')); ?>">
                 <div>
                   <input type="hidden" name="fds_about_hero_img" id="input_hero_img" value="<?php echo esc_attr($data['hero_img']); ?>">
                   <button type="button" class="button fds-upload-btn" data-input="input_hero_img" data-preview="preview_hero_img">Pilih / Ganti Gambar</button>
-                  <button type="button" class="button fds-clear-btn" data-input="input_hero_img" data-preview="preview_hero_img" data-default="<?php echo esc_url(fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80')); ?>" style="margin-left: 6px;">Reset</button>
+                  <button type="button" class="button fds-clear-btn" data-input="input_hero_img" data-preview="preview_hero_img" data-default="<?php echo esc_url(fds_img('tk_hero', get_template_directory_uri() . '/public/images/site/workshop-deltav.webp')); ?>" style="margin-left: 6px;">Reset</button>
                 </div>
               </div>
             </div>
@@ -618,7 +640,7 @@ function render_about_content_admin_page() {
 
             <h3>Paragraf Narasi (Kolom Kanan)</h3>
             <div class="fds-field">
-              <label>Paragraf 1 (Awal Mula 2012)</label>
+              <label>Paragraf 1 (Latar Belakang Riset & Pendirian PT)</label>
               <textarea name="fds_about_story_p1" rows="3"><?php echo esc_textarea($data['story_p1']); ?></textarea>
             </div>
             <div class="fds-field">
@@ -907,7 +929,7 @@ function render_about_content_admin_page() {
                 </div>
               </div>
 
-              <!-- Card 3: 24/7 -->
+              <!-- Card 3: Nasional -->
               <div style="background: #f9f9fb; border: 1px solid #e5e5ea; border-radius: 8px; padding: 16px;">
                 <div class="fds-field">
                   <label>Card 3 (Badge)</label>

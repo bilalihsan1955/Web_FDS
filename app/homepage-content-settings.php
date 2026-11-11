@@ -64,13 +64,13 @@ function fds_get_default_layanan_items() {
         ],
         [
             'title' => 'Produsen Drone Pertanian & Sprayer FERTO (TKDN 60,74%)',
-            'desc'  => 'Manufaktur resmi drone pertanian sprayer dan granule spreader pupuk kapasitas 5L–50L dengan sertifikasi TKDN 60,74% & SNI 9199:2023 untuk efisiensi perkebunan dan pangan.',
+            'desc'  => 'Manufaktur resmi drone pertanian sprayer dan granule spreader pupuk kapasitas 5L–50L dengan sertifikasi TKDN + BMP 60,74% (seri FERTO) serta SNI 9199:2023 pada FERTO 15 & FERTO 22.',
             'url'   => home_url('/kategori-drone/agrikultur/'),
             'group' => 'Produsen UAV',
         ],
         [
             'title' => 'Produsen Drone Pemetaan, Logistik & Surveillance',
-            'desc'  => 'Perakitan UAV Fixed-Wing VTOL DELTAV jangkauan 60 km untuk mapping luas, drone kargo logistik DELFRO, serta drone surveillance termal inframerah FLIR untuk patroli malam.',
+            'desc'  => 'Perakitan UAV Fixed-Wing VTOL DELTAV jangkauan 60 km untuk mapping luas, drone kargo logistik DELFRO, serta drone surveillance kamera optik dan termal inframerah untuk patroli dan inspeksi malam.',
             'url'   => home_url('/kategori-drone/pemetaan-gis/'),
             'group' => 'Produsen UAV',
         ],
@@ -134,16 +134,18 @@ function fds_get_layanan_items() {
         foreach ($saved as $item) {
             $t = trim((string) ($item['title'] ?? ''));
             if (!empty($t)) {
-                $decoded_title = wp_specialchars_decode($t, ENT_QUOTES);
+                $decoded_title = function_exists('fds_clean_string') ? \fds_clean_string($t) : html_entity_decode(wp_specialchars_decode($t, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $decoded_desc  = function_exists('fds_clean_string') ? \fds_clean_string((string) ($item['desc'] ?? '')) : html_entity_decode(wp_specialchars_decode((string) ($item['desc'] ?? ''), ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                $decoded_group = !empty($item['group']) ? (function_exists('fds_clean_string') ? \fds_clean_string((string) $item['group']) : (string) $item['group']) : 'Pelatihan & Operasional';
                 $raw_url       = trim((string) ($item['url'] ?? ''));
                 $resolved_url  = $items_customized
                     ? ($raw_url !== '' ? $raw_url : home_url('/layanan/'))
                     : fds_resolve_legacy_layanan_item_url($decoded_title, $raw_url);
                 $items[] = [
                     'title' => $decoded_title,
-                    'desc'  => wp_specialchars_decode((string) ($item['desc'] ?? ''), ENT_QUOTES),
+                    'desc'  => $decoded_desc,
                     'url'   => $resolved_url,
-                    'group' => !empty($item['group']) ? $item['group'] : 'Pelatihan & Operasional',
+                    'group' => $decoded_group,
                 ];
             }
         }
@@ -158,8 +160,11 @@ function fds_get_homepage_content(bool $fresh = false) {
     }
 
     if (!$fresh) {
-        $cached = get_transient('fds_homepage_content_cache');
+        $cached = get_transient('fds_homepage_content_cache_v2');
         if ($cached !== false && is_array($cached)) {
+            if (function_exists('fds_deep_decode')) {
+                $cached = \fds_deep_decode($cached);
+            }
             $static_hp = $cached;
             return $cached;
         }
@@ -187,7 +192,7 @@ function fds_get_homepage_content(bool $fresh = false) {
         // HERO
         'hero_badge'        => get_option('fds_hero_badge', 'Produsen Drone Pertanian & UAV Indonesia'),
         'hero_title'        => get_option('fds_hero_title', "Solusi Drone Pertanian &\nIndustrial Indonesia."),
-        'hero_desc'         => get_option('fds_hero_desc', 'Produsen UAV berstandar TKDN 60,74% & SNI 9199:2023. Solusi drone pertanian sprayer FERTO, pemetaan drone LiDAR, dan inspeksi industri.'),
+        'hero_desc'         => get_option('fds_hero_desc', 'Produsen UAV berstandar ISO 9001:2015 serta TKDN 60,74% (seri FERTO) dan SNI 9199:2023 (FERTO 15 & FERTO 22). Solusi drone pertanian sprayer, pemetaan LiDAR, dan inspeksi industri.'),
         'hero_cta1_text'    => get_option('fds_hero_cta1_text', 'Jelajahi Solusi Kami'),
         'hero_cta1_url'     => get_option('fds_hero_cta1_url', '#solusi'),
         'hero_cta2_text'    => get_option('fds_hero_cta2_text', 'Konsultasi Enterprise'),
@@ -206,13 +211,13 @@ function fds_get_homepage_content(bool $fresh = false) {
         'produk_title'      => get_option('fds_produk_title', 'Standar Mutu Manufaktur Nasional.'),
         'produk_desc'       => get_option('fds_produk_desc', 'Seluruh wahana diproduksi di Sleman, Yogyakarta dengan kepatuhan regulasi penerbangan DKPPU dan sertifikasi resmi Kementerian Perindustrian RI.'),
         'produk_stat1_num'  => get_option('fds_produk_stat1_num', '60,74%'),
-        'produk_stat1_lbl'  => get_option('fds_produk_stat1_lbl', 'TKDN + BMP Kemenperin RI'),
+        'produk_stat1_lbl'  => get_option('fds_produk_stat1_lbl', 'TKDN + BMP Kemenperin RI (Seri FERTO)'),
         'produk_stat2_num'  => get_option('fds_produk_stat2_num', 'SNI'),
-        'produk_stat2_lbl'  => get_option('fds_produk_stat2_lbl', 'SNI 9199:2023 Pertanian'),
+        'produk_stat2_lbl'  => get_option('fds_produk_stat2_lbl', 'SNI 9199:2023 (FERTO 15 & 22)'),
         'produk_stat3_num'  => get_option('fds_produk_stat3_num', '50 Liter'),
         'produk_stat3_lbl'  => get_option('fds_produk_stat3_lbl', 'Kapasitas Semprot Maksimal FERTO'),
-        'produk_stat4_num'  => get_option('fds_produk_stat4_num', '48 Jam'),
-        'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Jaminan Servis & Spare Parts Lokal'),
+        'produk_stat4_num'  => get_option('fds_produk_stat4_num', 'Nasional'),
+        'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Dukungan Servis & Suku Cadang Resmi'),
 
         // KEUNGGULAN (BENTO GRID)
         'keunggulan_badge'       => get_option('fds_keunggulan_badge', 'Keunggulan Manufaktur FDS'),
@@ -221,33 +226,33 @@ function fds_get_homepage_content(bool $fresh = false) {
         'keunggulan_card1_badge' => get_option('fds_keunggulan_card1_badge', 'Riset & Perakitan Sleman'),
         'keunggulan_card1_title' => get_option('fds_keunggulan_card1_title', "Rangka Karbon Komposit &\nAvionik In-House."),
         'keunggulan_card1_desc'  => get_option('fds_keunggulan_card1_desc', 'Setiap unit dirakit dan diuji terbang langsung di fasilitas workshop kami di Sleman, Yogyakarta di bawah audit Sistem Manajemen Mutu ISO 9001:2015.'),
-        'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80')),
+        'keunggulan_card1_img'   => get_option('fds_keunggulan_card1_img', get_option('fds_img_keunggulan', get_template_directory_uri() . '/public/images/site/workshop-deltav.webp')),
 
         'keunggulan_card2_badge'   => get_option('fds_keunggulan_card2_badge', 'Legalitas Pengadaan'),
         'keunggulan_card2_stat'    => get_option('fds_keunggulan_card2_stat', '60,74%'),
-        'keunggulan_card2_substat' => get_option('fds_keunggulan_card2_substat', 'Nilai TKDN + BMP Kemenperin RI'),
-        'keunggulan_card2_desc'    => get_option('fds_keunggulan_card2_desc', 'Sertifikat resmi TKDN Kemenperin RI. Memenuhi syarat prioritas belanja APBN/APBD di e-Katalog LKPP.'),
+        'keunggulan_card2_substat' => get_option('fds_keunggulan_card2_substat', 'TKDN + BMP Seri FERTO Kemenperin RI'),
+        'keunggulan_card2_desc'    => get_option('fds_keunggulan_card2_desc', 'Sertifikat resmi TKDN + BMP untuk seluruh model drone pertanian seri FERTO. Memenuhi prioritas belanja pemerintah di e-Katalog LKPP.'),
         'keunggulan_card2_img'     => get_option('fds_keunggulan_card2_img', get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg'),
 
         'keunggulan_card3_badge' => get_option('fds_keunggulan_card3_badge', 'Software Kendali'),
-        'keunggulan_card3_title' => get_option('fds_keunggulan_card3_title', "FDS STATION GCS\nBahasa Indonesia."),
+        'keunggulan_card3_title' => get_option('fds_keunggulan_card3_title', "FDS Station GCS\nBahasa Indonesia."),
         'keunggulan_card3_desc'  => get_option('fds_keunggulan_card3_desc', 'Software Ground Control Station intuitif tanpa kendala bahasa. Rencana terbang waypoint otomatis dan fitur keselamatan fail-safe RTH.'),
-        'keunggulan_card3_img'   => get_option('fds_keunggulan_card3_img', 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80'),
+        'keunggulan_card3_img'   => get_option('fds_keunggulan_card3_img', get_template_directory_uri() . '/public/images/site/engineer-ops.webp'),
 
         'keunggulan_card4_badge' => get_option('fds_keunggulan_card4_badge', 'Sertifikasi Produk'),
         'keunggulan_card4_stat'  => get_option('fds_keunggulan_card4_stat', 'ISO & SNI'),
-        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Tersertifikasi SNI 9199:2023 untuk keselamatan terbang drone pertanian dan sertifikasi ISO 9001:2015.'),
-        'keunggulan_card4_img'   => get_option('fds_keunggulan_card4_img', 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80'),
+        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Manajemen mutu manufaktur ISO 9001:2015 serta standar keselamatan nasional SNI 9199:2023 pada FERTO 15 dan FERTO 22.'),
+        'keunggulan_card4_img'   => get_option('fds_keunggulan_card4_img', get_template_directory_uri() . '/public/images/site/hero-2.webp'),
 
         'keunggulan_card5_badge' => get_option('fds_keunggulan_card5_badge', 'Layanan Purna Jual'),
         'keunggulan_card5_title' => get_option('fds_keunggulan_card5_title', 'Suku Cadang Ready Stock & Garansi Resmi.'),
         'keunggulan_card5_desc'  => get_option('fds_keunggulan_card5_desc', 'Semua komponen arm, motor propulsi, nosel, dan baterai tersedia langsung di workshop tanpa perlu menunggu impor berbulan-bulan.'),
-        'keunggulan_card5_img'   => get_option('fds_keunggulan_card5_img', 'https://images.unsplash.com/photo-1581092335397-9583fe92d232?auto=format&fit=crop&w=800&q=80'),
+        'keunggulan_card5_img'   => get_option('fds_keunggulan_card5_img', get_template_directory_uri() . '/public/images/site/workshop-deltav.webp'),
 
         'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Akademi Pilot'),
-        'keunggulan_card6_stat'  => get_option('fds_keunggulan_card6_stat', '2012'),
-        'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Berpengalaman di industri UAV sejak 2012, resmi berbadan hukum PT sejak 2019.'),
-        'keunggulan_card6_img'   => get_option('fds_keunggulan_card6_img', 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=800&q=80'),
+        'keunggulan_card6_stat'  => get_option('fds_keunggulan_card6_stat', 'DKPPU'),
+        'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Pelatihan operator drone industri dan pendampingan persiapan sertifikasi pilot sesuai regulasi CASR Part 107.'),
+        'keunggulan_card6_img'   => get_option('fds_keunggulan_card6_img', get_template_directory_uri() . '/public/images/site/about-team.webp'),
 
         'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Skalabilitas Armada'),
         'keunggulan_card7_title' => get_option('fds_keunggulan_card7_title', 'Satu ekosistem. Banyak solusi.'),
@@ -275,7 +280,7 @@ function fds_get_homepage_content(bool $fresh = false) {
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Formulir Permintaan Penawaran / Jadwal Demo'),
         'kontak_form_desc'       => get_option('fds_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Permintaan Konsultasi'),
-        'kontak_form_note'       => get_option('fds_kontak_form_note', 'Tim engineer kami akan merespons dalam 1×24 jam kerja. Data perusahaan Anda terjamin aman.'),
+        'kontak_form_note'       => get_option('fds_kontak_form_note', 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.'),
         'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
     ];
 
@@ -283,15 +288,19 @@ function fds_get_homepage_content(bool $fresh = false) {
     // agar template Blade tidak pernah menerima entity ganda.
     $clean_data = array_map(function($v) {
         if (!is_string($v)) return $v;
+        if (function_exists('fds_clean_string')) {
+            return \fds_clean_string($v);
+        }
         $prev = '';
         while ($prev !== $v) {
             $prev = $v;
             $v = wp_specialchars_decode($v, ENT_QUOTES);
+            $v = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
         return $v;
     }, $data);
 
-    set_transient('fds_homepage_content_cache', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_homepage_content_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_hp = $clean_data;
     return $clean_data;
 }
@@ -418,6 +427,11 @@ function render_homepage_content_admin_page() {
 
             $was_customized = (bool) get_option('fds_solusi_cards_customized', false);
             $norm_cmp = function ($cards_arr) {
+                $clean = function ($s) {
+                    return function_exists('fds_clean_string')
+                        ? \fds_clean_string((string) $s)
+                        : html_entity_decode(wp_specialchars_decode((string) $s, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                };
                 $out = [];
                 foreach ((array) $cards_arr as $item) {
                     $t = str_replace("\r\n", "\n", trim((string) ($item['title'] ?? '')));
@@ -427,11 +441,11 @@ function render_homepage_content_admin_page() {
                     }
                     $out[] = [
                         'image'     => trim((string) ($item['image'] ?? '')),
-                        'image_alt' => str_replace("\r\n", "\n", trim(wp_specialchars_decode((string) ($item['image_alt'] ?? ''), ENT_QUOTES))),
-                        'title'     => wp_specialchars_decode($t, ENT_QUOTES),
-                        'desc'      => wp_specialchars_decode($d, ENT_QUOTES),
-                        'tag'       => wp_specialchars_decode(trim((string) ($item['tag'] ?? '')), ENT_QUOTES),
-                        'link_text' => wp_specialchars_decode(trim((string) ($item['link_text'] ?? '')), ENT_QUOTES),
+                        'image_alt' => str_replace("\r\n", "\n", trim($clean($item['image_alt'] ?? ''))),
+                        'title'     => $clean($t),
+                        'desc'      => $clean($d),
+                        'tag'       => $clean(trim((string) ($item['tag'] ?? ''))),
+                        'link_text' => $clean(trim((string) ($item['link_text'] ?? ''))),
                         'link_url'  => trim((string) ($item['link_url'] ?? '')),
                     ];
                 }
@@ -465,6 +479,7 @@ function render_homepage_content_admin_page() {
         }
 
         delete_transient('fds_homepage_content_cache');
+        delete_transient('fds_homepage_content_cache_v2');
         if (function_exists(__NAMESPACE__ . '\\fds_flush_layanan_cache')) {
             fds_flush_layanan_cache();
         }
@@ -475,9 +490,10 @@ function render_homepage_content_admin_page() {
     $solusi_admin = function_exists('App\\fds_get_solusi_data') ? fds_get_solusi_data() : [];
     $raw_slides = function_exists('App\\fds_get_hero_slides') ? fds_get_hero_slides() : (get_option('fds_hero_slides', []));
     if (empty($raw_slides)) {
+        $site_img_base = get_template_directory_uri() . '/public/images/site';
         $raw_slides = [
-            ['url' => 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=1920&q=80', 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor', 'alt' => 'Full Drone Solutions'],
-            ['url' => 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&w=1920&q=80', 'title' => 'Teknologi Presisi Pertanian & Perkebunan', 'alt' => 'Drone Pertanian'],
+            ['url' => $site_img_base . '/hero-1.webp', 'title' => 'Solusi Drone Industrial untuk Berbagai Sektor', 'alt' => 'Full Drone Solutions'],
+            ['url' => $site_img_base . '/hero-2.webp', 'title' => 'Teknologi Presisi Pertanian & Perkebunan', 'alt' => 'Drone Pertanian'],
         ];
     }
     $slides = [];
@@ -705,7 +721,7 @@ function render_homepage_content_admin_page() {
                         <div style="margin-bottom: 12px;">
                             <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 4px;">Gambar Kartu</label>
                             <div style="display: flex; gap: 10px; align-items: center;">
-                                <img src="<?php echo esc_url(!empty($card['image']) ? $card['image'] : 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80'); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
+                                <img src="<?php echo esc_url(!empty($card['image']) ? $card['image'] : (get_template_directory_uri() . '/public/images/site/hero-1.webp')); ?>" class="card-preview-img" style="width: 100px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #cbd5e1; background: #e2e8f0;">
                                 <div style="flex: 1;">
                                     <input type="hidden" name="fds_card_image[]" class="card-image-input" value="<?php echo esc_attr($card['image'] ?? ''); ?>">
                                     <button type="button" class="button btn-upload-card-img" style="font-size: 11px; margin-bottom: 6px;">Pilih Gambar</button>
@@ -869,13 +885,13 @@ function render_homepage_content_admin_page() {
                         </div>
                     </div>
 
-                    <!-- Bottom Row: Card 2012 & Card Ekosistem Multi-Sektor -->
+                    <!-- Bottom Row: Card Akademi Pilot & Card Ekosistem Multi-Sektor -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                        <!-- Card 2012 -->
+                        <!-- Card Akademi Pilot -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 5: Pengalaman Industri (2012) — (Bawah Kiri)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 5: Akademi Pilot &amp; Operasional (Bawah Kiri)</h4>
                             <div style="margin-bottom: 8px;">
-                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat (2012)</label>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat</label>
                                 <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
                             </div>
                             <div style="margin-bottom: 8px;">
@@ -1246,7 +1262,7 @@ function render_homepage_content_admin_page() {
 
         $('#btn-remove-bento-card1').on('click', function(e) {
             e.preventDefault();
-            var defaultImg = 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80';
+            var defaultImg = <?php echo wp_json_encode(get_template_directory_uri() . '/public/images/site/workshop-deltav.webp'); ?>;
             $('#fds_keunggulan_card1_img').val(defaultImg);
             $('#bento-card1-preview').attr('src', defaultImg);
         });
@@ -1344,7 +1360,7 @@ function render_homepage_content_admin_page() {
         }
 
         window.fdsBuildSolusiCardHtml = function(card, count) {
-            var img = card.image || 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80';
+            var img = card.image || <?php echo wp_json_encode(get_template_directory_uri() . '/public/images/site/hero-1.webp'); ?>;
             return '<div class="fds-solusi-card-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 18px; position: relative;">' +
                 '<input type="hidden" name="fds_card_num[]" value="' + fdsEscHtml(card.num || '') + '">' +
                 '<input type="hidden" name="fds_card_slug[]" value="' + fdsEscHtml(card.slug || '') + '">' +
@@ -1414,7 +1430,7 @@ function render_homepage_content_admin_page() {
             var html = fdsBuildSolusiCardHtml({
                 num: '',
                 slug: '',
-                image: 'https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=800&q=80',
+                image: <?php echo wp_json_encode(get_template_directory_uri() . '/public/images/site/hero-1.webp'); ?>,
                 image_alt: '',
                 title: 'Judul Solusi Baru',
                 desc: '',

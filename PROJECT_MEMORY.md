@@ -1,51 +1,73 @@
 # 🧠 PROJECT MEMORY & ARCHITECTURE MASTER REFERENCE
-**Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa (Website Company Profile B2B Enterprise)  
-**Platform:** WordPress Custom Theme (Roots Sage / Acorn Blade Architecture)  
+**Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa (Website Company Profile & Lead Engine B2B Enterprise)  
+**Platform:** WordPress Custom Theme (Roots Sage 10 / Laravel Acorn Blade + Tailwind CSS + Vite)  
 **Dokumen Operasional Utama:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md) & [`PRD.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PRD.md)  
-**Terakhir Diperbarui:** 2026-10-13  
+**Terakhir Diperbarui:** 2026-11-11  
 
 ---
 
 ## 📌 1. Profil & Identitas Bisnis (Brand Context)
-* **Perusahaan:** PT Karya Solusi Angkasa (Full Drone Solutions / FDS)
-* **Status:** Produsen & Manufaktur Pesawat Udara Nirawak (UAV) Resmi Nasional Indonesia
-* **Lokasi Kantor & Fasilitas Produksi:** Sleman, Daerah Istimewa Yogyakarta 55514
-* **Legalitas & Sertifikasi Resmi:**
-  * **TKDN + BMP:** Nilai kandungan dalam negeri mencapai **60,74%** (Kementerian Perindustrian RI)
-  * **SNI 9199:2023:** Standar Nasional Indonesia untuk Pesawat Udara Nirawak (UAV) Pertanian
-  * **ISO 9001:2015:** Sistem Manajemen Mutu Manufaktur
-  * **Regulasi Penerbangan:** Kelaikudaraan DKPPU Kementerian Perhubungan RI & Sertifikasi Pilot FDS Academy
+* **Perusahaan (`legalName`):** PT Karya Solusi Angkasa (berbadan hukum PT sejak **2019**)
+* **Brand Publik & Site Title:** Full Drone Solutions (FDS)
+* **Status:** Produsen & Manufaktur Pesawat Udara Nirawak (UAV) Resmi Nasional Indonesia + Konsultan Layanan Pemetaan, LiDAR, Multispektral & GIS
+* **Lokasi Kantor & Fasilitas Produksi:** Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285
+* **Kontak Resmi:** `+62 8112 748 882` / `https://wa.me/628112748882` | Email: `marketing@fulldronesolutions.com`
+* **Legalitas & Sertifikasi Resmi (Dengan Ruang Lingkup Ketat):**
+  * **TKDN + BMP 60,74% (Kemenperin RI):** Berlaku **KHUSUS** untuk seluruh model lini drone pertanian seri **FERTO** (`5, 10, 15, 22, 30, 50`). Model non-FERTO (`DELTAV`, `DELFRO`, `MULTIPURPOSE`) dilarang mencantumkan TKDN sebelum ada konfirmasi resmi.
+  * **SNI 9199:2023:** Berlaku **KHUSUS** untuk **FERTO 15** (tampil dengan kapasitas **`17 Liter`**) dan **FERTO 22**.
+  * **ISO 9001:2015:** Sistem Manajemen Mutu Manufaktur terakreditasi.
+  * **Regulasi Penerbangan:** Pendampingan sertifikasi pilot beracuan DKPPU **CASR Part 107** / SIDOPI-GO.
 * **Nilai Keunggulan Utama (Value Proposition):**
-  1. Legal untuk tender pemerintah, BUMN, & e-Katalog LKPP (Prioritas belanja produk ber-TKDN).
-  2. Suku cadang *ready-stock* lokal di Yogyakarta tanpa perlu menunggu inden impor luar negeri.
-  3. Sistem Ground Control Station buatan sendiri berbahasa Indonesia (**FDS STATION GCS**).
-  4. Garansi dan tim teknisi langsung dari pabrikan di Indonesia.
+  1. Kesiapan pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP untuk seri FERTO ber-TKDN 60,74% dan SNI 9199:2023.
+  2. Suku cadang *ready-stock* lokal di workshop Sleman beserta layanan servis terjadwal langsung dari pabrikan.
+  3. Software Ground Control Station buatan sendiri berbahasa Indonesia (**FDS Station** — selalu ditulis Title Case).
+  4. Dukungan operasional end-to-end melalui unit layanan survei LiDAR, fotogrametri, multispektral/hyperspectral, dan pelatihan pilot.
 
 ---
 
 ## 📁 2. Peta File & Struktur Arsitektur Tema
 
-### A. Core Engine & Backend Logic (`app/`)
+### A. Core Engine, Funnel, Security & Backend Logic (`app/` — 24 Modul via `functions.php`)
 | File | Fungsi & Tanggung Jawab Utama |
 | :--- | :--- |
-| `app/cpt-drones.php` | **Custom Post Type Drone & Taksonomi:** Mendaftarkan CPT `drone`, 4 Kategori Resmi (`Agrikultur`, `Pemetaan & GIS`, `Kargo`, `Reboisasi`), Form Input Spesifikasi Khusus di WP Admin, Auto-Seeder 10 model drone, dan **Auto-Generator Artikel SEO 800–1200+ kata** ke `post_content` serta sinkronisasi metadata Rank Math. |
-| `app/seo.php` | **Enterprise Technical & Structured Data SEO:** Render Meta Tags, OpenGraph, Twitter Cards, Schema.org JSON-LD lengkap (`Organization`, `LocalBusiness`, `WebSite`, `Breadcrumbs`, `Service`, `FAQPage`, `Product`), **301 Permanent Redirects** (`/about`, `/about-us`, `/profil` -> `/tentang-kami/`), **AI Bot Directives** (`robots.txt`), **GEO Endpoint** (`/llms.txt`), dan Standalone XML Sitemap. |
-| `app/theme-settings.php` | **Pengaturan Logo & Navbar:** Menu WP Admin khusus untuk kelola logo, brand text, favicon, tinggi logo, shortcut admin bar, dan title browser tab dinamis. |
-| `app/homepage-content-settings.php` | **Pengaturan Konten Beranda:** Mengelola Hero Slider, Stats Bar, Solusi/Layanan (repeater dropdown & section), Fitur Inovasi, Testimoni, Newsroom, dan Form Kontak. |
-| `app/about-content-settings.php` | **Pengaturan Konten Tentang Kami:** Hero Profil, Visi-Misi, Sejarah/Milestone Perusahaan, Tim Manajemen & Engineer, Fasilitas Manufaktur Sleman, dan Nilai TKDN. |
-| `app/footer-settings.php` | **Pengaturan Footer & Kontak Global:** Alamat workshop Sleman, link WhatsApp, Email, telepon, Google Maps embed, jam operasional, link sosial media, dan copyright. |
-| `app/auto-setup.php` | **Auto-Provisioning & Migration Engine:** Otomatisasi pembuatan halaman inti (`/beranda`, `/tentang-kami`, `/bandingkan`, `/blog`), permalinks, auto-migration DB, dan sinkronisasi SEO. |
-
----
+| `app/setup.php` & `app/filters.php` | Inisialisasi tema Sage, enqueuing aset Vite, navigasi menu, dan filter template kustom. |
+| `app/helpers.php` | Helper sanitasi entity & teks (`fds_clean_string`, `fds_deep_decode`, `fds_scrub_legacy_text`), pengurutan logis model (`fds_sort_drone_posts`), responsif gambar WP (`fds_optimized_img_url`), dan paginasi blog (`fds_posts_pagination`). |
+| `app/security.php` | HTTP Security Headers (OWASP), no-cache AJAX dinamis (`fds_submit_inquiry`, `fds_download_brochure`), anti-enumerasi/penghapusan `?ver=` WP, serta guard `noindex, nofollow` otomatis pada host staging/lokal (`compro.*`, `staging.*`, `.local`). |
+| `app/admin-perf.php` | Optimasi backend WP-Admin: throttle Heartbeat API ke 60 detik, hapus RSS widget eksternal, dan batasi revisi post ke 5. |
+| `app/theme-settings.php` | Menu WP-Admin **Logo & Navbar**: upload logo, tinggi logo, brand text, favicon, CTA navbar, highlight card Mega Menu Produk & Layanan, logo partner footer, dan custom title tab browser. |
+| `app/homepage-content-settings.php` | Menu WP-Admin **Konten Beranda**: 8 tab pengelola Hero Carousel, Mitra, Solusi Industri, Bento Keunggulan, Header Produk, Layanan Enterprise, Newsroom, dan Kontak/Form Beranda. |
+| `app/hero-slider.php` & `app/solusi-settings.php` | Pengelola slide hero default & 6 kartu Solusi Industri beranda (terhubung Single Source of Truth dengan 6 sektor layanan). |
+| `app/layanan-settings.php` | Registry SSR Hub `/layanan/`, 6 Sektor, 3 Kategori, UI bersama + `/terima-kasih/`, flush cache layanan, dan non-destructive page provisioner (`fds_layanan_pages_provisioned_v1`). |
+| `app/layanan-data-sectors.php` | Data SSR lengkap (narasi, tabel perbandingan metode, format luaran, faktor biaya, checklist KAK, FAQ) untuk 6 sektor: `pertambangan`, `perkebunan-pertanian`, `kehutanan-lingkungan`, `energi-infrastruktur`, `perencanaan`, `bencana-lingkungan`. |
+| `app/layanan-data-categories.php` | Data SSR lengkap untuk 3 kategori layanan spesialis: `jasa-foto-udara-lidar`, `jasa-multispectral-hyperspectral`, dan `pelatihan-sertifikasi`. |
+| `app/layanan-admin.php` | Menu WP-Admin **Konten Layanan** dengan tab terisolasi per halaman, catatan placeholder internal admin, tombol simpan non-destruktif, reset per tab, serta metabox pintasan di WP Pages. |
+| `app/about-content-settings.php` | Menu WP-Admin **Konten Tentang Kami** (7 tab): Hero & Statistik (`2019`, `60,74%`, `ISO & SNI`, `100%`), Cerita Kami, 3 Spektrum Teknologi, Aktivitas & Mitra, Galeri, Sertifikasi, CTA & Workshop Maps. |
+| `app/cpt-drones.php` | Mendaftarkan CPT `drone` (`has_archive => false`) dan taksonomi `kategori_drone` (`agrikultur`, `pemetaan-gis`, `kargo`), metabox spesifikasi khusus, helper Single Source of Truth Hero & kartu katalog (`fds_get_drone_hero_media()`, `fds_get_drone_detail_data()`), purge cache katalog otomatis (`fds_purge_drone_catalog_caches()`), auto-seeder 9 model aktif, dan generator panduan teknis SSR 250–400 kata + `<details>` FAQ (tanpa duplikasi tabel spesifikasi). |
+| `app/produk-content-settings.php` | Submenu **Produk Drone &rarr; Konten Katalog**: pengelolaan non-destruktif seluruh teks non-card di `/produk/` & `/kategori-drone/*` (Hero, highlights, header kategori, matriks spesifikasi, panduan kategori, sidebar, UI bersama, FAQ & SEO/Schema) dengan tombol Reset terisolasi per tab dan metabox pintasan `/produk/`. |
+| `app/cpt-mitra.php` | CPT `mitra` untuk pengelolaan logo kemitraan marquee beranda (1-click media upload). |
+| `app/brochure-settings.php` | Submenu **Produk Drone &rarr; Pengaturan Brosur**: kustomisasi UI unduh brosur 2-state, PDF fallback global, AJAX email capture (`fds_download_brochure`), log leads, dan ekspor CSV aman. |
+| `app/footer-settings.php` | Menu WP-Admin **Kontak & Sosmed**: informasi PT, nomor WA/telepon, email, Google Maps, jam kerja, toggle tautan media sosial, copyright/legal, serta copy halaman `/kontak/`. |
+| `app/inquiry-handler.php` | Mendaftarkan CPT `fds_inquiry` (**Pesan Masuk**) dengan unread counter badge, meta box proyek/UTM/UU PDP, AJAX submission (`fds_submit_inquiry` + honeypot + Turnstile + redirect `/terima-kasih/`), submenu **Tracking & Konfigurasi Lead** (GA4/GTM/Ads/Pixel/Webhook), dan ekspor CSV anti-formula injection. |
+| `app/preview-handler.php` | Intercept autosave custom meta & thumbnail CPT saat mode WP Preview (`is_preview()`) aktif. |
+| `app/seo.php` | Koordinasi Rank Math `@graph`, Schema JSON-LD (`Organization`, `WebSite`, `CollectionPage`, `ItemList`, `ItemPage` + `about: Thing`, `Service`, `FAQPage`, `ContactPage`, `BlogPosting`, `BreadcrumbList`), 301 redirect legacy (`/rebo`, `/ferto-20l`, `/about`, dsb.), `noindex` halaman utilitas, `robots.txt` AI bot rules, dan `/llms.txt` / `/llms-full.txt` bersih. |
+| `app/auto-setup.php` | Auto-provisioning awal satu kali (`fds_theme_auto_setup_done_v1`) untuk halaman inti (`/beranda`, `/tentang-kami`, `/bandingkan`, `/kontak`, `/blog`), permalinks, slider, dan kontak default. |
+| `app/migrations-2026.php` | Skrip migrasi & sanitasi idempoten 2026-11: membersihkan `.agents/`/`scratch/` jika ada di tema aktif, mempublikasikan `/produk/` & `/privacy-policy/`, membersihkan token/klaim terlarang di opsi, dan menyinkronkan panduan teknis & FAQ 9 model drone tanpa menimpa edit admin atau menghapus halaman/menu/tag lama. |
 
 ### B. Template Tampilan Frontend (`resources/views/`)
-| File Blade | Tampilan & Fitur Frontend |
+| File / Komponen Blade | Tampilan & Fitur Frontend |
 | :--- | :--- |
-| `resources/views/layouts/app.blade.php` | Layout utama, Apple-style blur navbar, **Unified Mega Menu Drawer (Produk & Layanan)**, dynamic active menu underline, dan Global Footer. |
-| `resources/views/front-page.blade.php` | Halaman Beranda lengkap: **Full-Bleed Background Hero Section** (gambar latar layar penuh sinematik dengan multi-layer gradient overlay & slider interaktif), Stats Bar, Katalog Filterable Drone, Solusi Industri, Video / Fasilitas, Keunggulan Manufaktur, Testimoni, Blog, & Kontak Form. |
-| `resources/views/single-drone.blade.php` | Halaman Detail Produk Drone: Galeri foto, badge TKDN & SNI, highlight statistik, tabel spesifikasi interaktif, 4 skenario penggunaan (use cases), dan FAQ. |
-| `resources/views/page-bandingkan.blade.php` | Alat Komparasi Spesifikasi Teknis: Membandingkan 2 atau lebih model drone FDS secara berdampingan (*side-by-side*). |
-| `resources/views/page-kontak.blade.php` | **Halaman Pusat Kontak Resmi (Streamlined & Minimalist):** Hero header ringkas Apple, Master Dual-Surface Contact & Inquiry Hub (Info PT Sleman, Telepon/WA, Email, Jam Operasional di kiri, Formulir Inquiry cepat di kanan), dan Peta Interaktif Google Maps Fasilitas Workshop Sleman dengan tombol langsung ke Google Maps. Dilengkapi Schema.org `ContactPage` JSON-LD & 301 legacy redirects. |
+| `layouts/app.blade.php` | Layout global, navbar sticky Apple blur, Unified Mega Menu 3 kategori + Layanan, Footer 4 kolom + logo partner multiply, GA4/GTM event telemetry. |
+| `front-page.blade.php` | Beranda: Full-bleed Hero Carousel, Marquee Mitra, 6 kartu Solusi Industri (`↗`), Bento Keunggulan, **Daftar Baris `.drone-row` Filterable 3 Kategori**, Layanan Enterprise (1 baris 1 klik penuh), Newsroom, Hub Kontak. |
+| `template-produk.blade.php` | Hub Katalog `/produk/`: Hero gelombang teal, filter 3 kategori (`Agrikultur`, `Pemetaan & GIS`, `Kargo`), dan **Grid `<x-drone-card>`** seragam penuh *object-cover* + CTA Band gelombang teal. |
+| `taxonomy-kategori_drone.blade.php` | Arsip `/kategori-drone/{slug}/` menggunakan Grid `<x-drone-card>` seragam dengan panah diagonal `↗`. |
+| `single-drone.blade.php` | Detail Drone: Hero + 4 stat card, Tabel Spesifikasi + gambar offset melayang (`z-30`), Unduh Brosur PDF 2-State (`#0f808a`), 4 Use Cases, **Panduan Teknis 250–400w + FAQ Accordion `<details>` chevron `⌄`**, CTA Band gelombang teal. |
+| `page-bandingkan.blade.php` | Alat Komparasi spesifikasi 9 model drone FDS secara berdampingan (*side-by-side*). |
+| `template-layanan-hub.blade.php` | Hub `/layanan/`: 6 kartu Sektor, 3 kartu Kategori Layanan Spesialis, alur survei, format luaran, KAK, dan FAQ `<x-service-faq>`. |
+| `template-layanan-sektor.blade.php` & `template-layanan-kategori.blade.php` | Template SSR detail 6 sektor industri & 3 kategori layanan lengkap dengan tabel metode, deliverable, panduan biaya, `<x-service-faq>` (ikon chevron `⌄`), CTA terarah ke `/kontak/#hubungi-form`, dan `service-sticky-bar.blade.php`. |
+| `page-tentang-kami.blade.php` | Profil PT Karya Solusi Angkasa (`2019`), 3 Spektrum Teknologi, Aktivitas Kemitraan, Galeri, Sertifikasi, Peta Workshop Sleman. |
+| `page-kontak.blade.php` & `page-terima-kasih.blade.php` | Hub Kontak terpusat (auto-prefill parameter `?layanan=` / `?produk=`), Google Maps, dan konfirmasi konversi `/terima-kasih/` (`noindex`). |
+| `index.blade.php`, `single.blade.php`, `search.blade.php`, `page.blade.php`, `404.blade.php` | Arsip Newsroom, detail artikel, hasil pencarian (`get_search_query(false)`), halaman standar, dan 404 dengan gelombang vektor teal. |
+| `components/*` | `drone-card`, `service-card`, `service-faq`, `service-sticky-bar`, `breadcrumbs` (tanpa awalan `/`), `inquiry-hub`, `modal-brochure`, `google-map-card`, `page-hero`, `cta-band`, `section-header`, `badge`, `button`. |
 
 ---
 
@@ -54,129 +76,67 @@
 ```
 WP-Admin Dashboard
 │
-├── ✈️ Produk Drone (CPT)
-│   ├── Semua Drone ────────────── Edit Nama Drone, Foto, Spesifikasi, Tagline, Use Cases
-│   ├── Tambah Drone Baru ──────── Form input spesifikasi lengkap tanpa editor artikel
-│   └── Kategori Drone ─────────── 4 Kategori (Agrikultur, Pemetaan & GIS, Kargo, Reboisasi)
+├── ✈️ Produk Drone (CPT `drone`)
+│   ├── Semua Drone / Tambah Baru ─────── Edit 9 model aktif, Featured Image (Hero + Card 1:1), spesifikasi, use cases, PDF
+│   ├── Kategori Drone ────────────────── 3 Kategori Aktif (Agrikultur, Pemetaan & GIS, Kargo)
+│   ├── Konten Katalog ────────────────── Edit non-card copy /produk/ & /kategori-drone/* (Hero, Matrix, Panduan, FAQ, SEO)
+│   └── Pengaturan Brosur ─────────────── Teks 2-state brosur, fallback PDF, log leads & Ekspor CSV
 │
-├── 🎨 Logo & Navbar
-│   ├── Pengaturan Brand ───────── Upload Logo, Atur Tinggi Logo, Brand Text, Favicon
-│   ├── Tombol CTA Navbar ──────── Teks & URL Tombol CTA Kanan Atas Navbar
-│   ├── Mega Menu Dropdown Produk  Judul Box Kanan, 3 Kartu Highlight (FDS STATION, TKDN, SNI), Link Komparasi
-│   └── Mega Menu Dropdown Layanan Judul Box Kanan, 2 Kartu Highlight (Pilot Bersertifikat, Workshop Sleman), Link CTA
+├── 🤝 Mitra (CPT `mitra`) ────────────── Upload 1-click logo kemitraan marquee Beranda
 │
-├── 🏠 Konten Beranda (Anti-Slop B2B Copy)
-│   ├── Tab 1: Hero Carousel ───── Slider Banner Beranda (TKDN 60,74%, Headline Sleman, Deskripsi, Tombol CTA)
-│   ├── Tab 2: Mitra & Lembaga ─── Judul Marquee Kemitraan (Institusi Nasional & Riset)
-│   ├── Tab 3: Solusi Industri ─── 4 Kartu Sektor Kerja Strategis (Sawit/Padi, Tambang LiDAR, Inspeksi 150kV, SAR/Reboisasi)
-│   ├── Tab 4: Bento Keunggulan ── 7 Kartu Keunggulan Manufaktur Lokal (Rangka Karbon, TKDN, GCS, SNI, Spare Parts 48 Jam, FDS Academy, Fleet Management)
-│   ├── Tab 5: Lini Produk & Mutu ─ Header Katalog Drone & 4 Angka Statistik Mutu Nasional
-│   ├── Tab 6: Layanan Enterprise ─ Repeater Layanan Lapangan (Otomatis tampil di Mega Menu Layanan)
-│   ├── Tab 7: Newsroom / Blog ─── Judul & Ajakan Edukasi / Studi Kasus
-│   └── Tab 8: Kontak & Form ───── Teks ajakan form penawaran harga & jadwal demo terbang
+├── 📩 Pesan Masuk (CPT `fds_inquiry`)
+│   ├── Semua Pesan Masuk ─────────────── Lead proyek masuk (layanan, lokasi, UTM, badge unread) & Ekspor CSV
+│   └── Tracking & Konfigurasi Lead ───── GA4, GTM, Google Ads, Meta Pixel, email penerima, Turnstile, webhook
 │
-├── 🏢 Konten Tentang Kami
-│   ├── Tab 1: Hero & Pengantar ── Advanced UAV Engineering, Pengalaman Sejak 2012
-│   ├── Tab 2: Cerita & Milestone  Riset Aeromodelling Sleman hingga Berbadan Hukum PT
-│   ├── Tab 3: Spektrum Teknologi  3 Arsitektur Wahana (Rotary Wing, Fixed Wing, Hybrid VTOL DELTAV)
-│   ├── Tab 4: Aktivitas & Mitra ── Kolaborasi PRISMA Bappenas, Bank Indonesia, UGM-Swiss
-│   ├── Tab 5: Sertifikasi Mutu ── TKDN 60,74%, ISO 9001:2015, SNI 9199:2023
-│   └── Tab 6: Lokasi & Workshop ─ Kantor Pusat Depok Sleman, Kontak WhatsApp, Google Maps Embed
-│
-└── 📌 Kontak & Sosmed (Global Footer)
-    ├── Informasi Perusahaan ───── Alamat Sleman, No. WhatsApp, Email Marketing
-    ├── Lokasi & Google Maps ───── Embed iframe Google Maps & Toggle Tampil
-    ├── Media Sosial ───────────── Link & Toggle Aktif Instagram, LinkedIn, YouTube, TikTok, X, WhatsApp
-    └── Hak Cipta & Legal ──────── Teks Disclaimer Sertifikasi Kemenperin & Copyright
+├── 🎨 Logo & Navbar ──────────────────── Logo, brand text, favicon, CTA navbar, highlight Mega Menu, logo footer, title tab
+├── 🏠 Konten Beranda ─────────────────── 8 Tab: Hero & Slider, Mitra, Solusi, Bento, Produk, Layanan, Newsroom, Kontak
+├── 🌐 Konten Layanan ─────────────────── Hub Layanan, 6 Sektor, 3 Kategori Spesialis, Teks UI Bersama & /terima-kasih/
+├── 🏢 Konten Tentang Kami ────────────── 7 Tab: Hero (2019), Cerita, Spektrum, Aktivitas, Galeri, Sertifikasi, CTA/Workshop
+└── 📌 Kontak & Sosmed ────────────────── Alamat Sleman, WA/Telp, Email, Google Maps, Sosmed, Legal, Teks /kontak/
 ```
 
 ---
 
-## 🚀 4. Strategi SEO & GEO (Warrior, Legend & Mythic Framework)
-
-### A. Target Kata Kunci Utama (High-Intent B2B Keywords):
-1. **Pemetaan & GIS:** `drone mapping`, `jasa pemetaan drone`, `jasa survey drone lidar`, `jasa drone foto udara`, `jasa pemetaan drone tambang`, `pemetaan GIS drone`, `fixed wing vtol indonesia`.
-2. **Pertanian Presisi:** `drone pertanian`, `drone sprayer TKDN`, `drone pertanian indonesia`, `drone penyemprot pupuk`, `produsen drone pertanian`.
-3. **Misi Khusus & Kemanusiaan:** `drone pencarian korban bencana`, `drone SAR termal`, `drone reboisasi seedball`, `drone kargo logistik`.
-4. **Manufaktur & Brand Otoritas:** `produsen UAV Indonesia`, `PT Karya Solusi Angkasa`, `Full Drone Solutions`, `drone TKDN 60%`, `SNI 9199:2023`.
-
-### B. Kebijakan Brand Kompetitor (Clean & Ethical SEO):
-* **Aturan:** Judul SEO (`<title>`) dan deskripsi pencarian Google (`<meta name="description">`) **TIDAK menyebutkan nama brand kompetitor secara langsung**.
-* **Fokus:** Mengedepankan kekuatan legalitas manufaktur dalam negeri (TKDN 60,74%, SNI 9199:2023, suku cadang ready-stock lokal di Sleman, garansi pabrik, GCS Bahasa Indonesia).
-
-### C. Pemahaman Terhadap Skor Rank Math di WP Admin:
-* Skor di WP-Admin (misal 6/100 atau 80/100) adalah **kalkulator pengetikan teks lokal di browser** yang mengecek apakah user mengetik artikel di kotak blog.
-* Googlebot **TIDAK PERNAH** melihat angka skor di WP-Admin. Google menilai halaman dari **kode HTML rendered dan Schema JSON-LD di frontend**, yang di mana sistem FDS sudah menginjeksi 800–1200+ kata artikel teknis, tabel spesifikasi, dan microdata lengkap.
-
----
-
-## 🛠️ 5. Alur Build & Deployment Lokal / Hosting
-Jika melakukan perubahan kode pada template Blade, PHP, atau CSS:
-```bash
-# 1. Masuk ke direktori tema
+## 🛠️ 4. Alur Build & Deployment Lokal
+Setiap melakukan perubahan kode pada template Blade, PHP, CSS, atau JS:
+```powershell
+# 1. Masuk ke direktori source tema
 cd "c:\Users\BILALIHSAN\Local Sites\fds\app\public\fds-theme"
 
-# 2. Build aset frontend (Tailwind/Vite)
+# 2. Build aset frontend produksi (Tailwind / Vite)
 npm run build
 
-# 3. Sinkronisasikan ke tema aktif WordPress
-Copy-Item -Path "app\*" -Destination "..\wp-content\themes\fds-theme\app\" -Recurse -Force
-Copy-Item -Path "public\build\*" -Destination "..\wp-content\themes\fds-theme\public\build\" -Recurse -Force
-Copy-Item -Path "resources\views\*" -Destination "..\wp-content\themes\fds-theme\resources\views\" -Recurse -Force
+# 3. Bersihkan aset build lama di mirror aktif agar tidak menumpuk
+if (Test-Path "..\wp-content\themes\fds-theme\public\build") {
+    Remove-Item "..\wp-content\themes\fds-theme\public\build\*" -Recurse -Force -ErrorAction SilentlyContinue
+}
 
-# 4. Hapus cache Blade Acorn (jika tampilan tidak langsung berubah)
-Remove-Item -Path "..\..\cache\acorn\framework\views\*" -Recurse -Force
+# 4. Sinkronisasikan seluruh kode & docs ke tema aktif WordPress
+Copy-Item -Path "functions.php",".htaccess","AGENTS.md","GEMINI.md","PRD.md","PROJECT_MEMORY.md","COMPRO_GUIDE.md","INIT.md","CHANGELOG.md" -Destination "..\wp-content\themes\fds-theme\" -Force
+Copy-Item -Path "app\*" -Destination "..\wp-content\themes\fds-theme\app\" -Recurse -Force
+Copy-Item -Path "resources\*" -Destination "..\wp-content\themes\fds-theme\resources\" -Recurse -Force
+Copy-Item -Path "public\build\*" -Destination "..\wp-content\themes\fds-theme\public\build\" -Recurse -Force
+
+# 5. Hapus cache Blade Acorn (WAJIB agar perubahan Blade langsung tampil)
+if (Test-Path "..\wp-content\cache\acorn\framework\views") {
+    Remove-Item "..\wp-content\cache\acorn\framework\views\*" -Recurse -Force -ErrorAction SilentlyContinue
+}
 ```
+> *Catatan Keamanan Mirror:* Jangan menyalin folder `.agents/` maupun `scratch/` ke `..\wp-content\themes\fds-theme\`.
 
 ---
 
-## 🛑 6. Strict AI Behavioral & UI Architecture Rules (Anti-Slop)
-1. **Dilarang "Container di dalam Container" (Ban Nested Container Slop):**
-   - Logo, ikon, badge, teks tidak boleh dibungkus dalam container/kotak tambahan, pill bertingkat, atau frame bersarang di dalam kartu kecuali diminta user secara eksplisit.
-   - Logo harus diletakkan transparan secara langsung di atas background kartu.
-2. **Dilarang Memberi Titik/Hiasan di Samping Teks:**
-   - Tidak boleh menambahkan pulsing dots, decorative bullets, atau emoji di samping teks badge/heading.
-3. **Patuhi Referensi Wireframe & Geometri Vektor Tanpa Halusinasi:**
-   - Terapkan struktur grid/masonry sesuai referensi yang diberikan user secara presisi tanpa menambah elemen buatan sendiri yang tidak diperintahkan.
-   - **Ketaatan Geometri Vektor:** Jika user meminta bentuk lingkaran konsentris terbalik (inverted concentric circles), HANYA balikkan orientasi lingkaran konsentris dan haluskan pewarnaannya secara natural. Dilarang keras mengganti bentuk geometri dasar menjadi bentuk lain (seperti gelombang acak).
-4. **Definisi Teks Kecil vs Deskripsi:**
-   - "Teks kecil" yang diminta dihapus oleh user merujuk secara spesifik pada **Badge / Label pill kecil** di atas judul. Teks **Deskripsi Penjelasan** di bawah judul/stat HARUS tetap ada dan dapat diedit di WP Admin.
-5. **Konsistensi Skala Tipografi:**
-   - Semua judul section wajib seragam menggunakan `text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] leading-[1.1]`.
-   - Angka & teks stat kunci seperti **`ISO & SNI`** dan **`2012`** harus berukuran besar, tebal, dan proporsional.
-6. **Warna Biru Sistem Brand Wajib (`#0066cc`):**
-   - Semua aksen grafis, vektor, lingkaran konsentris, tombol utama, dan highlight wajib menggunakan warna biru sistem resmi FDS yaitu **`#0066cc`**. Dilarang keras mengganti ke warna cyan/sky blue (`#38bdf8`) atau warna di luar palet sistem brand.
-7. **DILARANG MENGGUNAKAN TEKS ALL-CAPS / KAPITAL SEMUA:**
-   - **Dilarang keras** menggunakan utility class CSS `uppercase` atau menulis seluruh kalimat dalam huruf kapital pada heading, subhead, micro-label, tombol, maupun badge.
-   - Selalu gunakan **Title Case** (Huruf Kapital di awal kata saja) atau **Sentence case** yang natural, elegan, dan nyaman dibaca.
-8. **Layout Footer & Penempatan Logo Sertifikasi/Partner:**
-   - **Tablet & Desktop (`md:` ke atas):** Kolom 4 (Dukungan) memiliki `relative min-h-[160px] pb-10 md:pb-12`. Deretan logo dikunci menggunakan `absolute right-0 bottom-0 w-max max-w-none` (`hidden md:flex flex-nowrap items-center gap-4 sm:gap-5 absolute right-0 bottom-0 w-max max-w-none`) sehingga tepi kanan logo selalu terkunci rapat di batas padding kanan dan panjangnya otomatis mengalir ke **KIRI** (ke area kosong di bawah kolom 3), 100% bebas dari offside/terpotong di sisi kanan.
-   - **Mobile (`< md`):** Deretan logo berada di bawah 4 kolom tautan dan merentang penuh 2 kolom (`col-span-2 md:hidden pt-2`), diposisikan **rata kiri (dimulai dari kiri)** (`flex flex-nowrap items-center gap-4 justify-start overflow-x-auto no-scrollbar py-1`) sehingga 1 baris utuh, tidak terpotong tepi layar, ukuran dan jarak tidak mengecil.
-   - **Baris Tengah (Middle Row):** Sisi kiri (`lg:col-span-8`) berisi Informasi Perusahaan (Nama PT, Alamat Sleman, No. Telp, Email), dan sisi kanan (`lg:col-span-4`) berisi Ikon Sosial Media (Instagram, YouTube, LinkedIn, TikTok, X, WhatsApp) rata kanan (`justify-start lg:justify-end`).
-   - **Transparansi Logo:** Menggunakan `mix-blend-mode: multiply !important; background-color: transparent !important;` langsung pada tag `<img>` tanpa wrapper ber-`opacity` / `transform` agar latar belakang putih pada gambar JPG/PNG otomatis hilang menyatu dengan warna footer `#f5f5f7` tanpa glitch hover.
-   - **Kontrol Dimensi:** Tinggi global dan Max Width per-logo dapat diatur secara fleksibel melalui WP Admin &rarr; Logo & Navbar (Card 8).
-9. **Fitur Unduh Brosur Drone & Gated Email Lead Capture:**
-   - **File Handler & Settings:** Terpusat di [`app/brochure-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/brochure-settings.php).
-   - **Menu WP Admin:** Tersedia di **Produk Drone &rarr; Pengaturan Brosur** untuk kustomisasi teks (Judul dengan tag dinamis `{drone_name}`, Deskripsi, Placeholder email, Teks tombol, dan Global Fallback PDF) serta tabel log email leads dengan fitur *Export CSV*.
-   - **Upload PDF per Drone:** Dikelola langsung di halaman **Produk Drone &rarr; Edit Drone** ([`app/cpt-drones.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/cpt-drones.php)) dengan tombol WordPress Media Uploader `[📁 Upload PDF]`.
-   - **Frontend Section:** Ditampilkan di [`resources/views/single-drone.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/single-drone.blade.php) tepat di bawah tabel spesifikasi teknis (#spesifikasi).
-   - **Desain & Alur Interaksi (2-State Minimalist Flow):** Desain super bersih tanpa badge/teks berlebih. State 1: Input email + tombol "Kirim Email" (sebelum kirim email, akses download terkunci). State 2: Setelah email diverifikasi via AJAX, form input otomatis bertransisi menjadi **Tombol Download Brosur (PDF) Aktif** (berwarna biru `#0066cc`) dan file PDF langsung terunduh/terbuka di browser.
-10. **DILARANG MENGGUNAKAN GARIS / STROKE PADA VEKTOR BACKGROUND:**
-   - Vektor latar belakang (background vector) HANYA boleh menggunakan bentuk fluida organik dengan isian gradasi solid (`<path ... fill="url(#...)" />`).
-   - **Dilarang keras** menambahkan elemen garis, stroke, outlines, wireframe lines, dashed lines, atau garis pembatas (`stroke="..." fill="none"`) pada vektor background kecuali user secara eksplisit memintanya.
-11. **ATURAN ANTI-OVERWRITE SAAT UPDATE TEMA (Strict Non-Destructive Data Rule):**
-    - Data auto-seeder (Halaman Beranda, Tentang Kami, Bandingkan, Blog, 10 model drone CPT, hero slides, mitra, kontak & alamat default) **HANYA** boleh dijalankan **SATU KALI** saat pertama kali tema diinstal pada instalasi WordPress baru (dikunci oleh flag `fds_theme_auto_setup_done_v1` dan `fds_drones_seeded_final_v1`).
-    - Saat tema diperbarui (*theme update*), diunggah ulang (*re-upload*), atau diaktifkan ulang di masa mendatang, **DILARANG KERAS** menimpa (*overwrite*) data halaman, konten yang sudah diedit admin, pengaturan WP Admin, spesifikasi CPT drone, logo, hero slides, maupun metadata SEO yang sudah tersimpan di database.
-    - Semua fungsi *sync* atau *migration* wajib mengecek apakah nilai di database sudah ada atau kosong (`empty()`) sebelum melakukan penulisan (`update_option` / `update_post_meta`).
-12. **ATURAN TAMPILAN GAMBAR SPESIFIKASI DRONE OFFSET (Single Drone Specs Layout):**
-    - **Offset Melayang (Intentional Floating Offset):** Gambar produk transparan besar pada section spesifikasi di [`single-drone.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/single-drone.blade.php) didesain secara sengaja untuk melayang (*offset*) ke bawah (`lg:h-0 lg:relative` + `lg:absolute lg:top-0 lg:left-0 pointer-events-none z-30`).
-    - **Jarak Section Tetap Rapat:** Jarak padding bawah section spesifikasi WAJIB tetap rapat/kompak (`pb-10 sm:pb-12`). DILARANG menambah padding bawah atau memberi jarak kosong berlebih ke section brosur.
-    - **Stacking Context Anti-Clipping:**
-      - Section spesifikasi memiliki `relative z-20 overflow-visible`.
-      - Kolom kiri dan wrapper gambar memiliki `overflow-visible z-30`.
-      - Section unduh brosur di bawahnya (`#unduh-brosur`) memiliki `relative z-0` sehingga latar belakang putihnya TIDAK menutupi atau memotong kaki *landing gear* dan baling-baling bawah drone yang melayang.
-
-
-
-
-
+## 🛑 5. Strict AI Behavioral & UI Architecture Rules (Ringkasan Kepatuhan 2026-11)
+Seluruh daftar aturan wajib tersedia rinci di [`AGENTS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/AGENTS.md) dan [`anti-hallucination-and-strict-guidelines.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/.agents/rules/anti-hallucination-and-strict-guidelines.md). Poin krusial:
+1. **Warna Brand Teal `#0f808a`:** Jangan pernah memakai `#0066cc` pada tombol, link aktif, fokus, maupun ilustrasi.
+2. **Bebas ALL-CAPS (`uppercase`):** Gunakan Title Case atau Sentence case (`FDS Station`, badge, heading, CTA).
+3. **Nol Nested Container / Decorative Dots:** Tanpa card-inside-card dan tanpa bullet/dot dekoratif di samping judul/badge.
+4. **Logo Footer & `mix-blend-mode: multiply`:** Terkunci di pojok kanan bawah kolom 4 desktop mengalir ke kiri; rata kiri di mobile; tanpa wrapper `opacity < 1` atau `transform`.
+5. **Wave SVG Organik Tanpa Stroke di Setiap Section Teal Gelap:** Setiap section berlatar teal gelap/utama di semua halaman wajib memiliki vektor gelombang fluida gradien *fill-only* (`stroke` dilarang).
+6. **Paritas Ikon & Breadcrumb:**
+   * Seluruh kartu/tautan interaktif memakai panah diagonal (`↗`).
+   * Seluruh akordeon (Detail Drone `.fds-faq-item` dan Layanan `<x-service-faq>`) seragam memakai ikon chevron ke bawah (`⌄`) yang berputar 180°, BUKAN `+`/`-`.
+   * [`breadcrumbs.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/components/breadcrumbs.blade.php) dilarang menampilkan `/` di depan `Beranda`.
+7. **Beranda `.drone-row` vs Katalog Grid `<x-drone-card>`:** Beranda `#produk` mempertahankan tampilan list horizontal; `/produk/` dan `/kategori-drone/*` memakai grid kartu *full-bleed* `object-cover` seragam.
+8. **SSR-First & Anti-Double-Escaping:** Konten panduan & FAQ `<details>` wajib di HTML awal (SSR). Gunakan `fds_clean_string()` + `fds_scrub_legacy_text()`, hindari `{{ esc_html/esc_attr/esc_url }}`, gunakan `{!! esc_url(...) !!}` untuk URL query, `{!! wp_json_encode(...) !!}` untuk script JS, `get_search_query(false)` untuk output pencarian, serta jangan bungkus argumen `'alt'` pada `get_the_post_thumbnail()` dengan `esc_attr()`.
+9. **Non-Destructive & Anti-Overwrite:** Dilarang menghapus halaman/post/tag/menu lama tanpa persetujuan tertulis atau menimpa opsi yang sudah disesuaikan admin WP.

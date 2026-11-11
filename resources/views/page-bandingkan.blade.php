@@ -14,9 +14,20 @@
   }
 
   // 2. ENRICH WITH WORDPRESS CPT 'drone' DATABASE (CACHED VIA TRANSIENT)
-  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v2');
+  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v3');
+  $cache_is_stale = false;
   if ($cached_catalog !== false && is_array($cached_catalog)) {
-    $catalog = $cached_catalog;
+    $cache_blob = serialize($cached_catalog);
+    if (
+      strpos($cache_blob, 'FDS STATION') !== false ||
+      stripos($cache_blob, 'FLIR') !== false ||
+      stripos($cache_blob, 'sejak 2012') !== false
+    ) {
+      $cache_is_stale = true;
+    }
+  }
+  if ($cached_catalog !== false && is_array($cached_catalog) && !$cache_is_stale) {
+    $catalog = function_exists('fds_deep_decode') ? fds_deep_decode($cached_catalog) : $cached_catalog;
   } else {
     $db_drones = get_posts([
       'post_type'      => 'drone',
@@ -54,19 +65,20 @@
 
     $droneImgKey = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
     
-    // Real Transparent Drone Cutout Fallbacks
+    // Real Transparent Drone Cutout Fallbacks (Local Theme Assets)
+    $cutoutBaseUri = get_template_directory_uri() . '/public/images/cutouts';
     $cleanDroneCutouts = [
-      'ferto-5l'     => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
-      'ferto-10l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_141509_532-1.png'),
-      'ferto-15l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
-      'ferto-22l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_142215_455-1-1.png'),
-      'ferto-30l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png'),
-      'ferto-50l'    => home_url('/wp-content/uploads/2026/08/IMG_20260820_141509_532-1.png'),
-      'deltav'       => home_url('/wp-content/uploads/2026/08/14.png'),
-      'multipurpose' => home_url('/wp-content/uploads/2026/08/IMG_20260820_142215_455-1-1.png'),
-      'delfro'       => home_url('/wp-content/uploads/2026/08/56-1.png'),
+      'ferto-5l'     => $cutoutBaseUri . '/ferto-5l.png',
+      'ferto-10l'    => $cutoutBaseUri . '/ferto-10l.png',
+      'ferto-15l'    => $cutoutBaseUri . '/ferto-15l.png',
+      'ferto-22l'    => $cutoutBaseUri . '/ferto-22l.png',
+      'ferto-30l'    => $cutoutBaseUri . '/ferto-30l.png',
+      'ferto-50l'    => $cutoutBaseUri . '/ferto-50l.png',
+      'deltav'       => $cutoutBaseUri . '/deltav.png',
+      'multipurpose' => $cutoutBaseUri . '/multipurpose.png',
+      'delfro'       => $cutoutBaseUri . '/delfro.png',
     ];
-    $cleanDefault = $cleanDroneCutouts[$slug] ?? home_url('/wp-content/uploads/2026/08/IMG_20260820_140300_689-1-1.png');
+    $cleanDefault = $cleanDroneCutouts[$slug] ?? ($cutoutBaseUri . '/ferto-15l.png');
 
     $has_meta = function($k) use ($post_id) {
       return metadata_exists('post', $post_id, $k);
@@ -106,8 +118,19 @@
     $item['kategori']  = $cat_name;
     $item['cat_slug']  = $cat_slug;
     $item['url']       = get_permalink($post_id);
-    $item['hero_img']  = $thumb ?: fds_img($droneImgKey, $cleanDefault);
-    $item['specs_img'] = $specs_img_db ?: ($thumb ?: fds_img($droneImgKey, $cleanDefault));
+    if (function_exists('\App\fds_get_drone_detail_data')) {
+      $canonical_detail = \App\fds_get_drone_detail_data($post_id);
+      $item['hero_img']  = !empty($canonical_detail['hero_url']) ? $canonical_detail['hero_url'] : ($thumb ?: $cleanDefault);
+      $item['specs_img'] = !empty($canonical_detail['specs_img']) ? $canonical_detail['specs_img'] : $cleanDefault;
+    } else {
+      $raw_hero_img  = $thumb ?: fds_img($droneImgKey, $cleanDefault);
+      $item['hero_img']  = (empty($raw_hero_img) || stripos((string) $raw_hero_img, 'unsplash.com') !== false || stripos((string) $raw_hero_img, 'DELFRO.png') !== false)
+        ? $cleanDefault
+        : $raw_hero_img;
+      $item['specs_img'] = (!empty($specs_img_db) && stripos((string) $specs_img_db, 'unsplash.com') === false && stripos((string) $specs_img_db, 'DELFRO.png') === false)
+        ? $specs_img_db
+        : $cleanDefault;
+    }
 
     if ($has_meta('drone_badge'))   $item['badge']   = get_post_meta($post_id, 'drone_badge', true);
     if ($has_meta('drone_tagline')) $item['tagline'] = get_post_meta($post_id, 'drone_tagline', true);
@@ -194,12 +217,17 @@
 
     $catalog[$slug] = $item;
   }
-  set_transient('fds_bandingkan_catalog_cache_v2', $catalog, 12 * HOUR_IN_SECONDS);
+  if (function_exists('fds_deep_decode')) {
+    $catalog = fds_deep_decode($catalog);
+  }
+  set_transient('fds_bandingkan_catalog_cache_v3', $catalog, 12 * HOUR_IN_SECONDS);
 }
 
   // 3. PARAMETER URL & VALIDASI KATEGORI SAMA
-  $req_d1 = isset($_GET['d1']) && isset($catalog[$_GET['d1']]) ? $_GET['d1'] : '';
-  $req_d2 = isset($_GET['d2']) && isset($catalog[$_GET['d2']]) ? $_GET['d2'] : '';
+  $raw_d1 = isset($_GET['d1']) ? sanitize_text_field(wp_unslash((string) $_GET['d1'])) : '';
+  $raw_d2 = isset($_GET['d2']) ? sanitize_text_field(wp_unslash((string) $_GET['d2'])) : '';
+  $req_d1 = ($raw_d1 !== '' && isset($catalog[$raw_d1])) ? $raw_d1 : '';
+  $req_d2 = ($raw_d2 !== '' && isset($catalog[$raw_d2])) ? $raw_d2 : '';
 
   // Pastikan drone tidak identik dan berasal dari kategori yang sama
   if (!empty($req_d1) && !empty($req_d2)) {
@@ -238,8 +266,57 @@
     ];
   }
 
-  // 5. DEEP DECODE SEMUA STRING VIA GLOBAL HELPER
+  // 5. DEEP DECODE & DEFENSIVE GUARDRAIL SCRUBBING VIA GLOBAL HELPER
   $catalog = fds_deep_decode($catalog);
+  if (function_exists('fds_scrub_legacy_text')) {
+    foreach ($catalog as $cSlug => $cItem) {
+      $sLower  = strtolower((string) $cSlug);
+      $isFerto = (strpos($sLower, 'ferto') === 0);
+      $hasSni  = in_array($sLower, ['ferto-15l', 'ferto-22l', 'ferto-15', 'ferto-22'], true);
+
+      foreach (['name', 'badge', 'tagline', 'desc', 'stat1_num', 'stat1_lbl', 'stat2_num', 'stat2_lbl', 'stat3_num', 'stat3_lbl', 'stat4_num', 'stat4_lbl'] as $fKey) {
+        if (isset($cItem[$fKey]) && is_string($cItem[$fKey]) && $cItem[$fKey] !== '') {
+          $cItem[$fKey] = fds_scrub_legacy_text($cItem[$fKey], $isFerto, $hasSni);
+        }
+      }
+
+      if (!empty($cItem['specs']) && is_array($cItem['specs'])) {
+        $cleanSpecs = [];
+        foreach ($cItem['specs'] as $spPair) {
+          if (!is_array($spPair) || count($spPair) < 2) continue;
+          $spLbl = fds_scrub_legacy_text((string) $spPair[0], $isFerto, $hasSni);
+          $spVal = fds_scrub_legacy_text((string) $spPair[1], $isFerto, $hasSni);
+          if (in_array($sLower, ['ferto-15l', 'ferto-15'], true) && (stripos($spLbl, 'payload') !== false || stripos($spLbl, 'kapasitas') !== false)) {
+            if (stripos($spVal, '17') === false) {
+              $spVal = '17 Liter';
+            }
+          }
+          if ($spVal === '') {
+            if (stripos($spLbl, 'sertifikasi') !== false) {
+              $spVal = 'ISO 9001:2015 (Manajemen Mutu)';
+            } else {
+              continue;
+            }
+          }
+          $cleanSpecs[] = [$spLbl, $spVal];
+        }
+        $cItem['specs'] = $cleanSpecs;
+      }
+
+      if (!empty($cItem['for']) && is_array($cItem['for'])) {
+        $cleanFor = [];
+        foreach ($cItem['for'] as $forTxt) {
+          $scrubbedFor = fds_scrub_legacy_text((string) $forTxt, $isFerto, $hasSni);
+          if ($scrubbedFor !== '') {
+            $cleanFor[] = $scrubbedFor;
+          }
+        }
+        $cItem['for'] = $cleanFor;
+      }
+
+      $catalog[$cSlug] = $cItem;
+    }
+  }
   $modal_categories = fds_deep_decode($modal_categories);
 
   $json_catalog = json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -464,12 +541,12 @@
 
       <h3>2. Pemetaan Area Luas vs Inspeksi Multirotor</h3>
       <p>
-        Dalam pekerjaan survei topografi tambang, pemetaan kadastral HGU, serta <a href="{{ home_url('/kategori-drone/pemetaan-gis/') }}">Pemetaan &amp; Survey LiDAR GIS</a>, wahana Fixed-Wing Hybrid VTOL seperti DELTAV menjadi standar untuk cakupan ribuan hektar berbekal jangkauan jelajah hingga 60 km. Sementara itu, platform modular seperti MULTIPURPOSE paling efektif untuk inspeksi jaringan transmisi listrik 150 kV, panel surya, dan kawasan industri yang memerlukan hovering presisi serta sensor optik zoom maupun termal FLIR.
+        Dalam pekerjaan survei topografi tambang, pemetaan kadastral HGU, serta <a href="{{ home_url('/kategori-drone/pemetaan-gis/') }}">Pemetaan &amp; Survey LiDAR GIS</a>, wahana Fixed-Wing Hybrid VTOL seperti DELTAV menjadi standar untuk cakupan ribuan hektar berbekal jangkauan jelajah hingga 60 km. Sementara itu, platform modular seperti MULTIPURPOSE paling efektif untuk inspeksi jaringan transmisi listrik 150 kV, panel surya, dan kawasan industri yang memerlukan hovering presisi serta sensor optik zoom maupun kamera termal inframerah.
       </p>
 
-      <h3>3. Distribusi Logistik &amp; Standar Sertifikasi TKDN 60,74%</h3>
+      <h3>3. Distribusi Logistik &amp; Standar Sertifikasi Pengadaan</h3>
       <p>
-        Untuk misi pengantaran cepat ke pulau terluar atau lokasi terisolir, lini <a href="{{ home_url('/kategori-drone/kargo/') }}">Drone Kargo &amp; Logistik</a> DELFRO menghadirkan rute otonom via FDS STATION berbahasa Indonesia. Seluruh lini produksi PT Karya Solusi Angkasa di Sleman, Yogyakarta telah mengantongi sertifikat TKDN + BMP 60,74%, SNI 9199:2023, serta manajemen mutu ISO 9001:2015 yang memudahkan pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP. Pelajari rekam jejak manufaktur kami di halaman <a href="{{ home_url('/tentang-kami/') }}">Tentang Kami</a> atau jadwalkan demo terbang resmi melalui <a href="{{ home_url('/kontak/') }}">Kontak Enterprise FDS</a>.
+        Untuk misi pengantaran cepat ke pulau terluar atau lokasi terisolir, lini <a href="{{ home_url('/kategori-drone/kargo/') }}">Drone Kargo &amp; Logistik</a> DELFRO menghadirkan rute otonom via FDS Station berbahasa Indonesia. Fasilitas PT Karya Solusi Angkasa di Sleman, Yogyakarta menerapkan manajemen mutu ISO 9001:2015, dengan lini drone agrikultur seri FERTO (5L–50L) bersertifikat TKDN + BMP 60,74% serta FERTO 15 dan FERTO 22 memenuhi standar nasional SNI 9199:2023 untuk pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP. Pelajari rekam jejak manufaktur kami di halaman <a href="{{ home_url('/tentang-kami/') }}">Tentang Kami</a> atau jadwalkan demo terbang resmi melalui <a href="{{ home_url('/kontak/#hubungi-form') }}">Kontak Enterprise FDS</a>.
       </p>
     </div>
   </section>
@@ -513,7 +590,7 @@
         Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
-        <a href="{{ home_url('/#kontak') }}"
+        <a href="{{ home_url('/kontak/#hubungi-form') }}"
            class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
           Hubungi Tim Sales FDS
         </a>
@@ -557,7 +634,7 @@
         <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0f808a] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">Semua</button>
         @foreach($modal_categories as $mSlug => $mName)
         <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer" data-tab-cat="{{ $mSlug }}">
-          {!! esc_html(wp_specialchars_decode($mName, ENT_QUOTES)) !!}
+          {{ function_exists('fds_clean_string') ? fds_clean_string((string) $mName) : $mName }}
         </button>
         @endforeach
       </div>
@@ -570,21 +647,21 @@
              data-cat-slug="{{ $dItem['cat_slug'] ?? sanitize_title($dItem['kategori']) }}"
              onclick="selectDroneForActiveSlot('{{ $slugKey }}')">
           <div class="w-20 h-20 bg-[#f5f5f7] rounded-xl flex items-center justify-center p-2 flex-shrink-0">
-            <img src="{{ $dItem['specs_img'] ?: $dItem['hero_img'] }}" alt="{{ $dItem['name'] }}" class="max-w-full max-h-full object-contain">
+            <img src="{!! esc_url($dItem['specs_img'] ?: $dItem['hero_img']) !!}" alt="{{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['name']) : $dItem['name'] }}" class="max-w-full max-h-full object-contain">
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center gap-1.5 mb-1">
               @if(!empty($dItem['badge']))
               <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0f808a]/10 text-[#0f808a]">
-                {!! esc_html(wp_specialchars_decode($dItem['badge'], ENT_QUOTES)) !!}
+                {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['badge']) : $dItem['badge'] }}
               </span>
               @endif
             </div>
             <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight mb-1 truncate">
-              {!! esc_html(wp_specialchars_decode($dItem['name'], ENT_QUOTES)) !!}
+              {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['name']) : $dItem['name'] }}
             </h4>
             <p class="text-[12px] text-[#86868b] truncate">
-              {!! esc_html(wp_specialchars_decode($dItem['kategori'], ENT_QUOTES)) !!}
+              {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['kategori']) : $dItem['kategori'] }}
             </p>
           </div>
           <div class="w-8 h-8 rounded-full bg-[#f5f5f7] group-hover:bg-[#0f808a] group-hover:text-white flex items-center justify-center text-[#86868b] transition-colors flex-shrink-0">
@@ -605,8 +682,8 @@
   const CATALOG = {!! $json_catalog !!};
   let activePickingSlot = 1;
   let activeCatFilter = 'all';
-  let d1Key = "{{ $req_d1 }}";
-  let d2Key = "{{ $req_d2 }}";
+  let d1Key = {!! wp_json_encode($req_d1) !!};
+  let d2Key = {!! wp_json_encode($req_d2) !!};
 
   function normalizeCategory(slugOrName) {
     if (!slugOrName) return '';
@@ -894,7 +971,7 @@
           </p>
 
           <div class="flex flex-wrap gap-2.5 justify-center">
-            <a href="{{ home_url('/#kontak') }}" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
+            <a href="{{ home_url('/kontak/') }}?produk=${encodeURIComponent(drone.slug || '')}#hubungi-form" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
               Minta Penawaran
             </a>
             <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all border border-black/10 shadow-sm">
@@ -1078,16 +1155,16 @@
       if (d1Row) {
         d1Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'SNI')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'SNI 9199:2023')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'ISO 9001')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Manajemen Mutu')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '60,74%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'TKDN + BMP')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '100%')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'FDS Station GCS')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || '100%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'FDS STATION')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || 'Nasional')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'Dukungan Teknis')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat4_num || 'Garansi')}</p>
@@ -1107,16 +1184,16 @@
       if (d2Row) {
         d2Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'SNI')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'SNI 9199:2023')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'ISO 9001')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Manajemen Mutu')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '60,74%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'TKDN + BMP')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '100%')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'FDS Station GCS')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || '100%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'FDS STATION')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || 'Nasional')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'Dukungan Teknis')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat4_num || 'Garansi')}</p>

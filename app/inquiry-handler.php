@@ -12,10 +12,10 @@ if (!defined('ABSPATH')) {
  *
  * Features:
  * 1. CPT 'fds_inquiry' ("Pesan Masuk") dengan kolom layanan/lokasi/UTM, badge unread, dan aksi cepat.
- * 2. Meta Box detail proyek (Lokasi, Luas, Timeline, File AOI terproteksi, Referrer/UTM, Persetujuan UU PDP).
- * 3. Secure AJAX Submission (Backward-compatible Beranda/Kontak + Form Penawaran Layanan + Upload AOI KML/KMZ/GeoJSON/PDF).
+ * 2. Meta Box detail proyek (Lokasi, Luas, Timeline, Referrer/UTM, Persetujuan UU PDP).
+ * 3. Secure AJAX Submission ringkas 6–7 field terpadu (Beranda, Kontak & Layanan) dengan redirect /terima-kasih/.
  * 4. Submenu Admin "Tracking & Konfigurasi Lead" (GA4, GTM, Google Ads, Meta Pixel, Penerima Email, Auto-Reply, Webhook, Turnstile).
- * 5. Ekspor CSV penuh berpelindung Anti-CSV Formula Injection + unduhan AOI privat khusus admin.
+ * 5. Ekspor CSV penuh berpelindung Anti-CSV Formula Injection.
  */
 
 // =========================================================================
@@ -347,11 +347,12 @@ add_action('manage_fds_inquiry_posts_custom_column', function ($column, $post_id
             echo '<div style="font-size:12.5px;line-height:1.45;">';
             echo '<strong style="color:#0f172a;">' . esc_html($service) . '</strong>';
             if ($location || $area) {
-                $loc_txt = implode(' &middot; ', array_filter([$location, $area]));
-                echo '<div style="color:#475569;font-size:12px;margin-top:2px;">' . esc_html(wp_specialchars_decode($loc_txt, ENT_QUOTES)) . '</div>';
+                $loc_txt = implode(' · ', array_filter([$location, $area]));
+                $loc_clean = function_exists('fds_clean_string') ? \fds_clean_string($loc_txt) : html_entity_decode(wp_specialchars_decode($loc_txt, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                echo '<div style="color:#475569;font-size:12px;margin-top:2px;">' . esc_html($loc_clean) . '</div>';
             }
             if ($aoi_name) {
-                echo '<div style="color:#0a555c;font-size:11.5px;margin-top:2px;font-weight:600;">Lampiran AOI: ' . esc_html($aoi_name) . '</div>';
+                echo '<div style="color:#0a555c;font-size:11.5px;margin-top:2px;font-weight:600;">Lampiran historis: ' . esc_html($aoi_name) . '</div>';
             }
             echo '</div>';
             break;
@@ -523,22 +524,20 @@ add_action('add_meta_boxes', function () {
                     <th>Estimasi Jadwal Proyek</th>
                     <td><?php echo esc_html($timeline); ?></td>
                 </tr>
+                <?php if ($aoi_name && $aoi_relpath): ?>
                 <tr>
-                    <th>Lampiran Batas Area (AOI)</th>
+                    <th>Lampiran Arsip Historis</th>
                     <td>
-                        <?php if ($aoi_name && $aoi_relpath): ?>
-                            <?php
-                            $dl_url = admin_url('admin-post.php?action=fds_download_aoi&post_id=' . (int) $post->ID . '&_wpnonce=' . wp_create_nonce('fds_download_aoi_' . (int) $post->ID));
-                            $kb     = $aoi_size > 0 ? round($aoi_size / 1024, 1) . ' KB' : '';
-                            ?>
-                            <strong><?php echo esc_html($aoi_name); ?></strong>
-                            <?php if ($kb): ?><span style="color:#64748b;">(<?php echo esc_html($kb); ?>)</span><?php endif; ?>
-                            <a href="<?php echo esc_url($dl_url); ?>" class="button button-small" style="margin-left: 10px; border-color: #0f808a; color: #0a555c; font-weight: 600;">Unduh File AOI Privat</a>
-                        <?php else: ?>
-                            <span style="color:#64748b;">Tidak ada file AOI yang dilampirkan.</span>
-                        <?php endif; ?>
+                        <?php
+                        $dl_url = admin_url('admin-post.php?action=fds_download_aoi&post_id=' . (int) $post->ID . '&_wpnonce=' . wp_create_nonce('fds_download_aoi_' . (int) $post->ID));
+                        $kb     = $aoi_size > 0 ? round($aoi_size / 1024, 1) . ' KB' : '';
+                        ?>
+                        <strong><?php echo esc_html($aoi_name); ?></strong>
+                        <?php if ($kb): ?><span style="color:#64748b;">(<?php echo esc_html($kb); ?>)</span><?php endif; ?>
+                        <a href="<?php echo esc_url($dl_url); ?>" class="button button-small" style="margin-left: 10px; border-color: #0f808a; color: #0a555c; font-weight: 600;">Unduh Arsip Privat</a>
                     </td>
                 </tr>
+                <?php endif; ?>
                 <tr>
                     <th>Detail Pesan / Kebutuhan</th>
                     <td>
@@ -592,7 +591,7 @@ add_action('save_post_fds_inquiry', function ($post_id) {
 
     if (isset($_POST['fds_inquiry_status'])) {
         $allowed = ['unread', 'in_progress', 'replied'];
-        $new_status = sanitize_text_field($_POST['fds_inquiry_status']);
+        $new_status = sanitize_text_field(wp_unslash((string) $_POST['fds_inquiry_status']));
         if (in_array($new_status, $allowed, true)) {
             update_post_meta($post_id, '_fds_inquiry_status', $new_status);
             delete_transient('fds_unread_inquiry_count');
@@ -756,120 +755,7 @@ add_action('admin_post_fds_export_inquiries', function () {
 });
 
 // =========================================================================
-// 4. SECURE AOI FILE UPLOAD HELPER (.kml, .kmz, .geojson, .pdf <= 5MB)
-// =========================================================================
-
-function fds_store_uploaded_aoi_file(array $file): array {
-    $err_code = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
-    if ($err_code === UPLOAD_ERR_NO_FILE) {
-        return ['ok' => true, 'has_file' => false];
-    }
-
-    if ($err_code !== UPLOAD_ERR_OK) {
-        return ['ok' => false, 'message' => 'Gagal mengunggah file batas area (AOI). Pastikan ukuran maksimal 5 MB.'];
-    }
-
-    $max_bytes = 5 * 1024 * 1024;
-    $size      = (int) ($file['size'] ?? 0);
-    if ($size <= 0 || $size > $max_bytes) {
-        return ['ok' => false, 'message' => 'Ukuran file batas area (AOI) maksimal 5 MB.'];
-    }
-
-    $tmp_name  = (string) ($file['tmp_name'] ?? '');
-    $orig_name = (string) ($file['name'] ?? '');
-    if ($tmp_name === '' || !is_file($tmp_name)) {
-        return ['ok' => false, 'message' => 'Berkas sementara upload AOI tidak valid.'];
-    }
-
-    $ext          = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
-    $allowed_exts = ['kml', 'kmz', 'geojson', 'pdf'];
-    if (!in_array($ext, $allowed_exts, true)) {
-        return ['ok' => false, 'message' => 'Format file AOI harus berupa .kml, .kmz, .geojson, atau .pdf.'];
-    }
-
-    // Validasi signature isi file terhadap ekstensi
-    $raw_content = @file_get_contents($tmp_name, false, null, 0, $max_bytes + 1);
-    if ($raw_content === false || $raw_content === '') {
-        return ['ok' => false, 'message' => 'File batas area (AOI) kosong atau tidak dapat dibaca.'];
-    }
-
-    if ($ext === 'pdf') {
-        if (strpos($raw_content, '%PDF-') !== 0) {
-            return ['ok' => false, 'message' => 'Isi file PDF tidak valid.'];
-        }
-    } elseif ($ext === 'kmz') {
-        if (substr($raw_content, 0, 2) !== 'PK') {
-            return ['ok' => false, 'message' => 'Isi file KMZ terkompresi tidak valid.'];
-        }
-    } elseif ($ext === 'kml') {
-        if (stripos($raw_content, '<kml') === false || stripos($raw_content, '<?php') !== false || stripos($raw_content, '<script') !== false) {
-            return ['ok' => false, 'message' => 'Format XML KML tidak valid atau mengandung elemen terlarang.'];
-        }
-    } elseif ($ext === 'geojson') {
-        $clean_json = preg_replace('/^\xEF\xBB\xBF/', '', trim($raw_content));
-        $decoded    = json_decode((string) $clean_json, true);
-        if (!is_array($decoded) || (empty($decoded['type']) && empty($decoded['features']) && empty($decoded['geometry']))) {
-            return ['ok' => false, 'message' => 'Struktur JSON pada file GeoJSON tidak valid.'];
-        }
-    }
-
-    $upload_dir  = wp_upload_dir();
-    $root_aoi    = trailingslashit($upload_dir['basedir']) . 'fds-aoi';
-    $subdir      = gmdate('Y/m');
-    $target_dir  = trailingslashit($root_aoi) . $subdir;
-
-    if (!wp_mkdir_p($target_dir)) {
-        return ['ok' => false, 'message' => 'Direktori penyimpanan AOI tidak tersedia di server.'];
-    }
-
-    // Amankan direktori privat dari akses web langsung maupun eksekusi script
-    $htaccess_file = trailingslashit($root_aoi) . '.htaccess';
-    if (!file_exists($htaccess_file)) {
-        $rules = "<IfModule mod_authz_core.c>\n  Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n  Order allow,deny\n  Deny from all\n</IfModule>\n<FilesMatch \"\\.(php|phtml|phar|pl|py|cgi|sh)$\">\n  Require all denied\n</FilesMatch>\n";
-        @file_put_contents($htaccess_file, $rules);
-    }
-    $index_file = trailingslashit($root_aoi) . 'index.php';
-    if (!file_exists($index_file)) {
-        @file_put_contents($index_file, "<?php\n// Silence is golden.\n");
-    }
-
-    $safe_orig = function_exists(__NAMESPACE__ . '\\fds_safe_filename')
-        ? fds_safe_filename($orig_name)
-        : sanitize_file_name($orig_name);
-    $stem      = pathinfo($safe_orig, PATHINFO_FILENAME) ?: 'aoi';
-    $stem      = substr(preg_replace('/[^a-zA-Z0-9_-]/', '-', $stem), 0, 50);
-    try {
-        $rand = bin2hex(random_bytes(6));
-    } catch (\Throwable $e) {
-        $rand = substr(md5((string) wp_rand() . microtime()), 0, 12);
-    }
-
-    $stored_filename = wp_unique_filename($target_dir, $rand . '-' . $stem . '.' . $ext);
-    $dest_path       = trailingslashit($target_dir) . $stored_filename;
-
-    $moved = false;
-    if (is_uploaded_file($tmp_name)) {
-        $moved = @move_uploaded_file($tmp_name, $dest_path);
-    }
-    if (!$moved) {
-        $moved = @file_put_contents($dest_path, $raw_content) !== false;
-    }
-
-    if (!$moved) {
-        return ['ok' => false, 'message' => 'Gagal menyimpan berkas AOI di server.'];
-    }
-
-    return [
-        'ok'       => true,
-        'has_file' => true,
-        'name'     => $safe_orig,
-        'relpath'  => $subdir . '/' . $stored_filename,
-        'size'     => $size,
-    ];
-}
-
-// =========================================================================
-// 5. AJAX SUBMISSION ENDPOINT (Beranda, Kontak & Form Penawaran Layanan)
+// 4. AJAX SUBMISSION ENDPOINT (Beranda, Kontak & Form Penawaran Layanan)
 // =========================================================================
 
 add_action('wp_ajax_fds_submit_inquiry', __NAMESPACE__ . '\\fds_handle_inquiry_submission');
@@ -992,7 +878,7 @@ function fds_handle_inquiry_submission() {
 
     // Field Proyek Tambahan (opsional / konteks B2B)
     $service_slug     = sanitize_key(wp_unslash($_POST['service_slug'] ?? ''));
-    $service_label    = sanitize_text_field(mb_substr(trim((string) wp_unslash($_POST['service_label'] ?? '')), 0, 140));
+    $service_label    = sanitize_text_field(mb_substr(trim((string) wp_unslash($_POST['service_label'] ?? $_POST['interest'] ?? '')), 0, 140));
     if ($service_label === '' && $service_slug !== '' && function_exists(__NAMESPACE__ . '\\fds_get_layanan_service_options')) {
         $srv_opts = fds_get_layanan_service_options();
         if (isset($srv_opts[$service_slug])) {
@@ -1015,14 +901,7 @@ function fds_handle_inquiry_submission() {
     $gclid        = sanitize_text_field(mb_substr(trim((string) wp_unslash($_POST['gclid'] ?? '')), 0, 140));
     $fbclid       = sanitize_text_field(mb_substr(trim((string) wp_unslash($_POST['fbclid'] ?? '')), 0, 140));
 
-    // 4. Upload AOI File opsional (.kml, .kmz, .geojson, .pdf <= 5MB)
-    $aoi_result = ['ok' => true, 'has_file' => false];
-    if (!empty($_FILES['aoi_file']) && is_array($_FILES['aoi_file'])) {
-        $aoi_result = fds_store_uploaded_aoi_file($_FILES['aoi_file']);
-        if (empty($aoi_result['ok'])) {
-            wp_send_json_error(['message' => $aoi_result['message'] ?? 'Berkas AOI tidak valid.'], 400);
-        }
-    }
+    // 4. Form ringkas (Opsi 2): pengunggahan berkas publik dinonaktifkan
 
     // 5. Susun Judul Post & Simpan ke CPT 'fds_inquiry'
     $post_title = $service_label !== ''
@@ -1058,12 +937,6 @@ function fds_handle_inquiry_submission() {
         '_fds_inquiry_gclid'            => $gclid,
         '_fds_inquiry_fbclid'           => $fbclid,
     ];
-
-    if (!empty($aoi_result['has_file'])) {
-        $meta_input['_fds_inquiry_aoi_name']    = (string) $aoi_result['name'];
-        $meta_input['_fds_inquiry_aoi_relpath'] = (string) $aoi_result['relpath'];
-        $meta_input['_fds_inquiry_aoi_size']    = (int) $aoi_result['size'];
-    }
 
     $post_id = wp_insert_post([
         'post_type'    => 'fds_inquiry',
@@ -1110,13 +983,12 @@ function fds_handle_inquiry_submission() {
                  . "Email Bisnis    : {$email}\n"
                  . "Lokasi Proyek   : " . ($project_location ?: '-') . "\n"
                  . "Perkiraan Luas  : " . ($project_area ?: '-') . "\n"
-                 . "Estimasi Jadwal : " . ($project_timeline ?: '-') . "\n"
-                 . "Lampiran AOI    : " . (!empty($aoi_result['has_file']) ? $aoi_result['name'] : 'Tidak ada') . "\n\n"
+                 . "Estimasi Jadwal : " . ($project_timeline ?: '-') . "\n\n"
                  . "Rincian Kebutuhan:\n{$message}\n\n"
                  . "--- Data Sumber & UTM ---\n"
                  . "Halaman Asal : " . ($source_page ?: '-') . "\n"
                  . "UTM Campaign : " . ($utm_source ? "{$utm_source} / {$utm_medium} / {$utm_campaign}" : 'Organik / Langsung') . "\n\n"
-                 . "Kelola & unduh AOI di WP Admin: " . admin_url('post.php?post=' . $post_id . '&action=edit');
+                 . "Kelola lead di WP Admin: " . admin_url('post.php?post=' . $post_id . '&action=edit');
 
         @wp_mail($recipients, $subject, $body);
     }
@@ -1136,7 +1008,7 @@ function fds_handle_inquiry_submission() {
                       . ($project_location ? "Lokasi Proyek   : {$project_location}\n" : '')
                       . ($project_area ? "Perkiraan Luas  : {$project_area}\n" : '')
                       . "\nTim teknis dan engineering kami sedang meninjau informasi kebutuhan Anda untuk menyiapkan rekomendasi metode atau langkah diskusi lanjutan.\n\n"
-                      . "Apabila Anda perlu menambahkan batas area tambahan (.kml/.shp) atau berdiskusi lebih cepat, silakan balas email ini dengan menyertakan nomor referensi {$lead_ref}, atau hubungi kami melalui:\n"
+                      . "Apabila terdapat rincian tambahan terkait lokasi, luasan area, atau jadwal pekerjaan, silakan balas email ini dengan menyertakan nomor referensi {$lead_ref}, atau hubungi kami melalui:\n"
                       . "- Telepon / WhatsApp: {$fds_phone}\n"
                       . "- Email Resmi       : {$fds_email}\n"
                       . "- Kantor & Workshop : Jl. Lukito Harjo No.10, Sleman, D.I. Yogyakarta 55285\n\n"
@@ -1162,8 +1034,6 @@ function fds_handle_inquiry_submission() {
             'project_location' => $project_location,
             'project_area'     => $project_area,
             'project_timeline' => $project_timeline,
-            'has_aoi_file'     => !empty($aoi_result['has_file']),
-            'aoi_file_name'    => $aoi_result['name'] ?? '',
             'source_page'      => $source_page,
             'utm_source'       => $utm_source,
             'utm_medium'       => $utm_medium,
@@ -1177,9 +1047,10 @@ function fds_handle_inquiry_submission() {
         ]);
     }
 
-    $redirect_url = !empty($_POST['redirect_on_success'])
-        ? home_url('/terima-kasih/?ref=' . rawurlencode($lead_ref))
-        : '';
+    $skip_redirect = isset($_POST['redirect_on_success']) && wp_unslash((string) $_POST['redirect_on_success']) === '0';
+    $redirect_url  = $skip_redirect
+        ? ''
+        : home_url('/terima-kasih/?ref=' . rawurlencode($lead_ref));
 
     wp_send_json_success([
         'message'       => "Permintaan penawaran Anda telah tercatat dengan nomor referensi {$lead_ref}. Tim Full Drone Solutions akan segera meninjau kebutuhan proyek Anda.",

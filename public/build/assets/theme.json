@@ -404,21 +404,6 @@
           "color": "oklch(26.2% .051 172.552)"
         },
         {
-          "name": "Teal (50)",
-          "slug": "teal-50",
-          "color": "#e8fbfd"
-        },
-        {
-          "name": "Teal (200)",
-          "slug": "teal-200",
-          "color": "#a3eef5"
-        },
-        {
-          "name": "Teal (600)",
-          "slug": "teal-600",
-          "color": "#13abb9"
-        },
-        {
           "name": "Teal (700)",
           "slug": "teal-700",
           "color": "#0f808a"

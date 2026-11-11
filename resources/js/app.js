@@ -259,6 +259,144 @@ if (typeof window !== 'undefined') {
     }
   });
 
+  window.fdsSubmitInquiry = async (form, options = {}) => {
+    if (!form) return;
+
+    const statusBox = options.statusEl || form.querySelector('[data-fds-form-status]');
+    const submitBtn = options.submitBtn || form.querySelector('button[type="submit"], input[type="submit"]');
+
+    const setStatus = (msg, type = 'error') => {
+      if (statusBox) {
+        statusBox.textContent = msg || '';
+        statusBox.classList.remove('hidden', 'text-[#0a555c]', 'bg-[#e8fbfd]', 'border-[#a3eef5]', 'text-red-700', 'bg-red-50', 'border-red-200');
+        if (msg) {
+          if (type === 'success') {
+            statusBox.classList.add('text-[#0a555c]', 'bg-[#e8fbfd]', 'border-[#a3eef5]');
+          } else {
+            statusBox.classList.add('text-red-700', 'bg-red-50', 'border-red-200');
+          }
+        } else {
+          statusBox.classList.add('hidden');
+        }
+      }
+      if (msg && typeof window.fdsShowSnackbar === 'function' && (!statusBox || type === 'success')) {
+        window.fdsShowSnackbar(type === 'success', type === 'success' ? 'Permintaan Terkirim' : 'Perhatian', msg);
+      }
+    };
+
+    if (typeof form.checkValidity === 'function' && !form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    setStatus('');
+    window.fdsPopulateAttribution(form);
+
+    // Sync service_label from select element when present
+    const serviceSelect = form.querySelector('select[name="service_slug"], select[name="service_label"], select[name="interest"]');
+    if (serviceSelect && serviceSelect.selectedOptions && serviceSelect.selectedOptions[0]) {
+      const chosenOpt = serviceSelect.selectedOptions[0];
+      const labelVal = (chosenOpt.getAttribute('data-label') || chosenOpt.textContent || chosenOpt.value || '').trim();
+      let hiddenLabel = form.querySelector('input[name="service_label"]');
+      if (!hiddenLabel && serviceSelect.name !== 'service_label') {
+        hiddenLabel = document.createElement('input');
+        hiddenLabel.type = 'hidden';
+        hiddenLabel.name = 'service_label';
+        form.appendChild(hiddenLabel);
+      }
+      if (hiddenLabel && labelVal) {
+        hiddenLabel.value = labelVal;
+      }
+    }
+
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+    const loadingText = (submitBtn && submitBtn.getAttribute('data-loading-text')) || 'Mengirim Permintaan...';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.classList.add('opacity-75', 'cursor-wait');
+      if (submitBtn.tagName === 'BUTTON') {
+        submitBtn.textContent = loadingText;
+      }
+    }
+
+    const ajaxUrl = options.ajaxUrl
+      || form.getAttribute('data-ajax-url')
+      || form.getAttribute('action')
+      || (window.fdsInquiryConfig && window.fdsInquiryConfig.ajaxUrl)
+      || '/wp-admin/admin-ajax.php';
+
+    try {
+      const formData = new FormData(form);
+      if (!formData.has('action')) {
+        formData.append('action', 'fds_submit_inquiry');
+      }
+
+      const resp = await fetch(ajaxUrl, {
+        method: 'POST',
+        body: formData,
+        credentials: 'same-origin',
+      });
+
+      let payload = null;
+      try {
+        payload = await resp.json();
+      } catch (parseErr) {
+        payload = null;
+      }
+
+      if (resp.ok && payload && payload.success) {
+        const data = payload.data || {};
+        window.fdsTrackEvent('generate_lead', {
+          lead_ref: data.lead_ref || '',
+          service_label: data.service_label || '',
+          form_location: options.formLocation || form.getAttribute('data-form-location') || window.location.pathname,
+        });
+
+        try {
+          window.sessionStorage.setItem('fds_last_lead', JSON.stringify({
+            ref: data.lead_ref || '',
+            service: data.service_label || '',
+            at: new Date().toISOString(),
+          }));
+        } catch (storageErr) {}
+
+        if (typeof options.onSuccess === 'function') {
+          options.onSuccess(data, form);
+        }
+
+        if (data.redirect_url && options.redirect !== false) {
+          window.location.href = data.redirect_url;
+          return;
+        }
+
+        setStatus(data.message || 'Permintaan Anda berhasil dikirim.', 'success');
+        form.reset();
+      } else {
+        const errMsg = (payload && payload.data && payload.data.message)
+          ? payload.data.message
+          : 'Terjadi kendala saat mengirim formulir. Silakan periksa kembali isian Anda dan coba lagi.';
+        setStatus(errMsg, 'error');
+      }
+    } catch (netErr) {
+      setStatus('Koneksi terputus sementara. Silakan periksa jaringan Anda atau hubungi kami melalui WhatsApp.', 'error');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove('opacity-75', 'cursor-wait');
+        if (submitBtn.tagName === 'BUTTON' && originalBtnHtml) {
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      }
+    }
+  };
+
+  document.addEventListener('submit', (e) => {
+    const form = e.target && e.target.closest ? e.target.closest('form[data-fds-inquiry-form]') : null;
+    if (!form) return;
+    e.preventDefault();
+    window.fdsSubmitInquiry(form);
+  });
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initZeroReflowAOS, { once: true });
   } else {

@@ -25,17 +25,75 @@
   $p_title       = fds_clean_string($global_c['page_kontak_title'] ?? 'Hubungi Kami.');
   $p_desc        = fds_clean_string($global_c['page_kontak_desc'] ?? 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.');
   $p_panel_label = fds_clean_string($global_c['page_kontak_panel_label'] ?? 'Kantor & Workshop Resmi');
-  $p_panel_desc  = fds_clean_string($global_c['page_kontak_panel_desc'] ?? 'Produsen UAV nasional bersertifikasi TKDN 60,74%, SNI 9199:2023, dan ISO 9001:2015 berlokasi di Sleman, Yogyakarta.');
+  $p_panel_desc_raw = fds_clean_string($global_c['page_kontak_panel_desc'] ?? 'Produsen UAV nasional dengan manajemen mutu ISO 9001:2015, TKDN 60,74% (seri FERTO), serta SNI 9199:2023 pada FERTO 15 dan FERTO 22, berlokasi di Sleman, Yogyakarta.');
+  $p_panel_desc  = function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($p_panel_desc_raw) : $p_panel_desc_raw;
   $p_hours_wd    = fds_clean_string($global_c['page_kontak_hours_wd'] ?? 'Senin – Jumat: 08:30 – 17:00 WIB');
   $p_hours_sat   = fds_clean_string($global_c['page_kontak_hours_sat'] ?? 'Sabtu: 08:30 – 13:00 WIB');
   $p_wa_btn      = fds_clean_string($global_c['page_kontak_wa_btn'] ?? 'Chat WhatsApp Kami');
   $p_form_title  = fds_clean_string($global_c['page_kontak_form_title'] ?? 'Kirim Pesan atau Permintaan Penawaran');
   $p_form_desc   = fds_clean_string($global_c['page_kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:');
   $p_form_btn    = fds_clean_string($global_c['page_kontak_form_btn'] ?? 'Kirim Pesan');
-  $p_form_note   = fds_clean_string($global_c['page_kontak_form_note'] ?? 'Respons 1×24 jam kerja. Data terjamin aman.');
+  $p_form_note   = fds_clean_string($global_c['page_kontak_form_note'] ?? 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.');
+  if (preg_match('/(?:1\s*[×xX]\s*24|24\s*jam|48\s*jam)/i', $p_form_note)) {
+    $p_form_note = 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.';
+  }
   $p_map_title   = fds_clean_string($global_c['page_kontak_map_title'] ?? 'Lokasi Workshop Sleman');
   $p_map_btn     = fds_clean_string($global_c['page_kontak_map_btn'] ?? 'Buka di Google Maps');
   $p_map_link    = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta';
+
+  // Opsi Layanan, Kategori & Armada Drone untuk Prefill Form Lead Engine
+  $fds_clean_kontak = static function ($val) {
+    $s = (string) $val;
+    if (function_exists('fds_clean_string')) {
+      return fds_clean_string($s);
+    }
+    $prev = '';
+    while ($prev !== $s) {
+      $prev = $s;
+      $s = wp_specialchars_decode($s, ENT_QUOTES);
+      $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    return $s;
+  };
+  $fds_service_options = [
+    'kontak-inquiry' => 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi',
+  ];
+  if (function_exists('App\fds_get_layanan_service_options')) {
+    foreach (\App\fds_get_layanan_service_options() as $opt_slug => $opt_lbl) {
+      $fds_service_options[(string) $opt_slug] = $fds_clean_kontak($opt_lbl);
+    }
+  }
+  $drone_kat_terms = get_terms([
+    'taxonomy'   => 'kategori_drone',
+    'hide_empty' => false,
+    'orderby'    => 'term_id',
+    'order'      => 'ASC',
+  ]);
+  if (!empty($drone_kat_terms) && !is_wp_error($drone_kat_terms)) {
+    foreach ($drone_kat_terms as $dkt) {
+      if (stripos((string) $dkt->slug, 'rebo') !== false) continue;
+      $fds_service_options['kategori-' . $dkt->slug] = 'Lini Produk Kategori: ' . $fds_clean_kontak($dkt->name);
+    }
+  }
+  $kontak_drone_posts = get_posts([
+    'post_type'      => 'drone',
+    'posts_per_page' => -1,
+    'post_status'    => 'publish',
+  ]);
+  if (!empty($kontak_drone_posts)) {
+    if (function_exists('fds_sort_drone_posts')) {
+      $kontak_drone_posts = fds_sort_drone_posts($kontak_drone_posts);
+    }
+    foreach ($kontak_drone_posts as $kd) {
+      if (stripos((string) $kd->post_name, 'rebo') !== false || stripos((string) $kd->post_name, 'agrea') !== false) continue;
+      $fds_service_options[(string) $kd->post_name] = 'Pengadaan Unit: ' . $fds_clean_kontak($kd->post_title);
+    }
+  }
+  $raw_prefill_param = sanitize_key(wp_unslash((string) ($_GET['layanan'] ?? $_GET['sektor'] ?? $_GET['produk'] ?? $_GET['model'] ?? '')));
+  $selected_service_slug = ($raw_prefill_param !== '' && isset($fds_service_options[$raw_prefill_param]))
+    ? $raw_prefill_param
+    : 'kontak-inquiry';
+  $selected_service_label = $fds_clean_kontak($fds_service_options[$selected_service_slug] ?? 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi');
 @endphp
 
 <div id="contact-page" class="w-full bg-white font-sans">
@@ -109,18 +167,18 @@
           {{-- Eyebrow --}}
           @if(!empty($p_badge))
           <p class="text-[12.5px] font-semibold text-white/80 tracking-tight mb-2 fds-hero-entrance fds-hero-delay-1">
-            {!! esc_html($p_badge) !!}
+            {{ $p_badge }}
           </p>
           @endif
 
           {{-- Title --}}
           <h1 class="text-[36px] sm:text-[44px] lg:text-[48px] font-semibold tracking-[-0.035em] text-white leading-[1.08] mb-3 sm:mb-4 fds-hero-entrance fds-hero-delay-2">
-            {!! esc_html($p_title) !!}
+            {{ $p_title }}
           </h1>
 
           {{-- Description --}}
           <p class="text-[15px] sm:text-[16px] text-white/85 leading-relaxed mb-6 sm:mb-8 max-w-[440px] fds-hero-entrance fds-hero-delay-3">
-            {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) $p_desc))) !!}
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", (string) $p_desc))) !!}
           </p>
 
           {{-- Direct Contact Information (Clean, zero boxes) --}}
@@ -132,12 +190,12 @@
               <div class="flex flex-wrap items-center gap-3">
                 <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener noreferrer"
                    class="text-[20px] sm:text-[22px] font-semibold text-white hover:text-white/80 transition-colors tracking-tight">
-                  {!! esc_html($c_phone) !!}
+                  {{ $c_phone }}
                 </a>
                 <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener noreferrer"
                    class="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.98] text-white text-[12px] font-semibold px-3 py-1 rounded-full shadow-xs transition-all duration-150">
                   <svg class="w-4 h-4 fill-current flex-shrink-0" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-                  <span>{!! esc_html($p_wa_btn) !!}</span>
+                  <span>{{ $p_wa_btn }}</span>
                 </a>
               </div>
             </div>
@@ -145,9 +203,9 @@
             {{-- Email --}}
             <div>
               <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">Email Resmi</p>
-              <a href="mailto:{{ esc_attr($c_email) }}" 
+              <a href="mailto:{{ $c_email }}" 
                  class="text-[15px] sm:text-[16px] font-medium text-white hover:text-white/80 transition-colors hover:underline break-all">
-                {!! esc_html($c_email) !!}
+                {{ $c_email }}
               </a>
             </div>
 
@@ -156,10 +214,10 @@
             <div>
               <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">Jam Operasional</p>
               @if(!empty($p_hours_wd))
-              <p class="text-[14px] text-white/90 leading-tight">{!! esc_html($p_hours_wd) !!}</p>
+              <p class="text-[14px] text-white/90 leading-tight">{{ $p_hours_wd }}</p>
               @endif
               @if(!empty($p_hours_sat))
-              <p class="text-[13px] text-white/75 leading-tight mt-1">{!! esc_html($p_hours_sat) !!}</p>
+              <p class="text-[13px] text-white/75 leading-tight mt-1">{{ $p_hours_sat }}</p>
               @endif
             </div>
             @endif
@@ -184,10 +242,10 @@
             
             <div class="mb-5">
               <h2 class="text-[20px] sm:text-[22px] font-semibold text-[#1d1d1f] tracking-tight mb-1">
-                {!! esc_html($p_form_title) !!}
+                {{ $p_form_title }}
               </h2>
               <p class="text-[13px] text-[#6e6e73] leading-relaxed">
-                {!! esc_html($p_form_desc) !!}
+                {{ $p_form_desc }}
               </p>
             </div>
 
@@ -199,7 +257,18 @@
                 $_fds_kontak_ts_sec = $_fds_kontak_track['turnstile_secret_key'] ?? '';
                 $_fds_kontak_use_ts = ($_fds_kontak_ts_key !== '' && $_fds_kontak_ts_sec !== '');
               @endphp
-              <input type="hidden" name="service_slug" value="kontak-inquiry">
+              <input type="hidden" name="service_label" id="fds-service-label" value="{{ $selected_service_label }}">
+
+              {{-- Service / Product Focus (Auto-Prefill via ?layanan= / ?sektor= / ?produk=) --}}
+              <div>
+                <label for="fds-service-select" class="block text-[11.5px] font-medium text-[#475569] mb-1">Fokus Layanan / Model UAV <span class="text-red-500">*</span></label>
+                <select id="fds-service-select" name="service_slug" required
+                  class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] outline-none transition-all cursor-pointer">
+                  @foreach($fds_service_options as $opt_val => $opt_text)
+                    <option value="{{ $opt_val }}" @selected($selected_service_slug === $opt_val)>{{ $opt_text }}</option>
+                  @endforeach
+                </select>
+              </div>
 
               {{-- Anti-Bot Honeypot Trap --}}
               <div style="display:none !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
@@ -251,7 +320,7 @@
 
               @if($_fds_kontak_use_ts)
                 <div class="pt-1">
-                  <div class="cf-turnstile" data-sitekey="{{ esc_attr($_fds_kontak_ts_key) }}" data-theme="light"></div>
+                  <div class="cf-turnstile" data-sitekey="{{ $_fds_kontak_ts_key }}" data-theme="light"></div>
                 </div>
                 @once
                   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
@@ -262,7 +331,7 @@
               <div class="pt-2">
                 <button type="submit" id="fds-inquiry-btn"
                   class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white font-semibold text-[13.5px] px-6 py-2.5 rounded-full transition-all duration-200 shadow-sm cursor-pointer inline-flex items-center justify-center gap-2 leading-none min-h-[42px] group">
-                  <span id="fds-inquiry-btn-text">{!! esc_html($p_form_btn) !!}</span>
+                  <span id="fds-inquiry-btn-text">{{ $p_form_btn }}</span>
                   <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0">
                     <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M6 6h12v12"/>
@@ -273,7 +342,7 @@
                 @if(!empty($p_form_note))
                 <div class="flex items-center gap-1.5 text-[11.5px] text-[#64748b] mt-3">
                   <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                  <span>{!! esc_html($p_form_note) !!}</span>
+                  <span>{{ $p_form_note }}</span>
                 </div>
                 @endif
               </div>
@@ -300,17 +369,17 @@
       <x-reveal class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-8">
         <div class="flex-1 min-w-0 pr-0 sm:pr-6 lg:pr-8">
           <p class="text-[12px] font-semibold text-[#0f808a] tracking-wide mb-1">
-            {!! esc_html(!empty($p_panel_label) ? $p_panel_label : 'Fasilitas Produksi & Workshop Resmi') !!}
+            {{ !empty($p_panel_label) ? $p_panel_label : 'Fasilitas Produksi & Workshop Resmi' }}
           </p>
           <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-snug">
-            {!! esc_html($p_map_title) !!}
+            {{ $p_map_title }}
           </h2>
           <p class="text-[14px] sm:text-[14.5px] text-[#515154] mt-1.5 leading-relaxed">
-            {!! esc_html($c_address) !!}
+            {{ $c_address }}
           </p>
           @if(!empty($p_panel_desc))
           <p class="text-[13px] text-[#64748b] mt-2 leading-relaxed max-w-[720px]">
-            {!! esc_html($p_panel_desc) !!}
+            {{ $p_panel_desc }}
           </p>
           @endif
         </div>
@@ -319,7 +388,7 @@
         <div class="flex-shrink-0">
           <a href="{!! esc_url($p_map_link) !!}" target="_blank" rel="noopener noreferrer"
              class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-[#0f808a] hover:text-white hover:bg-[#0f808a] bg-[#0f808a]/10 border border-[#0f808a]/20 px-5.5 py-2.5 rounded-full transition-all shadow-xs min-h-[42px] whitespace-nowrap leading-none group">
-            <span>{!! esc_html($p_map_btn) !!}</span>
+            <span>{{ $p_map_btn }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
@@ -343,7 +412,7 @@
           allowfullscreen="" 
           loading="lazy" 
           referrerpolicy="strict-origin-when-cross-origin"
-          title="{{ esc_attr($p_map_title) }}"
+          title="{{ $p_map_title }}"
           onload="var l = document.getElementById('map-loader-kontak'); if(l){ l.classList.add('opacity-0', 'pointer-events-none'); setTimeout(function(){ l.remove(); }, 500); }">
         </iframe>
       </x-reveal>
@@ -367,24 +436,24 @@
 
         <div class="fds-drone-guide">
           <p class="lead">
-            PT Karya Solusi Angkasa (Full Drone Solutions) melayani konsultasi teknis, penjadwalan demo terbang di workshop Sleman maupun lokasi proyek, hingga pendampingan dokumen pengadaan armada UAV untuk instansi pemerintah, BUMN, sektor perkebunan, dan perusahaan swasta nasional. Seluruh lini produksi lokal kami dilengkapi sertifikasi TKDN + BMP hingga 60,74%, manajemen mutu ISO 9001:2015, serta standar nasional SNI 9199:2023 untuk pengadaan e-Katalog maupun kontrak korporasi.
+            PT Karya Solusi Angkasa (Full Drone Solutions) melayani konsultasi teknis, penjadwalan demo terbang di workshop Sleman maupun lokasi proyek, hingga pendampingan dokumen pengadaan armada UAV untuk instansi pemerintah, BUMN, sektor perkebunan, dan perusahaan swasta nasional. Seluruh lini drone agrikultur seri FERTO telah mengantongi sertifikat TKDN + BMP hingga 60,74%, model FERTO 15 &amp; FERTO 22 memenuhi standar nasional SNI 9199:2023, dan fasilitas manufaktur kami menerapkan manajemen mutu ISO 9001:2015 untuk pengadaan e-Katalog maupun kontrak korporasi.
           </p>
 
           <h3>Portofolio Solusi yang Dapat Dikonsultasikan</h3>
           <ul>
             <li>
-              <a href="{{ esc_url(home_url('/kategori-drone/agrikultur/')) }}">Drone Agrikultur Seri FERTO</a> — Pilihan drone sprayer dan spreader berkapasitas 5 hingga 50 liter untuk pemeliharaan tanaman pangan, hortikultura, dan perkebunan kelapa sawit skala komersial.
+              <a href="{!! esc_url(home_url('/kategori-drone/agrikultur/')) !!}">Drone Agrikultur Seri FERTO</a> — Pilihan drone sprayer dan spreader berkapasitas 5 hingga 50 liter untuk pemeliharaan tanaman pangan, hortikultura, dan perkebunan kelapa sawit skala komersial.
             </li>
             <li>
-              <a href="{{ esc_url(home_url('/kategori-drone/pemetaan-gis/')) }}">Drone Pemetaan &amp; Survei GIS</a> — Platform Hybrid VTOL jarak jauh serta multirotor modular untuk pemetaan topografi, inspeksi jaringan listrik 150 kV, dan survei aset energi.
+              <a href="{!! esc_url(home_url('/kategori-drone/pemetaan-gis/')) !!}">Drone Pemetaan &amp; Survei GIS</a> — Platform Hybrid VTOL jarak jauh serta multirotor modular untuk pemetaan topografi, inspeksi jaringan listrik 150 kV, dan survei aset energi.
             </li>
             <li>
-              <a href="{{ esc_url(home_url('/kategori-drone/kargo/')) }}">Drone Kargo &amp; Logistik DELFRO</a> — Wahana angkut otonom berdaya angkat 10 kg untuk distribusi logistik di medan perbukitan maupun wilayah kepulauan.
+              <a href="{!! esc_url(home_url('/kategori-drone/kargo/')) !!}">Drone Kargo &amp; Logistik DELFRO</a> — Wahana angkut otonom berdaya angkat 10 kg untuk distribusi logistik di medan perbukitan maupun wilayah kepulauan.
             </li>
           </ul>
 
           <p>
-            Sebelum mengajukan permintaan penawaran harga resmi melalui formulir di atas, Anda juga dapat menggunakan alat <a href="{{ esc_url(home_url('/bandingkan/')) }}">Perbandingan Spesifikasi Drone</a> untuk mengevaluasi kapasitas muatan dan daya jelajah tiap model, atau membaca profil fasilitas riset kami di halaman <a href="{{ esc_url(home_url('/tentang-kami/')) }}">Tentang PT Karya Solusi Angkasa</a>.
+            Sebelum mengajukan permintaan penawaran harga resmi melalui formulir di atas, Anda juga dapat menggunakan alat <a href="{!! esc_url(home_url('/bandingkan/')) !!}">Perbandingan Spesifikasi Drone</a> untuk mengevaluasi kapasitas muatan dan daya jelajah tiap model, atau membaca profil fasilitas riset kami di halaman <a href="{!! esc_url(home_url('/tentang-kami/')) !!}">Tentang PT Karya Solusi Angkasa</a>.
           </p>
         </div>
       </div>
@@ -396,8 +465,35 @@
 {{-- Global Floating Toast Notification --}}
 <x-snackbar />
 
-{{-- Form Submission AJAX Handler --}}
+{{-- Form Submission & URL Prefill Handler --}}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  var sel = document.getElementById('fds-service-select');
+  var lbl = document.getElementById('fds-service-label');
+  if (!sel || !lbl) return;
+
+  function syncServiceLabel() {
+    var opt = sel.options[sel.selectedIndex];
+    lbl.value = opt ? opt.text.trim() : '';
+  }
+
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var requested = (params.get('layanan') || params.get('sektor') || params.get('produk') || params.get('model') || '').trim().toLowerCase();
+    if (requested) {
+      var matched = Array.prototype.find.call(sel.options, function(o) {
+        return o.value.toLowerCase() === requested;
+      });
+      if (matched) {
+        sel.value = matched.value;
+      }
+    }
+  } catch (err) {}
+
+  syncServiceLabel();
+  sel.addEventListener('change', syncServiceLabel);
+});
+
 function fdsSubmitInquiry(e) {
   e.preventDefault();
   var form = document.getElementById('fds-inquiry-form');
@@ -405,6 +501,14 @@ function fdsSubmitInquiry(e) {
   var btnText = document.getElementById('fds-inquiry-btn-text');
 
   if (!form || !btn) return;
+
+  var sel       = document.getElementById('fds-service-select');
+  var lblInput  = document.getElementById('fds-service-label');
+  var srvSlug   = sel ? sel.value : 'kontak-inquiry';
+  var srvLabel  = (sel && sel.selectedIndex >= 0 && sel.options[sel.selectedIndex])
+    ? sel.options[sel.selectedIndex].text.trim()
+    : 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi';
+  if (lblInput) lblInput.value = srvLabel;
 
   var firstName = (form.querySelector('[name="first_name"]') || {}).value || '';
   var lastName  = (form.querySelector('[name="last_name"]') || {}).value || '';
@@ -454,7 +558,7 @@ function fdsSubmitInquiry(e) {
   btn.classList.add('opacity-70', 'cursor-not-allowed');
   btnText.textContent = 'Mengirim Pesan...';
 
-  fetch('{{ admin_url("admin-ajax.php") }}', {
+  fetch({!! wp_json_encode(admin_url('admin-ajax.php')) !!}, {
     method: 'POST',
     body: formData
   })
@@ -462,37 +566,50 @@ function fdsSubmitInquiry(e) {
   .then(function(data) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = '{!! esc_js($p_form_btn) !!}';
+    btnText.textContent = {!! wp_json_encode($p_form_btn) !!};
 
     if (data.success) {
+      var leadRef = (data.data && data.data.lead_ref) ? data.data.lead_ref : '';
+      var respLabel = (data.data && data.data.service_label) ? data.data.service_label : srvLabel;
+      try {
+        sessionStorage.setItem('fds_last_lead_summary', JSON.stringify({
+          lead_ref: leadRef,
+          service_label: respLabel,
+          company: company.trim()
+        }));
+      } catch (err) {}
+
       if (typeof window.fdsTrackEvent === 'function') {
         window.fdsTrackEvent('generate_lead', {
-          service_slug: 'kontak-inquiry',
-          service_label: 'Inquiry Halaman Kontak',
-          lead_ref: (data.data && data.data.lead_ref) ? data.data.lead_ref : ''
+          service_slug: srvSlug,
+          service_label: respLabel,
+          lead_ref: leadRef
         });
       }
       if (typeof fdsShowSnackbar === 'function') {
-        fdsShowSnackbar(true, 'Pesan Berhasil Terkirim', data.data.message || 'Pesan Anda telah berhasil disimpan di sistem kami.');
-      } else {
-        alert('Pesan berhasil terkirim!');
+        fdsShowSnackbar(true, 'Pesan Berhasil Terkirim', (data.data && data.data.message) ? data.data.message : 'Pesan Anda telah berhasil disimpan di sistem kami.');
       }
       form.reset();
       if (window.turnstile && typeof window.turnstile.reset === 'function') {
         try { window.turnstile.reset(); } catch (err) {}
       }
+      if (data.data && data.data.redirect_url) {
+        setTimeout(function() {
+          window.location.href = data.data.redirect_url;
+        }, 450);
+      }
     } else {
       if (typeof fdsShowSnackbar === 'function') {
-        fdsShowSnackbar(false, 'Gagal Mengirim Pesan', data.data.message || 'Terjadi kesalahan. Silakan periksa kembali formulir Anda.');
+        fdsShowSnackbar(false, 'Gagal Mengirim Pesan', (data.data && data.data.message) ? data.data.message : 'Terjadi kesalahan. Silakan periksa kembali formulir Anda.');
       } else {
-        alert('Gagal mengirim pesan: ' + (data.data.message || 'Terjadi kesalahan.'));
+        alert('Gagal mengirim pesan: ' + ((data.data && data.data.message) || 'Terjadi kesalahan.'));
       }
     }
   })
   .catch(function(err) {
     btn.disabled = false;
     btn.classList.remove('opacity-70', 'cursor-not-allowed');
-    btnText.textContent = '{!! esc_js($p_form_btn) !!}';
+    btnText.textContent = {!! wp_json_encode($p_form_btn) !!};
     if (typeof fdsShowSnackbar === 'function') {
       fdsShowSnackbar(false, 'Gangguan Jaringan', 'Gagal terhubung ke server. Silakan coba lagi atau hubungi kami via WhatsApp.');
     } else {

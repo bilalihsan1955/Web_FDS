@@ -1,4 +1,4 @@
-<form role="search" method="get" class="search-form" action="{{ home_url('/') }}">
+<form role="search" method="get" class="search-form" action="{!! esc_url(home_url('/')) !!}">
   <label>
     <span class="sr-only">
       {{ _x('Search for:', 'label', 'sage') }}
@@ -6,8 +6,8 @@
 
     <input
       type="search"
-      placeholder="{!! esc_attr_x('Search &hellip;', 'placeholder', 'sage') !!}"
-      value="{{ get_search_query() }}"
+      placeholder="{{ html_entity_decode(_x('Search &hellip;', 'placeholder', 'sage'), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}"
+      value="{{ function_exists('fds_clean_string') ? fds_clean_string(get_search_query(false)) : get_search_query(false) }}"
       name="s"
     >
   </label>

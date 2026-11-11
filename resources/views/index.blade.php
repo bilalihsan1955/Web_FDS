@@ -3,6 +3,19 @@
 @section('content')
 
 @php
+  $fds_blog_clean = static function ($val) {
+    $s = (string) $val;
+    if (function_exists('fds_clean_string')) {
+      return fds_clean_string($s);
+    }
+    $prev = '';
+    while ($prev !== $s) {
+      $prev = $s;
+      $s = wp_specialchars_decode($s, ENT_QUOTES);
+      $s = html_entity_decode($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    }
+    return $s;
+  };
   $paged = max(1, get_query_var('paged'), get_query_var('page'));
   $current_cat_id = is_category() ? get_queried_object_id() : 0;
   $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
@@ -80,11 +93,11 @@
         </p>
         <h1 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.08] mb-3 fds-hero-entrance fds-hero-delay-2">
           @if(is_category())
-            {{ single_cat_title('', false) }}
+            {{ $fds_blog_clean(single_cat_title('', false)) }}
           @elseif(is_tax('kategori_drone'))
-            {{ single_term_title('', false) }}
+            {{ $fds_blog_clean(single_term_title('', false)) }}
           @elseif(is_tag())
-            Tag: {{ single_tag_title('', false) }}
+            Tag: {{ $fds_blog_clean(single_tag_title('', false)) }}
           @else
             Berita &amp; Artikel Terkini.
           @endif
@@ -102,14 +115,14 @@
 
       {{-- Search Form: Centered Vertically --}}
       <div class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
-        <form action="{{ home_url('/') }}" method="get" class="relative w-full">
+        <form action="{!! esc_url(home_url('/')) !!}" method="get" class="relative w-full">
           <div class="relative flex items-center">
             <div class="absolute left-4 pointer-events-none text-[#86868b]">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </div>
-            <input type="text" name="s" value="{{ get_search_query() }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
+            <input type="text" name="s" value="{{ $fds_blog_clean(get_search_query(false)) }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
                    class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
             <button type="submit"
                     class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
@@ -122,7 +135,7 @@
 
     @if(is_category() || is_tag())
     <div class="pt-4">
-      <a href="{{ esc_url($blog_url) }}"
+      <a href="{!! esc_url($blog_url) !!}"
          class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         <span>Lihat semua berita</span>
@@ -145,21 +158,22 @@
         while (have_posts()) {
           the_post();
           $cats = get_the_category(get_the_ID());
-          $cat_label = !empty($cats) ? $cats[0]->name : 'Berita';
+          $cat_label = !empty($cats) ? $fds_blog_clean($cats[0]->name) : 'Berita';
           $thumb_id  = get_post_thumbnail_id(get_the_ID());
-          $thumb_alt = $thumb_id ? trim((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true)) : '';
+          $thumb_alt = $thumb_id ? trim($fds_blog_clean((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true))) : '';
+          $clean_post_title = $fds_blog_clean(get_the_title());
           if ($thumb_alt === '') {
-            $thumb_alt = trim(wp_specialchars_decode(get_the_title(), ENT_QUOTES)) . ' — Full Drone Solutions';
+            $thumb_alt = trim($clean_post_title) . ' — Full Drone Solutions';
           }
           $all_posts[] = [
             'id'        => get_the_ID(),
-            'title'     => get_the_title(),
+            'title'     => $clean_post_title,
             'permalink' => get_permalink(),
-            'excerpt'   => get_the_excerpt(),
+            'excerpt'   => $fds_blog_clean(get_the_excerpt()),
             'date'      => get_the_date('d M Y'),
             'cat'       => $cat_label,
-            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 1024px) 100vw, 760px', 'alt' => esc_attr($thumb_alt)]) : null,
-            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 768px) 92vw, 440px', 'alt' => esc_attr($thumb_alt)]) : null,
+            'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 1024px) 100vw, 760px', 'alt' => $thumb_alt]) : null,
+            'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 768px) 92vw, 440px', 'alt' => $thumb_alt]) : null,
           ];
         }
       }
@@ -174,7 +188,7 @@
         <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">Belum ada artikel</h2>
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
         @if(is_category() || is_tag())
-          <a href="{{ esc_url($blog_url) }}"
+          <a href="{!! esc_url($blog_url) !!}"
              class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5.5 py-2.5 rounded-full transition-colors shadow-sm leading-none group">
             <span class="leading-none">Lihat Semua Topik</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -210,15 +224,15 @@
               <div>
                 <div class="flex items-center gap-2 text-[12px] mb-3">
                   <span class="bg-[#0f808a] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">Terbaru</span>
-                  <span class="font-semibold text-[#0f808a] ml-1">{!! esc_html($featured['cat']) !!}</span>
+                  <span class="font-semibold text-[#0f808a] ml-1">{{ $featured['cat'] }}</span>
                   <span class="text-[#cbd5e1]">&bull;</span>
                   <span class="text-[#86868b]">{{ $featured['date'] }}</span>
                 </div>
                 <h2 class="text-[24px] sm:text-[30px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.25] mb-3.5 group-hover:text-[#0f808a] transition-colors">
-                  <a href="{{ $featured['permalink'] }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode($featured['title'], ENT_QUOTES)) !!}</a>
+                  <a href="{!! esc_url($featured['permalink']) !!}" class="fds-stretched-link">{{ $featured['title'] }}</a>
                 </h2>
                 <p class="text-[14px] sm:text-[15px] text-[#515154] leading-relaxed line-clamp-3 mb-6">
-                  {!! esc_html(wp_specialchars_decode($featured['excerpt'], ENT_QUOTES)) !!}
+                  {{ $featured['excerpt'] }}
                 </p>
               </div>
 
@@ -257,15 +271,15 @@
 
                 <div class="p-6 sm:p-7 pb-4">
                   <div class="flex items-center gap-2 text-[12px] mb-2.5">
-                    <span class="font-semibold text-[#0f808a]">{!! esc_html($post['cat']) !!}</span>
+                    <span class="font-semibold text-[#0f808a]">{{ $post['cat'] }}</span>
                     <span class="text-[#cbd5e1]">&bull;</span>
                     <span class="text-[#86868b]">{{ $post['date'] }}</span>
                   </div>
                   <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
-                    <a href="{{ $post['permalink'] }}" class="fds-stretched-link">{!! esc_html(wp_specialchars_decode($post['title'], ENT_QUOTES)) !!}</a>
+                    <a href="{!! esc_url($post['permalink']) !!}" class="fds-stretched-link">{{ $post['title'] }}</a>
                   </h2>
                   <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
-                    {!! esc_html(wp_specialchars_decode($post['excerpt'], ENT_QUOTES)) !!}
+                    {{ $post['excerpt'] }}
                   </p>
                 </div>
               </div>

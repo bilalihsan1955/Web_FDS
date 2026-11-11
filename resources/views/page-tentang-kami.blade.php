@@ -8,6 +8,12 @@
 @php
   // Ambil data lengkap halaman Tentang Kami dari Admin WP (Satu Pintu via Konten Tentang Kami)
   $about = function_exists('\App\fds_get_about_content') ? \App\fds_get_about_content() : [];
+  $fds_about_scrub = static function ($v, bool $allowTkdn = true, bool $allowSni = true): string {
+      $str = function_exists('fds_clean_string')
+          ? fds_clean_string((string) $v)
+          : html_entity_decode(wp_specialchars_decode((string) $v, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      return function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($str, $allowTkdn, $allowSni) : $str;
+  };
 @endphp
 
 {{-- ========================================================== --}}
@@ -94,20 +100,30 @@
 
     <div class="max-w-[1140px] mx-auto text-center flex flex-col items-center">
       <p class="text-[13px] sm:text-[14px] font-semibold text-white/80 tracking-wide mb-6 fds-hero-entrance fds-hero-delay-1">
-        {!! esc_html(wp_specialchars_decode($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Pengalaman UAV Sejak 2012 · Yogyakarta')) !!}
+        {{ $fds_about_scrub($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Manufaktur UAV Nasional · Yogyakarta', true, false) }}
       </p>
       <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px] fds-hero-entrance fds-hero-delay-2">
-        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", wp_specialchars_decode($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology.")))) !!}
+        {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_about_scrub($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology.", false, false)))) !!}
       </h1>
       <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/80 max-w-[880px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
-        {!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", wp_specialchars_decode($about['hero_desc'] ?? 'Berpengalaman di industri UAV sejak 2012 dan resmi berbadan hukum PT pada 2019. Kami merancang desain aerodinamis, struktur avionik in-house, rangka karbon lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.')))) !!}
+        {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_about_scrub($about['hero_desc'] ?? 'Resmi berbadan hukum PT Karya Solusi Angkasa pada 2019 di Sleman, Yogyakarta. Kami merancang desain aerodinamis, sistem avionik in-house, rangka karbon komposit lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.', true, false)))) !!}
       </p>
     </div>
 
     {{-- Hero image --}}
+    @php
+      $tk_hero_default = get_template_directory_uri() . '/public/images/site/workshop-deltav.webp';
+      $tk_hero_raw = trim((string) ($about['hero_img'] ?? ''));
+      $tk_hero_img = ($tk_hero_raw !== '' && stripos($tk_hero_raw, 'unsplash.com') === false)
+        ? $tk_hero_raw
+        : fds_img('tk_hero', $tk_hero_default);
+      if (stripos((string) $tk_hero_img, 'unsplash.com') !== false || $tk_hero_img === '') {
+        $tk_hero_img = $tk_hero_default;
+      }
+    @endphp
     <div class="mt-16 rounded-t-[2rem] overflow-hidden relative z-10 fds-hero-entrance fds-hero-delay-4" style="box-shadow: 0 -8px 48px rgba(0,0,0,0.3);">
       <img
-        src="{!! esc_url(!empty($about['hero_img']) ? $about['hero_img'] : fds_img('tk_hero', 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80')) !!}"
+        src="{!! esc_url($tk_hero_img) !!}"
         alt="Tim & Workshop PT Karya Solusi Angkasa (FDS)"
         width="1400"
         height="720"
@@ -132,10 +148,16 @@
   for ($ai = 1; $ai <= 4; $ai++) {
       $aNum = trim((string)($about["stat{$ai}_num"] ?? ''));
       $aLbl = trim((string)($about["stat{$ai}_lbl"] ?? ''));
+      if ($aNum === '2012') {
+          $aNum = '2019';
+          if (stripos($aLbl, 'berdiri') !== false || stripos($aLbl, 'sejak') !== false || $aLbl === '') {
+              $aLbl = 'Berdiri Badan Hukum PT';
+          }
+      }
       if ($aNum !== '' || $aLbl !== '') {
           $about_stats_list[] = [
-              'num' => $aNum,
-              'lbl' => $aLbl,
+              'num' => $fds_about_scrub($aNum),
+              'lbl' => $fds_about_scrub($aLbl),
           ];
       }
   }
@@ -143,16 +165,36 @@
 @endphp
 
 @if($total_about_stats > 0)
-<section class="bg-[#0a555c] py-16">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+<section class="relative bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] py-16 overflow-hidden">
+  {{-- Vector Background: Pure Aerodynamic Flow Waves (Fill-Only Gradients) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
+    <svg class="w-full h-full" viewBox="0 0 1440 240" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="tk_stats_g1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#46deec" stop-opacity="0.20" />
+          <stop offset="55%" stop-color="#13abb9" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
+        </linearGradient>
+        <linearGradient id="tk_stats_g2" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.16" />
+          <stop offset="60%" stop-color="#0f808a" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
+        </linearGradient>
+      </defs>
+      <path d="M0,120 C360,40 720,180 1080,90 C1260,45 1380,70 1440,100 L1440,240 L0,240 Z" fill="url(#tk_stats_g1)" />
+      <path d="M0,165 C420,195 820,85 1180,145 C1320,170 1390,160 1440,140 L1440,240 L0,240 Z" fill="url(#tk_stats_g2)" />
+    </svg>
+  </div>
+
+  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
     <x-reveal-group :step="100" class="grid grid-cols-2 {{ $total_about_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_about_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_about_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-10 text-center">
       @foreach($about_stats_list as $ast)
       <div>
         @if(!empty($ast['num']))
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{!! esc_html($ast['num']) !!}</p>
+        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{{ $ast['num'] }}</p>
         @endif
         @if(!empty($ast['lbl']))
-        <p class="text-[13px] font-medium text-white/40 mt-1">{!! esc_html($ast['lbl']) !!}</p>
+        <p class="text-[13px] font-medium text-white/75 mt-1">{{ $ast['lbl'] }}</p>
         @endif
       </div>
       @endforeach
@@ -172,10 +214,10 @@
       {{-- Left: headline sticky --}}
       <x-reveal type="fade-right" class="lg:sticky lg:top-28">
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-5">
-          {!! esc_html($about['story_badge'] ?? 'Cerita Kami') !!}
+          {{ $fds_about_scrub($about['story_badge'] ?? 'Cerita Kami') }}
         </p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
-          {!! $about['story_title'] ?? 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.' !!}
+          {{ $fds_about_scrub($about['story_title'] ?? 'Rekayasa UAV mandiri untuk masa depan industri Indonesia.') }}
         </h2>
         @if (!empty($about['story_img']))
         <div class="mt-8 rounded-2xl overflow-hidden shadow-sm">
@@ -193,21 +235,21 @@
       {{-- Right: story text (Dikelola terpusat satu pintu via menu Konten Tentang Kami / About FDS) --}}
       <x-reveal-group :step="70" class="space-y-8 text-[18px] text-[#515154] leading-[1.7]">
         @if (!empty($about['story_p1']))
-          <p>{!! $about['story_p1'] !!}</p>
+          <p>{!! wp_kses_post($fds_about_scrub($about['story_p1'])) !!}</p>
         @endif
         @if (!empty($about['story_p2']))
-          <p>{!! $about['story_p2'] !!}</p>
+          <p>{!! wp_kses_post($fds_about_scrub($about['story_p2'])) !!}</p>
         @endif
         @if (!empty($about['story_p3']))
-          <p>{!! $about['story_p3'] !!}</p>
+          <p>{!! wp_kses_post($fds_about_scrub($about['story_p3'])) !!}</p>
         @endif
         @if (!empty($about['story_p4']))
-          <p>{!! $about['story_p4'] !!}</p>
+          <p>{!! wp_kses_post($fds_about_scrub($about['story_p4'])) !!}</p>
         @endif
         
         <div class="pt-4 border-t border-black/[0.06]">
-          <a href="{{ $about['story_cta_url'] ?? '#mitra' }}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0f808a] hover:underline group leading-none">
-            <span>{!! esc_html($about['story_cta_text'] ?? 'Lihat kemitraan strategis & portofolio klien') !!}</span>
+          <a href="{!! esc_url($about['story_cta_url'] ?? '#mitra') !!}" class="inline-flex items-center gap-1.5 text-[16px] font-semibold text-[#0f808a] hover:underline group leading-none">
+            <span>{{ $fds_about_scrub($about['story_cta_text'] ?? 'Lihat kemitraan strategis & portofolio klien') }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
@@ -273,10 +315,10 @@
 
     <x-reveal class="mb-16">
       <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-4">
-        {!! esc_html($about['spektrum_badge'] ?? 'Spektrum Teknologi UAV') !!}
+        {{ $fds_about_scrub($about['spektrum_badge'] ?? 'Spektrum Teknologi UAV') }}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[620px]">
-        {!! esc_html($about['spektrum_title'] ?? 'Tiga arsitektur wahana udara untuk segala medan.') !!}
+        {{ $fds_about_scrub($about['spektrum_title'] ?? 'Tiga arsitektur wahana udara untuk segala medan.') }}
       </h2>
     </x-reveal>
 
@@ -286,9 +328,9 @@
         <div data-aos="fade-up" data-aos-delay="0" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
-          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') !!}</h3>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{{ $fds_about_scrub($about['spektrum1_title'] ?? 'Rotary Wing (Multirotor)') }}</h3>
           <p class="text-[15px] text-white/75 leading-relaxed">
-            {!! $about['spektrum1_desc'] ?? 'Kemampuan Vertical Takeoff and Landing (VTOL), kontrol posisi presisi tinggi, dan hovering super stabil.' !!}
+            {{ $fds_about_scrub($about['spektrum1_desc'] ?? 'Kemampuan Vertical Takeoff and Landing (VTOL), kontrol posisi presisi tinggi, dan hovering super stabil.') }}
           </p>
         </div>
 
@@ -296,9 +338,9 @@
         <div data-aos="fade-up" data-aos-delay="200" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
-          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum2_title'] ?? 'Fixed Wing (Sayap Tetap)') !!}</h3>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{{ $fds_about_scrub($about['spektrum2_title'] ?? 'Fixed Wing (Sayap Tetap)') }}</h3>
           <p class="text-[15px] text-white/75 leading-relaxed">
-            {!! $about['spektrum2_desc'] ?? 'Dirancang untuk misi jarak jauh, daya tahan terbang tinggi (endurance), dan cakupan area pemetaan luas.' !!}
+            {{ $fds_about_scrub($about['spektrum2_desc'] ?? 'Dirancang untuk misi jarak jauh, daya tahan terbang tinggi (endurance), dan cakupan area pemetaan luas.') }}
           </p>
         </div>
 
@@ -306,9 +348,9 @@
         <div data-aos="fade-up" data-aos-delay="400" class="group relative bg-white/[0.06] hover:bg-white/[0.11] backdrop-blur-xl backdrop-saturate-150 border border-white/15 hover:border-white/30 rounded-[2rem] p-8 sm:p-10 transition-all duration-300 shadow-[0_16px_36px_-10px_rgba(0,0,0,0.5),inset_0_1px_1px_0_rgba(255,255,255,0.35)] hover:shadow-[0_24px_48px_-12px_rgba(0,0,0,0.6),inset_0_1px_1.5px_0_rgba(255,255,255,0.5)] hover:-translate-y-1 overflow-hidden">
           {{-- Top Specular Edge Sheen (Liquid Glass Rim Light) --}}
           <div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent pointer-events-none opacity-70 group-hover:opacity-100 transition-opacity"></div>
-          <h3 class="text-[20px] font-semibold text-white mb-3">{!! esc_html($about['spektrum3_title'] ?? 'Hybrid VTOL (DELTAV)') !!}</h3>
+          <h3 class="text-[20px] font-semibold text-white mb-3">{{ $fds_about_scrub($about['spektrum3_title'] ?? 'Hybrid VTOL (DELTAV)') }}</h3>
           <p class="text-[15px] text-white/75 leading-relaxed">
-            {!! $about['spektrum3_desc'] ?? 'Menggabungkan fleksibilitas peluncuran vertikal tanpa landasan dengan kecepatan jelajah 15–22 m/s dan jangkauan 60 km.' !!}
+            {{ $fds_about_scrub($about['spektrum3_desc'] ?? 'Menggabungkan fleksibilitas peluncuran vertikal tanpa landasan dengan kecepatan jelajah 15–22 m/s dan jangkauan 60 km.') }}
           </p>
         </div>
       </div>
@@ -326,13 +368,13 @@
 
       <x-reveal type="fade-right" class="lg:col-span-4 lg:sticky lg:top-28">
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
-          {!! esc_html($about['mitra_badge'] ?? 'Aktivitas Kami') !!}
+          {{ $fds_about_scrub($about['mitra_badge'] ?? 'Aktivitas Kami') }}
         </p>
         <h2 class="text-[36px] sm:text-[46px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-6">
-          {!! esc_html($about['mitra_title'] ?? 'Aktivitas Kami') !!}
+          {{ $fds_about_scrub($about['mitra_title'] ?? 'Aktivitas Kami') }}
         </h2>
         <p class="text-[17px] text-[#515154] leading-relaxed">
-          {!! esc_html($about['mitra_desc'] ?? 'Riset mandiri, inovasi manufaktur lokal, serta kolaborasi strategis bersama institusi nasional dan mitra internasional.') !!}
+          {{ $fds_about_scrub($about['mitra_desc'] ?? 'Riset mandiri, inovasi manufaktur lokal, serta kolaborasi strategis bersama institusi nasional dan mitra internasional.') }}
         </p>
       </x-reveal>
 
@@ -345,12 +387,12 @@
           <div class="py-8 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-start">
             <div class="sm:col-span-5">
               @if(!empty($act['cat']))
-              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{!! esc_html($act['cat']) !!}</p>
+              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{{ $fds_about_scrub($act['cat']) }}</p>
               @endif
-              <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{!! esc_html($act['name']) !!}</h3>
+              <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{{ $fds_about_scrub($act['name']) }}</h3>
             </div>
             <div class="sm:col-span-7">
-              <p class="text-[15px] text-[#515154] leading-relaxed">{!! nl2br(esc_html(preg_replace('/(?<!\s)\R/u', " \n", (string) ($act['desc'] ?? '')))) !!}</p>
+              <p class="text-[15px] text-[#515154] leading-relaxed">{!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_about_scrub((string) ($act['desc'] ?? ''))))) !!}</p>
             </div>
           </div>
           @endif
@@ -367,12 +409,12 @@
 {{-- ========================================================== --}}
 @php
   $gallery_items = function_exists('App\fds_get_about_gallery') ? \App\fds_get_about_gallery() : [];
-  $raw_gallery_title = $about['gallery_title'] ?? '';
+  $raw_gallery_title = $fds_about_scrub($about['gallery_title'] ?? '');
   $gallery_heading = (!empty($raw_gallery_title) && $raw_gallery_title !== 'Rekam jejak operasional, rekayasa manufaktur, dan uji terbang FDS.' && $raw_gallery_title !== 'Dokumentasi & Fasilitas')
     ? $raw_gallery_title
     : 'Galeri Dokumentasi';
     
-  $raw_gallery_desc = $about['gallery_desc'] ?? '';
+  $raw_gallery_desc = $fds_about_scrub($about['gallery_desc'] ?? '');
   $gallery_desc = (!empty($raw_gallery_desc) && $raw_gallery_desc !== 'Dokumentasi visual fasilitas perakitan Sleman, pengujian performa wahana udara, serta implementasi teknologi drone di lapangan.' && $raw_gallery_desc !== 'Rekam jejak fasilitas perakitan, uji terbang, dan implementasi teknologi drone FDS.')
     ? $raw_gallery_desc
     : 'Dokumentasi rekam jejak kegiatan operasional, uji terbang, dan implementasi teknologi drone FDS.';
@@ -384,11 +426,11 @@
     {{-- Header Sederhana & Bersih (Tanpa Kategori) --}}
     <x-reveal class="mb-10 sm:mb-14 max-w-[680px]">
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
-        {!! esc_html($gallery_heading) !!}
+        {{ $gallery_heading }}
       </h2>
       @if(!empty($gallery_desc))
       <p class="text-[16px] sm:text-[17px] text-[#515154] leading-relaxed mt-3">
-        {!! esc_html($gallery_desc) !!}
+        {{ $gallery_desc }}
       </p>
       @endif
     </x-reveal>
@@ -408,7 +450,7 @@
           @foreach($columns_data[$c] as $g_val)
             @php
               $g_i = $g_val['_orig_idx'];
-              $g_raw_title = wp_specialchars_decode($g_val['title'] ?? 'Dokumentasi FDS', ENT_QUOTES);
+              $g_raw_title = $fds_about_scrub($g_val['title'] ?? 'Dokumentasi FDS');
               $g_img = $g_val['img'] ?? '';
             @endphp
             <div 
@@ -440,7 +482,7 @@
                 {{-- Judul Foto (Hanya Judul Saja) --}}
                 <div class="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10 pointer-events-none">
                   <h3 class="text-white font-semibold text-[15px] sm:text-[17px] leading-snug tracking-tight drop-shadow-sm group-hover:text-[#46deec] transition-colors duration-200">
-                    {!! esc_html($g_raw_title) !!}
+                    {{ $g_raw_title }}
                   </h3>
                 </div>
               </div>
@@ -684,10 +726,10 @@
 
     <x-reveal class="mb-14">
       <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
-        {!! esc_html($about['certs_badge'] ?? 'Sertifikasi & Standar Mutu') !!}
+        {{ $fds_about_scrub($about['certs_badge'] ?? 'Sertifikasi & Standar Mutu') }}
       </p>
       <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[600px]">
-        {!! $about['certs_title'] ?? 'Standar mutu global, sertifikasi resmi nasional.' !!}
+        {{ $fds_about_scrub($about['certs_title'] ?? 'Standar mutu global, sertifikasi resmi nasional.') }}
       </h2>
     </x-reveal>
 
@@ -717,11 +759,11 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert1_badge'] ?? 'Kemenperin RI') !!}</p>
+          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{{ $fds_about_scrub($about['cert1_badge'] ?? 'Kemenperin RI', true, false) }}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert1_val'] ?? '60,74%') !!}</p>
-          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{!! esc_html($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) tertinggi di segmen drone industri buatan lokal.') !!}</p>
+          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert1_val'] ?? '60,74%', true, false) }}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) Kemenperin RI untuk lini drone pertanian seri FERTO.', true, false) }}</p>
         </div>
       </div>
 
@@ -749,15 +791,15 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-[#86868b] tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert2_badge'] ?? 'Standar Produk & Manajemen') !!}</p>
+          <p class="text-[13px] font-semibold text-[#515154] tracking-wide mb-4 sm:mb-5">{{ $fds_about_scrub($about['cert2_badge'] ?? 'Standar Produk & Manajemen', false, true) }}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-[#1d1d1f] tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert2_val'] ?? 'ISO & SNI') !!}</p>
-          <p class="text-[13.5px] sm:text-[14px] text-[#515154] mt-2.5 leading-relaxed">{!! esc_html($about['cert2_desc'] ?? 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 (Standar Nasional Drone Pertanian).') !!}</p>
+          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-[#1d1d1f] tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert2_val'] ?? 'ISO & SNI', false, true) }}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-[#515154] mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert2_desc'] ?? 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 pada FERTO 15 & FERTO 22.', false, true) }}</p>
         </div>
       </div>
 
-      {{-- Card 3: 24/7 Service (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
+      {{-- Card 3: Layanan Purna Jual Nasional (Ambient Dual-Orb Gradient - Ref: Frame 3716.svg) --}}
       <div data-aos="fade-up" data-aos-delay="400" class="relative overflow-hidden bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] rounded-[2rem] p-7 sm:p-8 flex flex-col justify-between min-h-[245px] sm:min-h-[255px] border border-white/[0.08] transition-all duration-300 hover:-translate-y-1 group shadow-[0_4px_30px_rgba(0,0,0,0.18)]">
         
         {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
@@ -781,11 +823,17 @@
         </div>
 
         <div class="relative z-10">
-          <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{!! esc_html($about['cert3_badge'] ?? 'Jaminan Layanan') !!}</p>
+          <p class="text-[13px] font-semibold text-white/75 tracking-wide mb-4 sm:mb-5">{{ $fds_about_scrub($about['cert3_badge'] ?? 'Jaminan Layanan') }}</p>
         </div>
+        @php
+          $tk_cert3_val = trim((string) ($about['cert3_val'] ?? 'Nasional'));
+          if ($tk_cert3_val === '' || $tk_cert3_val === '24/7') {
+              $tk_cert3_val = 'Nasional';
+          }
+        @endphp
         <div class="relative z-10">
-          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{!! esc_html($about['cert3_val'] ?? '24/7') !!}</p>
-          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{!! esc_html($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') !!}</p>
+          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($tk_cert3_val) }}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') }}</p>
         </div>
       </div>
 
@@ -799,10 +847,10 @@
 {{-- ========================================================== --}}
 @php
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
-  $c_entitas = $global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)');
-  $c_alamat  = $global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285');
-  $c_email   = $global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com');
-  $c_phone   = $global_c['phone'] ?? '+62 8112 748 882';
+  $c_entitas = $fds_about_scrub($global_c['company_name'] ?? ($about['info_entitas'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions)'));
+  $c_alamat  = $fds_about_scrub($global_c['address'] ?? ($about['info_alamat'] ?? 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285'));
+  $c_email   = $fds_about_scrub($global_c['email'] ?? ($about['info_email'] ?? 'marketing@fulldronesolutions.com'));
+  $c_phone   = $fds_about_scrub($global_c['phone'] ?? '+62 8112 748 882');
   $c_wa_link      = $global_c['wa_link'] ?? 'https://wa.me/628112748882';
   $c_maps         = $global_c['maps_url'] ?? ($about['info_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_about = isset($global_c['show_map_about']) ? (bool) $global_c['show_map_about'] : (isset($about['show_map_about']) ? (bool) $about['show_map_about'] : (bool) get_option('fds_show_map_about', 1));
@@ -848,22 +896,28 @@
           Kemitraan &amp; Pengadaan Korporasi
         </p>
         <h2 class="text-[38px] sm:text-[52px] lg:text-[60px] font-semibold tracking-[-0.035em] text-white leading-[1.06] mb-8">
-          {!! esc_html($about['cta_title'] ?? 'Siap bermitra dengan PT Karya Solusi Angkasa?') !!}
+          {{ $fds_about_scrub($about['cta_title'] ?? 'Siap bermitra dengan PT Karya Solusi Angkasa?') }}
         </h2>
-        <p class="text-[18px] sm:text-[20px] text-white/60 leading-[1.65] max-w-[580px] mb-12">
-          {!! esc_html($about['cta_desc'] ?? 'Baik instansi pemerintah, BUMN, perkebunan agrikultur besar, atau mitra industri — tim engineering kami siap memberikan solusi terbaik.') !!}
+        <p class="text-[18px] sm:text-[20px] text-white/80 leading-[1.65] max-w-[580px] mb-12">
+          {{ $fds_about_scrub($about['cta_desc'] ?? 'Baik instansi pemerintah, BUMN, perkebunan agrikultur besar, atau mitra industri — tim engineering kami siap memberikan solusi terbaik.') }}
         </p>
         <div class="flex flex-wrap items-center gap-6">
-          <a href="{{ $about['cta_btn1_url'] ?? home_url('/#kontak') }}"
+          @php
+            $tk_cta_btn1_url = trim((string) ($about['cta_btn1_url'] ?? ''));
+            if ($tk_cta_btn1_url === '' || strpos($tk_cta_btn1_url, '/#kontak') !== false) {
+                $tk_cta_btn1_url = home_url('/kontak/#hubungi-form');
+            }
+          @endphp
+          <a href="{!! esc_url($tk_cta_btn1_url) !!}"
              class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#1d1d1f] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-md">
-            {!! esc_html($about['cta_btn1_text'] ?? 'Mulai Konsultasi') !!}
+            {{ $fds_about_scrub($about['cta_btn1_text'] ?? 'Mulai Konsultasi') }}
           </a>
           @php
-            $btn2_label = $about['cta_btn2_text'] ?? 'Baca Studi Kasus';
-            $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', html_entity_decode($btn2_label, ENT_QUOTES, 'UTF-8'));
+            $btn2_label = $fds_about_scrub($about['cta_btn2_text'] ?? 'Baca Studi Kasus');
+            $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', $btn2_label);
           @endphp
-          <a href="{{ $about['cta_btn2_url'] ?? home_url('/blog/') }}"
-             class="inline-flex items-center text-white/70 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
+          <a href="{!! esc_url($about['cta_btn2_url'] ?? home_url('/blog/')) !!}"
+             class="inline-flex items-center text-white/85 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
             <span class="leading-none">{{ $btn2_label }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
@@ -875,47 +929,50 @@
 
       {{-- Right: Editorial Directory & Workshop Details (Col 5) --}}
       <x-reveal type="fade-left" class="lg:col-span-5 border-t lg:border-t-0 lg:border-l border-white/[0.1] pt-12 lg:pt-0 lg:pl-16">
-        <h3 class="text-[14px] font-semibold text-white/60 tracking-normal mb-8">
-          {!! esc_html($about['info_title'] ?? 'Kantor Pusat & Workshop') !!}
+        <h3 class="text-[14px] font-semibold text-white/80 tracking-normal mb-8">
+          {{ $fds_about_scrub($about['info_title'] ?? 'Kantor Pusat & Workshop') }}
         </h3>
 
         <div class="divide-y divide-white/[0.08]">
           
           <div class="pb-7">
-            <p class="text-[13px] font-semibold text-white/60 mb-1">Entitas Resmi</p>
+            <p class="text-[13px] font-semibold text-white/75 mb-1">Entitas Resmi</p>
             <p class="text-[17px] font-medium text-white leading-snug">
-              {!! esc_html($c_entitas) !!}
+              {{ $c_entitas }}
             </p>
           </div>
 
           <div class="py-7">
-            <p class="text-[13px] font-semibold text-white/40 mb-1">Alamat Workshop</p>
+            <p class="text-[13px] font-semibold text-white/75 mb-1">Alamat Workshop</p>
             <p class="text-[16px] font-medium text-white/90 leading-relaxed">
-              {!! esc_html($c_alamat) !!}
+              {{ $c_alamat }}
             </p>
-            <p class="text-[13px] text-white/50 mt-1">Fasilitas Riset, Desain Aerodinamis &amp; Manufaktur UAV</p>
+            <p class="text-[13px] text-white/75 mt-1">Fasilitas Riset, Desain Aerodinamis &amp; Manufaktur UAV</p>
           </div>
 
           <div class="py-7">
-            <p class="text-[13px] font-semibold text-white/50 mb-1">Email Resmi</p>
-            <a href="mailto:{{ esc_attr($c_email) }}" 
+            <p class="text-[13px] font-semibold text-white/75 mb-1">Email Resmi</p>
+            <a href="mailto:{{ $c_email }}" 
                class="text-[16px] font-medium text-white hover:underline transition-all block">
-              {!! esc_html($c_email) !!}
+              {{ $c_email }}
             </a>
           </div>
 
           <div class="pt-7">
-            <p class="text-[13px] font-semibold text-white/50 mb-1.5">Kontak &amp; Layanan Cepat</p>
+            <p class="text-[13px] font-semibold text-white/75 mb-1.5">Kontak &amp; Layanan Cepat</p>
             <div class="flex flex-wrap items-center gap-3 mt-1">
               <a href="tel:{{ preg_replace('/[^0-9+]/', '', $c_phone) }}" class="text-[16px] font-medium text-white hover:underline transition-all">
-                {!! esc_html($c_phone) !!}
+                {{ $c_phone }}
               </a>
               <span class="text-white/30">&middot;</span>
-              <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-[12.5px] font-semibold transition-all duration-150 shadow-sm hover:shadow active:scale-95">
+              <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white text-[12.5px] font-semibold transition-all duration-150 shadow-sm hover:shadow active:scale-95 group">
                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-              <span>WhatsApp</span>
-              <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>
+                <span>WhatsApp</span>
+                <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M6 6h12v12"/>
+                  <path d="M6 18 18 6"/>
+                </svg>
+              </a>
           </div>
         </div>
 

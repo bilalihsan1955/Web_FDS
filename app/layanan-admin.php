@@ -41,7 +41,10 @@ add_action('admin_enqueue_scripts', function ($hook) {
 });
 
 // 3. METABOX PINTASAN DI EDITOR HALAMAN WP PAGES
-add_action('add_meta_boxes', function () {
+add_action('add_meta_boxes_page', function ($post) {
+    if ($post && ($post->post_name ?? '') === 'produk') {
+        return;
+    }
     add_meta_box(
         'fds_layanan_editor_shortcut',
         'Pengelolaan Konten Layanan FDS',

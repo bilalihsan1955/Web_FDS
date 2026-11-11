@@ -48,16 +48,16 @@ function render_brochure_settings_admin_page() {
     $saved = false;
     if (isset($_POST['fds_save_brochure_settings']) && check_admin_referer('fds_brochure_settings_nonce')) {
         update_option('fds_brochure_enable', isset($_POST['fds_brochure_enable']) ? '1' : '0');
-        update_option('fds_brochure_badge', sanitize_text_field($_POST['fds_brochure_badge'] ?? ''));
-        update_option('fds_brochure_title', sanitize_text_field($_POST['fds_brochure_title'] ?? ''));
-        update_option('fds_brochure_desc', sanitize_textarea_field($_POST['fds_brochure_desc'] ?? ''));
-        update_option('fds_brochure_desc_ready', sanitize_textarea_field($_POST['fds_brochure_desc_ready'] ?? ''));
-        update_option('fds_brochure_placeholder', sanitize_text_field($_POST['fds_brochure_placeholder'] ?? ''));
-        update_option('fds_brochure_button_text', sanitize_text_field($_POST['fds_brochure_button_text'] ?? ''));
-        update_option('fds_brochure_layout', sanitize_text_field($_POST['fds_brochure_layout'] ?? 'horizontal'));
-        update_option('fds_brochure_privacy_note', sanitize_text_field($_POST['fds_brochure_privacy_note'] ?? ''));
-        update_option('fds_brochure_default_pdf', esc_url_raw($_POST['fds_brochure_default_pdf'] ?? ''));
-        update_option('fds_brochure_admin_email', sanitize_email($_POST['fds_brochure_admin_email'] ?? ''));
+        update_option('fds_brochure_badge', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_badge'] ?? ''))));
+        update_option('fds_brochure_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_title'] ?? ''))));
+        update_option('fds_brochure_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_brochure_desc'] ?? ''))));
+        update_option('fds_brochure_desc_ready', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_brochure_desc_ready'] ?? ''))));
+        update_option('fds_brochure_placeholder', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_placeholder'] ?? ''))));
+        update_option('fds_brochure_button_text', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_button_text'] ?? ''))));
+        update_option('fds_brochure_layout', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_layout'] ?? 'horizontal'))));
+        update_option('fds_brochure_privacy_note', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_privacy_note'] ?? ''))));
+        update_option('fds_brochure_default_pdf', esc_url_raw(wp_unslash((string) ($_POST['fds_brochure_default_pdf'] ?? ''))));
+        update_option('fds_brochure_admin_email', sanitize_email(wp_unslash((string) ($_POST['fds_brochure_admin_email'] ?? ''))));
         $saved = true;
     }
 
@@ -69,6 +69,13 @@ function render_brochure_settings_admin_page() {
     $desc_ready   = get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.');
     $placeholder  = get_option('fds_brochure_placeholder', 'Masukkan email Anda...');
     $button_text  = get_option('fds_brochure_button_text', 'Download Brosur (PDF)');
+    if (function_exists('fds_clean_string')) {
+        $title       = \fds_clean_string((string) $title);
+        $desc        = \fds_clean_string((string) $desc);
+        $desc_ready  = \fds_clean_string((string) $desc_ready);
+        $placeholder = \fds_clean_string((string) $placeholder);
+        $button_text = \fds_clean_string((string) $button_text);
+    }
     $default_pdf  = get_option('fds_brochure_default_pdf', '');
     $admin_email  = get_option('fds_brochure_admin_email', get_option('admin_email'));
 
@@ -268,9 +275,9 @@ function handle_brochure_download_ajax() {
     }
     set_transient($rate_key, $attempts + 1, 5 * MINUTE_IN_SECONDS);
 
-    $email      = sanitize_email($_POST['email'] ?? '');
+    $email      = sanitize_email(wp_unslash((string) ($_POST['email'] ?? '')));
     $drone_id   = intval($_POST['drone_id'] ?? 0);
-    $drone_name = sanitize_text_field($_POST['drone_name'] ?? 'Drone FDS');
+    $drone_name = sanitize_text_field(wp_unslash((string) ($_POST['drone_name'] ?? 'Drone FDS')));
 
     if (!is_email($email)) {
         wp_send_json_error([
