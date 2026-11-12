@@ -2003,7 +2003,7 @@ function fds_get_default_layanan_sectors(): array {
                 ],
                 [
                     'q' => 'Bisakah pemerintah daerah atau instansi kebencanaan membeli armada UAV siaga beserta pelatihan tim?',
-                    'a' => 'Bisa. FDS menyediakan pengadaan unit UAV buatan dalam negeri berstandar manajemen mutu ISO 9001:2015 (seperti seri MULTIPURPOSE, DELTAV, dan DELFRO) disertai program pelatihan dan bootcamp bagi tim operasional instansi.',
+                    'a' => 'Bisa. FDS (perusahaan bersertifikat sistem manajemen mutu ISO 9001:2015) menyediakan pengadaan unit UAV buatan dalam negeri seperti seri MULTIPURPOSE, DELTAV, dan DELFRO disertai program pelatihan dan bootcamp bagi tim operasional instansi.',
                 ],
                 [
                     'q' => 'Bagaimana cara mengajukan permintaan pemetaan baseline mitigasi maupun pemulihan pascabencana?',

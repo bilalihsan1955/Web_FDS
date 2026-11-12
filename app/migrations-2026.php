@@ -106,6 +106,9 @@ if (!function_exists(__NAMESPACE__ . '\\fds_migration_scrub_string')) {
         $val = (string) preg_replace('/\bTahun\s+2012\b/i', 'Awal Riset Nasional', $val);
 
         // Clean double spaces if replacements stripped parentheses
+        $val = (string) preg_replace('/\s*\(\s*Tanpa\s+klaim[^)]*\)/i', '', $val);
+        $val = (string) preg_replace('/\bUntuk\s+model\s+non-FERTO\s*\(DELTAV,\s*MULTIPURPOSE,\s*dan\s*DELFRO\),\s*status\s+sertifikasi\s+TKDN\s+belum\s+dicantumkan\./i', 'Pada tingkat perusahaan, PT Karya Solusi Angkasa menerapkan sistem manajemen mutu ISO 9001:2015.', $val);
+        $val = (string) preg_replace('/Tidak\.\s*Sertifikasi\s+TKDN\s+60[,.]74%\s+dan\s+SNI\s+9199:2023\s*\(pada\s+FERTO\s+15\s*(?:&amp;|&)\s*22\)\s+hanya\s+melekat\s+pada\s+seri\s+drone\s+sprayer\s+agrikultur\s+FERTO\.\s*/i', '', $val);
         $val = (string) preg_replace('/\s{2,}/', ' ', $val);
 
         if ($val !== $orig) {
@@ -307,7 +310,7 @@ HTML;
             "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE 'fds_%' AND option_name NOT IN ('fds_turnstile_site_key', 'fds_turnstile_secret_key', 'fds_lead_webhook_url', 'fds_ga4_id', 'fds_gtm_id', 'fds_gads_id', 'fds_gads_label', 'fds_meta_pixel_id', 'fds_migration_2026_11_v2')"
         );
 
-        $stale_pattern = '/(Best UAV|Best Layanan|sejak\s*(?:tahun\s*)?2012|\b2012\b|821-3555-5347|82135555347|unsplash\.com|perjalanan-kami|DELFRO\.png|FDS STATION|IP\s?(?:54|67|68)|\bAvero\b|\.kml\b|\.kmz\b|ferto[\s-]?20l|2\.35%|48\s*jam|1[×x]24\s*jam|24\/7|24\s*jam|\/#produk|\/#kontak|\bFLIR\b|compro\.fulldronesolutions)/i';
+        $stale_pattern = '/(Best UAV|Best Layanan|sejak\s*(?:tahun\s*)?2012|\b2012\b|821-3555-5347|82135555347|unsplash\.com|perjalanan-kami|DELFRO\.png|FDS STATION|IP\s?(?:54|67|68)|\bAvero\b|\.kml\b|\.kmz\b|ferto[\s-]?20l|2\.35%|48\s*jam|1[×x]24\s*jam|24\/7|24\s*jam|\/#produk|\/#kontak|\bFLIR\b|compro\.fulldronesolutions|Tanpa\s+klaim|belum\s+dicantumkan|Tidak\.\s*Sertifikasi\s+TKDN)/i';
 
         if (!empty($option_rows)) {
             foreach ($option_rows as $orow) {
@@ -354,7 +357,7 @@ HTML;
                     continue;
                 }
                 if ($opt_name === 'fds_about_stat3_lbl' && stripos((string) $raw_val, 'SNI') !== false && stripos((string) $raw_val, 'FERTO 15') === false) {
-                    update_option($opt_name, 'ISO 9001:2015 & SNI (FERTO 15 & 22)');
+                    update_option($opt_name, 'ISO 9001:2015 (PT) & SNI (FERTO 15 & 22)');
                     continue;
                 }
                 if ($opt_name === 'fds_about_cert2_val' && stripos((string) $raw_val, 'SNI') !== false && stripos((string) $raw_val, 'ISO') === false) {
@@ -362,7 +365,7 @@ HTML;
                     continue;
                 }
                 if ($opt_name === 'fds_about_cert2_desc' && stripos((string) $raw_val, 'SNI') !== false && stripos((string) $raw_val, 'FERTO 15') === false) {
-                    update_option($opt_name, 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 pada FERTO 15 & FERTO 22.');
+                    update_option($opt_name, 'Sistem manajemen mutu perusahaan ISO 9001:2015 (PT Karya Solusi Angkasa) dan standar produk SNI 9199:2023 pada FERTO 15 & FERTO 22.');
                     continue;
                 }
                 if ($opt_name === 'fds_menu_prod_item2_desc' && stripos((string) $raw_val, 'FERTO') === false) {
@@ -501,9 +504,20 @@ HTML;
                             update_post_meta($d->ID, 'drone_stat2_lbl', $stat2_map[$model_key][1]);
                         }
                     }
-                    update_post_meta($d->ID, 'drone_spec_sertifikasi', 'ISO 9001:2015');
-                } elseif (!$has_sni && stripos($spec_cert, 'SNI') !== false) {
-                    update_post_meta($d->ID, 'drone_spec_sertifikasi', 'TKDN + BMP 60,74% (Kemenperin RI) | ISO 9001:2015');
+                    if ($spec_cert !== '' && (stripos($spec_cert, 'TKDN') !== false || stripos($spec_cert, 'SNI') !== false || stripos($spec_cert, 'ISO 9001') !== false)) {
+                        $cleaned_non_ferto = function_exists('fds_scrub_legacy_text')
+                            ? fds_scrub_legacy_text($spec_cert, false, false, false)
+                            : '';
+                        if ($cleaned_non_ferto === '') {
+                            delete_post_meta($d->ID, 'drone_spec_sertifikasi');
+                        } else {
+                            update_post_meta($d->ID, 'drone_spec_sertifikasi', $cleaned_non_ferto);
+                        }
+                    }
+                } elseif (!$has_sni && (stripos($spec_cert, 'SNI') !== false || stripos($spec_cert, 'ISO 9001') !== false)) {
+                    update_post_meta($d->ID, 'drone_spec_sertifikasi', 'TKDN + BMP 60,74% (Kemenperin RI)');
+                } elseif ($has_sni && stripos($spec_cert, 'ISO 9001') !== false) {
+                    update_post_meta($d->ID, 'drone_spec_sertifikasi', 'TKDN + BMP 60,74% (Kemenperin RI) | SNI 9199:2023');
                 }
 
                 // Decide if Rank Math title/desc need refresh because of stale or inaccurate claims
@@ -538,14 +552,27 @@ HTML;
         $transients = [
             'fds_mega_menu_data',
             'fds_mega_menu_data_v2',
+            'fds_mega_menu_data_v3',
             'fds_bandingkan_catalog_cache',
             'fds_bandingkan_catalog_cache_v2',
+            'fds_bandingkan_catalog_cache_v3',
+            'fds_bandingkan_catalog_cache_v4',
             'fds_homepage_content_cache',
+            'fds_homepage_content_cache_v2',
+            'fds_homepage_content_cache_v3',
+            'fds_newsroom_ui_cache_v1',
             'fds_navbar_brand_cache_v3',
+            'fds_navbar_brand_cache_v4',
             'fds_global_contact_cache_v2',
+            'fds_global_contact_cache_v3',
+            'fds_global_contact_cache_v4',
+            'fds_about_content_cache_v2',
+            'fds_about_content_cache_v3',
             'fds_llms_txt_cache_v2',
             'fds_llms_txt_cache_v3',
             'fds_llms_txt_cache_v4',
+            'fds_llms_txt_cache_v5',
+            'fds_llms_full_txt_cache_v5',
         ];
         foreach ($transients as $tk) {
             delete_transient($tk);
@@ -555,8 +582,9 @@ HTML;
             fds_flush_layanan_cache();
         }
         if (function_exists(__NAMESPACE__ . '\\fds_build_llms_txt_content')) {
-            fds_build_llms_txt_content();
-            update_option('fds_llms_version_disk', '4.0');
+            fds_build_llms_txt_content(false);
+            fds_build_llms_txt_content(true);
+            update_option('fds_llms_version_disk', '5.0');
         }
 
         flush_rewrite_rules(false);
@@ -578,6 +606,207 @@ add_action('init', function () {
 
     if (!get_option('fds_migration_2026_11_v2') || $force_manual) {
         fds_run_migration_2026_11();
+    }
+
+    // One-time non-destructive diplomatic certification scrub (held-only wording)
+    if (!get_option('fds_diplomatic_cert_scrub_v1') && !get_transient('fds_diplomatic_cert_scrub_lock')) {
+        set_transient('fds_diplomatic_cert_scrub_lock', 1, 60);
+        $neg_regex   = '/(Tanpa\s+klaim|belum\s+dicantumkan|Tidak\.\s*Sertifikasi\s+TKDN|sudah\s+tercantum\s+dalam\s+sertifikasi\s+TKDN)/i';
+        $did_scrub   = false;
+
+        $pk_saved = get_option('fds_produk_catalog_content_v1', null);
+        if (is_array($pk_saved)) {
+            $pk_changed = false;
+            array_walk_recursive($pk_saved, function (&$item) use (&$pk_changed, $neg_regex) {
+                if (is_string($item) && preg_match($neg_regex, $item)) {
+                    $c = false;
+                    $item = fds_migration_scrub_string($item, $c);
+                    $item = preg_replace('/meliputi FERTO 5, FERTO 10, FERTO 15, FERTO 22, FERTO 30, dan FERTO 50\.\s*(?:Pada tingkat perusahaan,\s*PT Karya Solusi Angkasa menerapkan sistem manajemen mutu ISO 9001:2015\.|Seluruh unit seri FERTO juga memenuhi standar manajemen mutu ISO 9001:2015\.)/i', 'meliputi FERTO 5, FERTO 10, FERTO 15, FERTO 22, FERTO 30, dan FERTO 50. Pada tingkat korporasi, PT Karya Solusi Angkasa juga menerapkan sistem manajemen mutu ISO 9001:2015 dalam proses manufaktur dan pengujiannya.', $item);
+                    $pk_changed = true;
+                }
+            });
+            if ($pk_changed) {
+                update_option('fds_produk_catalog_content_v1', $pk_saved, false);
+                $did_scrub = true;
+            }
+        }
+
+        $kat_saved = get_option('fds_kat_drone_content_pemetaan_gis_v1', null);
+        if (is_array($kat_saved)) {
+            $kat_changed = false;
+            array_walk_recursive($kat_saved, function (&$item) use (&$kat_changed, $neg_regex) {
+                if (is_string($item) && preg_match($neg_regex, $item)) {
+                    if (stripos($item, 'Apakah DELTAV') !== false) {
+                        $item = 'Standar mutu apa yang diterapkan pada manufaktur DELTAV dan MULTIPURPOSE?';
+                    } else {
+                        $item = 'DELTAV dan MULTIPURPOSE diproduksi dan dikalibrasi di workshop resmi PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu perusahaan bersertifikat ISO 9001:2015 untuk menjamin keandalan operasional industri.';
+                    }
+                    $kat_changed = true;
+                }
+            });
+            if ($kat_changed) {
+                update_option('fds_kat_drone_content_pemetaan_gis_v1', $kat_saved, false);
+                $did_scrub = true;
+            }
+        }
+
+        $drone_ids = get_posts([
+            'post_type'      => 'drone',
+            'post_status'    => 'any',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+        ]);
+        foreach ($drone_ids as $did) {
+            $cert_meta = (string) get_post_meta((int) $did, 'drone_spec_sertifikasi', true);
+            if ($cert_meta !== '' && preg_match($neg_regex, $cert_meta)) {
+                $mk_did     = function_exists(__NAMESPACE__ . '\\fds_get_drone_model_key') ? fds_get_drone_model_key((int) $did) : strtolower((string) get_post_field('post_name', (int) $did));
+                $is_ferto_d = (strpos($mk_did, 'ferto-') === 0);
+                $has_sni_d  = in_array($mk_did, ['ferto-15l', 'ferto-22l'], true);
+                $clean_cert = function_exists('fds_scrub_legacy_text')
+                    ? \fds_scrub_legacy_text($cert_meta, $is_ferto_d, $has_sni_d, false)
+                    : trim((string) preg_replace('/\s*\(\s*Tanpa\s+klaim[^)]*\)/i', '', $cert_meta));
+                if ($clean_cert === '') {
+                    delete_post_meta((int) $did, 'drone_spec_sertifikasi');
+                } else {
+                    update_post_meta((int) $did, 'drone_spec_sertifikasi', $clean_cert);
+                }
+                $did_scrub = true;
+            }
+        }
+
+        if ($did_scrub && function_exists(__NAMESPACE__ . '\\fds_purge_drone_catalog_caches')) {
+            fds_purge_drone_catalog_caches();
+        }
+        update_option('fds_diplomatic_cert_scrub_v1', 1, false);
+        delete_transient('fds_diplomatic_cert_scrub_lock');
+    }
+
+    // One-time non-destructive cleanup: ISO 9001:2015 belongs to company QMS (PT), NOT individual drone units
+    if (!get_option('fds_unit_iso_cleanup_v1') && !get_transient('fds_unit_iso_cleanup_lock')) {
+        set_transient('fds_unit_iso_cleanup_lock', 1, 60);
+        $iso_cleaned = false;
+
+        $all_drone_ids = get_posts([
+            'post_type'      => 'drone',
+            'post_status'    => 'any',
+            'posts_per_page' => -1,
+            'fields'         => 'ids',
+        ]);
+        foreach ($all_drone_ids as $did) {
+            $did        = (int) $did;
+            $mk_did     = function_exists(__NAMESPACE__ . '\\fds_get_drone_model_key')
+                ? fds_get_drone_model_key($did)
+                : strtolower((string) get_post_field('post_name', $did));
+            $is_ferto_d = (strpos($mk_did, 'ferto-') === 0);
+            $has_sni_d  = in_array($mk_did, ['ferto-15l', 'ferto-22l'], true);
+
+            $cert_meta = (string) get_post_meta($did, 'drone_spec_sertifikasi', true);
+            if ($cert_meta !== '' && preg_match('/\bISO\s*9001\b/i', $cert_meta)) {
+                $clean_cert = function_exists('fds_scrub_legacy_text')
+                    ? \fds_scrub_legacy_text($cert_meta, $is_ferto_d, $has_sni_d, false)
+                    : trim((string) preg_replace('/\s*[|·,;\/&]?\s*\bISO\s*9001(?::\d+)?\b\s*/i', '', $cert_meta), " \t\n\r\0\x0B|·,;/&");
+                if ($clean_cert === '') {
+                    delete_post_meta($did, 'drone_spec_sertifikasi');
+                } else {
+                    update_post_meta($did, 'drone_spec_sertifikasi', $clean_cert);
+                }
+                $iso_cleaned = true;
+            }
+
+            $specs_raw = (string) get_post_meta($did, 'drone_specs_raw', true);
+            if ($specs_raw !== '' && preg_match('/\bISO\s*9001\b/i', $specs_raw)) {
+                $raw_lines = preg_split("/\r\n|\n|\r/", $specs_raw);
+                $new_lines = [];
+                $raw_changed = false;
+                foreach ($raw_lines as $rl) {
+                    if (stripos($rl, 'Sertifikasi') === 0 && preg_match('/\bISO\s*9001\b/i', $rl) && strpos($rl, ':') !== false) {
+                        [$rlabel, $rval] = explode(':', $rl, 2);
+                        $clean_rv = function_exists('fds_scrub_legacy_text')
+                            ? \fds_scrub_legacy_text(trim($rval), $is_ferto_d, $has_sni_d, false)
+                            : trim((string) preg_replace('/\s*[|·,;\/&]?\s*\bISO\s*9001(?::\d+)?\b\s*/i', '', $rval), " \t\n\r\0\x0B|·,;/&");
+                        $raw_changed = true;
+                        if ($clean_rv !== '') {
+                            $new_lines[] = trim($rlabel) . ': ' . $clean_rv;
+                        }
+                    } else {
+                        $new_lines[] = $rl;
+                    }
+                }
+                if ($raw_changed) {
+                    update_post_meta($did, 'drone_specs_raw', implode("\n", $new_lines));
+                    $iso_cleaned = true;
+                }
+            }
+        }
+
+        $pk_saved = get_option('fds_produk_catalog_content_v1', null);
+        if (is_array($pk_saved)) {
+            $pk_updated = false;
+            if (!empty($pk_saved['matrix_rows']) && is_array($pk_saved['matrix_rows'])) {
+                foreach ($pk_saved['matrix_rows'] as $r_idx => $row) {
+                    if (!is_array($row) || !isset($row['cert']) || !preg_match('/\bISO\s*9001\b/i', (string) $row['cert'])) {
+                        continue;
+                    }
+                    $m_str      = (string) ($row['model'] ?? '');
+                    $row_ferto  = (stripos($m_str, 'FERTO') !== false);
+                    $row_sni    = (stripos($m_str, '15') !== false || stripos($m_str, '22') !== false);
+                    $clean_rc   = function_exists('fds_scrub_legacy_text')
+                        ? \fds_scrub_legacy_text((string) $row['cert'], $row_ferto, $row_sni, false)
+                        : '';
+                    $pk_saved['matrix_rows'][$r_idx]['cert'] = $clean_rc !== '' ? $clean_rc : '—';
+                    $pk_updated = true;
+                }
+            }
+            if (!empty($pk_saved['faqs']) && is_array($pk_saved['faqs'])) {
+                foreach ($pk_saved['faqs'] as $f_idx => $fq) {
+                    if (!is_array($fq) || empty($fq['a'])) {
+                        continue;
+                    }
+                    $ans = (string) $fq['a'];
+                    if (
+                        strpos($ans, 'yang juga memenuhi standar manajemen mutu ISO 9001:2015') !== false ||
+                        strpos($ans, 'yang juga diproduksi dengan standar manajemen mutu ISO 9001:2015') !== false ||
+                        strpos($ans, 'PT Karya Solusi Angkasa menerapkan sistem manajemen mutu ISO 9001:2015') !== false
+                    ) {
+                        $pk_saved['faqs'][$f_idx]['a'] = 'Sertifikat TKDN + BMP 60,74% dari Kemenperin RI berlaku untuk seluruh lini drone pertanian sprayer seri FERTO buatan PT Karya Solusi Angkasa, meliputi FERTO 5, FERTO 10, FERTO 15, FERTO 22, FERTO 30, dan FERTO 50. Pada tingkat korporasi, PT Karya Solusi Angkasa juga menerapkan sistem manajemen mutu ISO 9001:2015 dalam proses manufaktur dan pengujiannya.';
+                        $pk_updated = true;
+                    }
+                }
+            }
+            if ($pk_updated) {
+                update_option('fds_produk_catalog_content_v1', $pk_saved, false);
+                $iso_cleaned = true;
+            }
+        }
+
+        $kat_pg = get_option('fds_kat_drone_content_pemetaan_gis_v1', null);
+        if (is_array($kat_pg) && !empty($kat_pg['faqs']) && is_array($kat_pg['faqs'])) {
+            $kat_pg_upd = false;
+            foreach ($kat_pg['faqs'] as $kf_idx => $kfq) {
+                if (!empty($kfq['a']) && strpos((string) $kfq['a'], 'di workshop resmi PT Karya Solusi Angkasa di bawah sistem manajemen mutu bersertifikat ISO 9001:2015') !== false) {
+                    $kat_pg['faqs'][$kf_idx]['a'] = 'DELTAV dan MULTIPURPOSE diproduksi dan dikalibrasi di workshop resmi PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu perusahaan bersertifikat ISO 9001:2015 untuk menjamin keandalan operasional industri.';
+                    $kat_pg_upd = true;
+                }
+            }
+            if ($kat_pg_upd) {
+                update_option('fds_kat_drone_content_pemetaan_gis_v1', $kat_pg, false);
+                $iso_cleaned = true;
+            }
+        }
+
+        if (get_option('fds_homepage_keunggulan_card4_badge') === 'Sertifikasi Produk') {
+            update_option('fds_homepage_keunggulan_card4_badge', 'Standar Mutu & Produk', false);
+            $iso_cleaned = true;
+        }
+
+        if ($iso_cleaned) {
+            delete_transient('fds_homepage_content_cache_v3');
+            if (function_exists(__NAMESPACE__ . '\\fds_purge_drone_catalog_caches')) {
+                fds_purge_drone_catalog_caches();
+            }
+        }
+        update_option('fds_unit_iso_cleanup_v1', 1, false);
+        delete_transient('fds_unit_iso_cleanup_lock');
     }
 }, 40);
 

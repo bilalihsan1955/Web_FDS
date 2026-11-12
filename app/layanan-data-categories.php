@@ -431,7 +431,7 @@ function fds_get_default_layanan_categories(): array {
             'eeat_proof' => [
                 'eyebrow'  => 'Ekosistem Agrikultur & Geospasial Terintegrasi',
                 'title'    => 'Dari Pemantauan Kesehatan Tanaman hingga Solusi Aplikasi Lapangan FDS',
-                'intro'    => 'Berbeda dari penyedia jasa pemetaan tunggal, Full Drone Solutions (PT Karya Solusi Angkasa) menggabungkan kapabilitas manufaktur wahana UAV lokal berstandar ISO 9001:2015, TKDN 60,74% pada seri FERTO, serta SNI 9199:2023 pada FERTO 15 & FERTO 22 mulai dari pemantauan hingga perangkat aplikasi presisi.',
+                'intro'    => 'Berbeda dari penyedia jasa pemetaan tunggal, Full Drone Solutions (PT Karya Solusi Angkasa) menggabungkan kapabilitas manufaktur perusahaan bersertifikat manajemen mutu ISO 9001:2015 serta produk berstandar TKDN 60,74% pada seri FERTO dan SNI 9199:2023 pada FERTO 15 & FERTO 22 mulai dari pemantauan hingga perangkat aplikasi presisi.',
                 'bullets'  => [
                     'Katalog teknologi kami mencakup integrasi sensor spektral FigSpec FS50 / FS60 bersama platform pemetaan Fixed-Wing VTOL DELTAV dan sistem kendali berbahasa Indonesia FDS Ground Control Station.',
                     'Temuan zona kebutuhan perlakuan dari peta indeks multispectral dapat langsung dihubungkan ke rencana aplikasi penyemprotan atau penyebaran presisi memakai lini drone pertanian FERTO (5L, 10L, 15L hingga seri komersial lainnya).',
@@ -569,7 +569,7 @@ function fds_get_default_layanan_categories(): array {
                         'Kecocokan Peserta',
                         'Kandidat pilot baru, koordinator operasi proyek, dan tim kecil perusahaan yang ingin mengakses fasilitas pabrik sekaligus.',
                         'Korporasi, BUMN, dinas pemerintah daerah, atau perkebunan dengan kelompok peserta operator internal yang siap ditempatkan di site.',
-                        'Organisasi pembeli unit UAV FDS (ISO 9001:2015; seri FERTO berstandar TKDN 60,74% dengan SNI 9199:2023 pada FERTO 15 & 22) yang membutuhkan transfer keahlian langsung kepada operator.',
+                        'Organisasi pengguna unit UAV FDS (diproduksi oleh PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu ISO 9001:2015; dengan sertifikasi produk TKDN 60,74% pada seri FERTO serta SNI 9199:2023 pada FERTO 15 & 22) yang membutuhkan transfer keahlian langsung kepada operator.',
                     ],
                 ],
             ],

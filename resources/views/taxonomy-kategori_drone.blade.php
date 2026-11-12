@@ -36,7 +36,7 @@
     ? \App\fds_get_kategori_drone_catalog_content($term_slug, $term)
     : [
         'headline'         => 'Drone ' . $term_name . '.',
-        'subtitle'         => 'Katalog resmi pesawat nirawak industrial buatan PT Karya Solusi Angkasa dengan standar manajemen mutu ISO 9001:2015.',
+        'subtitle'         => 'Katalog resmi pesawat nirawak industrial produksi PT Karya Solusi Angkasa (sistem manajemen mutu perusahaan ISO 9001:2015).',
         'cta_kontak_label' => ($term_slug === 'agrikultur') ? 'Konsultasi Pengadaan & TKDN' : 'Konsultasi Pengadaan & Demo Unit',
         'cta_kontak_url'   => '/kontak/?layanan=' . urlencode('kategori-' . $term_slug) . '#hubungi-form',
         'guide_title'      => 'Keunggulan Wahana UAV Rekayasa PT Karya Solusi Angkasa',
@@ -53,7 +53,7 @@
         'empty_text_prefix'  => 'Belum ada unit drone terdaftar dalam kategori',
         'empty_link_text'    => 'Lihat seluruh katalog armada FDS',
         'sidebar_title'      => 'Dukungan Manufaktur Lokal',
-        'sidebar_desc'       => 'Seluruh unit dirakit di workshop Sleman, D.I. Yogyakarta oleh PT Karya Solusi Angkasa dengan sistem manajemen mutu ISO 9001:2015, sertifikasi TKDN + BMP 60,74% untuk lini pertanian FERTO, serta SNI 9199:2023 pada FERTO 15 dan FERTO 22.',
+        'sidebar_desc'       => 'Seluruh unit dirakit di workshop Sleman, D.I. Yogyakarta oleh PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu perusahaan ISO 9001:2015, dengan sertifikasi produk TKDN + BMP 60,74% untuk lini pertanian FERTO serta SNI 9199:2023 pada FERTO 15 dan FERTO 22.',
         'sidebar_links'      => [
             ['label' => 'Lihat Katalog Lengkap UAV FDS', 'url' => '/produk/'],
             ['label' => 'Bandingkan Spesifikasi Antar Model', 'url' => '/bandingkan/'],

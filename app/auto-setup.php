@@ -173,7 +173,7 @@ function fds_run_theme_auto_provision() {
             [
                 'badge'      => 'Kemandirian Teknologi Nasional',
                 'title'      => 'Inovasi Kedirgantaraan & Standar Mutu Resmi.',
-                'desc'       => 'Nilai TKDN + BMP 60,74% untuk lini FERTO, sertifikasi SNI 9199:2023 pada FERTO 15 & FERTO 22, serta ISO 9001:2015 dari workshop Sleman, Yogyakarta.',
+                'desc'       => 'Nilai TKDN + BMP 60,74% untuk lini FERTO, sertifikasi SNI 9199:2023 pada FERTO 15 & FERTO 22, serta sistem manajemen mutu perusahaan ISO 9001:2015 dari workshop Sleman, Yogyakarta.',
                 'img'        => $site_img_uri . '/hero-3.webp',
                 'btn1_text'  => 'Tentang FDS',
                 'btn1_url'   => home_url('/tentang-kami/'),

@@ -2,7 +2,7 @@
 **Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa (Website Company Profile & Lead Engine B2B Enterprise)  
 **Platform:** WordPress Custom Theme (Roots Sage 10 / Laravel Acorn Blade + Tailwind CSS + Vite)  
 **Dokumen Operasional Utama:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md) & [`PRD.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PRD.md)  
-**Terakhir Diperbarui:** 2026-11-11  
+**Terakhir Diperbarui:** 2026-11-12  
 
 ---
 
@@ -15,7 +15,7 @@
 * **Legalitas & Sertifikasi Resmi (Dengan Ruang Lingkup Ketat):**
   * **TKDN + BMP 60,74% (Kemenperin RI):** Berlaku **KHUSUS** untuk seluruh model lini drone pertanian seri **FERTO** (`5, 10, 15, 22, 30, 50`). Model non-FERTO (`DELTAV`, `DELFRO`, `MULTIPURPOSE`) dilarang mencantumkan TKDN sebelum ada konfirmasi resmi.
   * **SNI 9199:2023:** Berlaku **KHUSUS** untuk **FERTO 15** (tampil dengan kapasitas **`17 Liter`**) dan **FERTO 22**.
-  * **ISO 9001:2015:** Sistem Manajemen Mutu Manufaktur terakreditasi.
+  * **ISO 9001:2015:** Sertifikasi **Sistem Manajemen Mutu Perusahaan / Manufaktur PT Karya Solusi Angkasa** (bukan sertifikasi unit/model drone individual — dilarang melekat pada baris spesifikasi per model maupun matriks sertifikasi per unit).
   * **Regulasi Penerbangan:** Pendampingan sertifikasi pilot beracuan DKPPU **CASR Part 107** / SIDOPI-GO.
 * **Nilai Keunggulan Utama (Value Proposition):**
   1. Kesiapan pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP untuk seri FERTO ber-TKDN 60,74% dan SNI 9199:2023.
@@ -35,33 +35,33 @@
 | `app/security.php` | HTTP Security Headers (OWASP), no-cache AJAX dinamis (`fds_submit_inquiry`, `fds_download_brochure`), anti-enumerasi/penghapusan `?ver=` WP, serta guard `noindex, nofollow` otomatis pada host staging/lokal (`compro.*`, `staging.*`, `.local`). |
 | `app/admin-perf.php` | Optimasi backend WP-Admin: throttle Heartbeat API ke 60 detik, hapus RSS widget eksternal, dan batasi revisi post ke 5. |
 | `app/theme-settings.php` | Menu WP-Admin **Logo & Navbar**: upload logo, tinggi logo, brand text, favicon, CTA navbar, highlight card Mega Menu Produk & Layanan, logo partner footer, dan custom title tab browser. |
-| `app/homepage-content-settings.php` | Menu WP-Admin **Konten Beranda**: 8 tab pengelola Hero Carousel, Mitra, Solusi Industri, Bento Keunggulan, Header Produk, Layanan Enterprise, Newsroom, dan Kontak/Form Beranda. |
+| `app/homepage-content-settings.php` | Menu WP-Admin **Konten Beranda**: 9 tab pengelola Hero Carousel, Mitra, Solusi Industri, Bento Keunggulan, Header/Filter Produk, Layanan Enterprise, Newsroom, Kontak/Form Beranda, serta **Tab Newsroom, Search & 404**. |
 | `app/hero-slider.php` & `app/solusi-settings.php` | Pengelola slide hero default & 6 kartu Solusi Industri beranda (terhubung Single Source of Truth dengan 6 sektor layanan). |
 | `app/layanan-settings.php` | Registry SSR Hub `/layanan/`, 6 Sektor, 3 Kategori, UI bersama + `/terima-kasih/`, flush cache layanan, dan non-destructive page provisioner (`fds_layanan_pages_provisioned_v1`). |
 | `app/layanan-data-sectors.php` | Data SSR lengkap (narasi, tabel perbandingan metode, format luaran, faktor biaya, checklist KAK, FAQ) untuk 6 sektor: `pertambangan`, `perkebunan-pertanian`, `kehutanan-lingkungan`, `energi-infrastruktur`, `perencanaan`, `bencana-lingkungan`. |
 | `app/layanan-data-categories.php` | Data SSR lengkap untuk 3 kategori layanan spesialis: `jasa-foto-udara-lidar`, `jasa-multispectral-hyperspectral`, dan `pelatihan-sertifikasi`. |
 | `app/layanan-admin.php` | Menu WP-Admin **Konten Layanan** dengan tab terisolasi per halaman, catatan placeholder internal admin, tombol simpan non-destruktif, reset per tab, serta metabox pintasan di WP Pages. |
-| `app/about-content-settings.php` | Menu WP-Admin **Konten Tentang Kami** (7 tab): Hero & Statistik (`2019`, `60,74%`, `ISO & SNI`, `100%`), Cerita Kami, 3 Spektrum Teknologi, Aktivitas & Mitra, Galeri, Sertifikasi, CTA & Workshop Maps. |
-| `app/cpt-drones.php` | Mendaftarkan CPT `drone` (`has_archive => false`) dan taksonomi `kategori_drone` (`agrikultur`, `pemetaan-gis`, `kargo`), metabox spesifikasi khusus, helper Single Source of Truth Hero & kartu katalog (`fds_get_drone_hero_media()`, `fds_get_drone_detail_data()`), purge cache katalog otomatis (`fds_purge_drone_catalog_caches()`), auto-seeder 9 model aktif, dan generator panduan teknis SSR 250–400 kata + `<details>` FAQ (tanpa duplikasi tabel spesifikasi). |
-| `app/produk-content-settings.php` | Submenu **Produk Drone &rarr; Konten Katalog**: pengelolaan non-destruktif seluruh teks non-card di `/produk/` & `/kategori-drone/*` (Hero, highlights, header kategori, matriks spesifikasi, panduan kategori, sidebar, UI bersama, FAQ & SEO/Schema) dengan tombol Reset terisolasi per tab dan metabox pintasan `/produk/`. |
+| `app/about-content-settings.php` | Menu WP-Admin **Konten Tentang Kami** (7 tab): Hero & Statistik (`2019`, `60,74%`, `ISO & SNI`, `100%`), Cerita Kami, 3 Spektrum Teknologi, Aktivitas & Mitra, Galeri, Sertifikasi, CTA/Workshop & Label Info. |
+| `app/cpt-drones.php` | Mendaftarkan CPT `drone` (`has_archive => false`) dan taksonomi `kategori_drone` (`agrikultur`, `pemetaan-gis`, `kargo`), metabox spesifikasi khusus, helper Single Source of Truth Hero, Card & **Matriks 9 Baris (`/produk/`)** (`fds_get_drone_hero_media()`, `fds_get_drone_detail_data()`), purge cache katalog otomatis (`fds_purge_drone_catalog_caches()`), auto-seeder 9 model aktif, dan generator panduan teknis SSR 250–400 kata + `<details>` FAQ (tanpa duplikasi tabel spesifikasi). |
+| `app/produk-content-settings.php` | Submenu **Produk Drone &rarr; Konten Katalog**: pengelolaan non-destruktif seluruh teks non-card di `/produk/`, `/kategori-drone/*`, Detail UI & **Tab Bandingkan** (Hero, Matrix header, Panduan, Sidebar, FAQ & SEO/Schema) dengan tombol Reset terisolasi per tab dan metabox pintasan `/produk/` & `/bandingkan/`. |
 | `app/cpt-mitra.php` | CPT `mitra` untuk pengelolaan logo kemitraan marquee beranda (1-click media upload). |
-| `app/brochure-settings.php` | Submenu **Produk Drone &rarr; Pengaturan Brosur**: kustomisasi UI unduh brosur 2-state, PDF fallback global, AJAX email capture (`fds_download_brochure`), log leads, dan ekspor CSV aman. |
-| `app/footer-settings.php` | Menu WP-Admin **Kontak & Sosmed**: informasi PT, nomor WA/telepon, email, Google Maps, jam kerja, toggle tautan media sosial, copyright/legal, serta copy halaman `/kontak/`. |
+| `app/brochure-settings.php` | Submenu **Produk Drone &rarr; Pengaturan Brosur**: kustomisasi UI unduh brosur 2-state, teks modal PDF fallback global, AJAX email capture (`fds_download_brochure`), log leads, dan ekspor CSV aman. |
+| `app/footer-settings.php` | Menu WP-Admin **Kontak & Sosmed**: informasi PT, nomor WA/telepon, email, Google Maps, jam kerja, toggle tautan media sosial, copyright/legal, label kolom footer, serta copy halaman `/kontak/`. |
 | `app/inquiry-handler.php` | Mendaftarkan CPT `fds_inquiry` (**Pesan Masuk**) dengan unread counter badge, meta box proyek/UTM/UU PDP, AJAX submission (`fds_submit_inquiry` + honeypot + Turnstile + redirect `/terima-kasih/`), submenu **Tracking & Konfigurasi Lead** (GA4/GTM/Ads/Pixel/Webhook), dan ekspor CSV anti-formula injection. |
 | `app/preview-handler.php` | Intercept autosave custom meta & thumbnail CPT saat mode WP Preview (`is_preview()`) aktif. |
-| `app/seo.php` | Koordinasi Rank Math `@graph`, Schema JSON-LD (`Organization`, `WebSite`, `CollectionPage`, `ItemList`, `ItemPage` + `about: Thing`, `Service`, `FAQPage`, `ContactPage`, `BlogPosting`, `BreadcrumbList`), 301 redirect legacy (`/rebo`, `/ferto-20l`, `/about`, dsb.), `noindex` halaman utilitas, `robots.txt` AI bot rules, dan `/llms.txt` / `/llms-full.txt` bersih. |
+| `app/seo.php` | Koordinasi Rank Math `@graph`, Schema JSON-LD (`Organization`, `WebSite`, `CollectionPage`, `ItemList`, `ItemPage` + `about: Thing`, `Service`, `FAQPage`, `ContactPage`, `BlogPosting`, `BreadcrumbList`), 301 redirect legacy (`/rebo`, `/ferto-20l`, `/about`, dsb.), `noindex` halaman utilitas, `robots.txt` AI bot rules, diferensiasi `/llms.txt` (indeks ringkas) vs `/llms-full.txt` (korpus penuh), sitemap lengkap bersih, serta purge otomatis terpusat (`fds_purge_ai_and_seo_caches()`). |
 | `app/auto-setup.php` | Auto-provisioning awal satu kali (`fds_theme_auto_setup_done_v1`) untuk halaman inti (`/beranda`, `/tentang-kami`, `/bandingkan`, `/kontak`, `/blog`), permalinks, slider, dan kontak default. |
-| `app/migrations-2026.php` | Skrip migrasi & sanitasi idempoten 2026-11: membersihkan `.agents/`/`scratch/` jika ada di tema aktif, mempublikasikan `/produk/` & `/privacy-policy/`, membersihkan token/klaim terlarang di opsi, dan menyinkronkan panduan teknis & FAQ 9 model drone tanpa menimpa edit admin atau menghapus halaman/menu/tag lama. |
+| `app/migrations-2026.php` | Skrip migrasi & sanitasi idempoten 2026-11: membersihkan `.agents/`/`scratch/` jika ada di tema aktif, mempublikasikan `/produk/` & `/privacy-policy/`, membersihkan token/klaim terlarang, ungkapan negatif di opsi/meta (`fds_diplomatic_cert_scrub_v1`), serta memisahkan `ISO 9001:2015` (korporasi) dari metadata sertifikasi unit drone (`fds_unit_iso_cleanup_v1`) tanpa menimpa edit admin atau menghapus halaman/menu/tag lama. |
 
 ### B. Template Tampilan Frontend (`resources/views/`)
 | File / Komponen Blade | Tampilan & Fitur Frontend |
 | :--- | :--- |
 | `layouts/app.blade.php` | Layout global, navbar sticky Apple blur, Unified Mega Menu 3 kategori + Layanan, Footer 4 kolom + logo partner multiply, GA4/GTM event telemetry. |
 | `front-page.blade.php` | Beranda: Full-bleed Hero Carousel, Marquee Mitra, 6 kartu Solusi Industri (`↗`), Bento Keunggulan, **Daftar Baris `.drone-row` Filterable 3 Kategori**, Layanan Enterprise (1 baris 1 klik penuh), Newsroom, Hub Kontak. |
-| `template-produk.blade.php` | Hub Katalog `/produk/`: Hero gelombang teal, filter 3 kategori (`Agrikultur`, `Pemetaan & GIS`, `Kargo`), dan **Grid `<x-drone-card>`** seragam penuh *object-cover* + CTA Band gelombang teal. |
+| `template-produk.blade.php` | Hub Katalog `/produk/`: Hero gelombang teal, filter 3 kategori (`Agrikultur`, `Pemetaan & GIS`, `Kargo`), **Grid `<x-drone-card>`** seragam penuh *object-cover*, **Matriks Ringkasan Live Per Kategori (Tab `.drone-tab` identik Beranda tanpa angka hitungan, Klik Baris Langsung ke Detail Unit, & kolom `Status Sertifikasi` dinamis pada kategori bersertifikat produk seperti Agrikultur)** + CTA Band gelombang teal. |
 | `taxonomy-kategori_drone.blade.php` | Arsip `/kategori-drone/{slug}/` menggunakan Grid `<x-drone-card>` seragam dengan panah diagonal `↗`. |
 | `single-drone.blade.php` | Detail Drone: Hero + 4 stat card, Tabel Spesifikasi + gambar offset melayang (`z-30`), Unduh Brosur PDF 2-State (`#0f808a`), 4 Use Cases, **Panduan Teknis 250–400w + FAQ Accordion `<details>` chevron `⌄`**, CTA Band gelombang teal. |
-| `page-bandingkan.blade.php` | Alat Komparasi spesifikasi 9 model drone FDS secara berdampingan (*side-by-side*). |
+| `page-bandingkan.blade.php` | Alat Komparasi spesifikasi **9 model live CPT** secara berdampingan (*side-by-side*) dengan narasi & panduan pemilihan editable dari `Konten Katalog`. |
 | `template-layanan-hub.blade.php` | Hub `/layanan/`: 6 kartu Sektor, 3 kartu Kategori Layanan Spesialis, alur survei, format luaran, KAK, dan FAQ `<x-service-faq>`. |
 | `template-layanan-sektor.blade.php` & `template-layanan-kategori.blade.php` | Template SSR detail 6 sektor industri & 3 kategori layanan lengkap dengan tabel metode, deliverable, panduan biaya, `<x-service-faq>` (ikon chevron `⌄`), CTA terarah ke `/kontak/#hubungi-form`, dan `service-sticky-bar.blade.php`. |
 | `page-tentang-kami.blade.php` | Profil PT Karya Solusi Angkasa (`2019`), 3 Spektrum Teknologi, Aktivitas Kemitraan, Galeri, Sertifikasi, Peta Workshop Sleman. |

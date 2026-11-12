@@ -27,7 +27,12 @@ if (!defined('ABSPATH')) {
 
 function fds_flush_produk_catalog_cache(): void {
     delete_transient('fds_llms_txt_cache_v4');
-    if (function_exists('has_action') && has_action('litespeed_purge_all')) {
+    delete_transient('fds_llms_txt_cache_v5');
+    delete_transient('fds_llms_full_txt_cache_v5');
+    delete_transient('fds_bandingkan_catalog_cache_v4');
+    if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+        fds_purge_ai_and_seo_caches(false);
+    } elseif (function_exists('has_action') && has_action('litespeed_purge_all')) {
         do_action('litespeed_purge_all');
     }
 }
@@ -106,7 +111,7 @@ function fds_get_produk_catalog_defaults(): array {
             ],
             [
                 'title' => 'ISO 9001:2015 & FDS Station',
-                'desc'  => 'Sistem mutu manufaktur terakreditasi, kendali misi Bahasa Indonesia, serta dukungan workshop Yogyakarta.',
+                'desc'  => 'Sistem manajemen mutu perusahaan <strong>PT Karya Solusi Angkasa</strong> di workshop Sleman beserta software kendali misi FDS Station berbahasa Indonesia.',
             ],
         ],
 
@@ -142,42 +147,42 @@ function fds_get_produk_catalog_defaults(): array {
                 'Sprayer lahan berbukit, hortikultura & kelompok tani',
                 '5 Liter / 10 Liter',
                 '10 – 15 menit (1 – 1,5 Ha/jam)',
-                'TKDN + BMP 60,74% | ISO 9001:2015',
+                'TKDN + BMP 60,74%',
             ],
             [
                 'FERTO 15 & FERTO 22',
                 'Sprayer komersial & perkebunan sawit / tebu',
                 '17 Liter (FERTO 15) / 22 Liter (FERTO 22)',
                 '8 Ha/jam (FERTO 15) / 8,5 – 12 Ha/jam (FERTO 22)',
-                'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015',
+                'TKDN + BMP 60,74% | SNI 9199:2023',
             ],
             [
                 'FERTO 30 & FERTO 50',
                 'Agroindustri skala masif, sawit & Hutan Tanaman Industri',
                 '30 Liter / 50 Liter',
                 '15 – 22 Ha/jam',
-                'TKDN + BMP 60,74% | ISO 9001:2015',
+                'TKDN + BMP 60,74%',
             ],
             [
                 'DELTAV',
                 'Pemetaan Fixed-Wing Hybrid VTOL topografi & LiDAR',
                 '1 – 2 kg (RGB 24–42 MP / LiDAR)',
                 '60 – 120 menit (hingga 60 km)',
-                'ISO 9001:2015 (Tanpa klaim TKDN/SNI)',
+                '—',
             ],
             [
                 'MULTIPURPOSE',
                 'Inspeksi SUTET 150kV, solar PV, migas & surveillance',
                 '5 kg (Termal IR, 20x Zoom, LiDAR)',
                 '15 – 30 menit',
-                'ISO 9001:2015 (Tanpa klaim TKDN/SNI)',
+                '—',
             ],
             [
                 'DELFRO',
                 'Logistik kargo otonom antartitik & pasokan darurat medis',
                 '3 – 10 kg (20 × 20 × 30 cm, MTOW 15 kg)',
                 '10 – 15 menit (Rute Waypoint)',
-                'ISO 9001:2015 (Tanpa klaim TKDN/SNI)',
+                '—',
             ],
         ],
 
@@ -186,7 +191,7 @@ function fds_get_produk_catalog_defaults(): array {
         'faqs'         => [
             [
                 'q' => 'Model drone mana saja yang sudah mengantongi sertifikat TKDN 60,74%?',
-                'a' => 'Sertifikat TKDN + BMP 60,74% dari Kemenperin RI berlaku untuk seluruh lini drone pertanian sprayer seri FERTO buatan PT Karya Solusi Angkasa, meliputi FERTO 5, FERTO 10, FERTO 15, FERTO 22, FERTO 30, dan FERTO 50. Untuk model non-FERTO (DELTAV, MULTIPURPOSE, dan DELFRO), status sertifikasi TKDN belum dicantumkan.',
+                'a' => 'Sertifikat TKDN + BMP 60,74% dari Kemenperin RI berlaku untuk seluruh lini drone pertanian sprayer seri FERTO buatan PT Karya Solusi Angkasa, meliputi FERTO 5, FERTO 10, FERTO 15, FERTO 22, FERTO 30, dan FERTO 50. Pada tingkat korporasi, PT Karya Solusi Angkasa juga menerapkan sistem manajemen mutu ISO 9001:2015 dalam proses manufaktur dan pengujiannya.',
             ],
             [
                 'q' => 'Model drone FDS mana yang sudah memenuhi standar SNI 9199:2023?',
@@ -330,7 +335,7 @@ function fds_get_kategori_drone_ui_defaults(): array {
         'empty_text_prefix'  => 'Belum ada unit drone terdaftar dalam kategori',
         'empty_link_text'    => 'Lihat seluruh katalog armada FDS',
         'sidebar_title'      => 'Dukungan Manufaktur Lokal',
-        'sidebar_desc'       => 'Seluruh unit dirakit di workshop Sleman, D.I. Yogyakarta oleh PT Karya Solusi Angkasa dengan sistem manajemen mutu ISO 9001:2015, sertifikasi TKDN + BMP 60,74% untuk lini pertanian FERTO, serta SNI 9199:2023 pada FERTO 15 dan FERTO 22.',
+        'sidebar_desc'       => 'Seluruh unit dirakit di workshop Sleman, D.I. Yogyakarta oleh PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu perusahaan ISO 9001:2015, dengan sertifikasi produk TKDN + BMP 60,74% untuk lini pertanian FERTO serta SNI 9199:2023 pada FERTO 15 dan FERTO 22.',
         'sidebar_links'      => [
             ['label' => 'Lihat Katalog Lengkap UAV FDS', 'url' => '/produk/'],
             ['label' => 'Bandingkan Spesifikasi Antar Model', 'url' => '/bandingkan/'],
@@ -442,8 +447,8 @@ function fds_get_kategori_drone_catalog_defaults(string $term_slug, string $term
                     'a' => 'DELTAV mendukung muatan 1–2 kg berupa kamera metrik RGB 24–42 MP, sensor multispektral, atau LiDAR ringan. MULTIPURPOSE mendukung payload modular hingga 5 kg termasuk kamera termal inframerah, kamera optical zoom 20x, dan sensor LiDAR inspeksi.',
                 ],
                 [
-                    'q' => 'Apakah DELTAV dan MULTIPURPOSE sudah tercantum dalam sertifikasi TKDN atau SNI 9199:2023?',
-                    'a' => 'Tidak. Sertifikasi TKDN 60,74% dan SNI 9199:2023 (pada FERTO 15 & 22) hanya melekat pada seri drone sprayer agrikultur FERTO. DELTAV dan MULTIPURPOSE beroperasi di bawah sistem manajemen mutu ISO 9001:2015 PT Karya Solusi Angkasa.',
+                    'q' => 'Standar mutu apa yang diterapkan pada manufaktur DELTAV dan MULTIPURPOSE?',
+                    'a' => 'DELTAV dan MULTIPURPOSE diproduksi dan dikalibrasi di workshop resmi PT Karya Solusi Angkasa yang menerapkan sistem manajemen mutu perusahaan bersertifikat ISO 9001:2015 untuk menjamin keandalan operasional industri.',
                 ],
             ],
             'seo_title' => 'Drone Pemetaan & Survey LiDAR GIS — Full Drone Solutions',
@@ -490,7 +495,7 @@ function fds_get_kategori_drone_catalog_defaults(string $term_slug, string $term
     $label = $term_name !== '' ? $term_name : ucwords(str_replace('-', ' ', $term_slug ?: 'Industri'));
     $desc_fallback = $term_desc !== ''
         ? $term_desc
-        : 'Katalog resmi pesawat nirawak industrial buatan PT Karya Solusi Angkasa dengan standar manajemen mutu ISO 9001:2015.';
+        : 'Katalog resmi pesawat nirawak industrial produksi PT Karya Solusi Angkasa (sistem manajemen mutu perusahaan ISO 9001:2015).';
 
     return [
         'headline'         => 'Drone ' . $label . '.',
@@ -500,7 +505,7 @@ function fds_get_kategori_drone_catalog_defaults(string $term_slug, string $term
         'guide_title'      => 'Keunggulan Wahana UAV Rekayasa PT Karya Solusi Angkasa',
         'paragraphs'       => [
             'Seluruh unit pesawat nirawak dalam kategori ' . $label . ' dirancang, dirakit, dan diuji terbang di fasilitas manufaktur Full Drone Solutions di Sleman, Daerah Istimewa Yogyakarta.',
-            'Dengan dukungan suku cadang asli siap pakai, software kendali FDS Station berbahasa Indonesia, serta standar mutu ISO 9001:2015, solusi FDS siap melayani sektor agribisnis, pertambangan, geospasial, serta instansi BUMN.',
+            'Dengan dukungan suku cadang asli siap pakai, software kendali FDS Station berbahasa Indonesia, serta sistem manajemen mutu perusahaan ISO 9001:2015 di PT Karya Solusi Angkasa, solusi FDS siap melayani sektor agribisnis, pertambangan, geospasial, serta instansi BUMN.',
         ],
         'faqs'             => [
             [
@@ -582,6 +587,193 @@ function fds_get_kategori_drone_catalog_content(string $term_slug, ?object $term
 }
 
 // =========================================================================
+// 3B. DEFAULTS & GETTERS — DETAIL DRONE UI & BANDINGKAN
+// =========================================================================
+
+function fds_get_drone_detail_ui_defaults(): array {
+    return [
+        'hero_cta1_text'     => 'Minta Penawaran',
+        'hero_cta2_text'     => 'Bandingkan model',
+        'specs_eyebrow'      => 'Spesifikasi',
+        'specs_compare_link' => 'Bandingkan spesifikasi',
+        'specs_heading'      => 'Direkayasa untuk <br>performa nyata.',
+        'specs_desc_fallback'=> 'Setiap spesifikasi {drone_name} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.',
+        'specs_empty_text'   => 'Spesifikasi detail akan segera diperbarui.',
+        'uc_eyebrow'         => 'Aplikasi & Use-Cases',
+        'uc_heading_tpl'     => '{drone_name} cocok untuk Anda.',
+        'uc_fallback_items'  => [
+            'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
+            'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
+            'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
+            'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
+        ],
+        'guide_eyebrow'      => 'Panduan Teknis & Tanya Jawab',
+        'cta_heading_tpl'    => 'Siap mengoperasikan {drone_name}?',
+        'cta_desc'           => 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.',
+        'cta_primary_text'   => 'Hubungi Tim Sales',
+        'cta_secondary_text' => 'Baca studi kasus',
+        'cta_secondary_url'  => '/blog/',
+    ];
+}
+
+function fds_get_drone_detail_ui(bool $fresh = false): array {
+    static $memo = null;
+    if (!$fresh && $memo !== null) {
+        return $memo;
+    }
+
+    $defaults = fds_get_drone_detail_ui_defaults();
+    $saved    = get_option('fds_drone_detail_ui_v1', []);
+    if (!is_array($saved)) {
+        $saved = [];
+    }
+    $merged = array_merge($defaults, $saved);
+
+    foreach ([
+        'hero_cta1_text', 'hero_cta2_text', 'specs_eyebrow', 'specs_compare_link',
+        'specs_desc_fallback', 'specs_empty_text', 'uc_eyebrow', 'uc_heading_tpl',
+        'guide_eyebrow', 'cta_heading_tpl', 'cta_desc', 'cta_primary_text', 'cta_secondary_text',
+    ] as $k) {
+        $merged[$k] = fds_produk_clean_text($merged[$k] ?? '');
+    }
+
+    // Allow harmless <br> line break on specs_heading
+    $raw_hd = (string) ($merged['specs_heading'] ?? $defaults['specs_heading']);
+    if (function_exists('fds_clean_string')) {
+        $raw_hd = fds_clean_string($raw_hd);
+    }
+    if (function_exists('fds_scrub_legacy_text')) {
+        $raw_hd = fds_scrub_legacy_text($raw_hd, true, true);
+    }
+    $merged['specs_heading'] = trim(wp_kses($raw_hd, ['br' => []])) ?: $defaults['specs_heading'];
+
+    $merged['cta_secondary_url'] = trim((string) ($merged['cta_secondary_url'] ?? ''));
+    if ($merged['cta_secondary_url'] === '') {
+        $merged['cta_secondary_url'] = $defaults['cta_secondary_url'];
+    }
+
+    $raw_uc = is_array($merged['uc_fallback_items'] ?? null) ? $merged['uc_fallback_items'] : $defaults['uc_fallback_items'];
+    $clean_uc = [];
+    foreach ($raw_uc as $item) {
+        $ci = fds_produk_clean_text($item);
+        if ($ci !== '') {
+            $clean_uc[] = $ci;
+        }
+    }
+    $merged['uc_fallback_items'] = !empty($clean_uc) ? $clean_uc : $defaults['uc_fallback_items'];
+
+    $memo = $merged;
+    return $merged;
+}
+
+function fds_get_bandingkan_defaults(): array {
+    $default_guide_html = <<<'HTML'
+<h3>1. Menentukan Kapasitas Lini Pertanian Seri FERTO (5L – 50L)</h3>
+<p>Untuk kebutuhan penyemprotan pupuk cair, pestisida, maupun penebaran granul padat pada komoditas padi, tebu, jagung, dan perkebunan kelapa sawit, seri <a href="/kategori-drone/agrikultur/">Drone Agrikultur FERTO</a> menawarkan enam varian kapasitas tangki. Model ringkas seperti FERTO 5 dan FERTO 10 unggul untuk lahan berterasering, bukit, dan mobilitas kelompok tani, sedangkan FERTO 15 (17 Liter), FERTO 22, FERTO 30, hingga FERTO 50 dirancang untuk produktivitas estate korporasi puluhan hektar per hari dengan dukungan radar Terrain Following.</p>
+<h3>2. Pemetaan Area Luas vs Inspeksi Multirotor</h3>
+<p>Dalam pekerjaan survei topografi tambang, pemetaan kadastral HGU, serta <a href="/kategori-drone/pemetaan-gis/">Pemetaan &amp; Survey LiDAR GIS</a>, wahana Fixed-Wing Hybrid VTOL seperti DELTAV menjadi standar untuk cakupan ribuan hektar berbekal jangkauan jelajah hingga 60 km. Sementara itu, platform modular seperti MULTIPURPOSE paling efektif untuk inspeksi jaringan transmisi listrik 150 kV, panel surya, dan kawasan industri yang memerlukan hovering presisi serta sensor optik zoom maupun kamera termal inframerah.</p>
+<h3>3. Distribusi Logistik &amp; Standar Sertifikasi Pengadaan</h3>
+<p>Untuk misi pengantaran cepat ke pulau terluar atau lokasi terisolir, lini <a href="/kategori-drone/kargo/">Drone Kargo &amp; Logistik</a> DELFRO menghadirkan rute otonom via FDS Station berbahasa Indonesia. Fasilitas PT Karya Solusi Angkasa di Sleman, Yogyakarta menerapkan manajemen mutu ISO 9001:2015, dengan lini drone agrikultur seri FERTO (5L–50L) bersertifikat TKDN + BMP 60,74% serta FERTO 15 dan FERTO 22 memenuhi standar nasional SNI 9199:2023 untuk pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP. Pelajari rekam jejak manufaktur kami di halaman <a href="/tentang-kami/">Tentang Kami</a> atau jadwalkan demo terbang resmi melalui <a href="/kontak/#hubungi-form">Kontak Enterprise FDS</a>.</p>
+HTML;
+
+    return [
+        'hero_label'          => 'Komparasi Model UAV',
+        'hero_title'          => 'Bandingkan Model Drone.',
+        'hero_desc'           => 'Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.',
+        'sticky_slot1'        => 'Pilih Drone 1',
+        'sticky_slot2'        => 'Pilih Drone 2',
+        'sticky_vs'           => 'vs',
+        'slot_pick_title'     => 'Pilih Model Drone',
+        'slot_pick_sub'       => 'Klik untuk memilih produk yang ingin dibandingkan',
+        'slot_pick_btn'       => 'Pilih Model',
+        'slot_change_btn'     => 'Ganti model',
+        'slot_remove_btn'     => 'Hapus',
+        'slot_offer_btn'      => 'Minta Penawaran',
+        'slot_detail_btn'     => 'Detail Produk',
+        'specs_badge'         => 'Spesifikasi',
+        'specs_title'         => 'Direkayasa untuk performa nyata.',
+        'specs_desc'          => 'Tabel perbandingan data teknis resmi dari lembar spesifikasi masing-masing unit drone FDS.',
+        'table_empty_title'   => 'Belum Ada Model yang Dipilih',
+        'table_empty_desc'    => 'Silakan pilih model drone pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.',
+        'uc_badge'            => 'Aplikasi & Use-Cases',
+        'uc_title'            => 'Untuk Siapa Model Ini Diciptakan.',
+        'uc_desc'             => 'Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.',
+        'uc_empty_model1'     => 'Model Pertama Belum Dipilih',
+        'uc_empty_model2'     => 'Model Kedua Belum Dipilih',
+        'stats_empty_model1'  => 'Keunggulan Model 1',
+        'stats_empty_model2'  => 'Keunggulan Model 2',
+        'stats_empty_text'    => 'Belum ada model dipilih',
+        'guide_badge'         => 'Panduan Pemilihan Armada UAV',
+        'guide_title'         => 'Panduan Memilih Armada Drone & Pengadaan B2B (TKDN & SNI)',
+        'guide_lead'          => 'Memilih pesawat nirawak industrial membutuhkan kecocokan presisi antara kapasitas payload, luasan lahan atau koridor survei, efisiensi waktu terbang, serta kepastian layanan purna jual dan sertifikasi pengadaan di Indonesia.',
+        'guide_html'          => trim($default_guide_html),
+        'cta_title'           => 'Siap menentukan pilihan armada Anda?',
+        'cta_desc'            => 'Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.',
+        'cta_primary_text'    => 'Hubungi Tim Sales FDS',
+        'cta_primary_url'     => '/kontak/#hubungi-form',
+        'cta_secondary_text'  => 'Baca studi kasus operasional',
+        'cta_secondary_url'   => '/blog/',
+        'modal_eyebrow'       => 'Katalog Produk',
+        'modal_title'         => 'Pilih Model Drone',
+        'modal_sub'           => 'Pilih produk drone yang ingin dibandingkan.',
+        'modal_all_tab'       => 'Semua',
+        'modal_empty_title'   => 'Tidak Ada Drone Lain dalam Kategori Ini',
+        'modal_empty_desc'    => 'Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.',
+        'seo_title'           => 'Bandingkan Spesifikasi Drone — Komparasi Lini UAV FDS',
+        'seo_desc'            => 'Bandingkan spesifikasi teknis drone sprayer FERTO (TKDN 60,74%), pemetaan VTOL DELTAV, MULTIPURPOSE, dan kargo DELFRO buatan PT Karya Solusi Angkasa.',
+    ];
+}
+
+function fds_get_bandingkan_content(bool $fresh = false): array {
+    static $memo = null;
+    if (!$fresh && $memo !== null) {
+        return $memo;
+    }
+
+    $defaults = fds_get_bandingkan_defaults();
+    $saved    = get_option('fds_bandingkan_content_v1', []);
+    if (!is_array($saved)) {
+        $saved = [];
+    }
+    $merged = array_merge($defaults, $saved);
+
+    $plain_keys = [
+        'hero_label', 'hero_title', 'hero_desc',
+        'sticky_slot1', 'sticky_slot2', 'sticky_vs',
+        'slot_pick_title', 'slot_pick_sub', 'slot_pick_btn', 'slot_change_btn', 'slot_remove_btn', 'slot_offer_btn', 'slot_detail_btn',
+        'specs_badge', 'specs_title', 'specs_desc', 'table_empty_title', 'table_empty_desc',
+        'uc_badge', 'uc_title', 'uc_desc', 'uc_empty_model1', 'uc_empty_model2',
+        'stats_empty_model1', 'stats_empty_model2', 'stats_empty_text',
+        'guide_badge', 'guide_title', 'guide_lead',
+        'cta_title', 'cta_desc', 'cta_primary_text', 'cta_secondary_text',
+        'modal_eyebrow', 'modal_title', 'modal_sub', 'modal_all_tab', 'modal_empty_title', 'modal_empty_desc',
+        'seo_title', 'seo_desc',
+    ];
+    foreach ($plain_keys as $k) {
+        $merged[$k] = fds_produk_clean_text($merged[$k] ?? '');
+    }
+
+    foreach (['cta_primary_url', 'cta_secondary_url'] as $uk) {
+        $merged[$uk] = trim((string) ($merged[$uk] ?? ''));
+        if ($merged[$uk] === '') {
+            $merged[$uk] = $defaults[$uk];
+        }
+    }
+
+    $raw_guide = (string) ($merged['guide_html'] ?? $defaults['guide_html']);
+    if (function_exists('fds_clean_string')) {
+        $raw_guide = fds_clean_string($raw_guide);
+    }
+    if (function_exists('fds_scrub_legacy_text')) {
+        $raw_guide = fds_scrub_legacy_text($raw_guide, true, true);
+    }
+    $merged['guide_html'] = trim(wp_kses_post($raw_guide)) ?: $defaults['guide_html'];
+
+    $memo = $merged;
+    return $merged;
+}
+
+// =========================================================================
 // 4. WP ADMIN SUBMENU & PAGE EDITOR METABOX SHORTCUT (/produk/)
 // =========================================================================
 
@@ -597,26 +789,30 @@ add_action('admin_menu', function () {
 }, 30);
 
 add_action('add_meta_boxes_page', function ($post) {
-    if ($post && ($post->post_name ?? '') === 'produk') {
+    $slug = $post ? ($post->post_name ?? '') : '';
+    if (in_array($slug, ['produk', 'bandingkan'], true)) {
         add_meta_box(
             'fds_produk_editor_shortcut',
-            'Pengelolaan Konten Katalog Produk FDS',
+            'Pengelolaan Konten Katalog & Komparasi FDS',
             __NAMESPACE__ . '\\render_produk_page_shortcut_metabox',
             'page',
             'side',
-            'high'
+            'high',
+            ['slug' => $slug]
         );
     }
 });
 
-function render_produk_page_shortcut_metabox(): void {
-    $url = admin_url('edit.php?post_type=drone&page=fds-produk-content&tab=hub');
+function render_produk_page_shortcut_metabox($post = null, $box = []): void {
+    $slug = is_array($box) && !empty($box['args']['slug']) ? (string) $box['args']['slug'] : 'produk';
+    $tab  = ($slug === 'bandingkan') ? 'bandingkan' : 'hub';
+    $url  = admin_url('edit.php?post_type=drone&page=fds-produk-content&tab=' . rawurlencode($tab));
     ?>
     <p style="margin:0 0 10px;font-size:12.5px;color:#334155;line-height:1.5;">
-        Seluruh teks Hero, Highlight Sertifikasi, Header Kategori, Tabel Ringkasan, FAQ, dan CTA halaman <strong>/produk/</strong> dikelola di <strong>Konten Katalog</strong> (terpisah dari kartu unit yang tersinkronisasi dari <em>Produk Drone</em>).
+        Seluruh teks pengantar, header section, panduan pengadaan, FAQ, dan CTA halaman <strong>/<?php echo esc_html($slug); ?>/</strong> dikelola di <strong>Konten Katalog</strong> (terpisah dari data unit yang tersinkronisasi 1:1 dari <em>Produk Drone</em>).
     </p>
     <a href="<?php echo esc_url($url); ?>" class="button button-primary" style="background:#0f808a;border-color:#0f808a;width:100%;text-align:center;font-weight:600;">
-        Buka Editor Konten Katalog &rarr;
+        Buka Editor Konten &rarr;
     </a>
     <?php
 }
@@ -686,6 +882,22 @@ function fds_get_produk_admin_tabs(): array {
         'label'  => 'Teks Bersama & Sidebar Kategori',
         'option' => 'fds_kat_drone_ui_v1',
         'url'    => home_url('/kategori-drone/agrikultur/'),
+    ];
+
+    $tabs['detail-ui'] = [
+        'kind'   => 'detail-ui',
+        'slug'   => 'detail-ui',
+        'label'  => 'Teks UI Detail Drone',
+        'option' => 'fds_drone_detail_ui_v1',
+        'url'    => home_url('/drone/ferto-15l/'),
+    ];
+
+    $tabs['bandingkan'] = [
+        'kind'   => 'bandingkan',
+        'slug'   => 'bandingkan',
+        'label'  => 'Halaman Bandingkan (/bandingkan/)',
+        'option' => 'fds_bandingkan_content_v1',
+        'url'    => home_url('/bandingkan/'),
     ];
 
     return $tabs;
@@ -887,6 +1099,80 @@ function fds_handle_produk_admin_post(string $active_tab, array $tabs): array {
         ];
 
         update_option($meta['option'], $save_data, false);
+    } elseif ($meta['kind'] === 'detail-ui') {
+        $raw_uc = sanitize_textarea_field(wp_unslash((string) ($_POST['uc_fallback_items'] ?? '')));
+        $uc_arr = array_values(array_filter(array_map('trim', preg_split('/\R/u', $raw_uc) ?: []), fn($v) => $v !== ''));
+        $raw_hd = wp_kses(wp_unslash((string) ($_POST['specs_heading'] ?? '')), ['br' => []]);
+
+        $save_data = [
+            'hero_cta1_text'      => $unslash_txt('hero_cta1_text'),
+            'hero_cta2_text'      => $unslash_txt('hero_cta2_text'),
+            'specs_eyebrow'       => $unslash_txt('specs_eyebrow'),
+            'specs_compare_link'  => $unslash_txt('specs_compare_link'),
+            'specs_heading'       => trim($raw_hd),
+            'specs_desc_fallback' => $unslash_area('specs_desc_fallback'),
+            'specs_empty_text'    => $unslash_txt('specs_empty_text'),
+            'uc_eyebrow'          => $unslash_txt('uc_eyebrow'),
+            'uc_heading_tpl'      => $unslash_txt('uc_heading_tpl'),
+            'uc_fallback_items'   => $uc_arr,
+            'guide_eyebrow'       => $unslash_txt('guide_eyebrow'),
+            'cta_heading_tpl'     => $unslash_txt('cta_heading_tpl'),
+            'cta_desc'            => $unslash_area('cta_desc'),
+            'cta_primary_text'    => $unslash_txt('cta_primary_text'),
+            'cta_secondary_text'  => $unslash_txt('cta_secondary_text'),
+            'cta_secondary_url'   => fds_produk_sanitize_url($_POST['cta_secondary_url'] ?? ''),
+        ];
+
+        update_option($meta['option'], $save_data, false);
+    } elseif ($meta['kind'] === 'bandingkan') {
+        $save_data = [
+            'hero_label'          => $unslash_txt('hero_label'),
+            'hero_title'          => $unslash_txt('hero_title'),
+            'hero_desc'           => $unslash_area('hero_desc'),
+            'sticky_slot1'        => $unslash_txt('sticky_slot1'),
+            'sticky_slot2'        => $unslash_txt('sticky_slot2'),
+            'sticky_vs'           => $unslash_txt('sticky_vs'),
+            'slot_pick_title'     => $unslash_txt('slot_pick_title'),
+            'slot_pick_sub'       => $unslash_txt('slot_pick_sub'),
+            'slot_pick_btn'       => $unslash_txt('slot_pick_btn'),
+            'slot_change_btn'     => $unslash_txt('slot_change_btn'),
+            'slot_remove_btn'     => $unslash_txt('slot_remove_btn'),
+            'slot_offer_btn'      => $unslash_txt('slot_offer_btn'),
+            'slot_detail_btn'     => $unslash_txt('slot_detail_btn'),
+            'specs_badge'         => $unslash_txt('specs_badge'),
+            'specs_title'         => $unslash_txt('specs_title'),
+            'specs_desc'          => $unslash_area('specs_desc'),
+            'table_empty_title'   => $unslash_txt('table_empty_title'),
+            'table_empty_desc'    => $unslash_area('table_empty_desc'),
+            'uc_badge'            => $unslash_txt('uc_badge'),
+            'uc_title'            => $unslash_txt('uc_title'),
+            'uc_desc'             => $unslash_area('uc_desc'),
+            'uc_empty_model1'     => $unslash_txt('uc_empty_model1'),
+            'uc_empty_model2'     => $unslash_txt('uc_empty_model2'),
+            'stats_empty_model1'  => $unslash_txt('stats_empty_model1'),
+            'stats_empty_model2'  => $unslash_txt('stats_empty_model2'),
+            'stats_empty_text'    => $unslash_txt('stats_empty_text'),
+            'guide_badge'         => $unslash_txt('guide_badge'),
+            'guide_title'         => $unslash_txt('guide_title'),
+            'guide_lead'          => $unslash_area('guide_lead'),
+            'guide_html'          => trim(wp_kses_post(wp_unslash((string) ($_POST['guide_html'] ?? '')))),
+            'cta_title'           => $unslash_txt('cta_title'),
+            'cta_desc'            => $unslash_area('cta_desc'),
+            'cta_primary_text'    => $unslash_txt('cta_primary_text'),
+            'cta_primary_url'     => fds_produk_sanitize_url($_POST['cta_primary_url'] ?? ''),
+            'cta_secondary_text'  => $unslash_txt('cta_secondary_text'),
+            'cta_secondary_url'   => fds_produk_sanitize_url($_POST['cta_secondary_url'] ?? ''),
+            'modal_eyebrow'       => $unslash_txt('modal_eyebrow'),
+            'modal_title'         => $unslash_txt('modal_title'),
+            'modal_sub'           => $unslash_txt('modal_sub'),
+            'modal_all_tab'       => $unslash_txt('modal_all_tab'),
+            'modal_empty_title'   => $unslash_txt('modal_empty_title'),
+            'modal_empty_desc'    => $unslash_area('modal_empty_desc'),
+            'seo_title'           => $unslash_txt('seo_title'),
+            'seo_desc'            => $unslash_area('seo_desc'),
+        ];
+
+        update_option($meta['option'], $save_data, false);
     }
 
     fds_flush_produk_catalog_cache();
@@ -916,6 +1202,10 @@ function render_produk_content_admin_page(): void {
         $data = fds_get_produk_catalog_content(true);
     } elseif ($meta['kind'] === 'kat') {
         $data = fds_get_kategori_drone_catalog_content($meta['slug'], null, true);
+    } elseif ($meta['kind'] === 'detail-ui') {
+        $data = fds_get_drone_detail_ui(true);
+    } elseif ($meta['kind'] === 'bandingkan') {
+        $data = fds_get_bandingkan_content(true);
     } else {
         $data = fds_get_kategori_drone_ui_content(true);
     }
@@ -1088,7 +1378,7 @@ function render_produk_content_admin_page(): void {
 
                 <!-- 4. MATRIKS RINGKAS SPESIFIKASI -->
                 <div class="fds-pk-card">
-                    <h3>4. Matriks Ringkasan Spesifikasi Lini Wahana</h3>
+                    <h3>4. Header &amp; Kolom Matriks Ringkasan Spesifikasi (/produk/)</h3>
                     <div class="fds-pk-field">
                         <label>Judul Matriks</label>
                         <input type="text" name="matrix_title" value="<?php echo esc_attr($data['matrix_title']); ?>">
@@ -1112,12 +1402,14 @@ function render_produk_content_admin_page(): void {
                         <input type="text" name="matrix_columns" value="<?php echo esc_attr(implode(' | ', (array) $data['matrix_columns'])); ?>">
                     </div>
                     <div class="fds-pk-field" style="margin-bottom:0;">
-                        <label>Baris Tabel (1 baris per line, kolom dipisahkan dengan tanda <code>|</code>)</label>
-                        <textarea name="matrix_rows" rows="7" style="font-family:monospace;font-size:12px;"><?php
+                        <label>Catatan Baris Matriks (Otomatis 1:1 dari Detail Produk Drone)</label>
+                        <p class="fds-pk-hint" style="margin-top:0;font-size:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 12px;color:#334155;">
+                            Isi tabel ringkasan di halaman <strong>/produk/</strong> otomatis disinkronkan 1:1 secara real-time per kategori (pilihan tab Agrikultur, Pemetaan &amp; GIS, dan Kargo) dari data masing-masing unit di menu <strong>Produk Drone</strong> (klik baris mana saja langsung mengarah ke halaman detail unit).
+                        </p>
+                        <input type="hidden" name="matrix_rows" value="<?php
                             $row_strs = array_map(fn($r) => implode(' | ', (array) $r), (array) $data['matrix_rows']);
-                            echo esc_textarea(implode("\n", $row_strs));
-                        ?></textarea>
-                        <span class="fds-pk-hint">Jaga akurasi klaim bisnis: TKDN 60,74% hanya untuk FERTO 5–50; SNI 9199:2023 hanya FERTO 15 &amp; 22; FERTO 15 tetap 17 Liter.</span>
+                            echo esc_attr(implode("\n", $row_strs));
+                        ?>">
                     </div>
                 </div>
 
@@ -1349,6 +1641,297 @@ function render_produk_content_admin_page(): void {
                         <?php endforeach; ?>
                     </div>
                     <button type="button" class="button" onclick="fdsPkAddSidebarLink()">+ Tambah Tautan Sidebar</button>
+                </div>
+
+            <?php elseif ($meta['kind'] === 'detail-ui'): ?>
+                <!-- TEKS UI BERSAMA HALAMAN DETAIL DRONE -->
+                <div class="fds-pk-card">
+                    <h3>1. Tombol Aksi Hero &amp; Bagian Spesifikasi (/drone/*/)</h3>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Tombol CTA Utama Hero</label>
+                            <input type="text" name="hero_cta1_text" value="<?php echo esc_attr($data['hero_cta1_text']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tautan Bandingkan Hero</label>
+                            <input type="text" name="hero_cta2_text" value="<?php echo esc_attr($data['hero_cta2_text']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Section Spesifikasi</label>
+                            <input type="text" name="specs_eyebrow" value="<?php echo esc_attr($data['specs_eyebrow']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tautan Bandingkan di Spesifikasi</label>
+                            <input type="text" name="specs_compare_link" value="<?php echo esc_attr($data['specs_compare_link']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Heading Section Spesifikasi (mendukung tag <code>&lt;br&gt;</code>)</label>
+                        <input type="text" name="specs_heading" value="<?php echo esc_attr($data['specs_heading']); ?>">
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Deskripsi Cadangan Jika Deskripsi Drone Kosong (gunakan <code>{drone_name}</code>)</label>
+                        <textarea name="specs_desc_fallback" rows="2"><?php echo esc_textarea($data['specs_desc_fallback']); ?></textarea>
+                    </div>
+                    <div class="fds-pk-field" style="margin-bottom:0;">
+                        <label>Teks Jika Tabel Spesifikasi Belum Diisi</label>
+                        <input type="text" name="specs_empty_text" value="<?php echo esc_attr($data['specs_empty_text']); ?>">
+                    </div>
+                </div>
+
+                <div class="fds-pk-card">
+                    <h3>2. Aplikasi Use-Cases, Panduan Teknis &amp; CTA Penutup Detail Drone</h3>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Aplikasi &amp; Use-Cases</label>
+                            <input type="text" name="uc_eyebrow" value="<?php echo esc_attr($data['uc_eyebrow']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Format Heading Use-Cases (gunakan <code>{drone_name}</code>)</label>
+                            <input type="text" name="uc_heading_tpl" value="<?php echo esc_attr($data['uc_heading_tpl']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Daftar Cadangan Use-Cases Jika Unit Baru Kosong (1 item per baris)</label>
+                        <textarea name="uc_fallback_items" rows="4"><?php echo esc_textarea(implode("\n", (array) $data['uc_fallback_items'])); ?></textarea>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Eyebrow Panduan Teknis &amp; FAQ</label>
+                        <input type="text" name="guide_eyebrow" value="<?php echo esc_attr($data['guide_eyebrow']); ?>">
+                    </div>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Format Heading CTA Penutup (gunakan <code>{drone_name}</code>)</label>
+                            <input type="text" name="cta_heading_tpl" value="<?php echo esc_attr($data['cta_heading_tpl']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tombol Utama CTA Penutup</label>
+                            <input type="text" name="cta_primary_text" value="<?php echo esc_attr($data['cta_primary_text']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Deskripsi CTA Penutup</label>
+                        <textarea name="cta_desc" rows="2"><?php echo esc_textarea($data['cta_desc']); ?></textarea>
+                    </div>
+                    <div class="fds-pk-grid2" style="margin-bottom:0;">
+                        <div class="fds-pk-field" style="margin-bottom:0;">
+                            <label>Tautan Sekunder CTA Penutup</label>
+                            <input type="text" name="cta_secondary_text" value="<?php echo esc_attr($data['cta_secondary_text']); ?>">
+                        </div>
+                        <div class="fds-pk-field" style="margin-bottom:0;">
+                            <label>URL Tautan Sekunder</label>
+                            <input type="text" name="cta_secondary_url" value="<?php echo esc_attr($data['cta_secondary_url']); ?>">
+                        </div>
+                    </div>
+                </div>
+
+            <?php elseif ($meta['kind'] === 'bandingkan'): ?>
+                <!-- HALAMAN BANDINGKAN (/bandingkan/) -->
+                <div class="fds-pk-card">
+                    <h3>1. Hero &amp; Label Slot Perbandingan (/bandingkan/)</h3>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Hero</label>
+                            <input type="text" name="hero_label" value="<?php echo esc_attr($data['hero_label']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Hero (H1)</label>
+                            <input type="text" name="hero_title" value="<?php echo esc_attr($data['hero_title']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Deskripsi Hero</label>
+                        <textarea name="hero_desc" rows="2"><?php echo esc_textarea($data['hero_desc']); ?></textarea>
+                    </div>
+                    <div class="fds-pk-grid2" style="grid-template-columns:repeat(3,1fr);">
+                        <div class="fds-pk-field">
+                            <label>Sticky Bar Slot 1</label>
+                            <input type="text" name="sticky_slot1" value="<?php echo esc_attr($data['sticky_slot1']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Label Tengah ("vs")</label>
+                            <input type="text" name="sticky_vs" value="<?php echo esc_attr($data['sticky_vs']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Sticky Bar Slot 2</label>
+                            <input type="text" name="sticky_slot2" value="<?php echo esc_attr($data['sticky_slot2']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-grid2" style="grid-template-columns:repeat(4,1fr);margin-bottom:0;">
+                        <div class="fds-pk-field">
+                            <label>Judul Placeholder Slot</label>
+                            <input type="text" name="slot_pick_title" value="<?php echo esc_attr($data['slot_pick_title']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tombol Placeholder</label>
+                            <input type="text" name="slot_pick_btn" value="<?php echo esc_attr($data['slot_pick_btn']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tautan Ganti / Hapus</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <input type="text" name="slot_change_btn" value="<?php echo esc_attr($data['slot_change_btn']); ?>">
+                                <input type="text" name="slot_remove_btn" value="<?php echo esc_attr($data['slot_remove_btn']); ?>">
+                            </div>
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Tombol Penawaran / Detail</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <input type="text" name="slot_offer_btn" value="<?php echo esc_attr($data['slot_offer_btn']); ?>">
+                                <input type="text" name="slot_detail_btn" value="<?php echo esc_attr($data['slot_detail_btn']); ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fds-pk-field" style="margin:8px 0 0;">
+                        <label>Subjudul Placeholder Slot</label>
+                        <input type="text" name="slot_pick_sub" value="<?php echo esc_attr($data['slot_pick_sub']); ?>">
+                    </div>
+                </div>
+
+                <div class="fds-pk-card">
+                    <h3>2. Header Spesifikasi, Use-Cases &amp; Keunggulan</h3>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Spesifikasi</label>
+                            <input type="text" name="specs_badge" value="<?php echo esc_attr($data['specs_badge']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Spesifikasi (H2)</label>
+                            <input type="text" name="specs_title" value="<?php echo esc_attr($data['specs_title']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Subjudul Spesifikasi</label>
+                        <input type="text" name="specs_desc" value="<?php echo esc_attr($data['specs_desc']); ?>">
+                    </div>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Judul Status Kosong Tabel</label>
+                            <input type="text" name="table_empty_title" value="<?php echo esc_attr($data['table_empty_title']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Deskripsi Status Kosong Tabel</label>
+                            <input type="text" name="table_empty_desc" value="<?php echo esc_attr($data['table_empty_desc']); ?>">
+                        </div>
+                    </div>
+                    <hr style="margin:14px 0;border:none;border-top:1px solid #f1f5f9;">
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Use-Cases</label>
+                            <input type="text" name="uc_badge" value="<?php echo esc_attr($data['uc_badge']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Use-Cases (H2)</label>
+                            <input type="text" name="uc_title" value="<?php echo esc_attr($data['uc_title']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Subjudul Use-Cases</label>
+                        <input type="text" name="uc_desc" value="<?php echo esc_attr($data['uc_desc']); ?>">
+                    </div>
+                    <div class="fds-pk-grid2" style="grid-template-columns:repeat(3,1fr);">
+                        <div class="fds-pk-field">
+                            <label>Placeholder Use-Case Model 1 / 2</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <input type="text" name="uc_empty_model1" value="<?php echo esc_attr($data['uc_empty_model1']); ?>">
+                                <input type="text" name="uc_empty_model2" value="<?php echo esc_attr($data['uc_empty_model2']); ?>">
+                            </div>
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Placeholder Keunggulan Model 1 / 2</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <input type="text" name="stats_empty_model1" value="<?php echo esc_attr($data['stats_empty_model1']); ?>">
+                                <input type="text" name="stats_empty_model2" value="<?php echo esc_attr($data['stats_empty_model2']); ?>">
+                            </div>
+                        </div>
+                        <div class="fds-pk-field" style="margin-bottom:0;">
+                            <label>Teks Kosong Bar Keunggulan</label>
+                            <input type="text" name="stats_empty_text" value="<?php echo esc_attr($data['stats_empty_text']); ?>">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fds-pk-card">
+                    <h3>3. Panduan Pemilihan Armada, Modal Picker &amp; CTA Penutup</h3>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Panduan</label>
+                            <input type="text" name="guide_badge" value="<?php echo esc_attr($data['guide_badge']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Panduan (H2)</label>
+                            <input type="text" name="guide_title" value="<?php echo esc_attr($data['guide_title']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Paragraf Pembuka Panduan</label>
+                        <textarea name="guide_lead" rows="2"><?php echo esc_textarea($data['guide_lead']); ?></textarea>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Isi Artikel Panduan (HTML aman: <code>&lt;h3&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code>)</label>
+                        <textarea name="guide_html" rows="8"><?php echo esc_textarea($data['guide_html']); ?></textarea>
+                    </div>
+                    <hr style="margin:14px 0;border:none;border-top:1px solid #f1f5f9;">
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Modal Eyebrow / Tab Semua</label>
+                            <div style="display:grid;grid-template-columns:2fr 1fr;gap:6px;">
+                                <input type="text" name="modal_eyebrow" value="<?php echo esc_attr($data['modal_eyebrow']); ?>">
+                                <input type="text" name="modal_all_tab" value="<?php echo esc_attr($data['modal_all_tab']); ?>">
+                            </div>
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Modal Picker</label>
+                            <input type="text" name="modal_title" value="<?php echo esc_attr($data['modal_title']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Subjudul Modal Picker</label>
+                            <input type="text" name="modal_sub" value="<?php echo esc_attr($data['modal_sub']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Judul Modal Kosong</label>
+                            <input type="text" name="modal_empty_title" value="<?php echo esc_attr($data['modal_empty_title']); ?>">
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Deskripsi Modal Kosong</label>
+                        <textarea name="modal_empty_desc" rows="2"><?php echo esc_textarea($data['modal_empty_desc']); ?></textarea>
+                    </div>
+                    <hr style="margin:14px 0;border:none;border-top:1px solid #f1f5f9;">
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Judul CTA Penutup</label>
+                            <input type="text" name="cta_title" value="<?php echo esc_attr($data['cta_title']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Teks CTA Primer</label>
+                            <input type="text" name="cta_primary_text" value="<?php echo esc_attr($data['cta_primary_text']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>URL CTA Primer</label>
+                            <input type="text" name="cta_primary_url" value="<?php echo esc_attr($data['cta_primary_url']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Teks / URL CTA Sekunder</label>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                <input type="text" name="cta_secondary_text" value="<?php echo esc_attr($data['cta_secondary_text']); ?>">
+                                <input type="text" name="cta_secondary_url" value="<?php echo esc_attr($data['cta_secondary_url']); ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fds-pk-field">
+                        <label>Deskripsi CTA Penutup</label>
+                        <textarea name="cta_desc" rows="2"><?php echo esc_textarea($data['cta_desc']); ?></textarea>
+                    </div>
+                    <div class="fds-pk-grid2" style="margin-bottom:0;">
+                        <div class="fds-pk-field" style="margin-bottom:0;">
+                            <label>SEO Meta Title (Maks 60 Karakter)</label>
+                            <input type="text" name="seo_title" value="<?php echo esc_attr($data['seo_title']); ?>">
+                        </div>
+                        <div class="fds-pk-field" style="margin-bottom:0;">
+                            <label>SEO Meta Description (Maks 158 Karakter)</label>
+                            <textarea name="seo_desc" rows="2"><?php echo esc_textarea($data['seo_desc']); ?></textarea>
+                        </div>
+                    </div>
                 </div>
             <?php endif; ?>
 

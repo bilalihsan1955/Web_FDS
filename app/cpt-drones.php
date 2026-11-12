@@ -527,8 +527,9 @@ function render_drone_pure_form_metabox($post) {
         </div>
 
         <div class="fds-field">
-            <label>Sertifikasi & Standar Resmi</label>
-            <input type="text" name="drone_spec_sertifikasi" value="<?php echo esc_attr($spec_sertifikasi); ?>" placeholder="Contoh: TKDN + BMP 60,74% (Seri FERTO) | SNI 9199:2023 (FERTO 15 & 22) | ISO 9001:2015">
+            <label>Sertifikasi & Standar Produk</label>
+            <input type="text" name="drone_spec_sertifikasi" value="<?php echo esc_attr($spec_sertifikasi); ?>" placeholder="Contoh: TKDN + BMP 60,74% (Seri FERTO) | SNI 9199:2023 (FERTO 15 & 22)">
+            <small style="color:#64748b;font-size:11.5px;display:block;margin-top:4px;">Isi khusus sertifikasi unit/produk (mis. TKDN/SNI). Sistem manajemen mutu ISO 9001:2015 berlaku di level perusahaan PT Karya Solusi Angkasa.</small>
         </div>
     </div>
 
@@ -727,8 +728,13 @@ function fds_purge_drone_catalog_caches(): void {
     delete_transient('fds_bandingkan_catalog_cache');
     delete_transient('fds_bandingkan_catalog_cache_v2');
     delete_transient('fds_bandingkan_catalog_cache_v3');
+    delete_transient('fds_bandingkan_catalog_cache_v4');
     delete_transient('fds_llms_txt_cache_v4');
-    if (function_exists('has_action') && has_action('litespeed_purge_all')) {
+    delete_transient('fds_llms_txt_cache_v5');
+    delete_transient('fds_llms_full_txt_cache_v5');
+    if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+        fds_purge_ai_and_seo_caches(false);
+    } elseif (function_exists('has_action') && has_action('litespeed_purge_all')) {
         do_action('litespeed_purge_all');
     }
 }
@@ -1376,7 +1382,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Otonom & Manual, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74%',
             'uc1_t'     => 'Lahan berbukit & terasering', 'uc1_d' => 'Bobot ringan dan dimensi ringkas mempermudah manuver di area sempit.',
             'uc2_t'     => 'Petani hortikultura & kebun', 'uc2_d' => 'Aplikasi cairan merata dengan pengurangan pemborosan larutan kerja.',
             'uc3_t'     => 'Penyedia jasa semprot mandiri', 'uc3_d' => 'Mobilitas tinggi mudah dibawa ke petak sawah perbukitan.',
@@ -1400,7 +1406,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Otonom & Manual, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74%',
             'uc1_t'     => 'Kelompok tani & Gapoktan', 'uc1_d' => 'Titik temu seimbang antara kapasitas operasional dan efisiensi investasi.',
             'uc2_t'     => 'Koperasi pertanian', 'uc2_d' => 'Membantu mengatasi keterbatasan tenaga kerja semprot manual di musim tanam.',
             'uc3_t'     => 'Program ketahanan pangan', 'uc3_d' => 'Mendukung penyemprotan tanaman pangan terukur secara otonom.',
@@ -1424,7 +1430,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Otonom & Manual, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74% | SNI 9199:2023',
             'uc1_t'     => 'Perkebunan tebu & jagung komersial', 'uc1_d' => 'Menyemprot cepat 8 Ha/jam dengan cakupan droplet merata.',
             'uc2_t'     => 'Kontraktor jasa perlindungan tanaman', 'uc2_d' => 'Durasi terbang hingga 25 menit untuk ritme kerja lapangan padat.',
             'uc3_t'     => 'Dual mode Sprayer & Granule Spreader', 'uc3_d' => 'Kompatibel dengan tangki granule spreader untuk pemupukan butir.',
@@ -1448,7 +1454,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74% | SNI 9199:2023',
             'uc1_t'     => 'Perkebunan sawit & tanaman industri', 'uc1_d' => 'Mengatasi tantangan lahan luas dengan kecepatan semprot tinggi.',
             'uc2_t'     => 'BUMN Perkebunan & Korporasi Agrikultur', 'uc2_d' => 'Memenuhi syarat pengadaan pemerintah dengan TKDN+BMP & SNI 9199:2023.',
             'uc3_t'     => 'Manajemen armada perkebunan', 'uc3_d' => 'Terintegrasi dengan analitik kesehatan tanaman berbasis NDVI.',
@@ -1472,7 +1478,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74%',
             'uc1_t'     => 'Mega perkebunan sawit & tebu', 'uc1_d' => 'Produktivitas 15 Ha/jam mempercepat target penyemprotan harian.',
             'uc2_t'     => 'Aplikasi pupuk & pestisida volume tinggi', 'uc2_d' => 'Tangki 30L meminimalkan frekuensi pendaratan untuk isi ulang.',
             'uc3_t'     => 'Pengendalian hama serentak', 'uc3_d' => 'Menuntaskan ratusan hektare lahan dalam waktu singkat sebelum hama menyebar.',
@@ -1496,7 +1502,7 @@ add_action('init', function () {
             'sp_ket'    => '',
             'sp_oto'    => 'Semi-to-Fully Autonomous, Terrain Following, Fail-Safe',
             'sp_gcs'    => 'FDS Station (Bahasa Indonesia)',
-            'sp_sert'   => 'TKDN + BMP 60,74% | ISO 9001:2015',
+            'sp_sert'   => 'TKDN + BMP 60,74%',
             'uc1_t'     => 'Perkebunan konglomerasi & agroindustri', 'uc1_d' => 'Menangani area ribuan hektare dengan armada efisien.',
             'uc2_t'     => 'Penyebaran pupuk & pestisida intensif', 'uc2_d' => 'Muatan 50L memaksimalkan efisiensi setiap sorti penerbangan.',
             'uc3_t'     => 'Misi otomatis skala besar', 'uc3_d' => 'Perencanaan rute cerdas dan pemantauan real-time via FDS Station.',
@@ -1520,7 +1526,7 @@ add_action('init', function () {
             'sp_ket'    => 'Rangka Komposit Karbon Hibrida',
             'sp_oto'    => 'Semi-to-Fully Autonomous, Waypoint Mission, Return to Launch',
             'sp_gcs'    => 'FDS Station GCS (Bahasa Indonesia)',
-            'sp_sert'   => 'ISO 9001:2015',
+            'sp_sert'   => '',
             'uc1_t'     => 'Survei topografi & konstruksi', 'uc1_d' => 'Mempercepat pemodelan 3D, ortomozaik, dan perhitungan cut & fill secara signifikan.',
             'uc2_t'     => 'Kehutanan & lingkungan', 'uc2_d' => 'Pemetaan DAS, tutupan kanopi hutan, dan progres reklamasi tambang.',
             'uc3_t'     => 'Pertambangan & kuari', 'uc3_d' => 'Pemetaan kontur presisi dan pemantauan batas konsesi tambang.',
@@ -1544,7 +1550,7 @@ add_action('init', function () {
             'sp_ket'    => 'Konstruksi Modular & Fail-Safe Mandiri',
             'sp_oto'    => 'Manual, Task Following, Semi-to-Fully Autonomous',
             'sp_gcs'    => 'FDS Station Real-Time Monitoring & AI Analytics',
-            'sp_sert'   => 'ISO 9001:2015',
+            'sp_sert'   => '',
             'uc1_t'     => 'Inspeksi transmisi listrik 150 kV', 'uc1_d' => 'Aman tanpa perlu pemadaman listrik dan bebas risiko bekerja di ketinggian.',
             'uc2_t'     => 'Inspeksi ladang energi surya (Solar PV)', 'uc2_d' => 'Deteksi dini hotspot dan sel rusak untuk cegah kehilangan energi.',
             'uc3_t'     => 'Inspeksi migas & cerobong suar (Flare)', 'uc3_d' => 'Deteksi kebocoran dan anomali termal tanpa mematikan kilang.',
@@ -1568,7 +1574,7 @@ add_action('init', function () {
             'sp_ket'    => 'MTOW: 15 kg | Propeller Karbon 18-inch',
             'sp_oto'    => 'Otonom (Waypoint Cargo Route) & Manual Fail-Safe',
             'sp_gcs'    => 'FDS Station Logistics Management',
-            'sp_sert'   => 'ISO 9001:2015',
+            'sp_sert'   => '',
             'uc1_t'     => 'Logistik medis & darurat bencana', 'uc1_d' => 'Pengiriman cepat obat-obatan, darah, dan sampel medis ke lokasi terpencil.',
             'uc2_t'     => 'Pengiriman suku cadang industri', 'uc2_d' => 'Menghubungkan site terpencil dengan warehouse secara cepat.',
             'uc3_t'     => 'Ekspedisi & kurir last-mile', 'uc3_d' => 'Alternatif logistik untuk melintasi sungai, bukit, atau selat.',
@@ -1623,7 +1629,9 @@ add_action('init', function () {
                 }
                 update_post_meta($post_id, 'drone_spec_otonomi', $data['sp_oto']);
                 update_post_meta($post_id, 'drone_spec_gcs', $data['sp_gcs']);
-                update_post_meta($post_id, 'drone_spec_sertifikasi', $data['sp_sert']);
+                if (!empty($data['sp_sert'])) {
+                    update_post_meta($post_id, 'drone_spec_sertifikasi', $data['sp_sert']);
+                }
 
                 // Structured Raw Specs string
                 $raw_specs = "Payload: {$data['sp_kap']}\n"
@@ -1633,8 +1641,8 @@ add_action('init', function () {
                            . "Kecepatan Jelajah: {$data['sp_kec']}\n"
                            . (!empty($data['sp_ket']) ? "Ketahanan Lingkungan: {$data['sp_ket']}\n" : "")
                            . "Sistem Otonomi & Navigasi: {$data['sp_oto']}\n"
-                           . "Ground Control Station: {$data['sp_gcs']}\n"
-                           . "Sertifikasi & Standar: {$data['sp_sert']}";
+                           . "Ground Control Station: {$data['sp_gcs']}"
+                           . (!empty($data['sp_sert']) ? "\nSertifikasi & Standar: {$data['sp_sert']}" : "");
                 update_post_meta($post_id, 'drone_specs_raw', trim($raw_specs));
 
                 update_post_meta($post_id, 'drone_uc1_t', $data['uc1_t']);
@@ -1687,7 +1695,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 6 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74%'],
             ],
             'desc'      => 'FERTO 5 didesain sebagai platform multirotor modular dengan mobilitas tinggi untuk menjangkau area berbukit, terasering, dan lahan perkebunan dengan kontur ekstrem. Dilengkapi fitur terrain-following otomatis dan sistem kendali FDS Station, drone ini menjamin presisi penyemprotan pupuk cair maupun pestisida secara merata dengan produktivitas 1 Ha per jam.',
             'for'       => [
@@ -1715,7 +1723,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 6 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74%'],
             ],
             'desc'      => 'FERTO 10 adalah varian andalan FDS yang menawarkan keseimbangan optimal antara kapasitas muatan 10 liter, ketahanan baterai 16.000 mAh, dan produktivitas 1 - 1,5 Ha/jam. Menggunakan rangka karbon komposit buatan dalam negeri bersertifikat TKDN 60,74%, drone ini mendukung modernisasi pertanian di berbagai wilayah Indonesia.',
             'for'       => [
@@ -1743,7 +1751,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 6 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | SNI 9199:2023'],
             ],
             'desc'      => 'FERTO 15 dirancang untuk ritme kerja lapangan yang padat dengan kapasitas tangki fleksibel 17 Liter dan produktivitas semprot hingga 8 hektare per jam. Mampu menuntaskan penyemprotan pupuk cair maupun pestisida pada lahan perkebunan luas dalam durasi terbang 15 hingga 22 menit per sortie baterai.',
             'for'       => [
@@ -1771,7 +1779,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 7 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | SNI 9199:2023'],
             ],
             'desc'      => 'FERTO 22 adalah varian heavy-duty yang didesain untuk operasional perkebunan skala korporasi seperti kelapa sawit, karet, dan tebu. Didukung baterai berdensitas energi tinggi 22.000 mAh dan pompa bertekanan dengan nozzle atomisasi sentrifugal, drone ini menghasilkan droplet halus merata hingga ke kanopi tanaman tinggi.',
             'for'       => [
@@ -1799,7 +1807,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 7 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74%'],
             ],
             'desc'      => 'FERTO 30 hadir untuk memenuhi kebutuhan efisiensi pada perkebunan besar dan proyek penghijauan hutan. Mengusung motor bertenaga tinggi dan tangki 30 liter berbahan komposit kokoh, drone ini mampu mencakup hingga 15 hektare per jam dengan kemampuan dual-mode penyemprotan cairan dan penebaran pupuk granular.',
             'for'       => [
@@ -1827,7 +1835,7 @@ if (!function_exists('\App\fds_get_default_drone_catalog')) {
                 ['Kecepatan Jelajah', '2 – 8 m/s'],
                 ['Sistem Otonomi & Navigasi', 'Otonom & Manual, Terrain Following, Fail-Safe'],
                 ['Ground Control Station', 'FDS Station (Bahasa Indonesia)'],
-                ['Sertifikasi & Standar', 'TKDN + BMP 60,74% | ISO 9001:2015'],
+                ['Sertifikasi & Standar', 'TKDN + BMP 60,74%'],
             ],
             'desc'      => 'FERTO 50 adalah varian berdaya angkut tertinggi dalam lini drone pertanian FDS dengan kapasitas tangki hingga 50 liter. Dirancang untuk agroindustri terintegrasi dan perkebunan ratusan hingga ribuan hektare yang membutuhkan produktivitas tinggi dalam jendela operasional harian.',
             'for'       => [
@@ -2211,10 +2219,10 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
 
         $drone = $decode_deep($drone);
 
-        $scrub_fn = static function ($txt) use ($isFerto, $hasSni): string {
+        $scrub_fn = static function ($txt, bool $allowIso = true) use ($isFerto, $hasSni): string {
             $s = (string) $txt;
             return function_exists('fds_scrub_legacy_text')
-                ? fds_scrub_legacy_text($s, $isFerto, $hasSni)
+                ? fds_scrub_legacy_text($s, $isFerto, $hasSni, $allowIso)
                 : $s;
         };
 
@@ -2245,17 +2253,16 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
                     $spLabel = 'Payload';
                 }
 
-                $spVal = $scrub_fn($spItem[1]);
+                $isCertSpec = (stripos($spLabel, 'Sertifikasi') !== false);
+                $spVal = $scrub_fn($spItem[1], !$isCertSpec);
                 if ($spLabel === 'Payload' && $modelKey === 'ferto-15l' && stripos($spVal, '17') === false) {
                     $spVal = '17 Liter (15 – 17 Liter)';
                 }
-                if (stripos($spLabel, 'Sertifikasi') !== false && $spVal === '') {
+                if ($isCertSpec && $spVal === '') {
                     if ($hasSni) {
-                        $spVal = 'TKDN + BMP 60,74% | SNI 9199:2023 | ISO 9001:2015';
+                        $spVal = 'TKDN + BMP 60,74% | SNI 9199:2023';
                     } elseif ($isFerto) {
-                        $spVal = 'TKDN + BMP 60,74% | ISO 9001:2015';
-                    } else {
-                        $spVal = 'ISO 9001:2015';
+                        $spVal = 'TKDN + BMP 60,74%';
                     }
                 }
 
@@ -2360,6 +2367,60 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             ? (string) $drone['tagline']
             : ($desc_plain !== '' ? wp_trim_words($desc_plain, 16, '…') : 'Platform UAV manufaktur PT Karya Solusi Angkasa (FDS) Sleman, Yogyakarta.');
 
+        // Matrix Row Summary Fields (1:1 synced with /produk/ comparison matrix, held certifications only)
+        $raw_tagline = trim((string) ($drone['tagline'] ?? ''));
+        if ($raw_tagline !== '') {
+            if (strpos($raw_tagline, ' — ') !== false) {
+                $parts_tg = explode(' — ', $raw_tagline, 2);
+                $matrix_function = trim($parts_tg[1]);
+            } elseif (strpos($raw_tagline, ' - ') !== false) {
+                $parts_tg = explode(' - ', $raw_tagline, 2);
+                $matrix_function = trim($parts_tg[1]);
+            } else {
+                $matrix_function = $raw_tagline;
+            }
+        } else {
+            $matrix_function = trim((string) ($drone['badge'] ?? '')) ?: 'Wahana UAV Industrial';
+        }
+        $matrix_function = rtrim($matrix_function, ". \t\n\r\0\x0B");
+
+        $matrix_payload = $card_payload;
+
+        if ($card_durasi !== '' && $card_range !== '') {
+            if (stripos($card_durasi, $card_range) !== false) {
+                $matrix_duration = $card_durasi;
+            } elseif (stripos($card_range, $card_durasi) !== false) {
+                $matrix_duration = $card_range;
+            } else {
+                $matrix_duration = $card_durasi . ' (' . $card_range . ')';
+            }
+        } elseif ($card_durasi !== '') {
+            $matrix_duration = $card_durasi;
+        } elseif ($card_range !== '') {
+            $matrix_duration = $card_range;
+        } else {
+            $matrix_duration = 'Otonom GCS';
+        }
+
+        $raw_cert = (string) ($spec_map['sertifikasi & standar'] ?? ($spec_map['sertifikasi'] ?? ''));
+        if ($raw_cert === '') {
+            $raw_cert = $scrub_fn($decode_deep((string) $get_meta('drone_spec_sertifikasi')), false);
+        } else {
+            $raw_cert = $scrub_fn($raw_cert, false);
+        }
+        $raw_cert = trim((string) preg_replace('/\s*\(\s*Tanpa\s+klaim[^)]*\)/i', '', $raw_cert));
+        if ($raw_cert === '') {
+            if ($hasSni) {
+                $matrix_cert = 'TKDN + BMP 60,74% | SNI 9199:2023';
+            } elseif ($isFerto) {
+                $matrix_cert = 'TKDN + BMP 60,74%';
+            } else {
+                $matrix_cert = '';
+            }
+        } else {
+            $matrix_cert = $raw_cert;
+        }
+
         $result = array_merge($drone, [
             'id'                => $post_id,
             'preview_id'        => $preview_id,
@@ -2378,6 +2439,10 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             'card_metric_label' => $card_metric_label,
             'card_metric_value' => $card_metric_value,
             'card_tagline'      => $card_tagline,
+            'matrix_function'   => $matrix_function,
+            'matrix_payload'    => $matrix_payload,
+            'matrix_duration'   => $matrix_duration,
+            'matrix_cert'       => $matrix_cert,
         ]);
 
         if ($can_cache) {

@@ -27,6 +27,15 @@
   $cleanDroneName = function_exists('fds_clean_string')
       ? fds_clean_string((string) ($drone['name'] ?? get_the_title($preview_id ?: $post_id)))
       : (string) ($drone['name'] ?? get_the_title($preview_id ?: $post_id));
+
+  $dui = function_exists('\App\fds_get_drone_detail_ui')
+      ? \App\fds_get_drone_detail_ui()
+      : [];
+  $href_detail = static function ($u): string {
+      return function_exists('\App\fds_produk_normalize_href')
+          ? \App\fds_produk_normalize_href((string) $u)
+          : home_url((string) $u);
+  };
 @endphp
 
 @if(empty($drone))
@@ -114,11 +123,11 @@
         <div class="flex flex-wrap items-center gap-4 pb-8 sm:pb-10 fds-hero-entrance fds-hero-delay-4">
           <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}"
              class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] font-semibold px-7 py-3.5 rounded-full transition-all duration-150 shadow-md shadow-black/15">
-            Minta Penawaran
+            {{ $dui['hero_cta1_text'] ?? 'Minta Penawaran' }}
           </a>
           <a href="{!! esc_url(home_url('/bandingkan/?d1=' . $slug)) !!}"
              class="inline-flex items-center text-white/80 hover:text-white text-[15px] font-medium transition-colors gap-2 px-3 py-3 leading-none group">
-            <span class="leading-none">Bandingkan model</span>
+            <span class="leading-none">{{ $dui['hero_cta2_text'] ?? 'Bandingkan model' }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
@@ -154,9 +163,9 @@
           <x-reveal type="fade-right" class="lg:col-span-6 flex flex-col relative overflow-visible z-20">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">Spesifikasi</p>
-                <a href="{{ home_url('/bandingkan/?d1=' . $slug) }}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1.5 leading-none group">
-                  <span class="leading-none">Bandingkan spesifikasi</span>
+                <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide">{{ $dui['specs_eyebrow'] ?? 'Spesifikasi' }}</p>
+                <a href="{!! esc_url(home_url('/bandingkan/?d1=' . $slug)) !!}" class="text-[13px] font-semibold text-[#0f808a] hover:underline flex items-center gap-1.5 leading-none group">
+                  <span class="leading-none">{{ $dui['specs_compare_link'] ?? 'Bandingkan spesifikasi' }}</span>
                   <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
                     <path d="M6 18 18 6"/>
@@ -164,10 +173,10 @@
                 </a>
               </div>
               <h2 class="text-[32px] sm:text-[40px] lg:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-5">
-                Direkayasa untuk <br>performa nyata.
+                {!! wp_kses((string) ($dui['specs_heading'] ?? 'Direkayasa untuk <br>performa nyata.'), ['br' => []]) !!}
               </h2>
               <p class="text-[15px] sm:text-[16px] text-[#515154] leading-relaxed max-w-xl mb-4">
-                {{ fds_clean_string((string) ($drone['desc'] ?: "Setiap spesifikasi {$cleanDroneName} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.")) }}
+                {{ fds_clean_string((string) ($drone['desc'] ?: str_replace('{drone_name}', $cleanDroneName, (string) ($dui['specs_desc_fallback'] ?? "Setiap spesifikasi {$cleanDroneName} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.")))) }}
               </p>
             </div>
 
@@ -208,7 +217,7 @@
               </div>
               @endforeach
             @else
-              <div class="py-4 text-[#86868b] text-[14px]">Spesifikasi detail akan segera diperbarui.</div>
+              <div class="py-4 text-[#86868b] text-[14px]">{{ $dui['specs_empty_text'] ?? 'Spesifikasi detail akan segera diperbarui.' }}</div>
             @endif
           </x-reveal-group>
 
@@ -226,6 +235,7 @@
       $brochure_desc_initial  = fds_clean_string((string) get_option('fds_brochure_desc', 'Masukkan email Anda untuk mengunduh brosur spesifikasi teknis resmi (PDF).'));
       $brochure_desc_ready    = fds_clean_string((string) get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.'));
       $brochure_ph            = fds_clean_string((string) get_option('fds_brochure_placeholder', 'Masukkan email Anda...'));
+      $brochure_submit        = fds_clean_string((string) get_option('fds_brochure_submit_text', 'Kirim Email'));
       $brochure_btn           = fds_clean_string((string) get_option('fds_brochure_button_text', 'Download Brosur (PDF)'));
       $brochure_file_url      = get_post_meta($post_id, 'drone_brosur_url', true) ?: get_option('fds_brochure_default_pdf', '');
     @endphp
@@ -240,6 +250,7 @@
           :desc-initial="$brochure_desc_initial"
           :desc-ready="$brochure_desc_ready"
           :placeholder="$brochure_ph"
+          :submit-text="$brochure_submit"
           :btn-text="$brochure_btn"
           :file-url="$brochure_file_url"
         />
@@ -249,12 +260,12 @@
 
     {{-- ── APLIKASI & USE-CASES (AERODYNAMIC FLOW STRATA VECTOR BACKGROUND) ─────── --}}
     @php
-      $usecases_list = !empty($drone['for']) && is_array($drone['for']) ? $drone['for'] : [
+      $usecases_list = !empty($drone['for']) && is_array($drone['for']) ? $drone['for'] : ($dui['uc_fallback_items'] ?? [
         'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
         'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
         'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
         'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
-      ];
+      ]);
     @endphp
 
     <section id="aplikasi-usecases" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] pt-24 sm:pt-32 pb-24 sm:pb-32 overflow-hidden z-10">
@@ -337,9 +348,9 @@
       <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <x-reveal type="fade-right">
-            <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">Aplikasi &amp; Use-Cases</span>
+            <span class="text-[12px] font-semibold text-white/80 tracking-wide mb-3 block">{{ $dui['uc_eyebrow'] ?? 'Aplikasi & Use-Cases' }}</span>
             <h2 class="text-[36px] sm:text-[46px] lg:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.12]">
-              {{ $cleanDroneName }} cocok untuk Anda.
+              {{ str_replace('{drone_name}', $cleanDroneName, (string) ($dui['uc_heading_tpl'] ?? '{drone_name} cocok untuk Anda.')) }}
             </h2>
           </x-reveal>
           <div class="relative">
@@ -418,7 +429,7 @@
     @if(!empty($drone_guide_html))
     <section id="panduan-teknis" class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
       <div class="max-w-[1100px] mx-auto px-6 lg:px-12">
-        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Panduan Teknis &amp; Tanya Jawab</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{{ $dui['guide_eyebrow'] ?? 'Panduan Teknis & Tanya Jawab' }}</p>
         <div class="fds-drone-guide">
           {!! $drone_guide_html !!}
         </div>
@@ -463,19 +474,19 @@
 
       <x-reveal-group :step="90" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
         <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
-          Siap mengoperasikan {{ $cleanDroneName }}?
+          {{ str_replace('{drone_name}', $cleanDroneName, (string) ($dui['cta_heading_tpl'] ?? 'Siap mengoperasikan {drone_name}?')) }}
         </h2>
         <p class="text-[16px] sm:text-[18px] lg:text-[19px] text-white/80 max-w-[540px] mx-auto mb-9 leading-relaxed">
-          Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.
+          {{ $dui['cta_desc'] ?? 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.' }}
         </p>
         <div class="flex flex-wrap gap-4 items-center justify-center">
           <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}"
              class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
-            Hubungi Tim Sales
+            {{ $dui['cta_primary_text'] ?? 'Hubungi Tim Sales' }}
           </a>
-          <a href="{{ home_url('/blog/') }}"
+          <a href="{!! esc_url($href_detail($dui['cta_secondary_url'] ?? '/blog/')) !!}"
              class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
-            <span class="leading-none">Baca studi kasus</span>
+            <span class="leading-none">{{ $dui['cta_secondary_text'] ?? 'Baca studi kasus' }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>

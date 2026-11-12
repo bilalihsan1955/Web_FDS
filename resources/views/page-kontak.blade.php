@@ -20,12 +20,16 @@
   $c_address = fds_clean_string($c_address);
   $c_company = fds_clean_string($global_c['company_name'] ?? 'PT Karya Solusi Angkasa');
 
-  // Kustomisasi Narasi Halaman Kontak Dinamis
+  // Kustomisasi Narasi & Label Formulir Halaman Kontak Dinamis
   $p_badge       = fds_clean_string($global_c['page_kontak_badge'] ?? 'Pusat Kontak');
   $p_title       = fds_clean_string($global_c['page_kontak_title'] ?? 'Hubungi Kami.');
   $p_desc        = fds_clean_string($global_c['page_kontak_desc'] ?? 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.');
+  $p_lbl_phone   = fds_clean_string($global_c['page_kontak_lbl_phone'] ?? 'Telepon & WhatsApp');
+  $p_lbl_email   = fds_clean_string($global_c['page_kontak_lbl_email'] ?? 'Email Resmi');
+  $p_lbl_hours   = fds_clean_string($global_c['page_kontak_lbl_hours'] ?? 'Jam Operasional');
+  $p_map_jump    = fds_clean_string($global_c['page_kontak_map_jump_text'] ?? 'Lihat titik lokasi & workshop resmi ↓');
   $p_panel_label = fds_clean_string($global_c['page_kontak_panel_label'] ?? 'Kantor & Workshop Resmi');
-  $p_panel_desc_raw = fds_clean_string($global_c['page_kontak_panel_desc'] ?? 'Produsen UAV nasional dengan manajemen mutu ISO 9001:2015, TKDN 60,74% (seri FERTO), serta SNI 9199:2023 pada FERTO 15 dan FERTO 22, berlokasi di Sleman, Yogyakarta.');
+  $p_panel_desc_raw = fds_clean_string($global_c['page_kontak_panel_desc'] ?? 'Produsen UAV nasional dengan manajemen mutu ISO 9001:2015, TKDN + BMP 60,74% (seri FERTO), serta SNI 9199:2023 pada FERTO 15 dan FERTO 22, berlokasi di Sleman, Yogyakarta.');
   $p_panel_desc  = function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($p_panel_desc_raw) : $p_panel_desc_raw;
   $p_hours_wd    = fds_clean_string($global_c['page_kontak_hours_wd'] ?? 'Senin – Jumat: 08:30 – 17:00 WIB');
   $p_hours_sat   = fds_clean_string($global_c['page_kontak_hours_sat'] ?? 'Sabtu: 08:30 – 13:00 WIB');
@@ -33,13 +37,34 @@
   $p_form_title  = fds_clean_string($global_c['page_kontak_form_title'] ?? 'Kirim Pesan atau Permintaan Penawaran');
   $p_form_desc   = fds_clean_string($global_c['page_kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:');
   $p_form_btn    = fds_clean_string($global_c['page_kontak_form_btn'] ?? 'Kirim Pesan');
+  $p_form_loading = fds_clean_string($global_c['page_kontak_form_loading'] ?? 'Mengirim Pesan...');
   $p_form_note   = fds_clean_string($global_c['page_kontak_form_note'] ?? 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.');
   if (preg_match('/(?:1\s*[×xX]\s*24|24\s*jam|48\s*jam)/i', $p_form_note)) {
     $p_form_note = 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.';
   }
-  $p_map_title   = fds_clean_string($global_c['page_kontak_map_title'] ?? 'Lokasi Workshop Sleman');
-  $p_map_btn     = fds_clean_string($global_c['page_kontak_map_btn'] ?? 'Buka di Google Maps');
-  $p_map_link    = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta';
+  $p_opt_default     = fds_clean_string($global_c['page_kontak_opt_default'] ?? 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi');
+  $p_field_srv_lbl   = fds_clean_string($global_c['page_kontak_field_service_lbl'] ?? 'Fokus Layanan / Model UAV');
+  $p_field_fname_lbl = fds_clean_string($global_c['page_kontak_field_fname_lbl'] ?? 'Nama Depan');
+  $p_field_fname_ph  = fds_clean_string($global_c['page_kontak_field_fname_ph'] ?? 'Nama depan');
+  $p_field_lname_lbl = fds_clean_string($global_c['page_kontak_field_lname_lbl'] ?? 'Nama Belakang');
+  $p_field_lname_ph  = fds_clean_string($global_c['page_kontak_field_lname_ph'] ?? 'Nama belakang');
+  $p_field_comp_lbl  = fds_clean_string($global_c['page_kontak_field_comp_lbl'] ?? 'Perusahaan / Instansi');
+  $p_field_comp_ph   = fds_clean_string($global_c['page_kontak_field_comp_ph'] ?? 'Nama perusahaan / instansi');
+  $p_field_email_lbl = fds_clean_string($global_c['page_kontak_field_email_lbl'] ?? 'Email Bisnis');
+  $p_field_email_ph  = fds_clean_string($global_c['page_kontak_field_email_ph'] ?? 'nama@perusahaan.com');
+  $p_field_phone_lbl = fds_clean_string($global_c['page_kontak_field_phone_lbl'] ?? 'Nomor Telepon / WhatsApp');
+  $p_field_phone_ph  = fds_clean_string($global_c['page_kontak_field_phone_ph'] ?? 'Nomor telepon / WhatsApp');
+  $p_field_msg_lbl   = fds_clean_string($global_c['page_kontak_field_msg_lbl'] ?? 'Kebutuhan Operasional & Detail Pengadaan');
+  $p_field_msg_ph    = fds_clean_string($global_c['page_kontak_field_msg_ph'] ?? 'Jelaskan kebutuhan pengadaan armada drone, jadwal demo terbang, atau spesifikasi teknis operasional Anda...');
+  $p_map_title       = fds_clean_string($global_c['page_kontak_map_title'] ?? 'Lokasi Workshop Sleman');
+  $p_map_btn         = fds_clean_string($global_c['page_kontak_map_btn'] ?? 'Buka di Google Maps');
+  $p_map_link        = $global_c['page_kontak_map_link'] ?? 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta';
+  $p_guide_eyebrow   = fds_clean_string($global_c['page_kontak_guide_eyebrow'] ?? 'Dukungan Pengadaan Enterprise');
+  $p_guide_title     = fds_clean_string($global_c['page_kontak_guide_title'] ?? 'Layanan Konsultasi & Pengadaan Korporasi FDS');
+  $p_guide_body      = (string) ($global_c['page_kontak_guide_body'] ?? '');
+  if ($p_guide_body === '' && function_exists('\App\fds_get_kontak_default_guide_html')) {
+    $p_guide_body = \App\fds_get_kontak_default_guide_html();
+  }
 
   // Opsi Layanan, Kategori & Armada Drone untuk Prefill Form Lead Engine
   $fds_clean_kontak = static function ($val) {
@@ -56,7 +81,7 @@
     return $s;
   };
   $fds_service_options = [
-    'kontak-inquiry' => 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi',
+    'kontak-inquiry' => $p_opt_default,
   ];
   if (function_exists('App\fds_get_layanan_service_options')) {
     foreach (\App\fds_get_layanan_service_options() as $opt_slug => $opt_lbl) {
@@ -85,7 +110,7 @@
       $kontak_drone_posts = fds_sort_drone_posts($kontak_drone_posts);
     }
     foreach ($kontak_drone_posts as $kd) {
-      if (stripos((string) $kd->post_name, 'rebo') !== false || stripos((string) $kd->post_name, 'agrea') !== false) continue;
+      if (stripos((string) $kd->post_name, 'rebo') !== false || stripos((string) $kd->post_name, 'agrea') !== false || stripos((string) $kd->post_name, 'ferto-20') !== false) continue;
       $fds_service_options[(string) $kd->post_name] = 'Pengadaan Unit: ' . $fds_clean_kontak($kd->post_title);
     }
   }
@@ -93,7 +118,7 @@
   $selected_service_slug = ($raw_prefill_param !== '' && isset($fds_service_options[$raw_prefill_param]))
     ? $raw_prefill_param
     : 'kontak-inquiry';
-  $selected_service_label = $fds_clean_kontak($fds_service_options[$selected_service_slug] ?? 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi');
+  $selected_service_label = $fds_clean_kontak($fds_service_options[$selected_service_slug] ?? $p_opt_default);
 @endphp
 
 <div id="contact-page" class="w-full bg-white font-sans">
@@ -186,7 +211,7 @@
             
             {{-- WhatsApp & Phone --}}
             <div>
-              <p class="text-[11.5px] font-semibold text-white/70 mb-1">Telepon &amp; WhatsApp</p>
+              <p class="text-[11.5px] font-semibold text-white/70 mb-1">{{ $p_lbl_phone }}</p>
               <div class="flex flex-wrap items-center gap-3">
                 <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener noreferrer"
                    class="text-[20px] sm:text-[22px] font-semibold text-white hover:text-white/80 transition-colors tracking-tight">
@@ -202,7 +227,7 @@
 
             {{-- Email --}}
             <div>
-              <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">Email Resmi</p>
+              <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">{{ $p_lbl_email }}</p>
               <a href="mailto:{{ $c_email }}" 
                  class="text-[15px] sm:text-[16px] font-medium text-white hover:text-white/80 transition-colors hover:underline break-all">
                 {{ $c_email }}
@@ -212,7 +237,7 @@
             {{-- Jam Operasional --}}
             @if(!empty($p_hours_wd) || !empty($p_hours_sat))
             <div>
-              <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">Jam Operasional</p>
+              <p class="text-[11.5px] font-semibold text-white/70 mb-0.5">{{ $p_lbl_hours }}</p>
               @if(!empty($p_hours_wd))
               <p class="text-[14px] text-white/90 leading-tight">{{ $p_hours_wd }}</p>
               @endif
@@ -227,7 +252,7 @@
             <div class="pt-1">
               <a href="#lokasi-workshop" 
                  class="inline-block text-[13.5px] font-medium text-white/90 hover:text-white hover:underline transition-colors">
-                Lihat titik lokasi &amp; workshop resmi &darr;
+                {{ $p_map_jump }}
               </a>
             </div>
             @endif
@@ -261,7 +286,7 @@
 
               {{-- Service / Product Focus (Auto-Prefill via ?layanan= / ?sektor= / ?produk=) --}}
               <div>
-                <label for="fds-service-select" class="block text-[11.5px] font-medium text-[#475569] mb-1">Fokus Layanan / Model UAV <span class="text-red-500">*</span></label>
+                <label for="fds-service-select" class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_srv_lbl }} <span class="text-red-500">*</span></label>
                 <select id="fds-service-select" name="service_slug" required
                   class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] outline-none transition-all cursor-pointer">
                   @foreach($fds_service_options as $opt_val => $opt_text)
@@ -279,13 +304,13 @@
               {{-- Names --}}
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Nama Depan <span class="text-red-500">*</span></label>
-                  <input type="text" name="first_name" required maxlength="60" placeholder="Nama depan"
+                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_fname_lbl }} <span class="text-red-500">*</span></label>
+                  <input type="text" name="first_name" required maxlength="60" placeholder="{{ $p_field_fname_ph }}"
                     class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all">
                 </div>
                 <div>
-                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Nama Belakang <span class="text-red-500">*</span></label>
-                  <input type="text" name="last_name" required maxlength="60" placeholder="Nama belakang"
+                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_lname_lbl }} <span class="text-red-500">*</span></label>
+                  <input type="text" name="last_name" required maxlength="60" placeholder="{{ $p_field_lname_ph }}"
                     class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all">
                 </div>
               </div>
@@ -293,28 +318,28 @@
               {{-- Company & Email --}}
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Perusahaan / Instansi <span class="text-red-500">*</span></label>
-                  <input type="text" name="company" required maxlength="100" placeholder="Nama perusahaan / instansi"
+                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_comp_lbl }} <span class="text-red-500">*</span></label>
+                  <input type="text" name="company" required maxlength="100" placeholder="{{ $p_field_comp_ph }}"
                     class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all">
                 </div>
                 <div>
-                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Email Bisnis <span class="text-red-500">*</span></label>
-                  <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
+                  <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_email_lbl }} <span class="text-red-500">*</span></label>
+                  <input type="email" name="email" required maxlength="100" placeholder="{{ $p_field_email_ph }}"
                     class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all">
                 </div>
               </div>
 
               {{-- Phone --}}
               <div>
-                <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Nomor Telepon / WhatsApp <span class="text-red-500">*</span></label>
-                <input type="tel" name="phone" required maxlength="30" placeholder="Nomor telepon / WhatsApp"
+                <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_phone_lbl }} <span class="text-red-500">*</span></label>
+                <input type="tel" name="phone" required maxlength="30" placeholder="{{ $p_field_phone_ph }}"
                   class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all">
               </div>
 
               {{-- Message --}}
               <div>
-                <label class="block text-[11.5px] font-medium text-[#475569] mb-1">Kebutuhan Operasional &amp; Detail Pengadaan <span class="text-red-500">*</span></label>
-                <textarea name="message" rows="3" required maxlength="3000" placeholder="Jelaskan kebutuhan pengadaan armada drone, jadwal demo terbang, atau spesifikasi teknis operasional Anda..."
+                <label class="block text-[11.5px] font-medium text-[#475569] mb-1">{{ $p_field_msg_lbl }} <span class="text-red-500">*</span></label>
+                <textarea name="message" rows="3" required maxlength="3000" placeholder="{{ $p_field_msg_ph }}"
                   class="w-full bg-[#f8fafc] border border-black/[0.08] focus:border-[#0f808a] focus:bg-white focus:ring-2 focus:ring-[#0f808a]/10 rounded-lg px-3.5 py-2 sm:py-2.5 text-[13.5px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all resize-none"></textarea>
               </div>
 
@@ -427,34 +452,19 @@
   <section class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
       <div class="max-w-4xl">
+        @if(!empty($p_guide_eyebrow))
         <p class="text-[12.5px] font-semibold text-[#0f808a] tracking-wide mb-2">
-          Dukungan Pengadaan Enterprise
+          {{ $p_guide_eyebrow }}
         </p>
+        @endif
+        @if(!empty($p_guide_title))
         <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.15] mb-6">
-          Layanan Konsultasi &amp; Pengadaan Korporasi FDS
+          {{ $p_guide_title }}
         </h2>
+        @endif
 
         <div class="fds-drone-guide">
-          <p class="lead">
-            PT Karya Solusi Angkasa (Full Drone Solutions) melayani konsultasi teknis, penjadwalan demo terbang di workshop Sleman maupun lokasi proyek, hingga pendampingan dokumen pengadaan armada UAV untuk instansi pemerintah, BUMN, sektor perkebunan, dan perusahaan swasta nasional. Seluruh lini drone agrikultur seri FERTO telah mengantongi sertifikat TKDN + BMP hingga 60,74%, model FERTO 15 &amp; FERTO 22 memenuhi standar nasional SNI 9199:2023, dan fasilitas manufaktur kami menerapkan manajemen mutu ISO 9001:2015 untuk pengadaan e-Katalog maupun kontrak korporasi.
-          </p>
-
-          <h3>Portofolio Solusi yang Dapat Dikonsultasikan</h3>
-          <ul>
-            <li>
-              <a href="{!! esc_url(home_url('/kategori-drone/agrikultur/')) !!}">Drone Agrikultur Seri FERTO</a> — Pilihan drone sprayer dan spreader berkapasitas 5 hingga 50 liter untuk pemeliharaan tanaman pangan, hortikultura, dan perkebunan kelapa sawit skala komersial.
-            </li>
-            <li>
-              <a href="{!! esc_url(home_url('/kategori-drone/pemetaan-gis/')) !!}">Drone Pemetaan &amp; Survei GIS</a> — Platform Hybrid VTOL jarak jauh serta multirotor modular untuk pemetaan topografi, inspeksi jaringan listrik 150 kV, dan survei aset energi.
-            </li>
-            <li>
-              <a href="{!! esc_url(home_url('/kategori-drone/kargo/')) !!}">Drone Kargo &amp; Logistik DELFRO</a> — Wahana angkut otonom berdaya angkat 10 kg untuk distribusi logistik di medan perbukitan maupun wilayah kepulauan.
-            </li>
-          </ul>
-
-          <p>
-            Sebelum mengajukan permintaan penawaran harga resmi melalui formulir di atas, Anda juga dapat menggunakan alat <a href="{!! esc_url(home_url('/bandingkan/')) !!}">Perbandingan Spesifikasi Drone</a> untuk mengevaluasi kapasitas muatan dan daya jelajah tiap model, atau membaca profil fasilitas riset kami di halaman <a href="{!! esc_url(home_url('/tentang-kami/')) !!}">Tentang PT Karya Solusi Angkasa</a>.
-          </p>
+          {!! wp_kses_post($p_guide_body) !!}
         </div>
       </div>
     </div>
@@ -507,7 +517,7 @@ function fdsSubmitInquiry(e) {
   var srvSlug   = sel ? sel.value : 'kontak-inquiry';
   var srvLabel  = (sel && sel.selectedIndex >= 0 && sel.options[sel.selectedIndex])
     ? sel.options[sel.selectedIndex].text.trim()
-    : 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi';
+    : {!! wp_json_encode($p_opt_default) !!};
   if (lblInput) lblInput.value = srvLabel;
 
   var firstName = (form.querySelector('[name="first_name"]') || {}).value || '';
@@ -556,7 +566,7 @@ function fdsSubmitInquiry(e) {
 
   btn.disabled = true;
   btn.classList.add('opacity-70', 'cursor-not-allowed');
-  btnText.textContent = 'Mengirim Pesan...';
+  btnText.textContent = {!! wp_json_encode($p_form_loading) !!};
 
   fetch({!! wp_json_encode(admin_url('admin-ajax.php')) !!}, {
     method: 'POST',

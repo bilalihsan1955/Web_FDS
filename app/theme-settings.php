@@ -256,8 +256,24 @@ function fds_get_navbar_brand(bool $fresh = false) {
             }
             return $raw;
         })(),
-        // Mega Menu Produk Right Sidebar
+        // Top-level Navbar & Mobile Drawer Labels
+        'nav_home_label'          => get_option('fds_nav_home_label', 'Beranda') ?: 'Beranda',
+        'nav_produk_label'        => get_option('fds_nav_produk_label', 'Produk') ?: 'Produk',
+        'nav_layanan_label'       => get_option('fds_nav_layanan_label', 'Layanan') ?: 'Layanan',
+        'nav_about_label'         => get_option('fds_nav_about_label', 'Tentang Kami') ?: 'Tentang Kami',
+        'nav_blog_label'          => get_option('fds_nav_blog_label', 'Blog') ?: 'Blog',
+        'nav_kontak_label'        => get_option('fds_nav_kontak_label', 'Kontak') ?: 'Kontak',
+        'skip_to_content_label'   => get_option('fds_skip_to_content_label', 'Lewati ke konten utama') ?: 'Lewati ke konten utama',
+        'mobile_prod_title'       => get_option('fds_mobile_prod_title', 'Produk Drone') ?: 'Produk Drone',
+        'mobile_prod_all_label'   => get_option('fds_mobile_prod_all_label', 'Semua Produk Drone') ?: 'Semua Produk Drone',
+        'mobile_prod_compare_lbl' => get_option('fds_mobile_prod_compare_lbl', 'Bandingkan Semua Model') ?: 'Bandingkan Semua Model',
+        'mobile_layanan_title'    => get_option('fds_mobile_layanan_title', 'Layanan') ?: 'Layanan',
+        // Mega Menu Produk UI & Right Sidebar
         'menu_prod_heading'       => get_option('fds_menu_prod_heading', 'Ekosistem & Standar Mutu'),
+        'menu_prod_all_label'     => get_option('fds_menu_prod_all_label', 'Lihat Semua Produk UAV') ?: 'Lihat Semua Produk UAV',
+        'menu_prod_ferto_suffix'  => get_option('fds_menu_prod_ferto_suffix', '(Seri FERTO)') ?: '(Seri FERTO)',
+        'menu_prod_more_prefix'   => get_option('fds_menu_prod_more_prefix', '+ Lihat {count} lainnya') ?: '+ Lihat {count} lainnya',
+        'menu_prod_empty_label'   => get_option('fds_menu_prod_empty_label', 'Belum ada drone pada kategori ini.') ?: 'Belum ada drone pada kategori ini.',
         'menu_prod_item1_title'   => get_option('fds_menu_prod_item1_title', 'FDS Station GCS'),
         'menu_prod_item1_desc'    => get_option('fds_menu_prod_item1_desc', 'Software Ground Control Bahasa Indonesia'),
         'menu_prod_item2_title'   => get_option('fds_menu_prod_item2_title', 'TKDN + BMP 60,74%'),
@@ -499,10 +515,26 @@ function render_navbar_settings_admin_page() {
         $title_separator   = sanitize_text_field(wp_unslash((string) ($_POST['fds_tab_title_separator'] ?? '–')));
         $custom_keywords   = sanitize_textarea_field(wp_unslash((string) ($_POST['fds_custom_keywords'] ?? '')));
 
-        // CTA & Mega Menu Fields
+        // CTA & Mega Menu & Navbar Labels Fields
+        $nav_home_label          = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_home_label'] ?? 'Beranda')));
+        $nav_produk_label        = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_produk_label'] ?? 'Produk')));
+        $nav_layanan_label       = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_layanan_label'] ?? 'Layanan')));
+        $nav_about_label         = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_about_label'] ?? 'Tentang Kami')));
+        $nav_blog_label          = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_blog_label'] ?? 'Blog')));
+        $nav_kontak_label        = sanitize_text_field(wp_unslash((string) ($_POST['fds_nav_kontak_label'] ?? 'Kontak')));
+        $skip_to_content_label   = sanitize_text_field(wp_unslash((string) ($_POST['fds_skip_to_content_label'] ?? 'Lewati ke konten utama')));
+        $mobile_prod_title       = sanitize_text_field(wp_unslash((string) ($_POST['fds_mobile_prod_title'] ?? 'Produk Drone')));
+        $mobile_prod_all_label   = sanitize_text_field(wp_unslash((string) ($_POST['fds_mobile_prod_all_label'] ?? 'Semua Produk Drone')));
+        $mobile_prod_compare_lbl = sanitize_text_field(wp_unslash((string) ($_POST['fds_mobile_prod_compare_lbl'] ?? 'Bandingkan Semua Model')));
+        $mobile_layanan_title    = sanitize_text_field(wp_unslash((string) ($_POST['fds_mobile_layanan_title'] ?? 'Layanan')));
+
         $navbar_cta_text        = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_text'] ?? 'Konsultasi Drone')));
         $navbar_cta_url         = sanitize_text_field(wp_unslash((string) ($_POST['fds_navbar_cta_url'] ?? home_url('/kontak/#hubungi-form'))));
         $menu_prod_heading      = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')));
+        $menu_prod_all_label    = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_all_label'] ?? 'Lihat Semua Produk UAV')));
+        $menu_prod_ferto_suffix = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_ferto_suffix'] ?? '(Seri FERTO)')));
+        $menu_prod_more_prefix  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_more_prefix'] ?? '+ Lihat {count} lainnya')));
+        $menu_prod_empty_label  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_empty_label'] ?? 'Belum ada drone pada kategori ini.')));
         $menu_prod_item1_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_title'] ?? 'FDS Station GCS')));
         $menu_prod_item1_desc   = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')));
         $menu_prod_item2_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item2_title'] ?? 'TKDN + BMP 60,74%')));
@@ -536,9 +568,25 @@ function render_navbar_settings_admin_page() {
         update_option('fds_tab_title_separator', $title_separator);
         update_option('fds_custom_keywords', $custom_keywords);
 
+        update_option('fds_nav_home_label', $nav_home_label);
+        update_option('fds_nav_produk_label', $nav_produk_label);
+        update_option('fds_nav_layanan_label', $nav_layanan_label);
+        update_option('fds_nav_about_label', $nav_about_label);
+        update_option('fds_nav_blog_label', $nav_blog_label);
+        update_option('fds_nav_kontak_label', $nav_kontak_label);
+        update_option('fds_skip_to_content_label', $skip_to_content_label);
+        update_option('fds_mobile_prod_title', $mobile_prod_title);
+        update_option('fds_mobile_prod_all_label', $mobile_prod_all_label);
+        update_option('fds_mobile_prod_compare_lbl', $mobile_prod_compare_lbl);
+        update_option('fds_mobile_layanan_title', $mobile_layanan_title);
+
         update_option('fds_navbar_cta_text', $navbar_cta_text);
         update_option('fds_navbar_cta_url', $navbar_cta_url);
         update_option('fds_menu_prod_heading', $menu_prod_heading);
+        update_option('fds_menu_prod_all_label', $menu_prod_all_label);
+        update_option('fds_menu_prod_ferto_suffix', $menu_prod_ferto_suffix);
+        update_option('fds_menu_prod_more_prefix', $menu_prod_more_prefix);
+        update_option('fds_menu_prod_empty_label', $menu_prod_empty_label);
         update_option('fds_menu_prod_item1_title', $menu_prod_item1_title);
         update_option('fds_menu_prod_item1_desc', $menu_prod_item1_desc);
         update_option('fds_menu_prod_item2_title', $menu_prod_item2_title);
@@ -563,6 +611,9 @@ function render_navbar_settings_admin_page() {
         delete_transient('fds_mega_menu_data_v3');
         delete_transient('fds_bandingkan_catalog_cache_v2');
         delete_transient('fds_bandingkan_catalog_cache_v3');
+        delete_transient('fds_bandingkan_catalog_cache_v4');
+        delete_transient('fds_llms_txt_cache_v5');
+        delete_transient('fds_llms_full_txt_cache_v5');
 
         // Logo-Logo Footer (Dinamis)
         $footer_logo_height = intval($_POST['fds_footer_logo_height'] ?? 28);
@@ -609,6 +660,9 @@ function render_navbar_settings_admin_page() {
 
         if (function_exists(__NAMESPACE__ . '\\fds_flush_layanan_cache')) {
             fds_flush_layanan_cache();
+        }
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+            fds_purge_ai_and_seo_caches(false);
         }
 
         $message = 'Pengaturan Logo, Navbar, Icon Tab, Kata Kunci SEO, Mega Menu &amp; Logo Footer berhasil disimpan!';
@@ -679,11 +733,12 @@ function render_navbar_settings_admin_page() {
 
                         <!-- Dummy Navigation Elements -->
                         <div style="display: flex; align-items: center; gap: 20px; color: #64748b; font-size: 13px; font-weight: 500;">
-                            <span style="color: #0f808a; font-weight: 600;">Beranda</span>
-                            <span>Produk</span>
-                            <span>Layanan</span>
-                            <span>Tentang Kami</span>
-                            <span>Blog</span>
+                            <span style="color: #0f808a; font-weight: 600;"><?php echo esc_html($brand_data['nav_home_label']); ?></span>
+                            <span><?php echo esc_html($brand_data['nav_produk_label']); ?></span>
+                            <span><?php echo esc_html($brand_data['nav_layanan_label']); ?></span>
+                            <span><?php echo esc_html($brand_data['nav_about_label']); ?></span>
+                            <span><?php echo esc_html($brand_data['nav_blog_label']); ?></span>
+                            <span><?php echo esc_html($brand_data['nav_kontak_label']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -1115,6 +1170,66 @@ function render_navbar_settings_admin_page() {
 
                 <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
 
+                <!-- 7b. LABEL MENU NAVIGASI UTAMA & DRAWER MOBILE -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px 26px;">
+                    <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
+                        <span class="dashicons dashicons-list-view" style="color: #0f808a;"></span> Label Menu Navigasi Utama &amp; Mobile Drawer
+                    </h2>
+                    <p style="margin: 0 0 18px; color: #64748b; font-size: 13px;">Kustomisasi teks tautan menu di Navbar Desktop, Mobile Drawer, dan aksesibilitas.</p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Beranda</label>
+                            <input type="text" name="fds_nav_home_label" value="<?php echo esc_attr($brand_data['nav_home_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Produk</label>
+                            <input type="text" name="fds_nav_produk_label" value="<?php echo esc_attr($brand_data['nav_produk_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Layanan</label>
+                            <input type="text" name="fds_nav_layanan_label" value="<?php echo esc_attr($brand_data['nav_layanan_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Tentang Kami</label>
+                            <input type="text" name="fds_nav_about_label" value="<?php echo esc_attr($brand_data['nav_about_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Blog</label>
+                            <input type="text" name="fds_nav_blog_label" value="<?php echo esc_attr($brand_data['nav_blog_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Menu: Kontak</label>
+                            <input type="text" name="fds_nav_kontak_label" value="<?php echo esc_attr($brand_data['nav_kontak_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Mobile: Judul Dropdown Produk</label>
+                            <input type="text" name="fds_mobile_prod_title" value="<?php echo esc_attr($brand_data['mobile_prod_title']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Mobile: Semua Produk Drone</label>
+                            <input type="text" name="fds_mobile_prod_all_label" value="<?php echo esc_attr($brand_data['mobile_prod_all_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Mobile: Bandingkan Model</label>
+                            <input type="text" name="fds_mobile_prod_compare_lbl" value="<?php echo esc_attr($brand_data['mobile_prod_compare_lbl']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Mobile: Judul Dropdown Layanan</label>
+                            <input type="text" name="fds_mobile_layanan_title" value="<?php echo esc_attr($brand_data['mobile_layanan_title']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Skip Link (Aksesibilitas)</label>
+                            <input type="text" name="fds_skip_to_content_label" value="<?php echo esc_attr($brand_data['skip_to_content_label']); ?>" style="width: 100%; font-size: 13px; padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #f1f5f9; margin: 0;">
+
                 <!-- 8. TOMBOL CTA NAVBAR UTAMA -->
                 <div>
                     <h2 style="margin: 0 0 4px; font-size: 16px; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 8px;">
@@ -1194,6 +1309,26 @@ function render_navbar_settings_admin_page() {
                                     <div>
                                         <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">URL Link Bandingkan</label>
                                         <input type="text" name="fds_menu_prod_compare_url" value="<?php echo esc_attr($brand_data['menu_prod_compare_url']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 6px; border-top: 1px dashed #e2e8f0;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Link Semua Produk</label>
+                                        <input type="text" name="fds_menu_prod_all_label" value="<?php echo esc_attr($brand_data['menu_prod_all_label']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Akhiran Kategori Agrikultur</label>
+                                        <input type="text" name="fds_menu_prod_ferto_suffix" value="<?php echo esc_attr($brand_data['menu_prod_ferto_suffix']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Lainnya ({count})</label>
+                                        <input type="text" name="fds_menu_prod_more_prefix" value="<?php echo esc_attr($brand_data['menu_prod_more_prefix']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Kategori Kosong</label>
+                                        <input type="text" name="fds_menu_prod_empty_label" value="<?php echo esc_attr($brand_data['menu_prod_empty_label']); ?>" style="width: 100%; font-size: 12px;">
                                     </div>
                                 </div>
                             </div>

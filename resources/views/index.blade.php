@@ -19,6 +19,7 @@
   $paged = max(1, get_query_var('paged'), get_query_var('page'));
   $current_cat_id = is_category() ? get_queried_object_id() : 0;
   $blog_url = get_permalink(get_option('page_for_posts')) ?: home_url('/blog/');
+  $nr = function_exists('App\fds_get_newsroom_ui_content') ? \App\fds_get_newsroom_ui_content() : [];
 @endphp
 
 {{-- ========================================================== --}}
@@ -82,13 +83,13 @@
       <div class="max-w-[680px]">
         <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">
           @if(is_category())
-            Kategori Artikel
+            {{ $nr['blog_hero_cat_badge'] ?? 'Kategori Artikel' }}
           @elseif(is_tax('kategori_drone'))
-            Kategori Drone
+            {{ $nr['blog_hero_drone_cat_badge'] ?? 'Kategori Drone' }}
           @elseif(is_tag())
-            Tag Artikel
+            {{ $nr['blog_hero_tag_badge'] ?? 'Tag Artikel' }}
           @else
-            Newsroom
+            {{ $nr['blog_hero_badge'] ?? 'Newsroom' }}
           @endif
         </p>
         <h1 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.08] mb-3 fds-hero-entrance fds-hero-delay-2">
@@ -97,9 +98,9 @@
           @elseif(is_tax('kategori_drone'))
             {{ $fds_blog_clean(single_term_title('', false)) }}
           @elseif(is_tag())
-            Tag: {{ $fds_blog_clean(single_tag_title('', false)) }}
+            {{ $nr['blog_hero_tag_prefix'] ?? 'Tag:' }} {{ $fds_blog_clean(single_tag_title('', false)) }}
           @else
-            Berita &amp; Artikel Terkini.
+            {{ $nr['blog_hero_title'] ?? 'Berita & Artikel Terkini.' }}
           @endif
         </h1>
         <p class="text-[15px] sm:text-[17px] text-white/85 max-w-[580px] leading-relaxed fds-hero-entrance fds-hero-delay-3">
@@ -108,7 +109,7 @@
           @elseif(is_tax('kategori_drone') && term_description())
             {!! term_description() !!}
           @else
-            Perkembangan produk drone, studi kasus operasional lapangan, dan wawasan teknologi industri dari tim FDS.
+            {{ $nr['blog_hero_desc'] ?? 'Perkembangan produk drone, studi kasus operasional lapangan, dan wawasan teknologi industri dari tim FDS.' }}
           @endif
         </p>
       </div>
@@ -122,11 +123,11 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
               </svg>
             </div>
-            <input type="text" name="s" value="{{ $fds_blog_clean(get_search_query(false)) }}" placeholder="Cari drone, artikel, topik..." required autocomplete="off"
+            <input type="text" name="s" value="{{ $fds_blog_clean(get_search_query(false)) }}" placeholder="{{ $nr['blog_search_ph'] ?? 'Cari drone, artikel, topik...' }}" required autocomplete="off"
                    class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
             <button type="submit"
                     class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
-              Cari
+              {{ $nr['blog_search_btn'] ?? 'Cari' }}
             </button>
           </div>
         </form>
@@ -138,7 +139,7 @@
       <a href="{!! esc_url($blog_url) !!}"
          class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        <span>Lihat semua berita</span>
+        <span>{{ $nr['blog_back_all'] ?? 'Lihat semua berita' }}</span>
       </a>
     </div>
     @endif
@@ -158,7 +159,7 @@
         while (have_posts()) {
           the_post();
           $cats = get_the_category(get_the_ID());
-          $cat_label = !empty($cats) ? $fds_blog_clean($cats[0]->name) : 'Berita';
+          $cat_label = !empty($cats) ? $fds_blog_clean($cats[0]->name) : ($nr['blog_default_cat'] ?? 'Berita');
           $thumb_id  = get_post_thumbnail_id(get_the_ID());
           $thumb_alt = $thumb_id ? trim($fds_blog_clean((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true))) : '';
           $clean_post_title = $fds_blog_clean(get_the_title());
@@ -185,12 +186,12 @@
         <svg class="w-14 h-14 sm:w-16 sm:h-16 text-[#94a3b8] mx-auto mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
-        <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">Belum ada artikel</h2>
-        <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.</p>
+        <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">{{ $nr['blog_empty_title'] ?? 'Belum ada artikel' }}</h2>
+        <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">{{ $nr['blog_empty_desc'] ?? 'Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.' }}</p>
         @if(is_category() || is_tag())
           <a href="{!! esc_url($blog_url) !!}"
              class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5.5 py-2.5 rounded-full transition-colors shadow-sm leading-none group">
-            <span class="leading-none">Lihat Semua Topik</span>
+            <span class="leading-none">{{ $nr['blog_empty_cta'] ?? 'Lihat Semua Topik' }}</span>
             <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
@@ -223,7 +224,7 @@
             <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
               <div>
                 <div class="flex items-center gap-2 text-[12px] mb-3">
-                  <span class="bg-[#0f808a] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">Terbaru</span>
+                  <span class="bg-[#0f808a] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">{{ $nr['blog_featured_badge'] ?? 'Terbaru' }}</span>
                   <span class="font-semibold text-[#0f808a] ml-1">{{ $featured['cat'] }}</span>
                   <span class="text-[#cbd5e1]">&bull;</span>
                   <span class="text-[#86868b]">{{ $featured['date'] }}</span>
@@ -238,7 +239,7 @@
 
               <div>
                 <span class="fds-card-cta-cue inline-flex items-center gap-2 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
-                  <span class="leading-none">Baca artikel lengkap</span>
+                  <span class="leading-none">{{ $nr['blog_featured_cta'] ?? 'Baca artikel lengkap' }}</span>
                   <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
                     <path d="M6 18 18 6"/>
@@ -286,7 +287,7 @@
 
               <div class="px-6 sm:px-7 pb-6 pt-0">
                 <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
-                  <span class="leading-none">Baca selengkapnya</span>
+                  <span class="leading-none">{{ $nr['blog_card_cta'] ?? 'Baca selengkapnya' }}</span>
                   <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>
                     <path d="M6 18 18 6"/>

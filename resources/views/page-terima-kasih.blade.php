@@ -93,23 +93,23 @@
     {{-- Ringkasan Non-PII dari SessionStorage (hanya tampil jika tersedia) --}}
     <div id="fds-ty-summary-card" class="hidden bg-white rounded-3xl p-7 sm:p-9 border border-black/[0.08]">
       <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-[-0.02em] mb-5">
-        Ringkasan Pengajuan Proyek
+        {{ $ui['ty_summary_heading'] ?? 'Ringkasan Pengajuan Proyek' }}
       </h2>
       <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-[14.5px]">
         <div>
-          <dt class="text-[#6e6e73]">Fokus Layanan / Sektor</dt>
+          <dt class="text-[#6e6e73]">{{ $ui['ty_lbl_service'] ?? 'Fokus Layanan / Sektor' }}</dt>
           <dd id="fds-ty-sum-service" class="font-semibold text-[#1d1d1f] mt-0.5">-</dd>
         </div>
         <div>
-          <dt class="text-[#6e6e73]">Perusahaan / Instansi</dt>
+          <dt class="text-[#6e6e73]">{{ $ui['ty_lbl_company'] ?? 'Perusahaan / Instansi' }}</dt>
           <dd id="fds-ty-sum-company" class="font-semibold text-[#1d1d1f] mt-0.5">-</dd>
         </div>
         <div id="fds-ty-sum-location-wrap">
-          <dt class="text-[#6e6e73]">Lokasi Proyek</dt>
+          <dt class="text-[#6e6e73]">{{ $ui['ty_lbl_location'] ?? 'Lokasi Proyek' }}</dt>
           <dd id="fds-ty-sum-location" class="font-semibold text-[#1d1d1f] mt-0.5">-</dd>
         </div>
         <div id="fds-ty-sum-area-wrap">
-          <dt class="text-[#6e6e73]">Perkiraan Luas / Target Jadwal</dt>
+          <dt class="text-[#6e6e73]">{{ $ui['ty_lbl_area'] ?? 'Perkiraan Luas / Target Jadwal' }}</dt>
           <dd id="fds-ty-sum-area" class="font-semibold text-[#1d1d1f] mt-0.5">-</dd>
         </div>
       </dl>
@@ -117,12 +117,15 @@
 
     {{-- 3 Tahap Tindak Lanjut Tanpa Klaim SLA Fiktif --}}
     <div class="bg-white rounded-3xl p-7 sm:p-9 border border-black/[0.08]">
+      @php
+        $ty_step_prefix = trim((string) ($ui['ty_step_prefix'] ?? 'Tahap')) ?: 'Tahap';
+      @endphp
       <h2 class="text-[22px] sm:text-[26px] font-semibold text-[#1d1d1f] tracking-[-0.02em] mb-6">
         {{ $ui['ty_steps_heading'] ?? 'Tahapan Peninjauan Berikutnya oleh Tim FDS' }}
       </h2>
       <ol class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <li class="pt-4 border-t border-black/[0.08]">
-          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">Tahap 01</p>
+          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">{{ $ty_step_prefix }} 01</p>
           @php
             $ty_step1_title = (string) ($ui['ty_step1_title'] ?? 'Verifikasi Data & Lokasi Proyek');
             if (stripos($ty_step1_title, 'Batas AOI') !== false) {
@@ -135,14 +138,14 @@
           </p>
         </li>
         <li class="pt-4 border-t border-black/[0.08]">
-          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">Tahap 02</p>
+          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">{{ $ty_step_prefix }} 02</p>
           <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">{{ $ui['ty_step2_title'] ?? 'Evaluasi Metode & Kesiapan Lapangan' }}</h3>
           <p class="text-[14.5px] text-[#515154] leading-relaxed">
             {{ $ui['ty_step2_desc'] ?? 'Tim geospasial mengevaluasi karakteristik tutupan lahan, pilihan metode akuisisi (fotogrametri, LiDAR, atau multispectral), kebutuhan titik kontrol, dan izin ruang udara.' }}
           </p>
         </li>
         <li class="pt-4 border-t border-black/[0.08]">
-          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">Tahap 03</p>
+          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">{{ $ty_step_prefix }} 03</p>
           <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">{{ $ui['ty_step3_title'] ?? 'Koordinasi Diskusi Teknis & Proposal' }}</h3>
           <p class="text-[14.5px] text-[#515154] leading-relaxed">
             {{ $ui['ty_step3_desc'] ?? 'Tim enterprise akan menghubungi email atau WhatsApp bisnis Anda untuk klarifikasi ruang lingkup akhir sebelum penerbitan dokumen proposal resmi.' }}
@@ -157,8 +160,14 @@
         <h2 class="text-[20px] sm:text-[22px] font-semibold text-[#1d1d1f] mb-2">
           {{ $ui['ty_extra_heading'] ?? 'Perlu Mengirimkan Dokumen Tambahan atau Koordinasi Mendesak?' }}
         </h2>
+        @php
+          $ty_extra_tpl = $clean_ty($ui['ty_extra_desc'] ?? 'Anda dapat langsung melampirkan dokumen KAK, poligon lokasi (.SHP/.GeoJSON), atau spesifikasi teknis tambahan melalui email {email} atau terhubung ke tim kami melalui WhatsApp ({phone}).');
+          $ty_extra_safe = e($ty_extra_tpl);
+          $ty_email_html = '<a href="mailto:' . esc_attr($c_email) . '" class="font-semibold text-[#0a555c] hover:underline">' . e($c_email) . '</a>';
+          $ty_extra_html = str_replace(['{email}', '{phone}'], [$ty_email_html, e($c_phone)], $ty_extra_safe);
+        @endphp
         <p class="text-[14.5px] text-[#515154] leading-relaxed">
-          Anda dapat langsung melampirkan dokumen KAK, poligon lokasi (.SHP/.GeoJSON), atau spesifikasi teknis tambahan melalui email <a href="mailto:{{ $c_email }}" class="font-semibold text-[#0a555c] hover:underline">{{ $c_email }}</a> atau terhubung ke tim kami melalui WhatsApp ({{ $c_phone }}).
+          {!! $ty_extra_html !!}
         </p>
       </div>
       <div class="flex flex-wrap items-center gap-3 flex-shrink-0">

@@ -85,6 +85,7 @@ Every agent working on this repository **MUST** strictly obey these **17 rules**
 - **Certification Scope:**
   - **TKDN + BMP 60,74%** applies **ONLY** to the **FERTO** series (`5, 10, 15, 22, 30, 50`). Never claim TKDN on `DELTAV`, `DELFRO`, or `MULTIPURPOSE` unless officially confirmed.
   - **SNI 9199:2023** applies **ONLY** to **FERTO 15** and **FERTO 22**.
+  - **ISO 9001:2015** is a **company / manufacturing Quality Management System (Sistem Manajemen Mutu)** certification held by **PT Karya Solusi Angkasa**, **NOT** an individual drone unit certification. Never list `ISO 9001:2015` inside per-unit drone specs, catalog `Status Sertifikasi` rows, `/llms.txt` per-drone summaries, or unit cards (use it only in corporate, workshop, manufacturer capability, About, Bento, or company QMS contexts).
   - **FERTO 15** displays tank capacity **`17 Liter`** (`15 – 17 Liter`).
   - **9 Active Models / 3 Categories:** `Agrikultur` (`FERTO 5, 10, 15, 22, 30, 50`), `Pemetaan & GIS` (`DELTAV`, `MULTIPURPOSE`), and `Kargo` (`DELFRO`). `rebo` and `agrea` remain excluded/redirected.
 - **Missing Data Policy:** Never display literal `[ISI: ...]` or `[KONFIRMASI: ...]` strings on public HTML. Record missing internal operational specs in `placeholders` arrays for WP Admin notes only.

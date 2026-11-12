@@ -142,7 +142,7 @@ if (!function_exists('fds_scrub_legacy_text')) {
     /**
      * Sanitasi defensif output SSR dari klaim lama yang tidak terverifikasi.
      */
-    function fds_scrub_legacy_text($text, bool $allowTkdn = true, bool $allowSni = true) {
+    function fds_scrub_legacy_text($text, bool $allowTkdn = true, bool $allowSni = true, bool $allowIso = true) {
         if (!is_string($text) || $text === '') {
             return $text;
         }
@@ -151,17 +151,24 @@ if (!function_exists('fds_scrub_legacy_text')) {
         $text = preg_replace('/\bBest\s+UAV\b/i', 'UAV Industri', $text);
         $text = preg_replace('/\bsejak\s*(?:tahun\s*)?2012\b/i', 'dengan rekayasa lokal Indonesia', $text);
         $text = preg_replace('/\b(?:kamera\s+termal\s+(?:inframerah\s+)?FLIR|FLIR)\b/i', 'kamera termal inframerah', $text);
-        $text = preg_replace('/\s*[|·,;\/-]?\s*\b(?:Tahan\s+(?:Air|Debu)(?:\s*(?:&|dan)\s*Debu)?\s*)?IP\s?(?:54|67|68)\b(?:\s*[^\n|]*)?/i', '', $text);
+        $text = preg_replace('/\s*[|·,;\/-]?\s*\b(?:Tahan\s+(?:Air|Debu)(?:\s*(?:&|dan)\s*Debu)?\s*)?IP\s?(?:54|67|68)\b(?:\s*[^\n|]*)?/i', ' ', $text);
+        $text = preg_replace('/\s*\(\s*Tanpa\s+klaim[^)]*\)/i', '', $text);
+        $text = preg_replace('/\bTanpa\s+klaim\s+TKDN(?:\s*\/\s*SNI)?\b/i', '', $text);
         $text = str_ireplace(['/#produk', '/#kontak'], ['/produk/', '/kontak/#hubungi-form'], $text);
 
         if (!$allowSni) {
             $text = preg_replace('/\s*[|·,;\/&]?\s*\bSNI\s*9199:2023\b\s*/i', ' ', $text);
         }
         if (!$allowTkdn) {
-            $text = preg_replace('/\s*[|·,;\/&]?\s*\b(?:sertifikat\s+|bersertifikat\s+)?TKDN(?:\s*\+\s*BMP)?(?:\s*60[,.]74%)?\b\s*/i', ' ', $text);
+            $text = preg_replace('/\s*[|·,;\/&]?\s*\b(?:sertifikat\s+|bersertifikat\s+)?TKDN(?:\s*\+\s*BMP)?(?:\s*(?:sebesar\s*)?60[,.]74%)?(?=\s|$|[|·,;\/).])\s*/i', ' ', $text);
+        }
+        if (!$allowIso) {
+            $text = preg_replace('/\s*[|·,;\/&]?\s*\bISO\s*9001(?::\d+)?\b\s*/i', ' ', (string) $text);
         }
 
-        $text = preg_replace('/^[|\s·\/,;]+|[|\s·\/,;]+$/u', '', $text);
+        $text = preg_replace('/\s*([|·])\s*(?:[|·]\s*)+/u', ' $1 ', (string) $text);
+        $text = preg_replace('/([a-zA-Z0-9])([|·])(?=\s)/u', '$1 $2', (string) $text);
+        $text = preg_replace('/^[|\s·\/,;]+|[|\s·\/,;]+$/u', '', (string) $text);
         $text = preg_replace('/\s{2,}/', ' ', (string) $text);
 
         return trim((string) $text);

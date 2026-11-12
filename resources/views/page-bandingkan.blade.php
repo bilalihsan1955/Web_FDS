@@ -2,232 +2,132 @@
 
 @section('content')
 @php
-  // 1. DATA MASTER DRONE RESMI FDS (Single Source of Truth)
-  $raw_catalog = function_exists('fds_get_default_drone_catalog') ? fds_get_default_drone_catalog() : \App\fds_get_default_drone_catalog();
-  $drones = [];
-  foreach ($raw_catalog as $s => $item) {
-    if (in_array($s, ['ferto-5', 'ferto-10', 'ferto-15', 'ferto-22', 'ferto-30', 'ferto-50'], true)) continue;
-    if (stripos((string) $s, 'rebo') !== false || stripos((string) $s, 'agrea') !== false) continue;
-    $item['slug'] = $s;
-    $item['cat_slug'] = sanitize_title($item['kategori'] ?? 'agrikultur');
-    $drones[$s] = $item;
-  }
+  $bk = function_exists('\App\fds_get_bandingkan_content')
+      ? \App\fds_get_bandingkan_content()
+      : [];
 
-  // 2. ENRICH WITH WORDPRESS CPT 'drone' DATABASE (CACHED VIA TRANSIENT)
-  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v3');
+  $href_bk = static function ($u): string {
+      return function_exists('\App\fds_produk_normalize_href')
+          ? \App\fds_produk_normalize_href((string) $u)
+          : home_url((string) $u);
+  };
+
+  // 1. CANONICAL CATALOG 1:1 DARI WORDPRESS CPT 'drone' VIA SINGLE SOURCE OF TRUTH (\App\fds_get_drone_detail_data)
+  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v4');
   $cache_is_stale = false;
   if ($cached_catalog !== false && is_array($cached_catalog)) {
     $cache_blob = serialize($cached_catalog);
     if (
       strpos($cache_blob, 'FDS STATION') !== false ||
       stripos($cache_blob, 'FLIR') !== false ||
-      stripos($cache_blob, 'sejak 2012') !== false
+      stripos($cache_blob, 'sejak 2012') !== false ||
+      stripos($cache_blob, 'Tanpa klaim') !== false
     ) {
       $cache_is_stale = true;
     }
   }
-  if ($cached_catalog !== false && is_array($cached_catalog) && !$cache_is_stale) {
+
+  if ($cached_catalog !== false && is_array($cached_catalog) && !$cache_is_stale && !empty($cached_catalog)) {
     $catalog = function_exists('fds_deep_decode') ? fds_deep_decode($cached_catalog) : $cached_catalog;
   } else {
     $db_drones = get_posts([
       'post_type'      => 'drone',
       'posts_per_page' => -1,
       'post_status'    => 'publish',
-      'orderby'        => 'ID',
+      'orderby'        => 'menu_order title',
       'order'          => 'ASC',
     ]);
 
-    $catalog = $drones;
+    if (function_exists('fds_sort_drone_posts') && !empty($db_drones)) {
+      $db_drones = fds_sort_drone_posts($db_drones);
+    }
+
+    $catalog = [];
 
     foreach ($db_drones as $dp) {
-    $slug    = $dp->post_name;
-    if (stripos((string) $slug, 'rebo') !== false || stripos((string) $slug, 'agrea') !== false) {
-      continue;
-    }
-    $post_id = $dp->ID;
+      $slug = strtolower((string) $dp->post_name);
+      if (
+        $slug === '' ||
+        strpos($slug, 'rebo') !== false ||
+        strpos($slug, 'agrea') !== false ||
+        strpos($slug, 'ferto-20') !== false
+      ) {
+        continue;
+      }
 
-    $c_terms = get_the_terms($post_id, 'kategori_drone');
-    if (!empty($c_terms) && !is_wp_error($c_terms)) {
-      $cat_name = $c_terms[0]->name;
-      $cat_slug = $c_terms[0]->slug;
-    } else {
-      $raw_cat = get_post_meta($post_id, 'drone_kategori', true);
-      $cat_name = $raw_cat ?: ($catalog[$slug]['kategori'] ?? 'Agrikultur');
-      $cat_slug = $catalog[$slug]['cat_slug'] ?? sanitize_title($cat_name);
-    }
-
-    if (stripos((string) $cat_slug, 'rebo') !== false) {
-      continue;
-    }
-
-    $thumb = get_the_post_thumbnail_url($post_id, 'full');
-    $specs_img_db = get_post_meta($post_id, 'drone_specs_img', true);
-
-    $droneImgKey = 'drone_' . str_replace('-', '_', str_replace('ferto-', '', $slug));
-    
-    // Real Transparent Drone Cutout Fallbacks (Local Theme Assets)
-    $cutoutBaseUri = get_template_directory_uri() . '/public/images/cutouts';
-    $cleanDroneCutouts = [
-      'ferto-5l'     => $cutoutBaseUri . '/ferto-5l.png',
-      'ferto-10l'    => $cutoutBaseUri . '/ferto-10l.png',
-      'ferto-15l'    => $cutoutBaseUri . '/ferto-15l.png',
-      'ferto-22l'    => $cutoutBaseUri . '/ferto-22l.png',
-      'ferto-30l'    => $cutoutBaseUri . '/ferto-30l.png',
-      'ferto-50l'    => $cutoutBaseUri . '/ferto-50l.png',
-      'deltav'       => $cutoutBaseUri . '/deltav.png',
-      'multipurpose' => $cutoutBaseUri . '/multipurpose.png',
-      'delfro'       => $cutoutBaseUri . '/delfro.png',
-    ];
-    $cleanDefault = $cleanDroneCutouts[$slug] ?? ($cutoutBaseUri . '/ferto-15l.png');
-
-    $has_meta = function($k) use ($post_id) {
-      return metadata_exists('post', $post_id, $k);
-    };
-
-    $item = $catalog[$slug] ?? [
-      'slug'      => $slug,
-      'name'      => get_the_title($post_id),
-      'kategori'  => $cat_name,
-      'cat_slug'  => $cat_slug,
-      'badge'     => get_post_meta($post_id, 'drone_badge', true),
-      'tagline'   => get_post_meta($post_id, 'drone_tagline', true) ?: get_the_excerpt($post_id),
-      'color'     => '#0f808a',
-      'specs'     => [],
-      'desc'      => get_post_meta($post_id, 'drone_desc', true) ?: get_the_content(null, false, $post_id),
-      'for'       => [],
-      'stat1_num' => get_post_meta($post_id, 'drone_stat1_num', true),
-      'stat1_lbl' => get_post_meta($post_id, 'drone_stat1_lbl', true),
-      'stat2_num' => get_post_meta($post_id, 'drone_stat2_num', true),
-      'stat2_lbl' => get_post_meta($post_id, 'drone_stat2_lbl', true),
-      'stat3_num' => get_post_meta($post_id, 'drone_stat3_num', true),
-      'stat3_lbl' => get_post_meta($post_id, 'drone_stat3_lbl', true),
-      'stat4_num' => get_post_meta($post_id, 'drone_stat4_num', true),
-      'stat4_lbl' => get_post_meta($post_id, 'drone_stat4_lbl', true),
-    ];
-
-    if ($has_meta('drone_stat1_num')) $item['stat1_num'] = get_post_meta($post_id, 'drone_stat1_num', true);
-    if ($has_meta('drone_stat1_lbl')) $item['stat1_lbl'] = get_post_meta($post_id, 'drone_stat1_lbl', true);
-    if ($has_meta('drone_stat2_num')) $item['stat2_num'] = get_post_meta($post_id, 'drone_stat2_num', true);
-    if ($has_meta('drone_stat2_lbl')) $item['stat2_lbl'] = get_post_meta($post_id, 'drone_stat2_lbl', true);
-    if ($has_meta('drone_stat3_num')) $item['stat3_num'] = get_post_meta($post_id, 'drone_stat3_num', true);
-    if ($has_meta('drone_stat3_lbl')) $item['stat3_lbl'] = get_post_meta($post_id, 'drone_stat3_lbl', true);
-    if ($has_meta('drone_stat4_num')) $item['stat4_num'] = get_post_meta($post_id, 'drone_stat4_num', true);
-    if ($has_meta('drone_stat4_lbl')) $item['stat4_lbl'] = get_post_meta($post_id, 'drone_stat4_lbl', true);
-
-    $item['name']      = get_the_title($post_id) ?: $item['name'];
-    $item['kategori']  = $cat_name;
-    $item['cat_slug']  = $cat_slug;
-    $item['url']       = get_permalink($post_id);
-    if (function_exists('\App\fds_get_drone_detail_data')) {
-      $canonical_detail = \App\fds_get_drone_detail_data($post_id);
-      $item['hero_img']  = !empty($canonical_detail['hero_url']) ? $canonical_detail['hero_url'] : ($thumb ?: $cleanDefault);
-      $item['specs_img'] = !empty($canonical_detail['specs_img']) ? $canonical_detail['specs_img'] : $cleanDefault;
-    } else {
-      $raw_hero_img  = $thumb ?: fds_img($droneImgKey, $cleanDefault);
-      $item['hero_img']  = (empty($raw_hero_img) || stripos((string) $raw_hero_img, 'unsplash.com') !== false || stripos((string) $raw_hero_img, 'DELFRO.png') !== false)
-        ? $cleanDefault
-        : $raw_hero_img;
-      $item['specs_img'] = (!empty($specs_img_db) && stripos((string) $specs_img_db, 'unsplash.com') === false && stripos((string) $specs_img_db, 'DELFRO.png') === false)
-        ? $specs_img_db
-        : $cleanDefault;
-    }
-
-    if ($has_meta('drone_badge'))   $item['badge']   = get_post_meta($post_id, 'drone_badge', true);
-    if ($has_meta('drone_tagline')) $item['tagline'] = get_post_meta($post_id, 'drone_tagline', true);
-    if ($has_meta('drone_desc'))    $item['desc']    = get_post_meta($post_id, 'drone_desc', true);
-
-    // Ambil Specs
-    $c_specs_raw = get_post_meta($post_id, 'drone_specs_raw', true);
-    if ($c_specs_raw) {
-      $parsed_specs = [];
-      $lines = explode("\n", $c_specs_raw);
-      foreach ($lines as $line) {
-        $line = trim($line);
-        if (empty($line)) continue;
-        $parts = explode(':', $line, 2);
-        if (count($parts) === 2) {
-          $parsed_specs[] = [trim($parts[0]), trim($parts[1])];
+      if (function_exists('\App\fds_get_drone_detail_data')) {
+        $detail = \App\fds_get_drone_detail_data((int) $dp->ID);
+        if (empty($detail)) {
+          continue;
         }
-      }
-      if (!empty($parsed_specs)) {
-        $item['specs'] = $parsed_specs;
-      }
-    }
-
-    if (empty($item['specs'])) {
-      $spec_fields = [
-        'Payload'                    => get_post_meta($post_id, 'drone_spec_kapasitas', true) ?: get_post_meta($post_id, 'drone_kapasitas', true),
-        'Durasi Terbang'             => get_post_meta($post_id, 'drone_spec_durasi', true),
-        'Sistem Daya (Baterai)'      => get_post_meta($post_id, 'drone_spec_baterai', true) ?: get_post_meta($post_id, 'drone_baterai', true),
-        'Produktivitas / Jangkauan'  => get_post_meta($post_id, 'drone_spec_produktivitas', true) ?: get_post_meta($post_id, 'drone_cakupan', true),
-        'Kecepatan Jelajah'          => get_post_meta($post_id, 'drone_spec_kecepatan', true),
-        'Ketahanan Lingkungan'       => get_post_meta($post_id, 'drone_spec_ketahanan', true),
-        'Sistem Otonomi & Navigasi'  => get_post_meta($post_id, 'drone_spec_otonomi', true),
-        'Ground Control Station'     => get_post_meta($post_id, 'drone_spec_gcs', true),
-        'Sertifikasi & Standar'      => get_post_meta($post_id, 'drone_spec_sertifikasi', true),
-      ];
-      $custom_specs = [];
-      foreach ($spec_fields as $lbl => $val) {
-        if ($val) $custom_specs[] = [$lbl, $val];
-      }
-      if (!empty($custom_specs)) {
-        $item['specs'] = $custom_specs;
-      }
-    }
-
-    $c_for = get_post_meta($post_id, 'drone_for', true);
-    if ($c_for) {
-      $parsed_for = array_filter(array_map('trim', explode("\n", $c_for)));
-      if (!empty($parsed_for)) {
-        $item['for'] = $parsed_for;
+        $cat_slug = (string) ($detail['cat_slug'] ?? sanitize_title((string) ($detail['kategori'] ?? 'agrikultur')));
+        if (strpos($cat_slug, 'rebo') !== false) {
+          continue;
+        }
+        $catalog[$slug] = [
+          'slug'      => (string) ($detail['slug'] ?? $slug),
+          'name'      => (string) ($detail['name'] ?? get_the_title($dp->ID)),
+          'kategori'  => (string) ($detail['kategori'] ?? 'Agrikultur'),
+          'cat_slug'  => $cat_slug,
+          'badge'     => (string) ($detail['badge'] ?? ''),
+          'tagline'   => (string) ($detail['tagline'] ?? ''),
+          'color'     => '#0f808a',
+          'specs'     => (array) ($detail['specs'] ?? []),
+          'desc'      => (string) ($detail['desc'] ?? ''),
+          'for'       => (array) ($detail['for'] ?? []),
+          'stat1_num' => (string) ($detail['stat1_num'] ?? ''),
+          'stat1_lbl' => (string) ($detail['stat1_lbl'] ?? ''),
+          'stat2_num' => (string) ($detail['stat2_num'] ?? ''),
+          'stat2_lbl' => (string) ($detail['stat2_lbl'] ?? ''),
+          'stat3_num' => (string) ($detail['stat3_num'] ?? ''),
+          'stat3_lbl' => (string) ($detail['stat3_lbl'] ?? ''),
+          'stat4_num' => (string) ($detail['stat4_num'] ?? ''),
+          'stat4_lbl' => (string) ($detail['stat4_lbl'] ?? ''),
+          'url'       => (string) ($detail['permalink'] ?? get_permalink($dp->ID)),
+          'hero_img'  => (string) ($detail['hero_url'] ?? ''),
+          'specs_img' => (string) ($detail['specs_img'] ?? ($detail['hero_url'] ?? '')),
+        ];
       }
     }
 
-    if (empty($item['for'])) {
-      $uc_list = [];
-      for ($i = 1; $i <= 4; $i++) {
-        $t = get_post_meta($post_id, "drone_uc{$i}_t", true);
-        $d = get_post_meta($post_id, "drone_uc{$i}_d", true);
-        if ($t) $uc_list[] = $d ? "$t — $d" : $t;
-      }
-      if (!empty($uc_list)) {
-        $item['for'] = $uc_list;
+    // Fallback aman hanya bila query CPT drone kosong
+    if (empty($catalog)) {
+      $raw_catalog = function_exists('fds_get_default_drone_catalog') ? fds_get_default_drone_catalog() : \App\fds_get_default_drone_catalog();
+      $cutoutBaseUri = get_template_directory_uri() . '/public/images/cutouts';
+      $photoBaseUri  = get_template_directory_uri() . '/public/images/drones';
+      foreach ($raw_catalog as $s => $item) {
+        if (in_array($s, ['ferto-5', 'ferto-10', 'ferto-15', 'ferto-22', 'ferto-30', 'ferto-50'], true)) continue;
+        if (stripos((string) $s, 'rebo') !== false || stripos((string) $s, 'agrea') !== false) continue;
+        $item['slug']      = $s;
+        $item['cat_slug']  = sanitize_title($item['kategori'] ?? 'agrikultur');
+        $item['url']       = home_url('/drone/' . $s . '/');
+        $item['hero_img']  = $photoBaseUri . '/' . $s . '.webp';
+        $item['specs_img'] = $cutoutBaseUri . '/' . $s . '.png';
+        $catalog[$s]       = $item;
       }
     }
 
-    $s1_n = get_post_meta($post_id, 'drone_stat1_num', true);
-    if ($s1_n) $item['stat1_num'] = $s1_n;
-    $s1_l = get_post_meta($post_id, 'drone_stat1_lbl', true);
-    if ($s1_l) $item['stat1_lbl'] = $s1_l;
-
-    $s2_n = get_post_meta($post_id, 'drone_stat2_num', true);
-    if ($s2_n) $item['stat2_num'] = $s2_n;
-    $s2_l = get_post_meta($post_id, 'drone_stat2_lbl', true);
-    if ($s2_l) $item['stat2_lbl'] = $s2_l;
-
-    $s3_n = get_post_meta($post_id, 'drone_stat3_num', true);
-    if ($s3_n) $item['stat3_num'] = $s3_n;
-    $s3_l = get_post_meta($post_id, 'drone_stat3_lbl', true);
-    if ($s3_l) $item['stat3_lbl'] = $s3_l;
-
-    $s4_n = get_post_meta($post_id, 'drone_stat4_num', true);
-    if ($s4_n) $item['stat4_num'] = $s4_n;
-    $s4_l = get_post_meta($post_id, 'drone_stat4_lbl', true);
-    if ($s4_l) $item['stat4_lbl'] = $s4_l;
-
-    $catalog[$slug] = $item;
+    if (function_exists('fds_deep_decode')) {
+      $catalog = fds_deep_decode($catalog);
+    }
+    set_transient('fds_bandingkan_catalog_cache_v4', $catalog, 12 * HOUR_IN_SECONDS);
   }
-  if (function_exists('fds_deep_decode')) {
-    $catalog = fds_deep_decode($catalog);
-  }
-  set_transient('fds_bandingkan_catalog_cache_v3', $catalog, 12 * HOUR_IN_SECONDS);
-}
 
-  // 3. PARAMETER URL & VALIDASI KATEGORI SAMA
+  // 2. RESOLVE QUERY PARAMS DENGAN DUKUNGAN ALIAS SLUG (misal ferto-15 -> ferto-15l)
+  $resolve_slug = static function (string $raw) use ($catalog): string {
+      $s = strtolower(trim($raw));
+      if ($s === '') return '';
+      if (isset($catalog[$s])) return $s;
+      if (isset($catalog[$s . 'l'])) return $s . 'l';
+      $stripped = rtrim($s, 'l');
+      if ($stripped !== '' && isset($catalog[$stripped])) return $stripped;
+      return '';
+  };
+
   $raw_d1 = isset($_GET['d1']) ? sanitize_text_field(wp_unslash((string) $_GET['d1'])) : '';
   $raw_d2 = isset($_GET['d2']) ? sanitize_text_field(wp_unslash((string) $_GET['d2'])) : '';
-  $req_d1 = ($raw_d1 !== '' && isset($catalog[$raw_d1])) ? $raw_d1 : '';
-  $req_d2 = ($raw_d2 !== '' && isset($catalog[$raw_d2])) ? $raw_d2 : '';
+  $req_d1 = $resolve_slug($raw_d1);
+  $req_d2 = $resolve_slug($raw_d2);
 
   // Pastikan drone tidak identik dan berasal dari kategori yang sama
   if (!empty($req_d1) && !empty($req_d2)) {
@@ -242,7 +142,7 @@
     }
   }
 
-  // 4. KATEGORI DRONE RESMI DARI WP ADMIN (TAKSONOMI 'kategori_drone')
+  // 3. KATEGORI DRONE RESMI DARI WP ADMIN (TAKSONOMI 'kategori_drone')
   $terms_db = get_terms([
     'taxonomy'   => 'kategori_drone',
     'hide_empty' => false,
@@ -266,7 +166,7 @@
     ];
   }
 
-  // 5. DEEP DECODE & DEFENSIVE GUARDRAIL SCRUBBING VIA GLOBAL HELPER
+  // 4. DEEP DECODE & DEFENSIVE GUARDRAIL SCRUBBING VIA GLOBAL HELPER
   $catalog = fds_deep_decode($catalog);
   if (function_exists('fds_scrub_legacy_text')) {
     foreach ($catalog as $cSlug => $cItem) {
@@ -284,16 +184,23 @@
         $cleanSpecs = [];
         foreach ($cItem['specs'] as $spPair) {
           if (!is_array($spPair) || count($spPair) < 2) continue;
-          $spLbl = fds_scrub_legacy_text((string) $spPair[0], $isFerto, $hasSni);
-          $spVal = fds_scrub_legacy_text((string) $spPair[1], $isFerto, $hasSni);
+          $spLbl    = fds_scrub_legacy_text((string) $spPair[0], $isFerto, $hasSni);
+          $isCertSp = stripos($spLbl, 'sertifikasi') !== false;
+          $spVal    = fds_scrub_legacy_text((string) $spPair[1], $isFerto, $hasSni, !$isCertSp);
           if (in_array($sLower, ['ferto-15l', 'ferto-15'], true) && (stripos($spLbl, 'payload') !== false || stripos($spLbl, 'kapasitas') !== false)) {
             if (stripos($spVal, '17') === false) {
-              $spVal = '17 Liter';
+              $spVal = '17 Liter (15 – 17 Liter)';
             }
           }
           if ($spVal === '') {
-            if (stripos($spLbl, 'sertifikasi') !== false) {
-              $spVal = 'ISO 9001:2015 (Manajemen Mutu)';
+            if ($isCertSp) {
+              if ($hasSni) {
+                $spVal = 'TKDN + BMP 60,74% | SNI 9199:2023';
+              } elseif ($isFerto) {
+                $spVal = 'TKDN + BMP 60,74%';
+              } else {
+                continue;
+              }
             } else {
               continue;
             }
@@ -318,28 +225,49 @@
     }
   }
   $modal_categories = fds_deep_decode($modal_categories);
+  $json_catalog     = wp_json_encode($catalog);
 
-  $json_catalog = json_encode($catalog, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+  $bk_ui = [
+    'sticky_slot1'       => (string) ($bk['sticky_slot1'] ?? 'Pilih Drone 1'),
+    'sticky_slot2'       => (string) ($bk['sticky_slot2'] ?? 'Pilih Drone 2'),
+    'slot_pick_title'    => (string) ($bk['slot_pick_title'] ?? 'Pilih Model Drone'),
+    'slot_pick_sub'      => (string) ($bk['slot_pick_sub'] ?? 'Klik untuk memilih produk yang ingin dibandingkan'),
+    'slot_pick_btn'      => (string) ($bk['slot_pick_btn'] ?? 'Pilih Model'),
+    'slot_change_btn'    => (string) ($bk['slot_change_btn'] ?? 'Ganti model'),
+    'slot_remove_btn'    => (string) ($bk['slot_remove_btn'] ?? 'Hapus'),
+    'slot_offer_btn'     => (string) ($bk['slot_offer_btn'] ?? 'Minta Penawaran'),
+    'slot_detail_btn'    => (string) ($bk['slot_detail_btn'] ?? 'Detail Produk'),
+    'table_empty_title'  => (string) ($bk['table_empty_title'] ?? 'Belum Ada Model yang Dipilih'),
+    'table_empty_desc'   => (string) ($bk['table_empty_desc'] ?? 'Silakan pilih model drone pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.'),
+    'uc_empty_model1'    => (string) ($bk['uc_empty_model1'] ?? 'Model Pertama Belum Dipilih'),
+    'uc_empty_model2'    => (string) ($bk['uc_empty_model2'] ?? 'Model Kedua Belum Dipilih'),
+    'stats_empty_model1' => (string) ($bk['stats_empty_model1'] ?? 'Keunggulan Model 1'),
+    'stats_empty_model2' => (string) ($bk['stats_empty_model2'] ?? 'Keunggulan Model 2'),
+    'stats_empty_text'   => (string) ($bk['stats_empty_text'] ?? 'Belum ada model dipilih'),
+    'modal_sub'          => (string) ($bk['modal_sub'] ?? 'Pilih produk drone yang ingin dibandingkan.'),
+    'modal_empty_title'  => (string) ($bk['modal_empty_title'] ?? 'Tidak Ada Drone Lain dalam Kategori Ini'),
+    'modal_empty_desc'   => (string) ($bk['modal_empty_desc'] ?? 'Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.'),
+  ];
 @endphp
 
 <div id="compare-page" class="w-full bg-[#f5f5f7] font-sans">
 
   {{-- ── 1. HERO SECTION VIA GLOBAL COMPONENT ── --}}
   <x-page-hero
-    label="Komparasi Model UAV"
-    title="Bandingkan Model Drone."
-    description="Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan."
+    :label="$bk['hero_label'] ?? 'Komparasi Model UAV'"
+    :title="$bk['hero_title'] ?? 'Bandingkan Model Drone.'"
+    :description="$bk['hero_desc'] ?? 'Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.'"
   />
 
   {{-- STICKY MOBILE & COMPACT COMPARISON BAR --}}
   <div id="sticky-compare-bar" class="fixed top-[52px] inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-black/[0.08] shadow-sm transform -translate-y-full transition-transform duration-300 pointer-events-none">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-2 flex items-center justify-between pointer-events-auto">
       <div id="sticky-slot-1" class="flex-1 flex items-center gap-2 justify-center text-center">
-        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">Pilih Drone 1</span>
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot1'] ?? 'Pilih Drone 1' }}</span>
       </div>
-      <div class="px-3 text-[11px] font-bold text-[#86868b] tracking-wider">vs</div>
+      <div class="px-3 text-[11px] font-bold text-[#86868b] tracking-wider">{{ $bk['sticky_vs'] ?? 'vs' }}</div>
       <div id="sticky-slot-2" class="flex-1 flex items-center gap-2 justify-center text-center">
-        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">Pilih Drone 2</span>
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot2'] ?? 'Pilih Drone 2' }}</span>
       </div>
     </div>
   </div>
@@ -368,12 +296,12 @@
       
       {{-- Section Header --}}
       <x-reveal class="text-center max-w-2xl mx-auto mb-14">
-        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-2">Spesifikasi</p>
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-2">{{ $bk['specs_badge'] ?? 'Spesifikasi' }}</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] mb-3">
-          Direkayasa untuk performa nyata.
+          {{ $bk['specs_title'] ?? 'Direkayasa untuk performa nyata.' }}
         </h2>
         <p class="text-[15px] text-[#515154] leading-relaxed">
-          Tabel perbandingan data teknis resmi dari lembar spesifikasi masing-masing unit drone FDS.
+          {{ $bk['specs_desc'] ?? 'Tabel perbandingan data teknis resmi dari lembar spesifikasi masing-masing unit drone FDS.' }}
         </p>
       </x-reveal>
 
@@ -464,12 +392,12 @@
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
       
       <x-reveal class="text-center max-w-2xl mx-auto mb-14">
-        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-2">Aplikasi &amp; Use-Cases</p>
+        <p class="text-[13px] font-semibold text-white/80 tracking-wide mb-2">{{ $bk['uc_badge'] ?? 'Aplikasi & Use-Cases' }}</p>
         <h2 class="text-[32px] sm:text-[44px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3">
-          Untuk Siapa Model Ini Diciptakan.
+          {{ $bk['uc_title'] ?? 'Untuk Siapa Model Ini Diciptakan.' }}
         </h2>
         <p class="text-[15px] text-white/80 leading-relaxed">
-          Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.
+          {{ $bk['uc_desc'] ?? 'Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.' }}
         </p>
       </x-reveal>
 
@@ -505,7 +433,7 @@
         {{-- D1 STATS --}}
         <div class="md:pr-10 lg:pr-16">
           <p id="d1-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
-            Keunggulan Model 1
+            {{ $bk['stats_empty_model1'] ?? 'Keunggulan Model 1' }}
           </p>
           <div id="d1-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
         </div>
@@ -513,7 +441,7 @@
         {{-- D2 STATS --}}
         <div class="md:pl-10 lg:pl-16">
           <p id="d2-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
-            Keunggulan Model 2
+            {{ $bk['stats_empty_model2'] ?? 'Keunggulan Model 2' }}
           </p>
           <div id="d2-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
         </div>
@@ -528,26 +456,14 @@
   {{-- ── 6B. PANDUAN MEMILIH ARMADA DRONE & PENGADAAN B2B (SSR) ── --}}
   <section class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
     <div class="max-w-[1100px] mx-auto px-6 lg:px-12 fds-drone-guide">
-      <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">Panduan Pemilihan Armada UAV</p>
-      <h2>Panduan Memilih Armada Drone &amp; Pengadaan B2B (TKDN &amp; SNI)</h2>
-      <p class="lead">
-        Memilih pesawat nirawak industrial membutuhkan kecocokan presisi antara kapasitas payload, luasan lahan atau koridor survei, efisiensi waktu terbang, serta kepastian layanan purna jual dan sertifikasi pengadaan di Indonesia.
-      </p>
-
-      <h3>1. Menentukan Kapasitas Lini Pertanian Seri FERTO (5L – 50L)</h3>
-      <p>
-        Untuk kebutuhan penyemprotan pupuk cair, pestisida, maupun penebaran granul padat pada komoditas padi, tebu, jagung, dan perkebunan kelapa sawit, seri <a href="{{ home_url('/kategori-drone/agrikultur/') }}">Drone Agrikultur FERTO</a> menawarkan enam varian kapasitas tangki. Model ringkas seperti FERTO 5 dan FERTO 10 unggul untuk lahan berterasering, bukit, dan mobilitas kelompok tani, sedangkan FERTO 15 (17 Liter), FERTO 22, FERTO 30, hingga FERTO 50 dirancang untuk produktivitas estate korporasi puluhan hektar per hari dengan dukungan radar Terrain Following.
-      </p>
-
-      <h3>2. Pemetaan Area Luas vs Inspeksi Multirotor</h3>
-      <p>
-        Dalam pekerjaan survei topografi tambang, pemetaan kadastral HGU, serta <a href="{{ home_url('/kategori-drone/pemetaan-gis/') }}">Pemetaan &amp; Survey LiDAR GIS</a>, wahana Fixed-Wing Hybrid VTOL seperti DELTAV menjadi standar untuk cakupan ribuan hektar berbekal jangkauan jelajah hingga 60 km. Sementara itu, platform modular seperti MULTIPURPOSE paling efektif untuk inspeksi jaringan transmisi listrik 150 kV, panel surya, dan kawasan industri yang memerlukan hovering presisi serta sensor optik zoom maupun kamera termal inframerah.
-      </p>
-
-      <h3>3. Distribusi Logistik &amp; Standar Sertifikasi Pengadaan</h3>
-      <p>
-        Untuk misi pengantaran cepat ke pulau terluar atau lokasi terisolir, lini <a href="{{ home_url('/kategori-drone/kargo/') }}">Drone Kargo &amp; Logistik</a> DELFRO menghadirkan rute otonom via FDS Station berbahasa Indonesia. Fasilitas PT Karya Solusi Angkasa di Sleman, Yogyakarta menerapkan manajemen mutu ISO 9001:2015, dengan lini drone agrikultur seri FERTO (5L–50L) bersertifikat TKDN + BMP 60,74% serta FERTO 15 dan FERTO 22 memenuhi standar nasional SNI 9199:2023 untuk pengadaan instansi pemerintah, BUMN, dan e-Katalog LKPP. Pelajari rekam jejak manufaktur kami di halaman <a href="{{ home_url('/tentang-kami/') }}">Tentang Kami</a> atau jadwalkan demo terbang resmi melalui <a href="{{ home_url('/kontak/#hubungi-form') }}">Kontak Enterprise FDS</a>.
-      </p>
+      @if(!empty($bk['guide_badge']))
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{{ $bk['guide_badge'] }}</p>
+      @endif
+      <h2>{{ $bk['guide_title'] ?? 'Panduan Memilih Armada Drone & Pengadaan B2B (TKDN & SNI)' }}</h2>
+      @if(!empty($bk['guide_lead']))
+        <p class="lead">{{ $bk['guide_lead'] }}</p>
+      @endif
+      {!! wp_kses_post((string) ($bk['guide_html'] ?? '')) !!}
     </div>
   </section>
 
@@ -584,19 +500,19 @@
 
     <x-reveal-group :step="90" class="max-w-[1400px] mx-auto px-6 lg:px-12 text-center relative z-10">
       <h2 class="text-[36px] sm:text-[48px] lg:text-[54px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5 drop-shadow-sm">
-        Siap menentukan pilihan armada Anda?
+        {{ $bk['cta_title'] ?? 'Siap menentukan pilihan armada Anda?' }}
       </h2>
       <p class="text-[16px] sm:text-[18px] lg:text-[19px] text-white/80 max-w-[540px] mx-auto mb-9 leading-relaxed">
-        Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.
+        {{ $bk['cta_desc'] ?? 'Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.' }}
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
-        <a href="{{ home_url('/kontak/#hubungi-form') }}"
+        <a href="{!! esc_url($href_bk($bk['cta_primary_url'] ?? '/kontak/#hubungi-form')) !!}"
            class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
-          Hubungi Tim Sales FDS
+          {{ $bk['cta_primary_text'] ?? 'Hubungi Tim Sales FDS' }}
         </a>
-        <a href="{{ home_url('/blog/') }}"
+        <a href="{!! esc_url($href_bk($bk['cta_secondary_url'] ?? '/blog/')) !!}"
            class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
-          <span class="leading-none">Baca studi kasus operasional</span>
+          <span class="leading-none">{{ $bk['cta_secondary_text'] ?? 'Baca studi kasus operasional' }}</span>
           <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
@@ -614,14 +530,14 @@
       <div class="p-6 pb-4 border-b border-black/[0.08] flex items-center justify-between bg-[#fbfbfd]">
         <div>
           <div class="flex items-center gap-2 mb-0.5">
-            <p class="text-[12px] font-semibold text-[#0f808a]">Katalog Produk</p>
+            <p class="text-[12px] font-semibold text-[#0f808a]">{{ $bk['modal_eyebrow'] ?? 'Katalog Produk' }}</p>
             <span id="modal-category-badge" class="hidden text-[11px] font-medium text-[#0f808a] bg-[#0f808a]/10 px-2.5 py-0.5 rounded-full"></span>
           </div>
           <h3 id="modal-heading-text" class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
-            Pilih Model Drone
+            {{ $bk['modal_title'] ?? 'Pilih Model Drone' }}
           </h3>
           <p id="modal-subheading-text" class="text-[13px] text-[#86868b] mt-0.5">
-            Pilih produk drone yang ingin dibandingkan.
+            {{ $bk['modal_sub'] ?? 'Pilih produk drone yang ingin dibandingkan.' }}
           </p>
         </div>
         <button type="button" onclick="closePickerModal()" class="w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#515154] hover:text-[#1d1d1f] transition-colors cursor-pointer" aria-label="Tutup">
@@ -631,7 +547,7 @@
 
       {{-- Modal Filter Tabs (Dinamis dari Taksonomi kategori_drone WP Admin) --}}
       <div id="modal-cat-tabs-container" class="px-6 py-3 border-b border-black/[0.06] bg-white flex flex-wrap gap-1.5">
-        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0f808a] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">Semua</button>
+        <button type="button" onclick="filterModalCategory('all', this)" class="modal-cat-tab active px-3.5 py-1.5 rounded-full text-[12px] font-semibold bg-[#0f808a] text-white shadow-sm transition-colors cursor-pointer" data-tab-cat="all">{{ $bk['modal_all_tab'] ?? 'Semua' }}</button>
         @foreach($modal_categories as $mSlug => $mName)
         <button type="button" onclick="filterModalCategory('{{ $mSlug }}', this)" class="modal-cat-tab px-3.5 py-1.5 rounded-full text-[12px] font-medium bg-[#f5f5f7] text-[#515154] hover:bg-[#ebebed] hover:text-[#1d1d1f] transition-colors cursor-pointer" data-tab-cat="{{ $mSlug }}">
           {{ function_exists('fds_clean_string') ? fds_clean_string((string) $mName) : $mName }}
@@ -680,6 +596,8 @@
 <script>
 (function() {
   const CATALOG = {!! $json_catalog !!};
+  const BK_UI = {!! wp_json_encode($bk_ui) !!};
+  const KONTAK_URL_BASE = {!! wp_json_encode(home_url('/kontak/')) !!};
   let activePickingSlot = 1;
   let activeCatFilter = 'all';
   let d1Key = {!! wp_json_encode($req_d1) !!};
@@ -726,7 +644,7 @@
         catBadge.classList.add('hidden');
       }
       if (subHeading) {
-        subHeading.textContent = 'Pilih produk drone yang ingin dibandingkan.';
+        subHeading.textContent = BK_UI.modal_sub || 'Pilih produk drone yang ingin dibandingkan.';
       }
       if (tabsContainer) {
         tabsContainer.classList.remove('hidden');
@@ -801,8 +719,8 @@
         <div class="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#86868b]">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <p class="text-[15px] font-semibold text-[#1d1d1f] mb-1">Tidak Ada Drone Lain dalam Kategori Ini</p>
-        <p class="text-[13px] text-[#86868b] max-w-sm mx-auto">Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.</p>
+        <p class="text-[15px] font-semibold text-[#1d1d1f] mb-1">${escapeHtml(BK_UI.modal_empty_title)}</p>
+        <p class="text-[13px] text-[#86868b] max-w-sm mx-auto">${escapeHtml(BK_UI.modal_empty_desc)}</p>
       `;
       grid.appendChild(emptyDiv);
     }
@@ -920,10 +838,10 @@
                 <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
               </div>
               <span class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors mb-1">
-                Pilih Model Drone
+                ${escapeHtml(BK_UI.slot_pick_title)}
               </span>
               <span class="text-[13px] text-[#86868b] max-w-xs leading-relaxed">
-                Klik untuk memilih produk yang ingin dibandingkan
+                ${escapeHtml(BK_UI.slot_pick_sub)}
               </span>
             </button>
           </div>
@@ -932,7 +850,7 @@
             <button type="button" onclick="openPickerModal(${slotNum})"
                     class="inline-flex items-center gap-1.5 bg-black/[0.06] hover:bg-black/[0.1] text-[#1d1d1f] font-semibold text-[13px] sm:text-[14px] px-5 py-2.5 rounded-full transition-colors cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>Pilih Model</span>
+              <span>${escapeHtml(BK_UI.slot_pick_btn)}</span>
             </button>
           </div>
         </div>
@@ -957,12 +875,12 @@
 
           <div class="mb-4 flex items-center gap-3">
             <button type="button" onclick="openPickerModal(${slotNum})" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] hover:underline cursor-pointer">
-              <span>Ganti model</span>
+              <span>${escapeHtml(BK_UI.slot_change_btn)}</span>
               <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             <span class="text-black/20">|</span>
             <button type="button" onclick="clearSlot(${slotNum})" class="text-[13px] text-[#86868b] hover:text-red-600 transition-colors cursor-pointer">
-              Hapus
+              ${escapeHtml(BK_UI.slot_remove_btn)}
             </button>
           </div>
 
@@ -971,11 +889,11 @@
           </p>
 
           <div class="flex flex-wrap gap-2.5 justify-center">
-            <a href="{{ home_url('/kontak/') }}?produk=${encodeURIComponent(drone.slug || '')}#hubungi-form" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
-              Minta Penawaran
+            <a href="${escapeHtml(KONTAK_URL_BASE)}?produk=${encodeURIComponent(drone.slug || '')}#hubungi-form" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
+              ${escapeHtml(BK_UI.slot_offer_btn)}
             </a>
             <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all border border-black/10 shadow-sm">
-              Detail Produk
+              ${escapeHtml(BK_UI.slot_detail_btn)}
             </a>
           </div>
         </div>
@@ -993,8 +911,8 @@
           <div class="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#86868b]">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <p class="text-[16px] font-semibold text-[#1d1d1f] mb-1">Belum Ada Model yang Dipilih</p>
-          <p class="text-[13px]">Silakan pilih model drone pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.</p>
+          <p class="text-[16px] font-semibold text-[#1d1d1f] mb-1">${escapeHtml(BK_UI.table_empty_title)}</p>
+          <p class="text-[13px]">${escapeHtml(BK_UI.table_empty_desc)}</p>
         </div>
       `;
       return;
@@ -1122,8 +1040,8 @@
         `).join('') || '<p class="text-[14px] text-white/50">Lembar spesifikasi use-case lengkap tersedia di rincian produk.</p>';
       }
     } else {
-      if (d1Title) d1Title.innerHTML = `<span>Model Pertama Belum Dipilih</span>`;
-      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-white hover:underline font-semibold cursor-pointer">+ Pilih Drone Pertama</button></div>`;
+      if (d1Title) d1Title.innerHTML = `<span>${escapeHtml(BK_UI.uc_empty_model1)}</span>`;
+      if (d1List) d1List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(1)" class="text-white hover:underline font-semibold cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot1)}</button></div>`;
     }
 
     const d2Title = document.getElementById('d2-for-title');
@@ -1142,8 +1060,8 @@
         `).join('') || '<p class="text-[14px] text-white/50">Lembar spesifikasi use-case lengkap tersedia di rincian produk.</p>';
       }
     } else {
-      if (d2Title) d2Title.innerHTML = `<span>Model Kedua Belum Dipilih</span>`;
-      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-white hover:underline font-semibold cursor-pointer">+ Pilih Drone Kedua</button></div>`;
+      if (d2Title) d2Title.innerHTML = `<span>${escapeHtml(BK_UI.uc_empty_model2)}</span>`;
+      if (d2List) d2List.innerHTML = `<div class="bg-white/[0.03] border border-dashed border-white/10 rounded-2xl p-6 text-center text-[13px] text-white/40"><button type="button" onclick="openPickerModal(2)" class="text-white hover:underline font-semibold cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot2)}</button></div>`;
     }
   }
 
@@ -1155,8 +1073,8 @@
       if (d1Row) {
         d1Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'ISO 9001')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Manajemen Mutu')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'UAV')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Platform Industri')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '100%')}</p>
@@ -1173,8 +1091,8 @@
         `;
       }
     } else {
-      if (d1Header) d1Header.textContent = 'Keunggulan Model 1';
-      if (d1Row) d1Row.innerHTML = '<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">Belum ada model dipilih</div>';
+      if (d1Header) d1Header.textContent = BK_UI.stats_empty_model1 || 'Keunggulan Model 1';
+      if (d1Row) d1Row.innerHTML = `<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
     }
 
     const d2Header = document.getElementById('d2-stats-header');
@@ -1184,8 +1102,8 @@
       if (d2Row) {
         d2Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'ISO 9001')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Manajemen Mutu')}</p>
+            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'UAV')}</p>
+            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Platform Industri')}</p>
           </div>
           <div>
             <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '100%')}</p>
@@ -1202,8 +1120,8 @@
         `;
       }
     } else {
-      if (d2Header) d2Header.textContent = 'Keunggulan Model 2';
-      if (d2Row) d2Row.innerHTML = '<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">Belum ada model dipilih</div>';
+      if (d2Header) d2Header.textContent = BK_UI.stats_empty_model2 || 'Keunggulan Model 2';
+      if (d2Row) d2Row.innerHTML = `<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
     }
   }
 
@@ -1265,13 +1183,13 @@
     if (slot1El) {
       slot1El.innerHTML = d1 
         ? `<button type="button" onclick="openPickerModal(1)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d1.name)}</button>` 
-        : `<button type="button" onclick="openPickerModal(1)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ Pilih Drone 1</button>`;
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot1)}</button>`;
     }
 
     if (slot2El) {
       slot2El.innerHTML = d2 
         ? `<button type="button" onclick="openPickerModal(2)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d2.name)}</button>` 
-        : `<button type="button" onclick="openPickerModal(2)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ Pilih Drone 2</button>`;
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot2)}</button>`;
     }
 
     const rect = cardsSection.getBoundingClientRect();

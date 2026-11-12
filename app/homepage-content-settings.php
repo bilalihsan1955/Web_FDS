@@ -160,7 +160,7 @@ function fds_get_homepage_content(bool $fresh = false) {
     }
 
     if (!$fresh) {
-        $cached = get_transient('fds_homepage_content_cache_v2');
+        $cached = get_transient('fds_homepage_content_cache_v3');
         if ($cached !== false && is_array($cached)) {
             if (function_exists('fds_deep_decode')) {
                 $cached = \fds_deep_decode($cached);
@@ -192,7 +192,7 @@ function fds_get_homepage_content(bool $fresh = false) {
         // HERO
         'hero_badge'        => get_option('fds_hero_badge', 'Produsen Drone Pertanian & UAV Indonesia'),
         'hero_title'        => get_option('fds_hero_title', "Solusi Drone Pertanian &\nIndustrial Indonesia."),
-        'hero_desc'         => get_option('fds_hero_desc', 'Produsen UAV berstandar ISO 9001:2015 serta TKDN 60,74% (seri FERTO) dan SNI 9199:2023 (FERTO 15 & FERTO 22). Solusi drone pertanian sprayer, pemetaan LiDAR, dan inspeksi industri.'),
+        'hero_desc'         => get_option('fds_hero_desc', 'Produsen UAV dengan manajemen mutu ISO 9001:2015, serta sertifikasi produk TKDN 60,74% (seri FERTO) dan SNI 9199:2023 (FERTO 15 & FERTO 22). Solusi drone pertanian sprayer, pemetaan LiDAR, dan inspeksi industri.'),
         'hero_cta1_text'    => get_option('fds_hero_cta1_text', 'Jelajahi Solusi Kami'),
         'hero_cta1_url'     => get_option('fds_hero_cta1_url', '#solusi'),
         'hero_cta2_text'    => get_option('fds_hero_cta2_text', 'Konsultasi Enterprise'),
@@ -218,6 +218,12 @@ function fds_get_homepage_content(bool $fresh = false) {
         'produk_stat3_lbl'  => get_option('fds_produk_stat3_lbl', 'Kapasitas Semprot Maksimal FERTO'),
         'produk_stat4_num'  => get_option('fds_produk_stat4_num', 'Nasional'),
         'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Dukungan Servis & Suku Cadang Resmi'),
+        'produk_filter_all'      => get_option('fds_produk_filter_all', 'Semua'),
+        'produk_compare_text'    => get_option('fds_produk_compare_text', 'Bandingkan Model'),
+        'produk_catalog_text'    => get_option('fds_produk_catalog_text', 'Lihat Semua Katalog'),
+        'produk_row_detail_text' => get_option('fds_produk_row_detail_text', 'Detail'),
+        'produk_empty_text'      => get_option('fds_produk_empty_text', 'Produk kategori ini akan segera hadir.'),
+        'produk_empty_cta_text'  => get_option('fds_produk_empty_cta_text', 'Hubungi Tim Sales FDS'),
 
         // KEUNGGULAN (BENTO GRID)
         'keunggulan_badge'       => get_option('fds_keunggulan_badge', 'Keunggulan Manufaktur FDS'),
@@ -239,9 +245,9 @@ function fds_get_homepage_content(bool $fresh = false) {
         'keunggulan_card3_desc'  => get_option('fds_keunggulan_card3_desc', 'Software Ground Control Station intuitif tanpa kendala bahasa. Rencana terbang waypoint otomatis dan fitur keselamatan fail-safe RTH.'),
         'keunggulan_card3_img'   => get_option('fds_keunggulan_card3_img', get_template_directory_uri() . '/public/images/site/engineer-ops.webp'),
 
-        'keunggulan_card4_badge' => get_option('fds_keunggulan_card4_badge', 'Sertifikasi Produk'),
+        'keunggulan_card4_badge' => get_option('fds_keunggulan_card4_badge', 'Standar Mutu & Produk'),
         'keunggulan_card4_stat'  => get_option('fds_keunggulan_card4_stat', 'ISO & SNI'),
-        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Manajemen mutu manufaktur ISO 9001:2015 serta standar keselamatan nasional SNI 9199:2023 pada FERTO 15 dan FERTO 22.'),
+        'keunggulan_card4_desc'  => get_option('fds_keunggulan_card4_desc', 'Sistem manajemen mutu perusahaan ISO 9001:2015 serta standar keselamatan produk SNI 9199:2023 pada FERTO 15 dan FERTO 22.'),
         'keunggulan_card4_img'   => get_option('fds_keunggulan_card4_img', get_template_directory_uri() . '/public/images/site/hero-2.webp'),
 
         'keunggulan_card5_badge' => get_option('fds_keunggulan_card5_badge', 'Layanan Purna Jual'),
@@ -266,21 +272,41 @@ function fds_get_homepage_content(bool $fresh = false) {
         'layanan_desc'           => get_option('fds_layanan_desc', 'Kami tidak hanya menjual hardware. Kami mendampingi tim Anda mulai dari instalasi awal, sertifikasi pilot, hingga pemeliharaan armada secara berkala.'),
         'layanan_cta_text'       => $layanan_cta_text_saved,
         'layanan_cta_url'        => $layanan_cta_url_saved,
+        'layanan_detail_text'    => get_option('fds_layanan_detail_text', 'Lihat Detail'),
 
         // NEWSROOM
         'blog_badge'             => get_option('fds_blog_badge', 'Newsroom & Edukasi'),
         'blog_title'             => get_option('fds_blog_title', 'Studi Kasus & Informasi Teknologi UAV.'),
         'blog_cta_text'          => get_option('fds_blog_cta_text', 'Lihat Semua Artikel & Studi Kasus'),
+        'newsroom_read_more_text' => get_option('fds_newsroom_read_more_text', 'Baca selengkapnya'),
+        'newsroom_empty_text'    => get_option('fds_newsroom_empty_text', 'Belum ada artikel yang diterbitkan.'),
 
         // KONTAK / INQUIRY
         'kontak_badge'           => get_option('fds_kontak_badge', 'Konsultasi & Penawaran'),
         'kontak_title'           => get_option('fds_kontak_title', "Jadwalkan Konsultasi Teknis\natau Demo Terbang."),
         'kontak_desc'            => get_option('fds_kontak_desc', 'Diskusikan kebutuhan armada drone, estimasi biaya operasional, atau jadwal uji terbang bersama tim engineer PT Karya Solusi Angkasa.'),
         'kontak_wa_text'         => get_option('fds_kontak_wa_text', 'Hubungi via WhatsApp'),
+        'kontak_phone_label'     => get_option('fds_kontak_phone_label', 'Telepon / WhatsApp'),
+        'kontak_email_label'     => get_option('fds_kontak_email_label', 'Email Bisnis'),
+        'kontak_address_label'   => get_option('fds_kontak_address_label', 'Lokasi Workshop & Testing Center'),
         'kontak_form_title'      => get_option('fds_kontak_form_title', 'Formulir Permintaan Penawaran / Jadwal Demo'),
         'kontak_form_desc'       => get_option('fds_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
+        'kontak_form_fname_lbl'  => get_option('fds_kontak_form_fname_lbl', 'Nama Depan'),
+        'kontak_form_fname_ph'   => get_option('fds_kontak_form_fname_ph', 'Nama depan'),
+        'kontak_form_lname_lbl'  => get_option('fds_kontak_form_lname_lbl', 'Nama Belakang'),
+        'kontak_form_lname_ph'   => get_option('fds_kontak_form_lname_ph', 'Nama belakang'),
+        'kontak_form_company_lbl' => get_option('fds_kontak_form_company_lbl', 'Perusahaan / Instansi'),
+        'kontak_form_company_ph'  => get_option('fds_kontak_form_company_ph', 'Nama perusahaan / instansi'),
+        'kontak_form_email_lbl'  => get_option('fds_kontak_form_email_lbl', 'Email Bisnis'),
+        'kontak_form_email_ph'   => get_option('fds_kontak_form_email_ph', 'nama@perusahaan.com'),
+        'kontak_form_phone_lbl'  => get_option('fds_kontak_form_phone_lbl', 'Nomor Telepon / WhatsApp'),
+        'kontak_form_phone_ph'   => get_option('fds_kontak_form_phone_ph', 'Nomor telepon / WhatsApp'),
+        'kontak_form_msg_lbl'    => get_option('fds_kontak_form_msg_lbl', 'Kebutuhan Anda'),
+        'kontak_form_msg_ph'     => get_option('fds_kontak_form_msg_ph', 'Jelaskan kebutuhan armada drone, layanan, atau pertanyaan teknis Anda...'),
         'kontak_form_btn_text'   => get_option('fds_kontak_form_btn_text', 'Kirim Permintaan Konsultasi'),
+        'kontak_form_loading'    => get_option('fds_kontak_form_loading', 'Mengirim Pesan...'),
         'kontak_form_note'       => get_option('fds_kontak_form_note', 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.'),
+        'kontak_map_title'       => get_option('fds_kontak_map_title', 'Lokasi Full Drone Solutions Sleman Yogyakarta'),
         'show_map_home'          => (bool) get_option('fds_show_map_home', 1),
     ];
 
@@ -300,9 +326,101 @@ function fds_get_homepage_content(bool $fresh = false) {
         return $v;
     }, $data);
 
-    set_transient('fds_homepage_content_cache_v2', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_homepage_content_cache_v3', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_hp = $clean_data;
     return $clean_data;
+}
+
+function fds_get_newsroom_ui_defaults(): array {
+    return [
+        // Blog / Archive (index.blade.php)
+        'blog_hero_badge'           => 'Newsroom',
+        'blog_hero_cat_badge'       => 'Kategori Artikel',
+        'blog_hero_drone_cat_badge' => 'Kategori Drone',
+        'blog_hero_tag_badge'       => 'Tag Artikel',
+        'blog_hero_tag_prefix'      => 'Tag:',
+        'blog_hero_title'           => 'Berita & Artikel Terkini.',
+        'blog_hero_desc'            => 'Perkembangan produk drone, studi kasus operasional lapangan, dan wawasan teknologi industri dari tim FDS.',
+        'blog_search_ph'            => 'Cari drone, artikel, topik...',
+        'blog_search_btn'           => 'Cari',
+        'blog_back_all'             => 'Lihat semua berita',
+        'blog_featured_badge'       => 'Terbaru',
+        'blog_featured_cta'         => 'Baca artikel lengkap',
+        'blog_card_cta'             => 'Baca selengkapnya',
+        'blog_default_cat'          => 'Berita',
+        'blog_empty_title'          => 'Belum ada artikel',
+        'blog_empty_desc'           => 'Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.',
+        'blog_empty_cta'            => 'Lihat Semua Topik',
+
+        // Single Article (single.blade.php)
+        'single_back_text'          => 'Kembali ke Newsroom',
+        'single_share_wa'           => 'WhatsApp',
+        'single_share_li'           => 'LinkedIn',
+
+        // Pencarian (search.blade.php)
+        'search_badge'              => 'Hasil Pencarian Artikel',
+        'search_found_tpl'          => 'Ditemukan {count} artikel yang relevan dengan kata kunci Anda.',
+        'search_not_found_desc'     => 'Tidak ditemukan artikel yang sesuai dengan kata kunci tersebut.',
+        'search_ph'                 => 'Cari artikel, topik, inovasi...',
+        'search_btn'                => 'Cari',
+        'search_back_text'          => 'Kembali ke semua artikel',
+        'search_empty_title'        => 'Tidak ada artikel yang cocok',
+        'search_empty_desc'         => 'Silakan coba kata kunci lain yang lebih umum atau jelajahi seluruh topik di ruang berita kami.',
+        'search_empty_cta'          => 'Lihat Semua Berita',
+        'search_card_cta'           => 'Baca selengkapnya',
+
+        // 404 Page (404.blade.php)
+        'err404_code'               => '404',
+        'err404_title'              => 'Halaman tidak ditemukan.',
+        'err404_desc'               => 'Halaman yang Anda cari mungkin telah dihapus atau dipindahkan.',
+        'err404_cta'                => 'Kembali ke Beranda',
+    ];
+}
+
+function fds_get_newsroom_ui_content(bool $fresh = false): array {
+    static $memo = null;
+    if (!$fresh && $memo !== null) {
+        return $memo;
+    }
+
+    if (!$fresh) {
+        $cached = get_transient('fds_newsroom_ui_cache_v1');
+        if ($cached !== false && is_array($cached)) {
+            if (function_exists('fds_deep_decode')) {
+                $cached = \fds_deep_decode($cached);
+            }
+            $memo = $cached;
+            return $cached;
+        }
+    }
+
+    $defaults = fds_get_newsroom_ui_defaults();
+    $saved    = get_option('fds_newsroom_ui_v1', []);
+    if (!is_array($saved)) {
+        $saved = [];
+    }
+
+    $out = $defaults;
+    foreach ($defaults as $k => $def_val) {
+        if (isset($saved[$k])) {
+            $raw = trim((string) $saved[$k]);
+            if ($raw !== '') {
+                $clean = function_exists('fds_clean_string')
+                    ? \fds_clean_string($raw)
+                    : html_entity_decode(wp_specialchars_decode($raw, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+                if (function_exists('fds_scrub_legacy_text')) {
+                    $clean = \fds_scrub_legacy_text($clean, true, true);
+                }
+                if ($clean !== '') {
+                    $out[$k] = $clean;
+                }
+            }
+        }
+    }
+
+    set_transient('fds_newsroom_ui_cache_v1', $out, 12 * HOUR_IN_SECONDS);
+    $memo = $out;
+    return $out;
 }
 
 // 5. TAMPILAN HALAMAN WP ADMIN KONTEN BERANDA
@@ -319,10 +437,14 @@ function render_homepage_content_admin_page() {
             'fds_mitra_heading',
             'fds_solusi_badge', 'fds_solusi_title', 'fds_solusi_cta_text', 'fds_solusi_cta_url',
             'fds_produk_badge', 'fds_produk_title', 'fds_produk_stat1_num', 'fds_produk_stat1_lbl', 'fds_produk_stat2_num', 'fds_produk_stat2_lbl', 'fds_produk_stat3_num', 'fds_produk_stat3_lbl', 'fds_produk_stat4_num', 'fds_produk_stat4_lbl',
+            'fds_produk_filter_all', 'fds_produk_compare_text', 'fds_produk_catalog_text', 'fds_produk_row_detail_text', 'fds_produk_empty_text', 'fds_produk_empty_cta_text',
             'fds_keunggulan_badge', 'fds_keunggulan_title', 'fds_keunggulan_card1_badge', 'fds_keunggulan_card1_img', 'fds_keunggulan_card2_badge', 'fds_keunggulan_card2_stat', 'fds_keunggulan_card2_substat', 'fds_keunggulan_card2_img', 'fds_keunggulan_card3_badge', 'fds_keunggulan_card3_img', 'fds_keunggulan_card4_badge', 'fds_keunggulan_card4_stat', 'fds_keunggulan_card4_img', 'fds_keunggulan_card5_badge', 'fds_keunggulan_card5_title', 'fds_keunggulan_card5_img', 'fds_keunggulan_card6_badge', 'fds_keunggulan_card6_stat', 'fds_keunggulan_card6_img', 'fds_keunggulan_card7_badge', 'fds_keunggulan_card7_title', 'fds_keunggulan_card7_chips', 'fds_keunggulan_card7_img',
-            'fds_layanan_badge', 'fds_layanan_title', 'fds_layanan_cta_text', 'fds_layanan_cta_url',
-            'fds_blog_badge', 'fds_blog_title', 'fds_blog_cta_text',
-            'fds_kontak_badge', 'fds_kontak_wa_text', 'fds_kontak_form_title', 'fds_kontak_form_btn_text',
+            'fds_layanan_badge', 'fds_layanan_title', 'fds_layanan_cta_text', 'fds_layanan_cta_url', 'fds_layanan_detail_text',
+            'fds_blog_badge', 'fds_blog_title', 'fds_blog_cta_text', 'fds_newsroom_read_more_text', 'fds_newsroom_empty_text',
+            'fds_kontak_badge', 'fds_kontak_wa_text', 'fds_kontak_phone_label', 'fds_kontak_email_label', 'fds_kontak_address_label',
+            'fds_kontak_form_title', 'fds_kontak_form_fname_lbl', 'fds_kontak_form_fname_ph', 'fds_kontak_form_lname_lbl', 'fds_kontak_form_lname_ph',
+            'fds_kontak_form_company_lbl', 'fds_kontak_form_company_ph', 'fds_kontak_form_email_lbl', 'fds_kontak_form_email_ph',
+            'fds_kontak_form_phone_lbl', 'fds_kontak_form_phone_ph', 'fds_kontak_form_msg_lbl', 'fds_kontak_form_btn_text', 'fds_kontak_form_loading', 'fds_kontak_map_title',
         ];
 
         $fields_textarea = [
@@ -331,7 +453,7 @@ function render_homepage_content_admin_page() {
             'fds_produk_desc',
             'fds_keunggulan_card1_title', 'fds_keunggulan_card1_desc', 'fds_keunggulan_card2_desc', 'fds_keunggulan_card3_title', 'fds_keunggulan_card3_desc', 'fds_keunggulan_card4_desc', 'fds_keunggulan_card5_desc', 'fds_keunggulan_card6_desc', 'fds_keunggulan_card7_desc',
             'fds_layanan_desc',
-            'fds_kontak_title', 'fds_kontak_desc', 'fds_kontak_form_desc', 'fds_kontak_form_note',
+            'fds_kontak_title', 'fds_kontak_desc', 'fds_kontak_form_desc', 'fds_kontak_form_msg_ph', 'fds_kontak_form_note',
         ];
 
         foreach ($fields_text as $f) {
@@ -478,15 +600,35 @@ function render_homepage_content_admin_page() {
             update_option('fds_layanan_items_customized', 1, 'no');
         }
 
+        // 5. Simpan Label UI Blog, Pencarian & 404 (Tab 9)
+        if (isset($_POST['fds_newsroom_ui']) && is_array($_POST['fds_newsroom_ui'])) {
+            $nr_defaults = fds_get_newsroom_ui_defaults();
+            $saved_nr = [];
+            foreach ($nr_defaults as $k => $def_v) {
+                $raw_val = isset($_POST['fds_newsroom_ui'][$k]) ? wp_unslash((string) $_POST['fds_newsroom_ui'][$k]) : $def_v;
+                $clean_v = (in_array($k, ['blog_hero_desc', 'blog_empty_desc', 'search_empty_desc', 'err404_desc'], true))
+                    ? sanitize_textarea_field($raw_val)
+                    : sanitize_text_field($raw_val);
+                $saved_nr[$k] = trim($clean_v) !== '' ? $clean_v : $def_v;
+            }
+            update_option('fds_newsroom_ui_v1', $saved_nr, 'no');
+        }
+
         delete_transient('fds_homepage_content_cache');
         delete_transient('fds_homepage_content_cache_v2');
+        delete_transient('fds_homepage_content_cache_v3');
+        delete_transient('fds_newsroom_ui_cache_v1');
         if (function_exists(__NAMESPACE__ . '\\fds_flush_layanan_cache')) {
             fds_flush_layanan_cache();
         }
-        $message = 'Semua perubahan konten Beranda berhasil disimpan!';
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+            fds_purge_ai_and_seo_caches(false);
+        }
+        $message = 'Semua perubahan konten Beranda, Blog, Pencarian & 404 berhasil disimpan!';
     }
 
     $c = fds_get_homepage_content(true);
+    $nr = fds_get_newsroom_ui_content(true);
     $solusi_admin = function_exists('App\\fds_get_solusi_data') ? fds_get_solusi_data() : [];
     $raw_slides = function_exists('App\\fds_get_hero_slides') ? fds_get_hero_slides() : (get_option('fds_hero_slides', []));
     if (empty($raw_slides)) {
@@ -564,6 +706,7 @@ function render_homepage_content_admin_page() {
                 <button type="button" class="tab-btn" data-tab="tab-layanan" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">6. Layanan Enterprise</button>
                 <button type="button" class="tab-btn" data-tab="tab-blog" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">7. Newsroom</button>
                 <button type="button" class="tab-btn" data-tab="tab-kontak" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">8. Kontak &amp; Form</button>
+                <button type="button" class="tab-btn" data-tab="tab-newsroom-ui" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #e2e8f0; background: #fff; color: #475569; font-size: 13px; font-weight: 600; cursor: pointer;">9. Blog, Pencarian &amp; 404</button>
             </div>
 
             <!-- ========================================================= -->
@@ -962,6 +1105,34 @@ function render_homepage_content_admin_page() {
                         </div>
                         <?php endfor; ?>
                     </div>
+
+                    <h3 style="font-size: 14px; font-weight: 700; margin: 14px 0 4px;">Label Tombol &amp; Filter Produk Beranda:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tab Filter "Semua"</label>
+                            <input type="text" name="fds_produk_filter_all" value="<?php echo esc_attr($c['produk_filter_all']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Bandingkan Model</label>
+                            <input type="text" name="fds_produk_compare_text" value="<?php echo esc_attr($c['produk_compare_text']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Lihat Semua Katalog</label>
+                            <input type="text" name="fds_produk_catalog_text" value="<?php echo esc_attr($c['produk_catalog_text']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Aksi Baris Produk</label>
+                            <input type="text" name="fds_produk_row_detail_text" value="<?php echo esc_attr($c['produk_row_detail_text']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Pesan Kategori Kosong</label>
+                            <input type="text" name="fds_produk_empty_text" value="<?php echo esc_attr($c['produk_empty_text']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks CTA Saat Kosong</label>
+                            <input type="text" name="fds_produk_empty_cta_text" value="<?php echo esc_attr($c['produk_empty_cta_text']); ?>" style="width: 100%; font-size: 12.5px;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -990,7 +1161,7 @@ function render_homepage_content_admin_page() {
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Deskripsi Layanan</label>
                         <textarea name="fds_layanan_desc" rows="2" style="width: 100%; font-size: 13px;"><?php echo esc_textarea($c['layanan_desc']); ?></textarea>
                     </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px;">
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol CTA</label>
                             <input type="text" name="fds_layanan_cta_text" value="<?php echo esc_attr($c['layanan_cta_text']); ?>" style="width: 100%; font-size: 13px;">
@@ -998,6 +1169,10 @@ function render_homepage_content_admin_page() {
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Target URL Tombol</label>
                             <input type="text" name="fds_layanan_cta_url" value="<?php echo esc_attr($c['layanan_cta_url']); ?>" style="width: 100%; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tautan Item ("Lihat Detail")</label>
+                            <input type="text" name="fds_layanan_detail_text" value="<?php echo esc_attr($c['layanan_detail_text']); ?>" style="width: 100%; font-size: 13px;">
                         </div>
                     </div>
                 </div>
@@ -1080,6 +1255,16 @@ function render_homepage_content_admin_page() {
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tautan "Lihat semua artikel"</label>
                         <input type="text" name="fds_blog_cta_text" value="<?php echo esc_attr($c['blog_cta_text']); ?>" style="width: 100%; font-size: 13px;">
                     </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Aksi Kartu Berita</label>
+                            <input type="text" name="fds_newsroom_read_more_text" value="<?php echo esc_attr($c['newsroom_read_more_text']); ?>" style="width: 100%; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Pesan Jika Belum Ada Artikel</label>
+                            <input type="text" name="fds_newsroom_empty_text" value="<?php echo esc_attr($c['newsroom_empty_text']); ?>" style="width: 100%; font-size: 13px;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1139,6 +1324,84 @@ function render_homepage_content_admin_page() {
                         <textarea name="fds_kontak_form_note" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['kontak_form_note']); ?></textarea>
                     </div>
 
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+                        <h3 style="font-size: 13px; font-weight: 700; color: #0f172a; margin: 0 0 10px;">Label Panel Kiri, Kolom Form &amp; Aksesibilitas Peta</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Telepon Panel Kiri</label>
+                                <input type="text" name="fds_kontak_phone_label" value="<?php echo esc_attr($c['kontak_phone_label']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Email Panel Kiri</label>
+                                <input type="text" name="fds_kontak_email_label" value="<?php echo esc_attr($c['kontak_email_label']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Lokasi Panel Kiri</label>
+                                <input type="text" name="fds_kontak_address_label" value="<?php echo esc_attr($c['kontak_address_label']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Nama Depan</label>
+                                <input type="text" name="fds_kontak_form_fname_lbl" value="<?php echo esc_attr($c['kontak_form_fname_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Nama Depan</label>
+                                <input type="text" name="fds_kontak_form_fname_ph" value="<?php echo esc_attr($c['kontak_form_fname_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Nama Belakang</label>
+                                <input type="text" name="fds_kontak_form_lname_lbl" value="<?php echo esc_attr($c['kontak_form_lname_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Nama Belakang</label>
+                                <input type="text" name="fds_kontak_form_lname_ph" value="<?php echo esc_attr($c['kontak_form_lname_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Perusahaan</label>
+                                <input type="text" name="fds_kontak_form_company_lbl" value="<?php echo esc_attr($c['kontak_form_company_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Perusahaan</label>
+                                <input type="text" name="fds_kontak_form_company_ph" value="<?php echo esc_attr($c['kontak_form_company_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Email Bisnis</label>
+                                <input type="text" name="fds_kontak_form_email_lbl" value="<?php echo esc_attr($c['kontak_form_email_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Email Bisnis</label>
+                                <input type="text" name="fds_kontak_form_email_ph" value="<?php echo esc_attr($c['kontak_form_email_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Telepon / WA</label>
+                                <input type="text" name="fds_kontak_form_phone_lbl" value="<?php echo esc_attr($c['kontak_form_phone_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Telepon / WA</label>
+                                <input type="text" name="fds_kontak_form_phone_ph" value="<?php echo esc_attr($c['kontak_form_phone_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Pesan Kebutuhan</label>
+                                <input type="text" name="fds_kontak_form_msg_lbl" value="<?php echo esc_attr($c['kontak_form_msg_lbl']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Tombol Saat Mengirim</label>
+                                <input type="text" name="fds_kontak_form_loading" value="<?php echo esc_attr($c['kontak_form_loading']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Pesan Kebutuhan</label>
+                                <textarea name="fds_kontak_form_msg_ph" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($c['kontak_form_msg_ph']); ?></textarea>
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Atribut Title Iframe Peta</label>
+                                <input type="text" name="fds_kontak_map_title" value="<?php echo esc_attr($c['kontak_map_title']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                        </div>
+                    </div>
+
                     <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 10px;">
                         <span style="font-size: 12px; font-weight: 700; color: #0f808a; letter-spacing: 0.5px; display: block; margin-bottom: 8px;">🗺️ Pengaturan Tampilan Google Maps</span>
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #1e293b; cursor: pointer;">
@@ -1146,6 +1409,193 @@ function render_homepage_content_admin_page() {
                             Tampilkan Google Maps Interaktif di Bagian Bawah Halaman Beranda
                         </label>
                         <span style="display: block; font-size: 12px; color: #64748b; margin-top: 4px; margin-left: 24px;">URL peta diambil dari menu terpusat <strong>Kontak &amp; Sosmed</strong>.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================================= -->
+            <!-- TAB 9: BLOG / NEWSROOM, SINGLE POST, PENCARIAN & 404      -->
+            <!-- ========================================================= -->
+            <div id="tab-newsroom-ui" class="tab-content" style="display: none; background: #fff; padding: 28px 32px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; margin-bottom: 24px;">
+                <h2 style="font-size: 16px; font-weight: 700; color: #0f172a; margin-top: 0; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                    9. Label UI Halaman Blog (/blog/), Artikel, Pencarian &amp; 404
+                </h2>
+                <p style="font-size: 12.5px; color: #64748b; margin-top: 0; margin-bottom: 20px;">Kelola teks pengantar, placeholder pencarian, dan tombol aksi pada halaman daftar berita, detail artikel, hasil pencarian, dan halaman 404.</p>
+
+                <div style="display: grid; gap: 20px;">
+                    <!-- Sub-section Blog / Archive -->
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+                        <h3 style="margin: 0 0 12px; font-size: 13.5px; font-weight: 700; color: #0f808a;">Halaman Blog &amp; Arsip Topik</h3>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Hero Default</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_badge]" value="<?php echo esc_attr($nr['blog_hero_badge']); ?>" style="width: 100%; font-size: 12.5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Arsip Kategori Artikel</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_cat_badge]" value="<?php echo esc_attr($nr['blog_hero_cat_badge']); ?>" style="width: 100%; font-size: 12.5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Arsip Kategori Drone</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_drone_cat_badge]" value="<?php echo esc_attr($nr['blog_hero_drone_cat_badge']); ?>" style="width: 100%; font-size: 12.5px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Arsip Tag Artikel</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_tag_badge]" value="<?php echo esc_attr($nr['blog_hero_tag_badge']); ?>" style="width: 100%; font-size: 12.5px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Hero Blog Default</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_title]" value="<?php echo esc_attr($nr['blog_hero_title']); ?>" style="width: 100%; font-size: 12.5px; font-weight: 600;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Awalan Judul Halaman Tag</label>
+                                <input type="text" name="fds_newsroom_ui[blog_hero_tag_prefix]" value="<?php echo esc_attr($nr['blog_hero_tag_prefix']); ?>" style="width: 100%; font-size: 12.5px;">
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Hero Blog Default</label>
+                            <textarea name="fds_newsroom_ui[blog_hero_desc]" rows="2" style="width: 100%; font-size: 12.5px;"><?php echo esc_textarea($nr['blog_hero_desc']); ?></textarea>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Pencarian Blog</label>
+                                <input type="text" name="fds_newsroom_ui[blog_search_ph]" value="<?php echo esc_attr($nr['blog_search_ph']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Cari Blog</label>
+                                <input type="text" name="fds_newsroom_ui[blog_search_btn]" value="<?php echo esc_attr($nr['blog_search_btn']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tautan Kembali ke Semua Berita</label>
+                                <input type="text" name="fds_newsroom_ui[blog_back_all]" value="<?php echo esc_attr($nr['blog_back_all']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Artikel Terbaru (Hero Card)</label>
+                                <input type="text" name="fds_newsroom_ui[blog_featured_badge]" value="<?php echo esc_attr($nr['blog_featured_badge']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Aksi Artikel Utama</label>
+                                <input type="text" name="fds_newsroom_ui[blog_featured_cta]" value="<?php echo esc_attr($nr['blog_featured_cta']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Aksi Kartu Artikel Grid</label>
+                                <input type="text" name="fds_newsroom_ui[blog_card_cta]" value="<?php echo esc_attr($nr['blog_card_cta']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Kategori Fallback Artikel</label>
+                                <input type="text" name="fds_newsroom_ui[blog_default_cat]" value="<?php echo esc_attr($nr['blog_default_cat']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul State Kosong Blog</label>
+                                <input type="text" name="fds_newsroom_ui[blog_empty_title]" value="<?php echo esc_attr($nr['blog_empty_title']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Reset Topik Blog</label>
+                                <input type="text" name="fds_newsroom_ui[blog_empty_cta]" value="<?php echo esc_attr($nr['blog_empty_cta']); ?>" style="width: 100%; font-size: 12px;">
+                            </div>
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi State Kosong Blog</label>
+                            <textarea name="fds_newsroom_ui[blog_empty_desc]" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($nr['blog_empty_desc']); ?></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Sub-section Single Post & Search & 404 -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+                            <h3 style="margin: 0 0 12px; font-size: 13.5px; font-weight: 700; color: #0f808a;">Detail Artikel &amp; Halaman 404</h3>
+                            <div style="display: grid; gap: 10px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tautan Kembali ke Newsroom</label>
+                                    <input type="text" name="fds_newsroom_ui[single_back_text]" value="<?php echo esc_attr($nr['single_back_text']); ?>" style="width: 100%; font-size: 12px;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Share WhatsApp</label>
+                                        <input type="text" name="fds_newsroom_ui[single_share_wa]" value="<?php echo esc_attr($nr['single_share_wa']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Label Share LinkedIn</label>
+                                        <input type="text" name="fds_newsroom_ui[single_share_li]" value="<?php echo esc_attr($nr['single_share_li']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 4px 0;">
+                                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Kode 404</label>
+                                        <input type="text" name="fds_newsroom_ui[err404_code]" value="<?php echo esc_attr($nr['err404_code']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul Halaman 404</label>
+                                        <input type="text" name="fds_newsroom_ui[err404_title]" value="<?php echo esc_attr($nr['err404_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi Halaman 404</label>
+                                    <textarea name="fds_newsroom_ui[err404_desc]" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($nr['err404_desc']); ?></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Kembali ke Beranda (404)</label>
+                                    <input type="text" name="fds_newsroom_ui[err404_cta]" value="<?php echo esc_attr($nr['err404_cta']); ?>" style="width: 100%; font-size: 12px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px;">
+                            <h3 style="margin: 0 0 12px; font-size: 13.5px; font-weight: 700; color: #0f808a;">Halaman Hasil Pencarian</h3>
+                            <div style="display: grid; gap: 10px;">
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Badge Header Pencarian</label>
+                                    <input type="text" name="fds_newsroom_ui[search_badge]" value="<?php echo esc_attr($nr['search_badge']); ?>" style="width: 100%; font-size: 12px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Format Jumlah Hasil (gunakan <code>{count}</code>)</label>
+                                    <input type="text" name="fds_newsroom_ui[search_found_tpl]" value="<?php echo esc_attr($nr['search_found_tpl']); ?>" style="width: 100%; font-size: 12px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Saat Hasil Kosong di Header</label>
+                                    <input type="text" name="fds_newsroom_ui[search_not_found_desc]" value="<?php echo esc_attr($nr['search_not_found_desc']); ?>" style="width: 100%; font-size: 12px;">
+                                </div>
+                                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Placeholder Input Pencarian</label>
+                                        <input type="text" name="fds_newsroom_ui[search_ph]" value="<?php echo esc_attr($nr['search_ph']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol Cari</label>
+                                        <input type="text" name="fds_newsroom_ui[search_btn]" value="<?php echo esc_attr($nr['search_btn']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tautan Kembali Header</label>
+                                        <input type="text" name="fds_newsroom_ui[search_back_text]" value="<?php echo esc_attr($nr['search_back_text']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Teks Aksi Kartu Hasil</label>
+                                        <input type="text" name="fds_newsroom_ui[search_card_cta]" value="<?php echo esc_attr($nr['search_card_cta']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Judul State Kosong</label>
+                                        <input type="text" name="fds_newsroom_ui[search_empty_title]" value="<?php echo esc_attr($nr['search_empty_title']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Tombol State Kosong</label>
+                                        <input type="text" name="fds_newsroom_ui[search_empty_cta]" value="<?php echo esc_attr($nr['search_empty_cta']); ?>" style="width: 100%; font-size: 12px;">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Deskripsi State Kosong</label>
+                                    <textarea name="fds_newsroom_ui[search_empty_desc]" rows="2" style="width: 100%; font-size: 12px;"><?php echo esc_textarea($nr['search_empty_desc']); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

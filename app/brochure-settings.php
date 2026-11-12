@@ -53,11 +53,15 @@ function render_brochure_settings_admin_page() {
         update_option('fds_brochure_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_brochure_desc'] ?? ''))));
         update_option('fds_brochure_desc_ready', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_brochure_desc_ready'] ?? ''))));
         update_option('fds_brochure_placeholder', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_placeholder'] ?? ''))));
+        update_option('fds_brochure_submit_text', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_submit_text'] ?? ''))));
         update_option('fds_brochure_button_text', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_button_text'] ?? ''))));
         update_option('fds_brochure_layout', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_layout'] ?? 'horizontal'))));
         update_option('fds_brochure_privacy_note', sanitize_text_field(wp_unslash((string) ($_POST['fds_brochure_privacy_note'] ?? ''))));
         update_option('fds_brochure_default_pdf', esc_url_raw(wp_unslash((string) ($_POST['fds_brochure_default_pdf'] ?? ''))));
         update_option('fds_brochure_admin_email', sanitize_email(wp_unslash((string) ($_POST['fds_brochure_admin_email'] ?? ''))));
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+            fds_purge_ai_and_seo_caches(false);
+        }
         $saved = true;
     }
 
@@ -68,12 +72,14 @@ function render_brochure_settings_admin_page() {
     $desc         = get_option('fds_brochure_desc', 'Masukkan email Anda untuk mengunduh dokumen spesifikasi teknis resmi (PDF).');
     $desc_ready   = get_option('fds_brochure_desc_ready', 'Dokumen spesifikasi teknis resmi (PDF) telah siap untuk diunduh.');
     $placeholder  = get_option('fds_brochure_placeholder', 'Masukkan email Anda...');
+    $submit_text  = get_option('fds_brochure_submit_text', 'Kirim Email');
     $button_text  = get_option('fds_brochure_button_text', 'Download Brosur (PDF)');
     if (function_exists('fds_clean_string')) {
         $title       = \fds_clean_string((string) $title);
         $desc        = \fds_clean_string((string) $desc);
         $desc_ready  = \fds_clean_string((string) $desc_ready);
         $placeholder = \fds_clean_string((string) $placeholder);
+        $submit_text = \fds_clean_string((string) $submit_text);
         $button_text = \fds_clean_string((string) $button_text);
     }
     $default_pdf  = get_option('fds_brochure_default_pdf', '');
@@ -142,13 +148,17 @@ function render_brochure_settings_admin_page() {
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Placeholder Input Email</label>
                         <input type="text" name="fds_brochure_placeholder" value="<?php echo esc_attr($placeholder); ?>" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                     </div>
                     <div>
-                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Download Aktif</label>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Kirim Email (Tahap 1)</label>
+                        <input type="text" name="fds_brochure_submit_text" value="<?php echo esc_attr($submit_text); ?>" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Download Aktif (Tahap 2)</label>
                         <input type="text" name="fds_brochure_button_text" value="<?php echo esc_attr($button_text); ?>" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
                     </div>
                 </div>

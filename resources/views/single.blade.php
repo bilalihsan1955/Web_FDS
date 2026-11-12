@@ -19,6 +19,7 @@
         return $s;
       };
       $single_title_clean = $fds_post_clean(get_the_title());
+      $nr = function_exists('App\fds_get_newsroom_ui_content') ? \App\fds_get_newsroom_ui_content() : [];
     @endphp
     <article>
 
@@ -68,16 +69,16 @@
         <div class="mt-16 pt-8 border-t border-black/[0.06] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
           <a href="{!! esc_url(home_url('/blog/')) !!}" class="inline-flex items-center gap-1.5 text-[14px] font-medium text-[#0f808a] hover:underline">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Kembali ke Newsroom
+            {{ $nr['single_back_text'] ?? 'Kembali ke Newsroom' }}
           </a>
           <div class="flex items-center gap-3">
             <a href="{!! esc_url('https://api.whatsapp.com/send?text=' . rawurlencode($single_title_clean . ' ' . get_permalink())) !!}" target="_blank" rel="noopener"
                class="px-4 py-1.5 rounded-full bg-[#f5f5f7] text-[13px] font-semibold text-[#1d1d1f] hover:bg-[#e8e8ed] transition-colors">
-              WhatsApp
+              {{ $nr['single_share_wa'] ?? 'WhatsApp' }}
             </a>
             <a href="{!! esc_url('https://www.linkedin.com/sharing/share-offsite/?url=' . rawurlencode(get_permalink())) !!}" target="_blank" rel="noopener"
                class="px-4 py-1.5 rounded-full bg-[#f5f5f7] text-[13px] font-semibold text-[#1d1d1f] hover:bg-[#e8e8ed] transition-colors">
-              LinkedIn
+              {{ $nr['single_share_li'] ?? 'LinkedIn' }}
             </a>
           </div>
         </div>

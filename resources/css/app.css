@@ -338,9 +338,48 @@ html.lenis, html.lenis body {
   background: #fbfbfd;
 }
 
-.fds-seo-spec-table.fds-comparison-table thead th:first-child {
+.fds-seo-spec-table tbody tr.fds-matrix-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.fds-seo-spec-table tbody tr.fds-matrix-row:hover td,
+.fds-seo-spec-table tbody tr.fds-matrix-row:focus-within td {
+  background: #f0fdfa;
+}
+
+.fds-seo-spec-table.fds-comparison-table thead th:first-child,
+.fds-seo-spec-table.fds-produk-matrix-table thead th:first-child {
   width: auto;
-  min-width: 190px;
+  min-width: 180px;
+}
+
+/* Shared Category Filter Tabs (Homepage #produk & /produk/ Matrix) */
+.drone-tab {
+  padding: 8px 20px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #ffffff;
+  color: #515154;
+}
+.drone-tab:hover {
+  border-color: #0f808a;
+  color: #0f808a;
+}
+.drone-tab.active,
+.drone-tab.active:hover,
+.drone-tab.active:focus {
+  background-color: #0f808a !important;
+  color: #ffffff !important;
+  border-color: #0f808a !important;
+}
+.drone-tab:focus-visible {
+  outline: 2px solid #0f808a;
+  outline-offset: 2px;
 }
 
 .fds-seo-faq-group {

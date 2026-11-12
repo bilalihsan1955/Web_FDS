@@ -2,12 +2,12 @@
 ## Pengembangan Website Company Profile (Compro) & Lead Engine B2B Enterprise Full Drone Solutions (FDS)
 
 **STATUS: PRODUCTION (VERSI MULTI-HALAMAN COMPRO + FUNNEL LAYANAN B2B ENTERPRISE)**  
-**Versi Dokumen:** v2.5 (Enterprise Production Edition)  
+**Versi Dokumen:** v2.5.1 (Enterprise Production Edition)  
 **Tipe Platform:** Website Company Profile (Compro) & Lead Engine B2B Enterprise  
 **Entitas:** PT Karya Solusi Angkasa (`Full Drone Solutions`)  
 **Disusun oleh:** Bilal Al Ihsan (Pengembang Utama & UI/UX Specialist)  
 **Untuk:** Tim Manajemen & Stakeholder PT Karya Solusi Angkasa  
-**Tanggal Rilis:** 2026-11-11  
+**Tanggal Rilis:** 2026-11-12  
 **Dokumen Terkait:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md), [`PROJECT_MEMORY.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PROJECT_MEMORY.md), [`AGENTS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/AGENTS.md), [`INIT.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/INIT.md), [`SEO_KEYWORDS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/SEO_KEYWORDS.md)  
 
 ---
@@ -20,7 +20,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
 1. Menampilkan kepatuhan legalitas resmi nasional secara akurat:
    * **TKDN + BMP mencapai 60,74%** (Kementerian Perindustrian RI) berlaku khusus pada seluruh lini drone pertanian seri **FERTO** (`5, 10, 15, 22, 30, 50`).
    * **SNI 9199:2023** berlaku khusus untuk model **FERTO 15** (kapasitas kerja **17 Liter**) dan **FERTO 22**.
-   * **ISO 9001:2015** Sistem Manajemen Mutu dan kepatuhan regulasi operator **DKPPU CASR Part 107**.
+   * **ISO 9001:2015** Sistem Manajemen Mutu berlaku pada level **perusahaan / manufaktur PT Karya Solusi Angkasa** (bukan sertifikasi unit produk individual per drone) bersama pendampingan regulasi operator **DKPPU CASR Part 107**.
 2. Menyajikan katalog terstruktur berisi **9 model drone aktif** dalam **3 kategori utama** (`Agrikultur`, `Pemetaan & GIS`, dan `Kargo`), sekaligus funnel **Hub Layanan (`/layanan/`)**, **6 halaman sektor industri**, dan **3 halaman kategori layanan spesialis**.
 3. Mengonversi pengunjung korporasi, BUMN, dan instansi menjadi prospek terukur melalui **Formulir Konsultasi Terpadu (`/kontak/#hubungi-form`)** beserta auto-prefill `?layanan=` / `?produk=`, **Gated Download Brosur PDF**, **Mobile Sticky WhatsApp CTA**, dan **pelacakan telemetri GA4/GTM**.
 4. Menjaga keterbacaan penuh oleh bot mesin pencari dan AI melalui **Server-Side Rendered (SSR)** HTML mentah (termasuk panduan teknis dan FAQ accordion `<details>`), **Schema JSON-LD `@graph`** yang valid tanpa field fiktif, dan `/llms.txt`.
@@ -64,7 +64,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
 
 ## 4.3 Katalog Hub (`/produk/`), Taksonomi (`/kategori-drone/*`) & Detail Drone (CPT `drone`)
 * **DRN-1 (9 Model Aktif & 3 Kategori):** Model aktif `FERTO 5`, `FERTO 10`, `FERTO 15` (`17 Liter`), `FERTO 22`, `FERTO 30`, `FERTO 50`, `DELTAV`, `MULTIPURPOSE`, dan `DELFRO` dalam kategori `Agrikultur`, `Pemetaan & GIS`, dan `Kargo` (model/rute lama seperti `/rebo` dan `/ferto-20l` diarahkan aman via 301).
-* **DRN-2 (Standarisasi Kartu Katalog Grid `<x-drone-card>` & Paritas Hero Detail 1:1):** Pada `/produk/` dan `/kategori-drone/*`, kartu memiliki tinggi seragam, gambar penuh *full-bleed* `object-cover` rasio `4/3` tanpa padding abu-abu, area klik utama stretched-link (`.fds-stretched-link`), badge kategori/sertifikasi akurat, dan tombol terpisah untuk komparasi. Foto utama serta spesifikasi kartu tersinkronisasi **1:1** secara otomatis dengan section Hero halaman detail unit (`\App\fds_get_drone_hero_media()` & `\App\fds_get_drone_detail_data()`), sementara seluruh konten editorial di luar kartu (Hero katalog, highlight sertifikasi, judul/deskripsi section kategori, tabel matriks spesifikasi, panduan kategori, sidebar, FAQ, CTA penutup, serta SEO meta & Schema `CollectionPage`/`FAQPage`) tetap **100% editable** non-destruktif melalui **Produk Drone &rarr; Konten Katalog** ([`app/produk-content-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/produk-content-settings.php)).
+* **DRN-2 (Standarisasi Kartu Katalog Grid `<x-drone-card>`, Matriks Live Per Kategori & Paritas Hero Detail 1:1):** Pada `/produk/` dan `/kategori-drone/*`, kartu memiliki tinggi seragam, gambar penuh *full-bleed* `object-cover` rasio `4/3` tanpa padding abu-abu, area klik utama stretched-link (`.fds-stretched-link`), badge kategori/sertifikasi akurat (hanya menampilkan sertifikasi yang dimiliki unit, tanpa teks negatif), dan tombol terpisah untuk komparasi. Foto utama, spesifikasi kartu, maupun **tabel matriks ringkasan spesifikasi per kategori pada Section 6 `/produk/` dengan tab `.drone-tab` seragam Beranda (`Agrikultur`, `Pemetaan & GIS`, `Kargo` tanpa angka jumlah unit)** (seluruh barisnya dapat diklik menuju detail model dan tetap ter-render SSR per tab panel) tersinkronisasi **1:1** secara otomatis dengan halaman detail unit (`\App\fds_get_drone_hero_media()` & `\App\fds_get_drone_detail_data()`), sementara seluruh konten editorial non-card di `/produk/`, `/kategori-drone/*`, Detail UI, dan `/bandingkan/` tetap **100% editable** non-destruktif melalui **Produk Drone &rarr; Konten Katalog** ([`app/produk-content-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/produk-content-settings.php)).
 * **DRN-3 (Halaman Detail `single-drone.blade.php`):** Ringkasan Hero + metrik utama -> Tabel Spesifikasi & gambar offset melayang (`z-20`/`z-30`) -> **Sistem Gated Download Brosur PDF 2-State** (State 1 input email -> AJAX -> State 2 tombol aktif `#0f808a`) -> 4 Skenario Operasional -> **Panduan Teknis Ringkas (250–400 kata)** + **FAQ Accordion `<details>` SSR** dengan ikon panah chevron seragam (tanpa pengulangan tabel spesifikasi ganda di bawah).
 
 ## 4.4 Funnel Layanan B2B (`/layanan/`, Sektor & Kategori Spesialis)
@@ -102,7 +102,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
 
 * **Dual-Engine SEO (`app/seo.php`):** Koordinasi penuh dengan **Rank Math SEO** (`rank_math/json_ld`) dan perlindungan kanonis / bahasa `id-ID` (`inLanguage`).
 * **Valid B2B Schema `@graph`:** Output terstruktur untuk `Organization`/`Corporation`/`LocalBusiness` (dengan `legalName: PT Karya Solusi Angkasa`, bebas `priceRange: "$$$$"`), `WebSite`, `CollectionPage`/`ItemList` (`/produk/`, `/layanan/`, `/kategori-drone/*`), `Service`, `FAQPage`, `ContactPage`, `BlogPosting`, `BreadcrumbList`, serta `ItemPage` + `about: Thing` pada `single-drone` (tanpa snippet `Product`/`Offer`/ulasan fiktif).
-* **Crawl Hygiene & Sitemap:** Arsip `/drone/` dinonaktifkan, rute legacy dialihkan 301 ke URL aktif, halaman utilitas/terima-kasih dilabeli `noindex`, kategori kosong dikeluarkan dari sitemap, dan `/llms.txt` + `/llms-full.txt` tersaji bersih (Markdown terdekode bebas `&amp;`) bersama izin bot AI pada `robots.txt`.
+* **Crawl Hygiene, Sitemap & GEO (`/llms.txt` vs `/llms-full.txt`):** Arsip `/drone/` dinonaktifkan, rute legacy dialihkan 301 ke URL aktif, halaman utilitas/terima-kasih serta CPT internal (`fds_inquiry`, `mitra`, `elementor_library`) dan term kosong dikeluarkan dari sitemap Rank Math maupun `/sitemap.xml` fallback (sambil menjaga kelengkapan `post`, `page`, `drone`, `kategori_drone`, `category`, dan `/layanan/*`). `/llms.txt` menyajikan indeks ringkas terstruktur, sementara `/llms-full.txt` menyajikan korpus pengetahuan penuh (9 model spek detail, 6 sektor, 3 kategori, FAQ, dan artikel Newsroom terkini), keduanya dibersihkan dari `&amp;` mentah dan disegarkan otomatis via [`\App\fds_purge_ai_and_seo_caches()`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/seo.php) serta didukung izin bot AI pada `robots.txt`.
 
 ---
 

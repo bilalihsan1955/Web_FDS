@@ -34,15 +34,32 @@ add_action('admin_enqueue_scripts', function ($hook) {
     }
 });
 
+function fds_get_kontak_default_guide_html(): string {
+    $u_agri  = esc_url(home_url('/kategori-drone/agrikultur/'));
+    $u_peta  = esc_url(home_url('/kategori-drone/pemetaan-gis/'));
+    $u_kargo = esc_url(home_url('/kategori-drone/kargo/'));
+    $u_comp  = esc_url(home_url('/bandingkan/'));
+    $u_about = esc_url(home_url('/tentang-kami/'));
+
+    return '<p class="lead">PT Karya Solusi Angkasa (Full Drone Solutions) melayani konsultasi teknis, penjadwalan demo terbang di workshop Sleman maupun lokasi proyek, hingga pendampingan dokumen pengadaan armada UAV untuk instansi pemerintah, BUMN, sektor perkebunan, dan perusahaan swasta nasional. Seluruh lini drone agrikultur seri FERTO telah mengantongi sertifikat TKDN + BMP hingga 60,74%, model FERTO 15 &amp; FERTO 22 memenuhi standar nasional SNI 9199:2023, dan fasilitas manufaktur kami menerapkan manajemen mutu ISO 9001:2015 untuk pengadaan e-Katalog maupun kontrak korporasi.</p>' . "\n"
+        . '<h3>Portofolio Solusi yang Dapat Dikonsultasikan</h3>' . "\n"
+        . '<ul>' . "\n"
+        . '  <li><a href="' . $u_agri . '">Drone Agrikultur Seri FERTO</a> — Pilihan drone sprayer dan spreader berkapasitas 5 hingga 50 liter untuk pemeliharaan tanaman pangan, hortikultura, dan perkebunan kelapa sawit skala komersial.</li>' . "\n"
+        . '  <li><a href="' . $u_peta . '">Drone Pemetaan &amp; Survei GIS</a> — Platform Hybrid VTOL jarak jauh serta multirotor modular untuk pemetaan topografi, inspeksi jaringan listrik 150 kV, dan survei aset energi.</li>' . "\n"
+        . '  <li><a href="' . $u_kargo . '">Drone Kargo &amp; Logistik DELFRO</a> — Wahana angkut otonom berdaya angkat 10 kg untuk distribusi logistik di medan perbukitan maupun wilayah kepulauan.</li>' . "\n"
+        . '</ul>' . "\n"
+        . '<p>Sebelum mengajukan permintaan penawaran harga resmi melalui formulir di atas, Anda juga dapat menggunakan alat <a href="' . $u_comp . '">Perbandingan Spesifikasi Drone</a> untuk mengevaluasi kapasitas muatan dan daya jelajah tiap model, atau membaca profil fasilitas riset kami di halaman <a href="' . $u_about . '">Tentang PT Karya Solusi Angkasa</a>.</p>';
+}
+
 // 2. HELPER GLOBAL CONTACT & SOCIAL MEDIA (SINGLE SOURCE OF TRUTH)
-function fds_get_global_contact() {
+function fds_get_global_contact(bool $fresh = false) {
     static $static_contact = null;
-    if ($static_contact !== null) {
+    if (!$fresh && $static_contact !== null) {
         return $static_contact;
     }
 
-    $cached = get_transient('fds_global_contact_cache_v3');
-    if ($cached !== false && is_array($cached)) {
+    $cached = !$fresh ? get_transient('fds_global_contact_cache_v4') : false;
+    if (!$fresh && $cached !== false && is_array($cached)) {
         if (function_exists('fds_deep_decode')) {
             $cached = \fds_deep_decode($cached);
         }
@@ -92,34 +109,82 @@ function fds_get_global_contact() {
         'whatsapp'         => get_option('fds_sosmed_whatsapp_url', get_option('fds_footer_whatsapp', 'https://wa.me/628112748882')),
         'whatsapp_active'  => (bool) get_option('fds_sosmed_whatsapp_active', 1),
 
-        // HAK CIPTA & LEGAL
-        'copyright'    => get_option('fds_footer_copyright', 'Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.'),
-        'privacy_url'  => $privacy_url,
-        'terms_url'    => $terms_url,
+        // HAK CIPTA, LEGAL & LABEL KOLOM FOOTER
+        'copyright'               => get_option('fds_footer_copyright', 'Copyright © ' . date('Y') . ' PT Karya Solusi Angkasa (Full Drone Solutions). Hak cipta dilindungi.'),
+        'privacy_url'             => $privacy_url,
+        'terms_url'               => $terms_url,
+        'footer_col1_title'       => get_option('fds_footer_col1_title', 'Produk Drone') ?: 'Produk Drone',
+        'footer_col1_all_label'   => get_option('fds_footer_col1_all_label', 'Semua Produk UAV (Katalog)') ?: 'Semua Produk UAV (Katalog)',
+        'footer_col2_title'       => (string) get_option('fds_footer_col2_title', ''),
+        'footer_col2_all_label'   => (string) get_option('fds_footer_col2_all_label', ''),
+        'footer_col3_title'       => get_option('fds_footer_col3_title', 'Perusahaan') ?: 'Perusahaan',
+        'footer_about_label'      => get_option('fds_footer_about_label', 'Tentang PT Karya Solusi Angkasa') ?: 'Tentang PT Karya Solusi Angkasa',
+        'footer_sector_prefix'    => get_option('fds_footer_sector_prefix', 'Solusi ') ?: 'Solusi ',
+        'footer_blog_label'       => get_option('fds_footer_blog_label', 'Newsroom & Riset') ?: 'Newsroom & Riset',
+        'footer_layanan_govt_label' => get_option('fds_footer_layanan_govt_label', 'Pemerintah, BUMN & Korporasi') ?: 'Pemerintah, BUMN & Korporasi',
+        'footer_col4_title'       => get_option('fds_footer_col4_title', 'Dukungan') ?: 'Dukungan',
+        'footer_kontak_label'     => get_option('fds_footer_kontak_label', 'Hubungi Tim Sales & Engineering') ?: 'Hubungi Tim Sales & Engineering',
+        'footer_workshop_label'   => get_option('fds_footer_workshop_label', 'Workshop & Demo Unit Yogyakarta') ?: 'Workshop & Demo Unit Yogyakarta',
+        'footer_rfp_label'        => get_option('fds_footer_rfp_label', 'Permintaan Penawaran & RFP') ?: 'Permintaan Penawaran & RFP',
+        'footer_tel_prefix'       => get_option('fds_footer_tel_prefix', 'Tel: ') ?: 'Tel: ',
+        'footer_email_prefix'     => get_option('fds_footer_email_prefix', 'Email: ') ?: 'Email: ',
+        'footer_privacy_label'    => get_option('fds_footer_privacy_label', 'Kebijakan Privasi') ?: 'Kebijakan Privasi',
+        'footer_terms_label'      => get_option('fds_footer_terms_label', 'Ketentuan Layanan') ?: 'Ketentuan Layanan',
 
-        // KUSTOMISASI NARASI HALAMAN KONTAK (/kontak/)
-        'page_kontak_badge'       => get_option('fds_page_kontak_badge', 'Pusat Kontak'),
-        'page_kontak_title'       => get_option('fds_page_kontak_title', 'Hubungi Kami.'),
-        'page_kontak_desc'        => get_option('fds_page_kontak_desc', 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.'),
-        'page_kontak_panel_label' => get_option('fds_page_kontak_panel_label', 'Kantor & Workshop Resmi'),
-        'page_kontak_panel_desc'  => get_option('fds_page_kontak_panel_desc', 'Produsen UAV nasional dengan TKDN + BMP 60,74% (Seri FERTO), SNI 9199:2023 (FERTO 15 & FERTO 22), dan sistem manajemen mutu ISO 9001:2015 di Sleman, Yogyakarta.'),
-        'page_kontak_hours_wd'    => get_option('fds_page_kontak_hours_wd', 'Senin – Jumat: 08:30 – 17:00 WIB'),
-        'page_kontak_hours_sat'   => get_option('fds_page_kontak_hours_sat', 'Sabtu: 08:30 – 13:00 WIB'),
-        'page_kontak_wa_btn'      => get_option('fds_page_kontak_wa_btn', 'Chat WhatsApp Kami'),
-        'page_kontak_form_title'  => get_option('fds_page_kontak_form_title', 'Kirim Pesan atau Permintaan Penawaran'),
-        'page_kontak_form_desc'   => get_option('fds_page_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
-        'page_kontak_form_btn'    => get_option('fds_page_kontak_form_btn', 'Kirim Pesan'),
-        'page_kontak_form_note'   => get_option('fds_page_kontak_form_note', 'Tim kami merespons pada jam kerja Senin–Sabtu. Data Anda terlindungi.'),
-        'page_kontak_map_title'   => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
-        'page_kontak_map_btn'     => get_option('fds_page_kontak_map_btn', 'Buka di Google Maps'),
-        'page_kontak_map_link'    => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta'),
+        // KUSTOMISASI NARASI & FORM HALAMAN KONTAK (/kontak/)
+        'page_kontak_badge'             => get_option('fds_page_kontak_badge', 'Pusat Kontak'),
+        'page_kontak_title'             => get_option('fds_page_kontak_title', 'Hubungi Kami.'),
+        'page_kontak_desc'              => get_option('fds_page_kontak_desc', 'Diskusikan pengadaan armada drone, jadwal demo terbang, atau kebutuhan teknis operasional Anda bersama tim Full Drone Solutions.'),
+        'page_kontak_lbl_phone'         => get_option('fds_page_kontak_lbl_phone', 'Telepon & WhatsApp') ?: 'Telepon & WhatsApp',
+        'page_kontak_lbl_email'         => get_option('fds_page_kontak_lbl_email', 'Email Resmi') ?: 'Email Resmi',
+        'page_kontak_lbl_hours'         => get_option('fds_page_kontak_lbl_hours', 'Jam Operasional') ?: 'Jam Operasional',
+        'page_kontak_map_jump_text'     => get_option('fds_page_kontak_map_jump_text', 'Lihat titik lokasi & workshop resmi ↓') ?: 'Lihat titik lokasi & workshop resmi ↓',
+        'page_kontak_panel_label'       => get_option('fds_page_kontak_panel_label', 'Kantor & Workshop Resmi'),
+        'page_kontak_panel_desc'        => get_option('fds_page_kontak_panel_desc', 'Produsen UAV nasional dengan TKDN + BMP 60,74% (Seri FERTO), SNI 9199:2023 (FERTO 15 & FERTO 22), dan sistem manajemen mutu ISO 9001:2015 di Sleman, Yogyakarta.'),
+        'page_kontak_hours_wd'          => get_option('fds_page_kontak_hours_wd', 'Senin – Jumat: 08:30 – 17:00 WIB'),
+        'page_kontak_hours_sat'         => get_option('fds_page_kontak_hours_sat', 'Sabtu: 08:30 – 13:00 WIB'),
+        'page_kontak_wa_btn'            => get_option('fds_page_kontak_wa_btn', 'Chat WhatsApp Kami'),
+        'page_kontak_form_title'        => get_option('fds_page_kontak_form_title', 'Kirim Pesan atau Permintaan Penawaran'),
+        'page_kontak_form_desc'         => get_option('fds_page_kontak_form_desc', 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:'),
+        'page_kontak_form_btn'          => get_option('fds_page_kontak_form_btn', 'Kirim Pesan'),
+        'page_kontak_form_loading'      => get_option('fds_page_kontak_form_loading', 'Mengirim Pesan...') ?: 'Mengirim Pesan...',
+        'page_kontak_form_note'         => get_option('fds_page_kontak_form_note', 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.'),
+        'page_kontak_opt_default'       => get_option('fds_page_kontak_opt_default', 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi') ?: 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi',
+        'page_kontak_field_service_lbl' => get_option('fds_page_kontak_field_service_lbl', 'Fokus Layanan / Model UAV') ?: 'Fokus Layanan / Model UAV',
+        'page_kontak_field_fname_lbl'   => get_option('fds_page_kontak_field_fname_lbl', 'Nama Depan') ?: 'Nama Depan',
+        'page_kontak_field_fname_ph'    => get_option('fds_page_kontak_field_fname_ph', 'Nama depan') ?: 'Nama depan',
+        'page_kontak_field_lname_lbl'   => get_option('fds_page_kontak_field_lname_lbl', 'Nama Belakang') ?: 'Nama Belakang',
+        'page_kontak_field_lname_ph'    => get_option('fds_page_kontak_field_lname_ph', 'Nama belakang') ?: 'Nama belakang',
+        'page_kontak_field_comp_lbl'    => get_option('fds_page_kontak_field_comp_lbl', 'Perusahaan / Instansi') ?: 'Perusahaan / Instansi',
+        'page_kontak_field_comp_ph'     => get_option('fds_page_kontak_field_comp_ph', 'Nama perusahaan / instansi') ?: 'Nama perusahaan / instansi',
+        'page_kontak_field_email_lbl'   => get_option('fds_page_kontak_field_email_lbl', 'Email Bisnis') ?: 'Email Bisnis',
+        'page_kontak_field_email_ph'    => get_option('fds_page_kontak_field_email_ph', 'nama@perusahaan.com') ?: 'nama@perusahaan.com',
+        'page_kontak_field_phone_lbl'   => get_option('fds_page_kontak_field_phone_lbl', 'Nomor Telepon / WhatsApp') ?: 'Nomor Telepon / WhatsApp',
+        'page_kontak_field_phone_ph'    => get_option('fds_page_kontak_field_phone_ph', 'Nomor telepon / WhatsApp') ?: 'Nomor telepon / WhatsApp',
+        'page_kontak_field_msg_lbl'     => get_option('fds_page_kontak_field_msg_lbl', 'Kebutuhan Operasional & Detail Pengadaan') ?: 'Kebutuhan Operasional & Detail Pengadaan',
+        'page_kontak_field_msg_ph'      => get_option('fds_page_kontak_field_msg_ph', 'Jelaskan kebutuhan pengadaan armada drone, jadwal demo terbang, atau spesifikasi teknis operasional Anda...') ?: 'Jelaskan kebutuhan pengadaan armada drone, jadwal demo terbang, atau spesifikasi teknis operasional Anda...',
+        'page_kontak_map_title'         => get_option('fds_page_kontak_map_title', 'Lokasi Workshop'),
+        'page_kontak_map_btn'           => get_option('fds_page_kontak_map_btn', 'Buka di Google Maps'),
+        'page_kontak_map_link'          => get_option('fds_page_kontak_map_link', 'https://maps.google.com/?q=Full+Drone+Solutions+Sleman+Yogyakarta'),
+        'page_kontak_guide_eyebrow'     => get_option('fds_page_kontak_guide_eyebrow', 'Dukungan Pengadaan Enterprise'),
+        'page_kontak_guide_title'       => get_option('fds_page_kontak_guide_title', 'Layanan Konsultasi & Pengadaan Korporasi FDS'),
+        'page_kontak_guide_body'        => (function () {
+            $raw = get_option('fds_page_kontak_guide_body', '');
+            $val = is_string($raw) && trim($raw) !== '' ? $raw : fds_get_kontak_default_guide_html();
+            return function_exists('fds_scrub_legacy_text') ? \fds_scrub_legacy_text($val) : $val;
+        })(),
     ];
 
-    // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll)
-    $clean_data = array_map(function($v) {
-        if (!is_string($v)) return $v;
+    // Decode HTML entities berulang (&amp;amp; → &amp; → &, dll) untuk string plain-text saja (kecuali rich HTML body)
+    $clean_data = [];
+    foreach ($data as $k => $v) {
+        if ($k === 'page_kontak_guide_body' || !is_string($v)) {
+            $clean_data[$k] = $v;
+            continue;
+        }
         if (function_exists('fds_clean_string')) {
-            return \fds_clean_string($v);
+            $clean_data[$k] = \fds_clean_string($v);
+            continue;
         }
         $prev = '';
         while ($prev !== $v) {
@@ -127,10 +192,10 @@ function fds_get_global_contact() {
             $v = wp_specialchars_decode($v, ENT_QUOTES);
             $v = html_entity_decode($v, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         }
-        return $v;
-    }, $data);
+        $clean_data[$k] = $v;
+    }
 
-    set_transient('fds_global_contact_cache_v3', $clean_data, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_global_contact_cache_v4', $clean_data, 12 * HOUR_IN_SECONDS);
     $static_contact = $clean_data;
     return $clean_data;
 }
@@ -228,17 +293,39 @@ function render_global_contact_admin_page() {
         update_option('fds_sosmed_whatsapp_url', esc_url_raw(wp_unslash((string) ($_POST['fds_sosmed_whatsapp_url'] ?? ''))));
         update_option('fds_sosmed_whatsapp_active', isset($_POST['fds_sosmed_whatsapp_active']) ? 1 : 0);
 
-        // 3. Simpan Footer Hak Cipta
+        // 3. Simpan Footer Hak Cipta & Label Kolom Footer
         $raw_priv = trim(wp_unslash((string) ($_POST['fds_footer_privacy_url'] ?? '')));
         $raw_term = trim(wp_unslash((string) ($_POST['fds_footer_terms_url'] ?? '')));
         update_option('fds_footer_copyright', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_copyright'] ?? ''))));
         update_option('fds_footer_privacy_url', ($raw_priv !== '' && $raw_priv !== '#') ? esc_url_raw($raw_priv) : '');
         update_option('fds_footer_terms_url', ($raw_term !== '' && $raw_term !== '#') ? esc_url_raw($raw_term) : '');
 
-        // 4. Simpan Kustomisasi Narasi Halaman Kontak (/kontak/)
+        update_option('fds_footer_col1_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col1_title'] ?? ''))));
+        update_option('fds_footer_col1_all_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col1_all_label'] ?? ''))));
+        update_option('fds_footer_col2_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col2_title'] ?? ''))));
+        update_option('fds_footer_col2_all_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col2_all_label'] ?? ''))));
+        update_option('fds_footer_col3_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col3_title'] ?? ''))));
+        update_option('fds_footer_about_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_about_label'] ?? ''))));
+        update_option('fds_footer_sector_prefix', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_sector_prefix'] ?? ''))));
+        update_option('fds_footer_blog_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_blog_label'] ?? ''))));
+        update_option('fds_footer_layanan_govt_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_layanan_govt_label'] ?? ''))));
+        update_option('fds_footer_col4_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_col4_title'] ?? ''))));
+        update_option('fds_footer_kontak_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_kontak_label'] ?? ''))));
+        update_option('fds_footer_workshop_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_workshop_label'] ?? ''))));
+        update_option('fds_footer_rfp_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_rfp_label'] ?? ''))));
+        update_option('fds_footer_tel_prefix', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_tel_prefix'] ?? ''))));
+        update_option('fds_footer_email_prefix', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_email_prefix'] ?? ''))));
+        update_option('fds_footer_privacy_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_privacy_label'] ?? ''))));
+        update_option('fds_footer_terms_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_footer_terms_label'] ?? ''))));
+
+        // 4. Simpan Kustomisasi Narasi & Form Halaman Kontak (/kontak/)
         update_option('fds_page_kontak_badge', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_badge'] ?? ''))));
         update_option('fds_page_kontak_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_title'] ?? ''))));
         update_option('fds_page_kontak_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_desc'] ?? ''))));
+        update_option('fds_page_kontak_lbl_phone', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_lbl_phone'] ?? ''))));
+        update_option('fds_page_kontak_lbl_email', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_lbl_email'] ?? ''))));
+        update_option('fds_page_kontak_lbl_hours', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_lbl_hours'] ?? ''))));
+        update_option('fds_page_kontak_map_jump_text', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_map_jump_text'] ?? ''))));
         update_option('fds_page_kontak_panel_label', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_panel_label'] ?? ''))));
         update_option('fds_page_kontak_panel_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_panel_desc'] ?? ''))));
         update_option('fds_page_kontak_hours_wd', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_hours_wd'] ?? ''))));
@@ -247,21 +334,47 @@ function render_global_contact_admin_page() {
         update_option('fds_page_kontak_form_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_title'] ?? ''))));
         update_option('fds_page_kontak_form_desc', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_form_desc'] ?? ''))));
         update_option('fds_page_kontak_form_btn', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_btn'] ?? ''))));
+        update_option('fds_page_kontak_form_loading', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_loading'] ?? ''))));
         update_option('fds_page_kontak_form_note', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_note'] ?? ''))));
+        update_option('fds_page_kontak_opt_default', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_opt_default'] ?? ''))));
+        update_option('fds_page_kontak_field_service_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_service_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_fname_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fname_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_fname_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fname_ph'] ?? ''))));
+        update_option('fds_page_kontak_field_lname_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_lname_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_lname_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_lname_ph'] ?? ''))));
+        update_option('fds_page_kontak_field_comp_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_comp_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_comp_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_comp_ph'] ?? ''))));
+        update_option('fds_page_kontak_field_email_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_email_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_email_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_email_ph'] ?? ''))));
+        update_option('fds_page_kontak_field_phone_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_phone_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_phone_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_phone_ph'] ?? ''))));
+        update_option('fds_page_kontak_field_msg_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_msg_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_msg_ph', sanitize_textarea_field(wp_unslash((string) ($_POST['fds_page_kontak_field_msg_ph'] ?? ''))));
         update_option('fds_page_kontak_map_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_map_title'] ?? ''))));
         update_option('fds_page_kontak_map_btn', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_map_btn'] ?? ''))));
         update_option('fds_page_kontak_map_link', esc_url_raw(wp_unslash((string) ($_POST['fds_page_kontak_map_link'] ?? ''))));
+        update_option('fds_page_kontak_guide_eyebrow', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_guide_eyebrow'] ?? ''))));
+        update_option('fds_page_kontak_guide_title', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_guide_title'] ?? ''))));
+        $guide_body_clean = wp_kses_post(wp_unslash((string) ($_POST['fds_page_kontak_guide_body'] ?? '')));
+        if (function_exists('fds_scrub_legacy_text')) {
+            $guide_body_clean = \fds_scrub_legacy_text($guide_body_clean);
+        }
+        update_option('fds_page_kontak_guide_body', $guide_body_clean);
 
         delete_transient('fds_global_contact_cache');
         delete_transient('fds_global_contact_cache_v2');
         delete_transient('fds_global_contact_cache_v3');
+        delete_transient('fds_global_contact_cache_v4');
         delete_transient('fds_about_content_cache');
         delete_transient('fds_about_content_cache_v2');
         delete_transient('fds_about_content_cache_v3');
-        $message = 'Pengaturan Kontak Global, Sosial Media, Narasi Halaman Kontak & Hak Cipta berhasil diperbarui!';
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+            fds_purge_ai_and_seo_caches(false);
+        }
+        $message = 'Pengaturan Kontak Global, Sosial Media, Label Footer & Narasi Halaman Kontak berhasil diperbarui!';
     }
 
-    $c = fds_get_global_contact();
+    $c = fds_get_global_contact(true);
     ?>
     <div class="wrap" style="max-width: 100%; margin-top: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; box-sizing: border-box;">
 
@@ -397,6 +510,25 @@ function render_global_contact_admin_page() {
                         <input type="text" name="fds_page_kontak_wa_btn" value="<?php echo esc_attr($c['page_kontak_wa_btn']); ?>" placeholder="Chat WhatsApp Kami" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
                     </div>
 
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Telepon &amp; WhatsApp</label>
+                            <input type="text" name="fds_page_kontak_lbl_phone" value="<?php echo esc_attr($c['page_kontak_lbl_phone']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Email Resmi</label>
+                            <input type="text" name="fds_page_kontak_lbl_email" value="<?php echo esc_attr($c['page_kontak_lbl_email']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Jam Operasional</label>
+                            <input type="text" name="fds_page_kontak_lbl_hours" value="<?php echo esc_attr($c['page_kontak_lbl_hours']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tautan Lompat ke Peta</label>
+                            <input type="text" name="fds_page_kontak_map_jump_text" value="<?php echo esc_attr($c['page_kontak_map_jump_text']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
                     <div style="margin-bottom: 14px;">
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Sub-Judul Seksi Peta / Workshop</label>
                         <input type="text" name="fds_page_kontak_panel_label" value="<?php echo esc_attr($c['page_kontak_panel_label']); ?>" placeholder="Fasilitas Produksi &amp; Workshop Resmi" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
@@ -422,20 +554,89 @@ function render_global_contact_admin_page() {
                         <textarea name="fds_page_kontak_form_desc" rows="2" placeholder="Lengkapi formulir di bawah ini..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;"><?php echo esc_textarea($c['page_kontak_form_desc']); ?></textarea>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 14px;">
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Tombol Kirim Pesan</label>
                             <input type="text" name="fds_page_kontak_form_btn" value="<?php echo esc_attr($c['page_kontak_form_btn']); ?>" placeholder="Kirim Pesan" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Teks Status Loading Tombol</label>
+                            <input type="text" name="fds_page_kontak_form_loading" value="<?php echo esc_attr($c['page_kontak_form_loading']); ?>" placeholder="Mengirim Pesan..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
                         </div>
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Catatan Jaminan &amp; Keamanan Data</label>
                             <input type="text" name="fds_page_kontak_form_note" value="<?php echo esc_attr($c['page_kontak_form_note']); ?>" placeholder="Tim kami merespons pada jam kerja Senin–Sabtu. Data Anda terlindungi." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
                         </div>
                     </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Dropdown Fokus Layanan / UAV</label>
+                            <input type="text" name="fds_page_kontak_field_service_lbl" value="<?php echo esc_attr($c['page_kontak_field_service_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Opsi Default Dropdown Fokus Layanan</label>
+                            <input type="text" name="fds_page_kontak_opt_default" value="<?php echo esc_attr($c['page_kontak_opt_default']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Nama Depan</label>
+                            <input type="text" name="fds_page_kontak_field_fname_lbl" value="<?php echo esc_attr($c['page_kontak_field_fname_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Nama Depan</label>
+                            <input type="text" name="fds_page_kontak_field_fname_ph" value="<?php echo esc_attr($c['page_kontak_field_fname_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Nama Belakang</label>
+                            <input type="text" name="fds_page_kontak_field_lname_lbl" value="<?php echo esc_attr($c['page_kontak_field_lname_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Nama Belakang</label>
+                            <input type="text" name="fds_page_kontak_field_lname_ph" value="<?php echo esc_attr($c['page_kontak_field_lname_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Perusahaan / Instansi</label>
+                            <input type="text" name="fds_page_kontak_field_comp_lbl" value="<?php echo esc_attr($c['page_kontak_field_comp_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Perusahaan / Instansi</label>
+                            <input type="text" name="fds_page_kontak_field_comp_ph" value="<?php echo esc_attr($c['page_kontak_field_comp_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Email Bisnis</label>
+                            <input type="text" name="fds_page_kontak_field_email_lbl" value="<?php echo esc_attr($c['page_kontak_field_email_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Email Bisnis</label>
+                            <input type="text" name="fds_page_kontak_field_email_ph" value="<?php echo esc_attr($c['page_kontak_field_email_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Telepon / WhatsApp</label>
+                            <input type="text" name="fds_page_kontak_field_phone_lbl" value="<?php echo esc_attr($c['page_kontak_field_phone_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Telepon / WhatsApp</label>
+                            <input type="text" name="fds_page_kontak_field_phone_ph" value="<?php echo esc_attr($c['page_kontak_field_phone_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Kebutuhan Operasional</label>
+                            <input type="text" name="fds_page_kontak_field_msg_lbl" value="<?php echo esc_attr($c['page_kontak_field_msg_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Kebutuhan Operasional</label>
+                            <input type="text" name="fds_page_kontak_field_msg_ph" value="<?php echo esc_attr($c['page_kontak_field_msg_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 4. KARTU GOOGLE MAPS -->
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
                     <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">4. Kartu Google Maps Bawah</h3>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px;">
@@ -452,6 +653,27 @@ function render_global_contact_admin_page() {
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Tautan Eksternal Google Maps</label>
                         <input type="text" name="fds_page_kontak_map_link" value="<?php echo esc_attr($c['page_kontak_map_link']); ?>" placeholder="https://maps.google.com/?q=..." style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                    </div>
+                </div>
+
+                <!-- 5. PANDUAN PENGADAAN ENTERPRISE (SECTION 3 HALAMAN KONTAK) -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 14px;">5. Seksi Panduan Konsultasi &amp; Pengadaan Korporasi (Bagian Bawah /kontak/)</h3>
+
+                    <div style="display: grid; grid-template-columns: 260px 1fr; gap: 16px; margin-bottom: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Eyebrow Seksi</label>
+                            <input type="text" name="fds_page_kontak_guide_eyebrow" value="<?php echo esc_attr($c['page_kontak_guide_eyebrow']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Judul Seksi Panduan (H2)</label>
+                            <input type="text" name="fds_page_kontak_guide_title" value="<?php echo esc_attr($c['page_kontak_guide_title']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Konten Panduan Pengadaan B2B (Mendukung tag HTML: <code>&lt;p&gt;</code>, <code>&lt;h3&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;a&gt;</code>)</label>
+                        <textarea name="fds_page_kontak_guide_body" rows="8" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 12px; font-size: 12.5px; font-family: monospace; line-height: 1.5;"><?php echo esc_textarea($c['page_kontak_guide_body']); ?></textarea>
                     </div>
                 </div>
 
@@ -553,7 +775,7 @@ function render_global_contact_admin_page() {
                     <input type="text" name="fds_footer_copyright" value="<?php echo esc_attr($c['copyright']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px;">
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">URL Kebijakan Privasi</label>
                         <input type="text" name="fds_footer_privacy_url" value="<?php echo esc_attr($c['privacy_url']); ?>" placeholder="#" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px;">
@@ -561,6 +783,81 @@ function render_global_contact_admin_page() {
                     <div>
                         <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">URL Ketentuan Layanan</label>
                         <input type="text" name="fds_footer_terms_url" value="<?php echo esc_attr($c['terms_url']); ?>" placeholder="#" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 14px;">
+                    </div>
+                </div>
+
+                <!-- Label Kolom & Tautan Footer -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px 20px;">
+                    <h3 style="font-size: 13px; font-weight: 700; color: #0f808a; margin: 0 0 12px;">Label Kolom &amp; Tautan Navigasi Footer</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;">
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Judul Kolom 1</label>
+                            <input type="text" name="fds_footer_col1_title" value="<?php echo esc_attr($c['footer_col1_title']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Link Pertama Kolom 1</label>
+                            <input type="text" name="fds_footer_col1_all_label" value="<?php echo esc_attr($c['footer_col1_all_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Judul Kolom 2 (Opsional Override)</label>
+                            <input type="text" name="fds_footer_col2_title" value="<?php echo esc_attr($c['footer_col2_title']); ?>" placeholder="Layanan (Ikuti Konten Layanan)" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Link Pertama Kolom 2 (Opsional Override)</label>
+                            <input type="text" name="fds_footer_col2_all_label" value="<?php echo esc_attr($c['footer_col2_all_label']); ?>" placeholder="Semua Layanan UAV (Hub)" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Judul Kolom 3</label>
+                            <input type="text" name="fds_footer_col3_title" value="<?php echo esc_attr($c['footer_col3_title']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 3: Link Tentang Kami</label>
+                            <input type="text" name="fds_footer_about_label" value="<?php echo esc_attr($c['footer_about_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Awalan Link Sektor (mis. "Solusi ")</label>
+                            <input type="text" name="fds_footer_sector_prefix" value="<?php echo esc_attr($c['footer_sector_prefix']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 3: Link Blog / Newsroom</label>
+                            <input type="text" name="fds_footer_blog_label" value="<?php echo esc_attr($c['footer_blog_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 3: Link Pemerintah &amp; BUMN</label>
+                            <input type="text" name="fds_footer_layanan_govt_label" value="<?php echo esc_attr($c['footer_layanan_govt_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Judul Kolom 4</label>
+                            <input type="text" name="fds_footer_col4_title" value="<?php echo esc_attr($c['footer_col4_title']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 4: Link Sales &amp; Engineering</label>
+                            <input type="text" name="fds_footer_kontak_label" value="<?php echo esc_attr($c['footer_kontak_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 4: Link Workshop</label>
+                            <input type="text" name="fds_footer_workshop_label" value="<?php echo esc_attr($c['footer_workshop_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Kolom 4: Link RFP &amp; Penawaran</label>
+                            <input type="text" name="fds_footer_rfp_label" value="<?php echo esc_attr($c['footer_rfp_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label Prefix Telepon</label>
+                            <input type="text" name="fds_footer_tel_prefix" value="<?php echo esc_attr($c['footer_tel_prefix']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label Prefix Email</label>
+                            <input type="text" name="fds_footer_email_prefix" value="<?php echo esc_attr($c['footer_email_prefix']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label Link Kebijakan Privasi</label>
+                            <input type="text" name="fds_footer_privacy_label" value="<?php echo esc_attr($c['footer_privacy_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label Link Ketentuan Layanan</label>
+                            <input type="text" name="fds_footer_terms_label" value="<?php echo esc_attr($c['footer_terms_label']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                        </div>
                     </div>
                 </div>
             </div>

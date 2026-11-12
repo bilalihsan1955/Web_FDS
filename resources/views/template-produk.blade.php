@@ -34,7 +34,7 @@
 
   foreach ($all_drones as $d_post) {
       $d_slug = strtolower((string) $d_post->post_name);
-      if (strpos($d_slug, 'rebo') !== false || strpos($d_slug, 'agrea') !== false) {
+      if (strpos($d_slug, 'rebo') !== false || strpos($d_slug, 'agrea') !== false || strpos($d_slug, 'ferto-20') !== false) {
           continue;
       }
 
@@ -65,6 +65,13 @@
       return $oa === $ob ? strcmp($a->post_title, $b->post_title) : ($oa <=> $ob);
   });
 
+  if (function_exists('fds_sort_drone_posts')) {
+      $agrikultur_drones = fds_sort_drone_posts($agrikultur_drones);
+      $pemetaan_drones   = fds_sort_drone_posts($pemetaan_drones);
+      $kargo_drones      = fds_sort_drone_posts($kargo_drones);
+      $other_drones      = fds_sort_drone_posts($other_drones);
+  }
+
   $cat_agri_url      = get_term_link('agrikultur', 'kategori_drone');
   $cat_pemetaan_url  = get_term_link('pemetaan-gis', 'kategori_drone');
   $cat_kargo_url     = get_term_link('kargo', 'kategori_drone');
@@ -75,7 +82,74 @@
   $produk_faqs = function_exists('\App\fds_get_produk_faqs') ? \App\fds_get_produk_faqs() : (array) ($pk['faqs'] ?? []);
   $highlights  = (array) ($pk['highlights'] ?? []);
   $matrix_cols = (array) ($pk['matrix_columns'] ?? []);
-  $matrix_rows = (array) ($pk['matrix_rows'] ?? []);
+
+  $build_matrix_rows = static function (array $posts): array {
+      $rows = [];
+      foreach ($posts as $mpost) {
+          if (function_exists('\App\fds_get_drone_detail_data')) {
+              $mdetail = \App\fds_get_drone_detail_data((int) $mpost->ID);
+              if (!empty($mdetail)) {
+                  $rows[] = [
+                      'name'      => (string) ($mdetail['name'] ?? get_the_title($mpost->ID)),
+                      'permalink' => (string) ($mdetail['permalink'] ?? get_permalink($mpost->ID)),
+                      'function'  => (string) ($mdetail['matrix_function'] ?? ($mdetail['card_tagline'] ?? '')),
+                      'payload'   => (string) ($mdetail['matrix_payload'] ?? ($mdetail['card_payload'] ?? '')),
+                      'duration'  => (string) ($mdetail['matrix_duration'] ?? ($mdetail['card_metric_value'] ?? '')),
+                      'cert'      => (string) ($mdetail['matrix_cert'] ?? ''),
+                  ];
+              }
+          }
+      }
+      return $rows;
+  };
+
+  $has_row_certs = static fn(array $rows): bool => count(array_filter($rows, static fn($r) => trim((string) ($r['cert'] ?? '')) !== '')) > 0;
+
+  $cat_term_label = static function (string $slug, string $fallback): string {
+      $term = get_term_by('slug', $slug, 'kategori_drone');
+      if ($term && !is_wp_error($term) && !empty($term->name)) {
+          return function_exists('fds_clean_string') ? fds_clean_string((string) $term->name) : (string) $term->name;
+      }
+      return $fallback;
+  };
+
+  $matrix_categories = [];
+  $agri_rows = $build_matrix_rows($agrikultur_drones);
+  if (!empty($agri_rows)) {
+      $matrix_categories[] = [
+          'key'       => 'agrikultur',
+          'label'     => $cat_term_label('agrikultur', 'Agrikultur'),
+          'rows'      => $agri_rows,
+          'has_certs' => $has_row_certs($agri_rows),
+      ];
+  }
+  $pemetaan_rows = $build_matrix_rows($pemetaan_drones);
+  if (!empty($pemetaan_rows)) {
+      $matrix_categories[] = [
+          'key'       => 'pemetaan',
+          'label'     => $cat_term_label('pemetaan-gis', 'Pemetaan & GIS'),
+          'rows'      => $pemetaan_rows,
+          'has_certs' => $has_row_certs($pemetaan_rows),
+      ];
+  }
+  $kargo_rows = $build_matrix_rows($kargo_drones);
+  if (!empty($kargo_rows)) {
+      $matrix_categories[] = [
+          'key'       => 'kargo',
+          'label'     => $cat_term_label('kargo', 'Kargo'),
+          'rows'      => $kargo_rows,
+          'has_certs' => $has_row_certs($kargo_rows),
+      ];
+  }
+  $other_rows = $build_matrix_rows($other_drones);
+  if (!empty($other_rows)) {
+      $matrix_categories[] = [
+          'key'       => 'lainnya',
+          'label'     => 'Varian Tambahan',
+          'rows'      => $other_rows,
+          'has_certs' => $has_row_certs($other_rows),
+      ];
+  }
 @endphp
 
 {{-- 1. HERO KATALOG PRODUK --}}
@@ -298,11 +372,11 @@
 </section>
 @endif
 
-{{-- 6. MATRIKS RINGKAS PEMILIHAN ARMADA --}}
-@if(!empty($matrix_cols) && !empty($matrix_rows))
-<section class="bg-white py-16 sm:py-20 border-t border-black/[0.06]">
+{{-- 6. MATRIKS RINGKAS PEMILIHAN ARMADA PER KATEGORI (LIVE 1:1 CPT DRONE + FULL ROW CLICK) --}}
+@if(!empty($matrix_cols) && !empty($matrix_categories))
+<section id="ringkasan-spesifikasi" class="bg-white py-16 sm:py-20 border-t border-black/[0.06]" data-fds-matrix-root>
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-7">
       <div>
         <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-tight">
           {{ $pk['matrix_title'] ?? 'Ringkasan Spesifikasi Lini Wahana FDS' }}
@@ -321,32 +395,111 @@
       @endif
     </div>
 
-    <div class="overflow-x-auto">
-      <table class="fds-seo-spec-table">
-        <thead>
-          <tr>
-            @foreach($matrix_cols as $mcol)
-              <th scope="col">{{ $mcol }}</th>
-            @endforeach
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($matrix_rows as $mrow)
+    {{-- Pilihan Kategori Ringkasan Spesifikasi (Identik tab filter Beranda, tanpa angka) --}}
+    <div class="flex flex-wrap gap-2 mb-8"
+         role="tablist"
+         aria-label="Pilih kategori ringkasan spesifikasi drone">
+      @foreach($matrix_categories as $mcat)
+        @php $is_active_mcat = $loop->first; @endphp
+        <button type="button"
+                role="tab"
+                id="fds-matrix-tab-{{ $mcat['key'] }}"
+                aria-controls="fds-matrix-panel-{{ $mcat['key'] }}"
+                aria-selected="{{ $is_active_mcat ? 'true' : 'false' }}"
+                tabindex="{{ $is_active_mcat ? '0' : '-1' }}"
+                data-matrix-tab="{{ $mcat['key'] }}"
+                class="drone-tab {{ $is_active_mcat ? 'active' : '' }}">
+          {{ $mcat['label'] }}
+        </button>
+      @endforeach
+    </div>
+
+    @foreach($matrix_categories as $mcat)
+      @php
+        $is_active_mcat = $loop->first;
+        $cat_has_certs  = !empty($mcat['has_certs']);
+        $cat_cols       = $cat_has_certs ? $matrix_cols : array_slice($matrix_cols, 0, 4);
+      @endphp
+      <div id="fds-matrix-panel-{{ $mcat['key'] }}"
+           data-matrix-panel="{{ $mcat['key'] }}"
+           class="overflow-x-auto {{ $is_active_mcat ? '' : 'hidden' }}">
+        <table class="fds-seo-spec-table fds-produk-matrix-table !my-0 min-w-[780px]">
+          <thead>
             <tr>
-              @foreach($mrow as $cidx => $mcell)
-                @if($cidx === 0)
-                  <td><strong>{{ $mcell }}</strong></td>
-                @else
-                  <td>{{ $mcell }}</td>
-                @endif
+              @foreach($cat_cols as $mcol)
+                <th scope="col">{{ $mcol }}</th>
               @endforeach
             </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            @foreach($mcat['rows'] as $mrow)
+              <tr class="fds-matrix-row group"
+                  data-href="{!! esc_url($mrow['permalink']) !!}"
+                  onclick="if(!event.target.closest('a'))window.location.href=this.dataset.href;">
+                <td>
+                  <a href="{!! esc_url($mrow['permalink']) !!}"
+                     class="inline-flex items-center gap-1.5 font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] hover:text-[#0f808a] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f808a] rounded-sm">
+                    <span>{{ $mrow['name'] }}</span>
+                    <svg class="w-3.5 h-3.5 text-[#0f808a] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M6 6h12v12"/>
+                      <path d="M6 18 18 6"/>
+                    </svg>
+                  </a>
+                </td>
+                <td>{{ $mrow['function'] }}</td>
+                <td>{{ $mrow['payload'] }}</td>
+                <td>{{ $mrow['duration'] }}</td>
+                @if($cat_has_certs)
+                  <td>{{ $mrow['cert'] !== '' ? $mrow['cert'] : '—' }}</td>
+                @endif
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+    @endforeach
   </div>
 </section>
+<script>
+(function () {
+  var root = document.querySelector('[data-fds-matrix-root]');
+  if (!root) return;
+  var tabs = Array.prototype.slice.call(root.querySelectorAll('[data-matrix-tab]'));
+  var panels = Array.prototype.slice.call(root.querySelectorAll('[data-matrix-panel]'));
+  if (!tabs.length || !panels.length) return;
+
+  function activateTab(key, focusTab) {
+    tabs.forEach(function (tab) {
+      var isMatch = tab.getAttribute('data-matrix-tab') === key;
+      tab.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+      tab.setAttribute('tabindex', isMatch ? '0' : '-1');
+      tab.classList.toggle('active', isMatch);
+      if (isMatch && focusTab) tab.focus();
+    });
+    panels.forEach(function (panel) {
+      var isMatch = panel.getAttribute('data-matrix-panel') === key;
+      panel.classList.toggle('hidden', !isMatch);
+    });
+  }
+
+  tabs.forEach(function (tab, idx) {
+    tab.addEventListener('click', function () {
+      activateTab(tab.getAttribute('data-matrix-tab'), false);
+    });
+    tab.addEventListener('keydown', function (e) {
+      var nextIdx = -1;
+      if (e.key === 'ArrowRight') nextIdx = (idx + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') nextIdx = 0;
+      else if (e.key === 'End') nextIdx = tabs.length - 1;
+      if (nextIdx !== -1) {
+        e.preventDefault();
+        activateTab(tabs[nextIdx].getAttribute('data-matrix-tab'), true);
+      }
+    });
+  });
+})();
+</script>
 @endif
 
 {{-- 7. FAQ KATALOG PRODUK (SSR NATIVE DETAILS) --}}

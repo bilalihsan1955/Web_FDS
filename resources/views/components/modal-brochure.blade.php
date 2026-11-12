@@ -5,6 +5,7 @@
   'descInitial' => 'Dapatkan lembar spesifikasi komprehensif, panduan instalasi, dan kalkulasi ROI operasional langsung dalam format PDF.',
   'descReady'   => 'Email Anda telah terverifikasi. Silakan unduh dokumen brosur PDF resmi melalui tombol di bawah ini.',
   'placeholder' => 'Masukkan email bisnis Anda...',
+  'submitText'  => 'Kirim Email',
   'btnText'     => 'Download Brosur PDF (Resmi)',
   'fileUrl'     => '',
 ])
@@ -18,6 +19,7 @@
   $descInitial = $clean_bro($descInitial);
   $descReady   = $clean_bro($descReady);
   $placeholder = $clean_bro($placeholder);
+  $submitText  = $clean_bro($submitText);
   $btnText     = $clean_bro($btnText);
   $droneName   = $clean_bro($droneName);
 @endphp
@@ -59,7 +61,7 @@
         <button type="submit" 
                 id="fds-brochure-submit-btn" 
                 class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap min-h-[44px] leading-none group">
-          <span class="leading-none">Kirim Email</span>
+          <span class="leading-none">{{ $submitText }}</span>
           <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
@@ -97,6 +99,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const msgBox = document.getElementById('fds-brochure-msg');
   const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
   const initialPdf = {!! wp_json_encode((string) $fileUrl) !!};
+  const submitLabel = {!! wp_json_encode((string) $submitText) !!};
+  const ajaxEndpoint = {!! wp_json_encode(admin_url('admin-ajax.php')) !!};
 
   if (!form || !readyBox) return;
 
@@ -150,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const formData = new FormData(form);
 
-    fetch('{{ admin_url('admin-ajax.php') }}', {
+    fetch(ajaxEndpoint, {
       method: 'POST',
       body: formData,
     })
@@ -195,13 +199,24 @@ document.addEventListener('DOMContentLoaded', function() {
     .finally(() => {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = `
-          <span class="leading-none">Kirim Email</span>
-          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 6h12v12"/>
-            <path d="M6 18 18 6"/>
-          </svg>
-        `;
+        submitBtn.replaceChildren();
+        const spanEl = document.createElement('span');
+        spanEl.className = 'leading-none';
+        spanEl.textContent = submitLabel;
+        const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svgEl.setAttribute('class', 'w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0');
+        svgEl.setAttribute('viewBox', '0 0 24 24');
+        svgEl.setAttribute('fill', 'none');
+        svgEl.setAttribute('stroke', 'currentColor');
+        svgEl.setAttribute('stroke-width', '2');
+        svgEl.setAttribute('stroke-linecap', 'round');
+        svgEl.setAttribute('stroke-linejoin', 'round');
+        const p1 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p1.setAttribute('d', 'M6 6h12v12');
+        const p2 = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p2.setAttribute('d', 'M6 18 18 6');
+        svgEl.append(p1, p2);
+        submitBtn.append(spanEl, svgEl);
       }
     });
   });

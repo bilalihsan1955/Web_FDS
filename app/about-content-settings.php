@@ -163,19 +163,21 @@ function fds_get_about_gallery() {
 }
 
 // 2. HELPER GET ABOUT CONTENT
-function fds_get_about_content() {
+function fds_get_about_content(bool $fresh = false) {
     static $static_about = null;
-    if ($static_about !== null) {
+    if (!$fresh && $static_about !== null) {
         return $static_about;
     }
 
-    $cached = get_transient('fds_about_content_cache_v3');
-    if ($cached !== false && is_array($cached)) {
-        if (function_exists('fds_deep_decode')) {
-            $cached = \fds_deep_decode($cached);
+    if (!$fresh) {
+        $cached = get_transient('fds_about_content_cache_v3');
+        if ($cached !== false && is_array($cached)) {
+            if (function_exists('fds_deep_decode')) {
+                $cached = \fds_deep_decode($cached);
+            }
+            $static_about = $cached;
+            return $cached;
         }
-        $static_about = $cached;
-        return $cached;
     }
 
     $data = [
@@ -191,7 +193,7 @@ function fds_get_about_content() {
         'stat2_num'       => get_option('fds_about_stat2_num', '60,74%'),
         'stat2_lbl'       => get_option('fds_about_stat2_lbl', 'TKDN + BMP (Seri FERTO)'),
         'stat3_num'       => get_option('fds_about_stat3_num', 'ISO & SNI'),
-        'stat3_lbl'       => get_option('fds_about_stat3_lbl', 'ISO 9001:2015 & SNI (FERTO 15 & 22)'),
+        'stat3_lbl'       => get_option('fds_about_stat3_lbl', 'ISO 9001:2015 (PT) & SNI (FERTO 15 & 22)'),
         'stat4_num'       => get_option('fds_about_stat4_num', '100%'),
         'stat4_lbl'       => get_option('fds_about_stat4_lbl', 'Rekayasa & Software Lokal'),
 
@@ -267,22 +269,30 @@ function fds_get_about_content() {
 
         'cert2_badge'     => get_option('fds_about_cert2_badge', 'Standar Produk & Manajemen'),
         'cert2_val'       => get_option('fds_about_cert2_val', 'ISO & SNI'),
-        'cert2_desc'      => get_option('fds_about_cert2_desc', 'Sertifikasi ISO 9001:2015 (Manajemen Mutu) dan SNI 9199:2023 pada FERTO 15 & FERTO 22.'),
+        'cert2_desc'      => get_option('fds_about_cert2_desc', 'Sistem manajemen mutu perusahaan ISO 9001:2015 (PT Karya Solusi Angkasa) dan standar produk SNI 9199:2023 pada FERTO 15 & FERTO 22.'),
 
         'cert3_badge'     => get_option('fds_about_cert3_badge', 'Jaminan Layanan'),
         'cert3_val'       => get_option('fds_about_cert3_val', 'Nasional'),
         'cert3_desc'      => get_option('fds_about_cert3_desc', 'Dukungan servis, suku cadang asli, dan pelatihan pilot resmi di seluruh Indonesia.'),
 
         // CTA & WORKSHOP
-        'cta_title'       => get_option('fds_about_cta_title', 'Siap bermitra dengan PT Karya Solusi Angkasa?'),
-        'cta_desc'        => get_option('fds_about_cta_desc', 'Baik instansi pemerintah, BUMN, perkebunan agrikultur besar, atau mitra industri — tim engineering kami siap memberikan solusi terbaik.'),
-        'cta_btn1_text'   => get_option('fds_about_cta_btn1_text', 'Mulai Konsultasi'),
-        'cta_btn1_url'    => get_option('fds_about_cta_btn1_url', home_url('/kontak/#hubungi-form')),
-        'cta_btn2_text'   => get_option('fds_about_cta_btn2_text', 'Baca Studi Kasus ›'),
-        'cta_btn2_url'    => get_option('fds_about_cta_btn2_url', '/blog/'),
+        'cta_badge'            => get_option('fds_about_cta_badge', 'Kemitraan & Pengadaan Korporasi') ?: 'Kemitraan & Pengadaan Korporasi',
+        'cta_title'            => get_option('fds_about_cta_title', 'Siap bermitra dengan PT Karya Solusi Angkasa?'),
+        'cta_desc'             => get_option('fds_about_cta_desc', 'Baik instansi pemerintah, BUMN, perkebunan agrikultur besar, atau mitra industri — tim engineering kami siap memberikan solusi terbaik.'),
+        'cta_btn1_text'        => get_option('fds_about_cta_btn1_text', 'Mulai Konsultasi'),
+        'cta_btn1_url'         => get_option('fds_about_cta_btn1_url', home_url('/kontak/#hubungi-form')),
+        'cta_btn2_text'        => get_option('fds_about_cta_btn2_text', 'Baca Studi Kasus ›'),
+        'cta_btn2_url'         => get_option('fds_about_cta_btn2_url', '/blog/'),
 
-        'info_title'      => get_option('fds_about_info_title', 'Kantor Pusat & Workshop'),
-        'info_entitas'    => get_option('fds_about_info_entitas', 'PT Karya Solusi Angkasa (Full Drone Solutions)'),
+        'info_title'           => get_option('fds_about_info_title', 'Kantor Pusat & Workshop'),
+        'info_lbl_entity'      => get_option('fds_about_info_lbl_entity', 'Entitas Resmi') ?: 'Entitas Resmi',
+        'info_lbl_address'     => get_option('fds_about_info_lbl_address', 'Alamat Workshop') ?: 'Alamat Workshop',
+        'info_lbl_address_sub' => get_option('fds_about_info_lbl_address_sub', 'Fasilitas Riset, Desain Aerodinamis & Manufaktur UAV') ?: 'Fasilitas Riset, Desain Aerodinamis & Manufaktur UAV',
+        'info_lbl_email'       => get_option('fds_about_info_lbl_email', 'Email Resmi') ?: 'Email Resmi',
+        'info_lbl_phone'       => get_option('fds_about_info_lbl_phone', 'Kontak & Layanan Cepat') ?: 'Kontak & Layanan Cepat',
+        'info_wa_text'         => get_option('fds_about_info_wa_text', 'WhatsApp') ?: 'WhatsApp',
+        'info_map_title'       => get_option('fds_about_info_map_title', 'Lokasi Full Drone Solutions Sleman Yogyakarta') ?: 'Lokasi Full Drone Solutions Sleman Yogyakarta',
+        'info_entitas'         => get_option('fds_about_info_entitas', 'PT Karya Solusi Angkasa (Full Drone Solutions)'),
         'info_alamat'     => get_option('fds_about_info_alamat', 'Jl. Lukito Harjo No.10, Mulungan Kulon, Sendangadi, Kec. Mlati, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55285'),
         'info_email'      => get_option('fds_about_info_email', 'marketing@fulldronesolutions.com'),
         'info_phone'      => get_option('fds_about_info_phone', '+62 8112 748 882'),
@@ -354,10 +364,13 @@ function render_about_content_admin_page() {
             'fds_about_cert2_badge', 'fds_about_cert2_val', 'fds_about_cert2_desc',
             'fds_about_cert3_badge', 'fds_about_cert3_val', 'fds_about_cert3_desc',
             // CTA & WORKSHOP
-            'fds_about_cta_title', 'fds_about_cta_desc',
+            'fds_about_cta_badge', 'fds_about_cta_title', 'fds_about_cta_desc',
             'fds_about_cta_btn1_text', 'fds_about_cta_btn1_url',
             'fds_about_cta_btn2_text', 'fds_about_cta_btn2_url',
-            'fds_about_info_title', 'fds_about_info_entitas', 'fds_about_info_alamat', 'fds_about_info_email', 'fds_about_info_layanan',
+            'fds_about_info_title', 'fds_about_info_lbl_entity', 'fds_about_info_lbl_address',
+            'fds_about_info_lbl_address_sub', 'fds_about_info_lbl_email', 'fds_about_info_lbl_phone',
+            'fds_about_info_wa_text', 'fds_about_info_map_title',
+            'fds_about_info_entitas', 'fds_about_info_alamat', 'fds_about_info_email', 'fds_about_info_layanan',
         ];
 
         foreach ($keys as $k) {
@@ -459,10 +472,14 @@ function render_about_content_admin_page() {
         delete_transient('fds_global_contact_cache');
         delete_transient('fds_global_contact_cache_v2');
         delete_transient('fds_global_contact_cache_v3');
+        delete_transient('fds_global_contact_cache_v4');
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+            fds_purge_ai_and_seo_caches(false);
+        }
     }
 
     wp_enqueue_media();
-    $data = fds_get_about_content();
+    $data = fds_get_about_content(true);
     ?>
     <div class="wrap fds-about-admin-wrap">
       <h1 class="wp-heading-inline" style="font-weight: 700; color: #1d1d1f; margin-bottom: 8px;">
@@ -955,6 +972,10 @@ function render_about_content_admin_page() {
           <div class="fds-card">
             <h2>🚀 Section Call-to-Action (Bawah)</h2>
             <div class="fds-field">
+              <label>Label Atas CTA</label>
+              <input type="text" name="fds_about_cta_badge" value="<?php echo esc_attr($data['cta_badge']); ?>">
+            </div>
+            <div class="fds-field">
               <label>Judul CTA</label>
               <input type="text" name="fds_about_cta_title" value="<?php echo esc_attr($data['cta_title']); ?>">
             </div>
@@ -1004,6 +1025,42 @@ function render_about_content_admin_page() {
             <div class="fds-field">
               <label>Judul Box Direktori Workshop</label>
               <input type="text" name="fds_about_info_title" value="<?php echo esc_attr($data['info_title']); ?>">
+            </div>
+
+            <div class="fds-grid-2">
+              <div class="fds-field">
+                <label>Label Entitas Resmi</label>
+                <input type="text" name="fds_about_info_lbl_entity" value="<?php echo esc_attr($data['info_lbl_entity']); ?>">
+              </div>
+              <div class="fds-field">
+                <label>Label Alamat Workshop</label>
+                <input type="text" name="fds_about_info_lbl_address" value="<?php echo esc_attr($data['info_lbl_address']); ?>">
+              </div>
+            </div>
+
+            <div class="fds-field">
+              <label>Sub-Teks Keterangan Fasilitas Workshop</label>
+              <input type="text" name="fds_about_info_lbl_address_sub" value="<?php echo esc_attr($data['info_lbl_address_sub']); ?>">
+            </div>
+
+            <div class="fds-grid-3">
+              <div class="fds-field">
+                <label>Label Email Resmi</label>
+                <input type="text" name="fds_about_info_lbl_email" value="<?php echo esc_attr($data['info_lbl_email']); ?>">
+              </div>
+              <div class="fds-field">
+                <label>Label Kontak &amp; Layanan Cepat</label>
+                <input type="text" name="fds_about_info_lbl_phone" value="<?php echo esc_attr($data['info_lbl_phone']); ?>">
+              </div>
+              <div class="fds-field">
+                <label>Teks Tombol WhatsApp</label>
+                <input type="text" name="fds_about_info_wa_text" value="<?php echo esc_attr($data['info_wa_text']); ?>">
+              </div>
+            </div>
+
+            <div class="fds-field">
+              <label>Judul Aksesibilitas Peta (iframe title)</label>
+              <input type="text" name="fds_about_info_map_title" value="<?php echo esc_attr($data['info_map_title']); ?>">
             </div>
 
             <div style="padding: 16px 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 14px;">

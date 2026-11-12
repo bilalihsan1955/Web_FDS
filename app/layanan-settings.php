@@ -96,8 +96,20 @@ function fds_merge_layanan_data(array $default, array $override): array {
  * dan memicu purge cache halaman setelah penyimpanan admin.
  */
 function fds_flush_layanan_cache(): void {
+    static $is_flushing = false;
+    if ($is_flushing) {
+        return;
+    }
+    $is_flushing = true;
+
     delete_transient('fds_homepage_content_cache');
     delete_transient('fds_homepage_content_cache_v2');
+    delete_transient('fds_homepage_content_cache_v3');
+    delete_transient('fds_newsroom_ui_cache_v1');
+    delete_transient('fds_about_content_cache');
+    delete_transient('fds_about_content_cache_v2');
+    delete_transient('fds_about_content_cache_v3');
+    delete_transient('fds_global_contact_cache_v4');
     delete_transient('fds_navbar_brand_cache_v2');
     delete_transient('fds_navbar_brand_cache_v3');
     delete_transient('fds_navbar_brand_cache_v4');
@@ -105,8 +117,11 @@ function fds_flush_layanan_cache(): void {
     delete_transient('fds_mega_menu_data_v3');
     delete_transient('fds_bandingkan_catalog_cache_v2');
     delete_transient('fds_bandingkan_catalog_cache_v3');
+    delete_transient('fds_bandingkan_catalog_cache_v4');
     delete_transient('fds_llms_txt_cache_v3');
     delete_transient('fds_llms_txt_cache_v4');
+    delete_transient('fds_llms_txt_cache_v5');
+    delete_transient('fds_llms_full_txt_cache_v5');
 
     if (function_exists(__NAMESPACE__ . '\\fds_get_layanan_sectors')) {
         fds_get_layanan_sectors(true);
@@ -126,8 +141,13 @@ function fds_flush_layanan_cache(): void {
     if (function_exists(__NAMESPACE__ . '\\fds_get_navbar_brand')) {
         fds_get_navbar_brand(true);
     }
+    if (function_exists(__NAMESPACE__ . '\\fds_purge_ai_and_seo_caches')) {
+        fds_purge_ai_and_seo_caches(true);
+    } elseif (function_exists('has_action') && has_action('litespeed_purge_all')) {
+        do_action('litespeed_purge_all');
+    }
 
-    do_action('litespeed_purge_all');
+    $is_flushing = false;
 }
 
 /**
@@ -168,7 +188,7 @@ function fds_get_default_layanan_hub_data(): array {
                 ],
                 [
                     'title' => 'Kebutuhan Skalabilitas dari Jasa Proyek ke Armada Mandiri',
-                    'desc'  => 'Perusahaan yang beralih dari jasa survei berkala ke kepemilikan armada internal sering kesulitan mencari mitra yang sanggup menyediakan unit berstandar mutu ISO (dan TKDN untuk lini pertanian FERTO) sekaligus pelatihannya.',
+                    'desc'  => 'Perusahaan yang beralih dari jasa survei berkala ke kepemilikan armada internal sering kesulitan mencari mitra manufaktur bersertifikat sistem manajemen mutu ISO 9001:2015 (serta TKDN untuk lini pertanian FERTO) sekaligus pelatihannya.',
                 ],
             ],
         ],
@@ -476,7 +496,13 @@ function fds_get_default_layanan_ui_texts(): array {
         'ty_h1'                          => 'Terima Kasih, Permintaan Konsultasi Anda Telah Kami Terima',
         'ty_subtitle'                    => 'Tim Full Drone Solutions (PT Karya Solusi Angkasa) akan meninjau fokus layanan, detail lokasi proyek, serta rincian kebutuhan yang Anda kirimkan untuk menyiapkan diskusi teknis dan estimasi penawaran yang relevan.',
         'ty_ref_label'                   => 'Nomor Referensi Inquiry',
+        'ty_summary_heading'             => 'Ringkasan Pengajuan Proyek',
+        'ty_lbl_service'                 => 'Fokus Layanan / Sektor',
+        'ty_lbl_company'                 => 'Perusahaan / Instansi',
+        'ty_lbl_location'                => 'Lokasi Proyek',
+        'ty_lbl_area'                    => 'Perkiraan Luas / Target Jadwal',
         'ty_steps_heading'               => 'Tahapan Peninjauan Berikutnya oleh Tim FDS',
+        'ty_step_prefix'                 => 'Tahap',
         'ty_step1_title'                 => 'Verifikasi Data & Lokasi Proyek',
         'ty_step1_desc'                  => 'Tim kami memastikan kelengkapan lokasi wilayah kerja serta memeriksa kejelasan cakupan kebutuhan atau format output data yang Anda butuhkan.',
         'ty_step2_title'                 => 'Evaluasi Metode & Kesiapan Lapangan',
@@ -484,6 +510,7 @@ function fds_get_default_layanan_ui_texts(): array {
         'ty_step3_title'                 => 'Koordinasi Diskusi Teknis & Proposal',
         'ty_step3_desc'                  => 'Tim enterprise akan menghubungi email atau WhatsApp bisnis Anda untuk klarifikasi ruang lingkup akhir sebelum penerbitan dokumen proposal resmi.',
         'ty_extra_heading'               => 'Perlu Mengirimkan Dokumen Tambahan atau Koordinasi Mendesak?',
+        'ty_extra_desc'                  => 'Anda dapat langsung melampirkan dokumen KAK, poligon lokasi (.SHP/.GeoJSON), atau spesifikasi teknis tambahan melalui email {email} atau terhubung ke tim kami melalui WhatsApp ({phone}).',
         'ty_btn_wa'                      => 'Lanjut via WhatsApp',
         'ty_btn_back'                    => 'Kembali ke Layanan',
         'ty_btn_compare'                 => 'Bandingkan Armada UAV',

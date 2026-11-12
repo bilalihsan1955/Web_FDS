@@ -18,12 +18,13 @@
     return $s;
   };
   $found_count = isset($wp_query->found_posts) ? (int) $wp_query->found_posts : 0;
+  $nr = function_exists('App\fds_get_newsroom_ui_content') ? \App\fds_get_newsroom_ui_content() : [];
   $all_posts = [];
   if (have_posts()) {
     while (have_posts()) {
       the_post();
       $cats = get_the_category(get_the_ID());
-      $cat_label = !empty($cats) ? $fds_search_clean($cats[0]->name) : 'Berita';
+      $cat_label = !empty($cats) ? $fds_search_clean($cats[0]->name) : ($nr['blog_default_cat'] ?? 'Berita');
       $thumb_id  = get_post_thumbnail_id(get_the_ID());
       $thumb_alt = $thumb_id ? trim($fds_search_clean((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true))) : '';
       if ($thumb_alt === '') {
@@ -101,15 +102,19 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-14 sm:py-16 lg:py-20 relative z-10">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
       <div class="max-w-[680px]">
-        <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">Hasil Pencarian Artikel</p>
+        <p class="text-[13px] font-semibold text-white/85 tracking-wide mb-2.5 fds-hero-entrance fds-hero-delay-1">{{ $nr['search_badge'] ?? 'Hasil Pencarian Artikel' }}</p>
         <h1 class="text-[32px] sm:text-[44px] lg:text-[50px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-3 fds-hero-entrance fds-hero-delay-2">
           &ldquo;{{ $fds_search_clean(get_search_query(false)) }}&rdquo;
         </h1>
         <p class="text-[15px] sm:text-[16px] text-white/85 leading-relaxed fds-hero-entrance fds-hero-delay-3">
           @if($found_count > 0)
-            Ditemukan <strong>{{ $found_count }}</strong> artikel yang relevan dengan kata kunci Anda.
+            @php
+              $found_tpl = (string) ($nr['search_found_tpl'] ?? 'Ditemukan {count} artikel yang relevan dengan kata kunci Anda.');
+              $found_html = str_replace('{count}', '<strong>' . $found_count . '</strong>', e($found_tpl));
+            @endphp
+            {!! $found_html !!}
           @else
-            Tidak ditemukan artikel yang sesuai dengan kata kunci tersebut.
+            {{ $nr['search_not_found_desc'] ?? 'Tidak ditemukan artikel yang sesuai dengan kata kunci tersebut.' }}
           @endif
         </p>
       </div>
@@ -122,11 +127,11 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
           </div>
-          <input type="text" name="s" value="{{ $fds_search_clean(get_search_query(false)) }}" placeholder="Cari artikel, topik, inovasi..." required autocomplete="off"
+          <input type="text" name="s" value="{{ $fds_search_clean(get_search_query(false)) }}" placeholder="{{ $nr['search_ph'] ?? 'Cari artikel, topik, inovasi...' }}" required autocomplete="off"
                  class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
           <button type="submit"
                   class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
-            Cari
+            {{ $nr['search_btn'] ?? 'Cari' }}
           </button>
         </div>
       </form>
@@ -136,7 +141,7 @@
       <a href="{!! esc_url($blog_url) !!}"
          class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        <span>Kembali ke semua artikel</span>
+        <span>{{ $nr['search_back_text'] ?? 'Kembali ke semua artikel' }}</span>
       </a>
     </div>
   </div>
@@ -155,13 +160,13 @@
         <svg class="w-14 h-14 sm:w-16 sm:h-16 text-[#94a3b8] mx-auto mb-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">Tidak ada artikel yang cocok</h2>
+        <h2 class="text-[22px] sm:text-[24px] font-semibold text-[#1d1d1f] tracking-tight mb-2">{{ $nr['search_empty_title'] ?? 'Tidak ada artikel yang cocok' }}</h2>
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-8">
-          Silakan coba kata kunci lain yang lebih umum atau jelajahi seluruh topik di ruang berita kami.
+          {{ $nr['search_empty_desc'] ?? 'Silakan coba kata kunci lain yang lebih umum atau jelajahi seluruh topik di ruang berita kami.' }}
         </p>
         <a href="{!! esc_url($blog_url) !!}"
            class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm leading-none group">
-          <span class="leading-none">Lihat Semua Berita</span>
+          <span class="leading-none">{{ $nr['search_empty_cta'] ?? 'Lihat Semua Berita' }}</span>
           <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
@@ -200,7 +205,7 @@
 
             <div class="px-6 sm:px-7 pb-6 pt-0">
               <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
-                <span class="leading-none">Baca selengkapnya</span>
+                <span class="leading-none">{{ $nr['search_card_cta'] ?? 'Baca selengkapnya' }}</span>
                 <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M6 6h12v12"/>
                   <path d="M6 18 18 6"/>
