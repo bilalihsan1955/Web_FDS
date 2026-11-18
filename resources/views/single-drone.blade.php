@@ -137,10 +137,19 @@
       </div>
 
       {{-- Hero image (Single Canonical Media Resolver — Identik 1:1 dengan Kartu Katalog) --}}
+      @php
+        $heroAltCategory = match (true) {
+            $modelKey === 'deltav' => 'Drone Pemetaan Fixed-Wing VTOL',
+            $modelKey === 'multipurpose' => 'Platform UAV Inspeksi Modular',
+            $modelKey === 'delfro' || stripos((string) ($drone['kategori'] ?? ''), 'kargo') !== false => 'Drone Kargo Logistik Otonom',
+            $isFerto || stripos((string) ($drone['kategori'] ?? ''), 'agrikultur') !== false => 'Drone Pertanian Presisi',
+            default => fds_clean_string((string) ($drone['kategori'] ?? 'UAV Industri')),
+        };
+      @endphp
       <div class="relative z-10 w-full mt-auto overflow-hidden flex items-end justify-center leading-none max-h-[240px] sm:max-h-[260px] lg:max-h-[260px] xl:max-h-[400px] 2xl:max-h-[680px] fds-hero-entrance fds-hero-delay-5">
         <img src="{!! esc_url($heroSrc) !!}"
              @if($heroSrcset !== '') srcset="{{ $heroSrcset }}" sizes="(max-width: 768px) 100vw, 1200px" @endif
-             alt="{{ $cleanDroneName }} — Drone Pertanian & Industri PT Karya Solusi Angkasa FDS"
+             alt="{{ $cleanDroneName }} — {{ $heroAltCategory }} PT Karya Solusi Angkasa FDS"
              width="1200"
              height="720"
              loading="eager"
