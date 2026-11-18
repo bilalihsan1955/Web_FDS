@@ -22,6 +22,9 @@
   $submitText  = $clean_bro($submitText);
   $btnText     = $clean_bro($btnText);
   $droneName   = $clean_bro($droneName);
+  $cleanUrl    = trim((string) $fileUrl);
+  $hasPdf      = ($cleanUrl !== '' && $cleanUrl !== '#');
+  $descPending = 'Permintaan brosur diterima. Tim teknis kami akan mengirimkan dokumen spesifikasi ' . $droneName . ' ke email Anda pada jam kerja.';
 @endphp
 
 <div class="bg-[#f5f5f7] rounded-3xl p-8 sm:p-10 border border-black/[0.08] shadow-sm">
@@ -34,7 +37,7 @@
       </h3>
       <p class="fds-brochure-desc-text text-[15px] sm:text-[17px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
          data-desc-initial="{{ $descInitial }}"
-         data-desc-ready="{{ $descReady }}">
+         data-desc-ready="{{ $hasPdf ? $descReady : $descPending }}">
         {{ $descInitial }}
       </p>
     </div>
@@ -50,41 +53,52 @@
         <input type="hidden" name="drone_name" value="{{ $droneName }}">
 
         <div class="relative w-full sm:w-[320px] lg:w-[340px]">
+          <label for="brochure_email" class="sr-only">{{ $placeholder }}</label>
           <input type="email" 
                  id="brochure_email" 
                  name="email" 
+                 autocomplete="email"
                  required 
                  placeholder="{{ $placeholder }}" 
-                 class="w-full h-[54px] sm:h-[58px] px-6 bg-white border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
+                 class="w-full h-[54px] sm:h-[58px] px-6 bg-white border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#6e6e73] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
         </div>
 
         <button type="submit" 
                 id="fds-brochure-submit-btn" 
                 class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap min-h-[44px] leading-none group">
           <span class="leading-none">{{ $submitText }}</span>
-          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
         </button>
       </form>
 
-      {{-- STATE 2: TOMBOL DOWNLOAD AKTIF --}}
-      <div id="fds-brochure-download-ready" class="hidden items-center">
+      {{-- STATE 2: TOMBOL DOWNLOAD AKTIF (Hanya dirender jika URL PDF valid, zero # anchor) --}}
+      <div id="fds-brochure-download-ready" class="hidden items-center" role="status" aria-live="polite">
+        @if($hasPdf)
         <a id="fds-brochure-download-link" 
-           href="{!! esc_url($fileUrl ?: '#') !!}" 
+           href="{!! esc_url($cleanUrl) !!}" 
            target="_blank" 
            rel="noopener noreferrer"
            class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer shadow-md shadow-black/15 min-h-[44px]">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
           </svg>
           <span>{{ $btnText }}</span>
         </a>
+        @else
+        <div id="fds-brochure-email-queued" class="inline-flex items-center gap-3 bg-[#e8fbfd] border border-[#0f808a]/25 text-[#052b2e] px-6 py-4 rounded-2xl text-[14.5px] font-medium">
+          <svg class="w-5 h-5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Permintaan tercatat. Brosur dikirim ke email Anda.</span>
+        </div>
+        @endif
       </div>
 
       {{-- Feedback message --}}
-      <div id="fds-brochure-msg" class="hidden text-[13px] mt-2.5 px-2 text-center sm:text-left"></div>
+      <div id="fds-brochure-msg" class="hidden text-[13px] mt-2.5 px-2 text-center sm:text-left" aria-live="polite"></div>
     </div>
 
   </div>
@@ -98,11 +112,28 @@ document.addEventListener('DOMContentLoaded', function() {
   const submitBtn = document.getElementById('fds-brochure-submit-btn');
   const msgBox = document.getElementById('fds-brochure-msg');
   const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
-  const initialPdf = {!! wp_json_encode((string) $fileUrl) !!};
+  const initialPdf = {!! wp_json_encode($hasPdf ? $cleanUrl : '') !!};
   const submitLabel = {!! wp_json_encode((string) $submitText) !!};
+  const btnTextLabel = {!! wp_json_encode((string) $btnText) !!};
   const ajaxEndpoint = {!! wp_json_encode(admin_url('admin-ajax.php')) !!};
 
   if (!form || !readyBox) return;
+
+  function applyResolvedPdf(pdfUrl) {
+    if (!pdfUrl || pdfUrl === '#') return;
+    if (downloadLink) {
+      downloadLink.href = pdfUrl;
+      return;
+    }
+    const link = document.createElement('a');
+    link.id = 'fds-brochure-download-link';
+    link.href = pdfUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.className = 'inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer shadow-md shadow-black/15 min-h-[44px]';
+    link.textContent = btnTextLabel;
+    readyBox.replaceChildren(link);
+  }
 
   function updateDescToReady() {
     descTexts.forEach(el => {
@@ -119,8 +150,8 @@ document.addEventListener('DOMContentLoaded', function() {
     readyBox.classList.remove('hidden');
     readyBox.classList.add('flex');
     updateDescToReady();
-    if (initialPdf && downloadLink) {
-      downloadLink.href = initialPdf;
+    if (initialPdf) {
+      applyResolvedPdf(initialPdf);
     }
   }
 
@@ -164,9 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('fds_brochure_unlocked', '1');
 
       if (data && data.success && data.data && data.data.download_url) {
-        if (downloadLink) downloadLink.href = data.data.download_url;
-      } else if (initialPdf && downloadLink) {
-        downloadLink.href = initialPdf;
+        applyResolvedPdf(data.data.download_url);
+      } else if (initialPdf) {
+        applyResolvedPdf(initialPdf);
       }
 
       form.classList.add('hidden');
