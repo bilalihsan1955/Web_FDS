@@ -219,6 +219,55 @@ if (!function_exists('fds_sort_drone_posts')) {
     }
 }
 
+if (!function_exists('fds_resolve_mitra_alt')) {
+    /**
+     * Resolusi nama institusi resmi untuk alt text logo mitra berdasarkan identifikasi visual file logo.
+     */
+    function fds_resolve_mitra_alt(int $post_id, string $logo_url = ''): string {
+        $filename = strtolower(basename((string) parse_url($logo_url, PHP_URL_PATH)));
+        $verified_map = [
+            '/(?:^|[^a-z])pln(?:[^a-z]|$)/i'             => 'PLN (PT PLN Persero)',
+            '/one-stope|rpx/i'                             => 'RPX One Stop Logistics',
+            '/(?:^|[^a-z])ugm(?:[^a-z]|$)/i'             => 'Universitas Gadjah Mada (UGM)',
+            '/(?:^|[^a-z])itb(?:[^a-z]|$)/i'             => 'Institut Teknologi Bandung (ITB)',
+            '/(?:^|[^a-z])pama(?:[^a-z]|$)/i'            => 'PAMA (PT Pamapersada Nusantara)',
+            '/logo-2(?:-\d+)?\./i'                         => 'Pupuk Indonesia Holding Company',
+            '/easy-green/i'                                => 'Easy Green',
+            '/298568562_106915562125042|sawit-sumbermas/i' => 'Sawit Sumbermas Sarana (SSMS)',
+            '/petrokimia[_-]?gresik/i'                     => 'PT Petrokimia Gresik',
+            '/petrokimia[_-]?kayu/i'                       => 'Petrokimia Kayaku',
+            '/mhucoal?/i'                                  => 'MHU Coal (Multi Harapan Utama)',
+            '/instiper/i'                                  => 'Institut Pertanian STIPER (INSTIPER) Yogyakarta',
+            '/maxresdefault|benih/i'                       => 'Benih Bhineka Nusantara',
+            '/petrosida/i'                                 => 'PT Petrosida Gresik',
+            '/djarum/i'                                    => 'Djarum',
+            '/bumitama/i'                                  => 'Bumitama Gunajaya Agro',
+            '/javlec/i'                                    => 'JAVLEC',
+            '/(?:^|[^a-z])batan(?:[^a-z]|$)/i'           => 'BATAN (Badan Tenaga Nuklir Nasional)',
+            '/akebono/i'                                   => 'PT Akebono Brake Astra Indonesia',
+        ];
+
+        foreach ($verified_map as $pattern => $institution) {
+            if ($filename !== '' && preg_match($pattern, $filename)) {
+                return $institution;
+            }
+        }
+
+        $thumb_id = $post_id > 0 ? (int) get_post_thumbnail_id($post_id) : 0;
+        $att_alt  = $thumb_id > 0 ? trim((string) fds_clean_string((string) get_post_meta($thumb_id, '_wp_attachment_image_alt', true))) : '';
+        if ($att_alt !== '' && !preg_match('/^(?:img|dsc|whatsapp|snapinsta|maxresdefault|\d{5,})/i', $att_alt)) {
+            return $att_alt;
+        }
+
+        $post_title = $post_id > 0 ? trim((string) fds_clean_string((string) get_the_title($post_id))) : '';
+        if ($post_title !== '' && !preg_match('/^(?:img|dsc|whatsapp|snapinsta|maxresdefault|\d{5,})/i', $post_title)) {
+            return $post_title;
+        }
+
+        return 'Mitra Institusi Full Drone Solutions';
+    }
+}
+
 if (!function_exists('fds_deep_decode')) {
     /**
      * Recursively clean and decode HTML entities from arrays or strings

@@ -288,10 +288,10 @@
       @foreach($mitra_with_logo as $mitra)
         @php
           $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
-          $m_thumb_id = get_post_thumbnail_id($mitra->ID);
-          $m_alt_meta = $m_thumb_id ? trim($fds_clean(get_post_meta($m_thumb_id, '_wp_attachment_image_alt', true))) : '';
-          $m_title_clean = trim($fds_clean($mitra->post_title));
-          $m_alt = $m_alt_meta !== '' ? $m_alt_meta : ($m_title_clean !== '' ? $m_title_clean . ' — Mitra Full Drone Solutions' : 'Mitra Resmi Full Drone Solutions');
+          $m_inst = function_exists('fds_resolve_mitra_alt')
+              ? fds_resolve_mitra_alt((int) $mitra->ID, (string) $logo)
+              : (trim($fds_clean($mitra->post_title)) ?: 'Mitra Full Drone Solutions');
+          $m_alt = $m_inst . ' — Mitra Full Drone Solutions';
         @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10">
           <img src="{!! esc_url($logo) !!}"
@@ -301,13 +301,19 @@
                loading="lazy"
                decoding="async"
                class="h-24 w-auto object-contain"
-               title="{{ $m_title_clean ?: 'Mitra Resmi Full Drone Solutions' }}">
+               title="{{ $m_inst }}">
         </div>
       @endforeach
       @foreach($mitra_with_logo as $mitra)
-        @php $logo = get_the_post_thumbnail_url($mitra->ID, 'medium'); @endphp
+        @php
+          $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
+          $m_inst = function_exists('fds_resolve_mitra_alt')
+              ? fds_resolve_mitra_alt((int) $mitra->ID, (string) $logo)
+              : (trim($fds_clean($mitra->post_title)) ?: 'Mitra Full Drone Solutions');
+          $m_alt = $m_inst . ' — Mitra Full Drone Solutions';
+        @endphp
         <div class="flex-shrink-0 flex items-center justify-center px-10" aria-hidden="true">
-          <img src="{!! esc_url($logo) !!}" alt="" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
+          <img src="{!! esc_url($logo) !!}" alt="{{ $m_alt }}" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
         </div>
       @endforeach
     </div>
