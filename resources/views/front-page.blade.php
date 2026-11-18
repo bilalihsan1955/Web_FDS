@@ -1423,7 +1423,7 @@ function filterDrones(btn) {
 
               {{-- Article Excerpt --}}
               <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
-                {{ $fds_clean(get_the_excerpt($post->ID)) }}
+                {{ $fds_clean(wp_strip_all_tags(get_the_excerpt($post->ID))) }}
               </p>
             </div>
           </div>

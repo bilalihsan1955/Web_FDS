@@ -34,7 +34,7 @@
         'id'        => get_the_ID(),
         'title'     => $fds_search_clean(get_the_title()),
         'permalink' => get_permalink(),
-        'excerpt'   => $fds_search_clean(get_the_excerpt()),
+        'excerpt'   => $fds_search_clean(wp_strip_all_tags(get_the_excerpt())),
         'date'      => get_the_date('d M Y'),
         'cat'       => $cat_label,
         'thumb_med' => has_post_thumbnail() ? get_the_post_thumbnail(null, 'medium_large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-700', 'alt' => $thumb_alt]) : null,

@@ -11,12 +11,12 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Add "… Continued" to the excerpt.
+ * Add plain ellipsis to the excerpt without raw inline links.
  *
  * @return string
  */
 add_filter('excerpt_more', function () {
-    return sprintf(' &hellip; <a href="%s">%s</a>', get_permalink(), __('Continued', 'sage'));
+    return ' &hellip;';
 });
 
 /**

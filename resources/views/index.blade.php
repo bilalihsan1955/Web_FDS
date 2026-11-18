@@ -170,7 +170,7 @@
             'id'        => get_the_ID(),
             'title'     => $clean_post_title,
             'permalink' => get_permalink(),
-            'excerpt'   => $fds_blog_clean(get_the_excerpt()),
+            'excerpt'   => $fds_blog_clean(wp_strip_all_tags(get_the_excerpt())),
             'date'      => get_the_date('d M Y'),
             'cat'       => $cat_label,
             'thumb'     => has_post_thumbnail() ? get_the_post_thumbnail(null, 'large', ['class' => 'w-full h-full object-cover group-hover:scale-105 transition-transform duration-500', 'sizes' => '(max-width: 1024px) 100vw, 760px', 'alt' => $thumb_alt]) : null,
