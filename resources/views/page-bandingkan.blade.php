@@ -21,7 +21,9 @@
       strpos($cache_blob, 'FDS STATION') !== false ||
       stripos($cache_blob, 'FLIR') !== false ||
       stripos($cache_blob, 'sejak 2012') !== false ||
-      stripos($cache_blob, 'Tanpa klaim') !== false
+      stripos($cache_blob, 'Tanpa klaim') !== false ||
+      stripos($cache_blob, 'berstandar ,') !== false ||
+      preg_match('/"Sertifikasi & Standar";s:\d+:"Resmi"/i', $cache_blob)
     ) {
       $cache_is_stale = true;
     }
@@ -926,12 +928,21 @@
       return k;
     }
 
+    function isOmittedSpec(key, val) {
+      const cleanVal = String(val || '').trim();
+      if (!cleanVal) return true;
+      if (key === 'Sertifikasi & Standar' && /^(?:resmi|standar\s*resmi|sertifikat\s*resmi|sertifikasi\s*resmi|-|—)$/i.test(cleanVal)) {
+        return true;
+      }
+      return false;
+    }
+
     const specsMap1 = {};
     if (d1 && d1.specs) {
       d1.specs.forEach(item => {
         if (Array.isArray(item) && item.length === 2) {
           const normKey = normalizeSpecLabel(item[0]);
-          specsMap1[normKey] = item[1];
+          if (!isOmittedSpec(normKey, item[1])) specsMap1[normKey] = item[1];
         }
       });
     }
@@ -941,7 +952,7 @@
       d2.specs.forEach(item => {
         if (Array.isArray(item) && item.length === 2) {
           const normKey = normalizeSpecLabel(item[0]);
-          specsMap2[normKey] = item[1];
+          if (!isOmittedSpec(normKey, item[1])) specsMap2[normKey] = item[1];
         }
       });
     }

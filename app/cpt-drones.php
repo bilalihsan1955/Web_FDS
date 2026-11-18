@@ -2255,6 +2255,9 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
 
                 $isCertSpec = (stripos($spLabel, 'Sertifikasi') !== false);
                 $spVal = $scrub_fn($spItem[1], !$isCertSpec);
+                if ($isCertSpec && preg_match('/^(?:resmi|standar\s*resmi|sertifikat\s*resmi|sertifikasi\s*resmi|-|—|\s)*$/i', trim($spVal))) {
+                    $spVal = '';
+                }
                 if ($spLabel === 'Payload' && $modelKey === 'ferto-15l' && stripos($spVal, '17') === false) {
                     $spVal = '17 Liter (15 – 17 Liter)';
                 }
@@ -2409,6 +2412,9 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             $raw_cert = $scrub_fn($raw_cert, false);
         }
         $raw_cert = trim((string) preg_replace('/\s*\(\s*Tanpa\s+klaim[^)]*\)/i', '', $raw_cert));
+        if ($raw_cert !== '' && preg_match('/^(?:resmi|standar\s*resmi|sertifikat\s*resmi|sertifikasi\s*resmi|-|—|\s)*$/i', $raw_cert)) {
+            $raw_cert = '';
+        }
         if ($raw_cert === '') {
             if ($hasSni) {
                 $matrix_cert = 'TKDN + BMP 60,74% | SNI 9199:2023';
