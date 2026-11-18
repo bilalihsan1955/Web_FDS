@@ -174,7 +174,7 @@
         <a href="{!! esc_url($wa_full_url) !!}"
            target="_blank"
            rel="noopener noreferrer"
-           class="inline-flex items-center justify-center min-h-[44px] bg-[#25D366] hover:bg-[#1fb857] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-colors">
+           class="inline-flex items-center justify-center min-h-[44px] bg-[#25D366] hover:bg-[#1fb857] text-[#1d1d1f] text-[14px] font-semibold px-6 py-2.5 rounded-full transition-colors">
           {{ $ui['ty_btn_wa'] ?? 'Lanjut via WhatsApp' }}
         </a>
         <a href="{!! esc_url(home_url('/layanan/')) !!}"

@@ -507,7 +507,7 @@
                   <!-- Agrikultur (Atas) -->
                   <div>
                     <div class="mb-3 flex items-center justify-between">
-                      <a href="{!! esc_url($agri_url) !!}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors">
+                      <a href="{!! esc_url($agri_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
                         {{ $fds_nav_clean(!empty($agri_cat['term']->name) ? (string) $agri_cat['term']->name : 'UAV Agrikultur') }} {{ $fds_nav_clean((string) ($nb_brand['menu_prod_ferto_suffix'] ?? '(Seri FERTO)')) }}
                       </a>
                       @if($agri_remaining > 0)
@@ -528,14 +528,14 @@
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $item['name']) }}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
                           {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
                         </div>
                       </a>
                       @endforeach
                     </div>
                     @else
-                    <p class="text-[13px] text-[#86868b]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_empty_label'] ?? 'Belum ada drone pada kategori ini.')) }}</p>
+                    <p class="text-[13px] text-[#5c5e63]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_empty_label'] ?? 'Belum ada drone pada kategori ini.')) }}</p>
                     @endif
                   </div>
 
@@ -543,7 +543,7 @@
                   @if(!empty($pemetaan_cat) && !empty($pemetaan_drones))
                   <div class="pt-4 mt-4 border-t border-black/[0.06]">
                     <div class="mb-3 flex items-center justify-between">
-                      <a href="{!! esc_url($pemetaan_url) !!}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors">
+                      <a href="{!! esc_url($pemetaan_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
                         {{ $fds_nav_clean((string) $pemetaan_cat['term']->name) }}
                       </a>
                       @if($pemetaan_remaining > 0)
@@ -563,7 +563,7 @@
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $item['name']) }}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
                           {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
                         </div>
                       </a>
@@ -580,7 +580,7 @@
                   <!-- Kargo -->
                   @if(!empty($kargo_cat) && !empty($kargo_drones))
                   <div>
-                    <a href="{!! esc_url($kargo_url) !!}" class="text-[12px] font-semibold text-[#86868b] hover:text-[#0f808a] transition-colors mb-2.5 inline-block">
+                    <a href="{!! esc_url($kargo_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors mb-2.5 inline-block">
                       {{ $fds_nav_clean((string) $kargo_cat['term']->name) }}
                     </a>
                     <div class="space-y-2.5">
@@ -589,7 +589,7 @@
                         <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $item['name']) }}
                         </div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
                           {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
                         </div>
                       </a>
@@ -612,22 +612,22 @@
                 <!-- Column 4: Ekosistem & Standar (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#86868b] mb-4">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')) }}</p>
+                    <p class="text-[12px] font-semibold text-[#5c5e63] mb-4">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')) }}</p>
                     
                     <div class="space-y-3.5">
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean(str_ireplace('FDS STATION', 'FDS Station', (string) ($nb_brand['menu_prod_item1_title'] ?? 'FDS Station GCS'))) }}</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')) }}</div>
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')) }}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_title'] ?? 'TKDN + BMP 60,74%')) }}</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_desc'] ?? 'Berlaku resmi untuk seluruh lini seri FERTO')) }}</div>
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_desc'] ?? 'Berlaku resmi untuk seluruh lini seri FERTO')) }}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_title'] ?? 'Standar SNI 9199:2023')) }}</div>
-                        <div class="text-[11px] text-[#86868b] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_desc'] ?? 'Teruji resmi pada FERTO 15 & FERTO 22')) }}</div>
+                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_desc'] ?? 'Teruji resmi pada FERTO 15 & FERTO 22')) }}</div>
                       </div>
                     </div>
                   </div>
@@ -1101,7 +1101,7 @@
 
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
           <!-- Bottom bar (Copyright & Links) -->
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#86868b]">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#5c5e63]">
             <span>{{ $f_copyright }}</span>
             <div class="flex items-center gap-4">
               <a href="{!! esc_url(!empty($footer_data['privacy_url']) && $footer_data['privacy_url'] !== '#' ? $footer_data['privacy_url'] : home_url('/privacy-policy/')) !!}" class="hover:text-[#1d1d1f] hover:underline">{{ $f_privacy_lbl }}</a>
@@ -1328,6 +1328,22 @@
       });
     });
     </script>
+
+    <dialog id="fds-lightbox-dialog" class="fds-lightbox" closedby="any" aria-labelledby="fds-lightbox-caption">
+      <div class="fds-lightbox-bar">
+        <p id="fds-lightbox-caption" style="margin:0;font-size:0.9375rem;font-weight:500;"></p>
+        <div class="fds-lightbox-controls">
+          <button id="fds-lightbox-prev" type="button" class="fds-lightbox-btn" aria-label="Foto sebelumnya">←</button>
+          <button id="fds-lightbox-next" type="button" class="fds-lightbox-btn" aria-label="Foto berikutnya">→</button>
+          <form method="dialog" style="margin:0;">
+            <button type="submit" class="fds-lightbox-btn" autofocus aria-label="Tutup galeri">×</button>
+          </form>
+        </div>
+      </div>
+      <div class="fds-lightbox-stage">
+        <img id="fds-lightbox-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="1200" height="750">
+      </div>
+    </dialog>
 
     <?php do_action('get_footer'); ?>
     <?php wp_footer(); ?>

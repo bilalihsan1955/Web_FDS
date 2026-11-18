@@ -19,19 +19,25 @@
       $p = trim($prefix);
       return $p !== '' ? ($p . ' ' . $suffix) : $suffix;
   };
+  $cln = static function ($v): string {
+      $s = (string) $v;
+      $s = function_exists('fds_clean_string') ? fds_clean_string($s) : html_entity_decode(wp_specialchars_decode($s, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+      return function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($s) : $s;
+  };
+  $arrow_svg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>';
+  $chev_svg  = '<svg class="fds-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 9l-7 7-7-7"/></svg>';
 @endphp
 
 @if(!empty($sector))
 @php
-  $sec_slug   = $sector['slug'] ?? 'layanan';
-  $q_def      = $sector['quote_defaults'] ?? [];
-  $wa_prefill = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan sektor ' . ($sector['card_title'] ?? 'Industri') . '.');
-  $wa_sep     = strpos($wa_link, '?') === false ? '?' : '&';
-  $wa_cta_url = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
-  $kontak_form_url  = home_url('/kontak/?layanan=' . rawurlencode((string) $sec_slug) . '#hubungi-form');
-  $sektor_trust_bar = function_exists('fds_scrub_legacy_text')
-      ? fds_scrub_legacy_text((string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)'))
-      : (string) ($ui['trust_bar'] ?? 'Manufaktur UAV Nasional · ISO 9001:2015 · TKDN 60,74% (Seri FERTO) · SNI 9199:2023 (FERTO 15 & 22)');
+  $sec_slug        = (string) ($sector['slug'] ?? 'pertambangan');
+  $q_def           = $sector['quote_defaults'] ?? [];
+  $wa_prefill      = $q_def['wa_prefill'] ?? ('Halo tim FDS, kami ingin berkonsultasi mengenai layanan sektor ' . ($sector['card_title'] ?? 'Industri') . '.');
+  $wa_sep          = strpos($wa_link, '?') === false ? '?' : '&';
+  $wa_cta_url      = $wa_link . $wa_sep . 'text=' . rawurlencode($wa_prefill);
+  $kontak_form_url = home_url('/kontak/?layanan=' . rawurlencode($sec_slug) . '#hubungi-form');
+  $vis             = function_exists('App\fds_get_sector_visuals') ? \App\fds_get_sector_visuals($sec_slug, $sector) : [];
+  $gallery_items   = $vis['gallery'] ?? [];
 
   $resolved_reading_links = [];
   foreach (($sector['reading_links'] ?? []) as $rl) {
@@ -41,173 +47,378 @@
               ? \App\fds_resolve_optional_post_url((string) $rl['slug'])
               : '');
       if ($url !== '' && !empty($rl['label'])) {
-          $resolved_reading_links[] = ['label' => (string) $rl['label'], 'url' => $url];
+          $resolved_reading_links[] = ['label' => $cln($rl['label']), 'url' => $url];
       }
   }
+
+  $intro_paras     = $sector['intro_paragraphs'] ?? [];
+  $lead_intro      = !empty($intro_paras[0]) ? $cln($intro_paras[0]) : $cln($sector['hero_summary'] ?? '');
+  $extra_intros    = array_slice($intro_paras, 1);
+
+  $solutions       = $sector['solutions'] ?? [];
+  $featured_sols   = [];
+  $remaining_sols  = [];
+  foreach ($solutions as $sol) {
+      $raw_sol_url  = trim((string) ($sol['link_url'] ?? ''));
+      $sol_url      = ($raw_sol_url === '#form-penawaran') ? $kontak_form_url : $raw_sol_url;
+      $sol_name     = $cln($sol['name'] ?? '');
+      $sol_desc     = $cln($sol['desc'] ?? '');
+      $entry        = ['name' => $sol_name, 'desc' => $sol_desc, 'url' => $sol_url];
+      if ($sol_url !== '' && count($featured_sols) < 3) {
+          $featured_sols[] = $entry;
+      } else {
+          $remaining_sols[] = $entry;
+      }
+  }
+  if (count($featured_sols) === 0 && count($remaining_sols) >= 3) {
+      $featured_sols  = array_slice($remaining_sols, 0, 3);
+      $remaining_sols = array_slice($remaining_sols, 3);
+  }
+  $sol_photo_map = $vis['solution_photos'] ?? [];
 @endphp
 
-{{-- 1. HERO SEKTOR --}}
-<section class="relative pt-32 sm:pt-40 pb-20 sm:pb-24 bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] overflow-hidden">
-  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="sec-wave1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.55" />
-        </linearGradient>
-        <linearGradient id="sec-wave2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.18" />
-          <stop offset="100%" stop-color="#031e20" stop-opacity="0.75" />
-        </linearGradient>
-      </defs>
-      <path d="M0,180 C340,220 720,340 1080,380 C1260,400 1380,390 1440,365 L1440,500 L0,500 Z" fill="url(#sec-wave1)" />
-      <path d="M0,310 C320,330 680,410 1040,440 C1240,455 1360,450 1440,435 L1440,500 L0,500 Z" fill="url(#sec-wave2)" />
-    </svg>
-  </div>
-
-  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
-    <p class="text-[14px] sm:text-[15px] font-semibold text-[#a3eef5] mb-3 tracking-wide">
-      {{ $sector['num'] ?? '' }} &middot; {{ $sector['subtitle'] ?? '' }}
-    </p>
-
-    <h1 class="text-[36px] sm:text-[48px] lg:text-[56px] font-semibold tracking-[-0.03em] text-white leading-[1.08] max-w-[920px]">
-      {{ $sector['h1'] ?? $sector['card_title'] }}
-    </h1>
-
-    @if(!empty($sector['hero_summary']))
-      <p class="mt-5 text-[17px] sm:text-[19px] text-white/90 leading-relaxed max-w-[780px]">
-        {{ $sector['hero_summary'] }}
-      </p>
-    @endif
-
-    <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href="{!! esc_url($kontak_form_url) !!}"
-         class="inline-flex items-center justify-center min-h-[44px] bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
-        {{ $p_join((string) ($ui['sektor_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($sector['card_title'] ?? '')) }}
-      </a>
-      <a href="{!! esc_url($wa_cta_url) !!}"
-         target="_blank"
-         rel="noopener noreferrer"
-         class="inline-flex items-center justify-center min-h-[44px] bg-[#25D366] hover:bg-[#1fb857] text-white text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
-        {{ $ui['cta_wa_text'] ?? 'Konsultasi via WhatsApp' }}
-      </a>
-      <a href="#solusi-sektor"
-         class="inline-flex items-center justify-center min-h-[44px] bg-white/15 hover:bg-white/25 text-white border border-white/25 text-[14px] sm:text-[15px] font-medium px-6 py-3 rounded-full transition-colors">
-        {{ $ui['sektor_cta_secondary_text'] ?? 'Lihat Solusi & Output Data' }}
-      </a>
+{{-- 1. HERO CINEMA SEKTOR --}}
+<section class="fds-cinema-hero">
+  <img src="{!! esc_url($vis['hero_img'] ?? ($sector['image'] ?? '')) !!}"
+       alt="{{ $cln($vis['hero_alt'] ?? ($sector['image_alt'] ?? ($sector['card_title'] ?? 'Layanan FDS'))) }}"
+       class="fds-cinema-bg"
+       width="1200"
+       height="750"
+       loading="eager"
+       fetchpriority="high"
+       decoding="sync"
+       data-no-lazy="1">
+  <div class="fds-cinema-scrim"></div>
+  <div class="fds-container">
+    <div class="fds-cinema-content">
+      <h1 class="fds-h1" style="margin-bottom:20px;">
+        {{ $cln($sector['h1'] ?? ($sector['card_title'] ?? '')) }}
+      </h1>
+      @if(!empty($sector['hero_summary']))
+        <p class="fds-lead" style="margin-bottom:32px;">
+          {{ $cln($sector['hero_summary']) }}
+        </p>
+      @endif
+      <div class="fds-btn-group">
+        <a href="{!! esc_url($kontak_form_url) !!}" class="fds-btn fds-btn--white-teal">
+          {{ $cln($p_join((string) ($ui['sektor_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($sector['card_title'] ?? ''))) }}
+        </a>
+        <a href="{!! esc_url($wa_cta_url) !!}" target="_blank" rel="noopener noreferrer" class="fds-btn fds-btn--whatsapp">
+          {{ $cln($ui['cta_wa_text'] ?? 'Konsultasi via WhatsApp') }}
+        </a>
+      </div>
     </div>
-
-    @if(!empty($sektor_trust_bar))
-    <p class="mt-6 text-[13px] sm:text-[13.5px] text-white/75">
-      {{ $sektor_trust_bar }}
-    </p>
-    @endif
   </div>
 </section>
 
-{{-- 2. PENGANTAR SEKTOR & TANTANGAN OPERASIONAL --}}
-@if(!empty($sector['intro_paragraphs']) || !empty($sector['challenge_section']))
-<section class="bg-white py-16 sm:py-24 border-b border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 space-y-14">
-    @if(!empty($sector['intro_paragraphs']))
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        <div class="lg:col-span-4">
-          <h2 class="text-[28px] sm:text-[34px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-tight">
-            {{ $sector['subtitle'] ?? $sector['card_title'] }}
-          </h2>
-        </div>
-        <div class="lg:col-span-8 space-y-4 text-[16px] sm:text-[17px] text-[#424245] leading-relaxed">
-          @foreach($sector['intro_paragraphs'] as $para)
-            <p>{{ $para }}</p>
-          @endforeach
-        </div>
+{{-- STICKY SUB-NAV --}}
+<nav class="fds-subnav" aria-label="Navigasi Bagian Layanan {{ $cln($sector['card_title'] ?? '') }}">
+  <div class="fds-container fds-subnav-inner">
+    <span style="font-weight:600;font-size:0.9375rem;white-space:nowrap;">{{ $cln($sector['card_title'] ?? 'Layanan') }}</span>
+    <ul class="fds-subnav-links">
+      <li><a class="fds-subnav-link is-active" href="#solusi-sektor">Ruang Lingkup</a></li>
+      <li><a class="fds-subnav-link" href="#deliverables">Output</a></li>
+      <li><a class="fds-subnav-link" href="#alur-kerja">Alur Kerja</a></li>
+      <li><a class="fds-subnav-link" href="#biaya">Biaya</a></li>
+      @if(!empty($gallery_items))
+        <li><a class="fds-subnav-link" href="#galeri">Galeri</a></li>
+      @endif
+      <li><a class="fds-subnav-link" href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</nav>
+
+{{-- 2. PROOF METRICS + STORY SPLIT WITH FIELD PHOTOGRAPHY --}}
+<section class="fds-sec fds-bg-white">
+  <div class="fds-container">
+    @if(!empty($vis['kpis']))
+      <div class="fds-stats-band" style="margin-bottom:64px;">
+        @foreach($vis['kpis'] as $kpi)
+          <div class="fds-stat-cell">
+            <span class="fds-stat-num">{{ $cln($kpi['num'] ?? '') }}</span>
+            <span class="fds-stat-label">{{ $cln($kpi['lbl'] ?? '') }}</span>
+          </div>
+        @endforeach
       </div>
     @endif
 
-    @if(!empty($sector['challenge_section']))
-      @php $ch = $sector['challenge_section']; @endphp
-      <div class="pt-12 border-t border-black/[0.08] space-y-10">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          <div class="lg:col-span-5">
-            @if(!empty($ch['eyebrow']))
-              <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $ch['eyebrow'] }}</p>
-            @endif
-            <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-tight">
-              {{ $ch['title'] ?? '' }}
-            </h2>
-          </div>
-          <div class="lg:col-span-7 space-y-4 text-[15.5px] sm:text-[16.5px] text-[#424245] leading-relaxed">
-            @foreach($ch['paragraphs'] ?? [] as $cp)
-              <p>{{ $cp }}</p>
-            @endforeach
-          </div>
-        </div>
+    <div class="fds-story-split">
+      <div>
+        <h2 class="fds-h2" style="margin-bottom:18px;">
+          {{ $cln($sector['subtitle'] ?? ($sector['card_title'] ?? '')) }}
+        </h2>
+        <p class="fds-lead">
+          {{ $lead_intro }}
+        </p>
+      </div>
+      <figure class="fds-media-stage">
+        <img src="{!! esc_url($vis['story_img'] ?? '') !!}"
+             alt="{{ $cln($vis['story_alt'] ?? ('Operasi udara ' . ($sector['card_title'] ?? 'FDS'))) }}"
+             loading="lazy"
+             decoding="async"
+             width="1200"
+             height="750">
+      </figure>
+    </div>
+  </div>
+</section>
 
-        @if(!empty($ch['pain_points']))
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @foreach($ch['pain_points'] as $pp)
-              <div class="pt-5 border-t border-black/[0.12]">
-                <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug mb-2">
-                  {{ $pp['title'] ?? '' }}
-                </h3>
-                <p class="text-[14.5px] text-[#515154] leading-relaxed">
-                  {{ $pp['desc'] ?? '' }}
-                </p>
-              </div>
-            @endforeach
-          </div>
-        @endif
+{{-- 3. SOLUSI DAN LAYANAN (3 PHOTO FEATURE CARDS + CAPABILITY HAIRLINE GRID) --}}
+@if(!empty($solutions))
+<section id="solusi-sektor" class="fds-sec fds-bg-light scroll-mt-24">
+  <div class="fds-container">
+    <div class="fds-sec-head">
+      <h2 class="fds-h2">{{ $cln($ui['sektor_solutions_heading'] ?? 'Solusi dan Layanan') }}</h2>
+    </div>
+
+    @if(!empty($featured_sols))
+      <div class="fds-photo-cards-3" @if(!empty($remaining_sols)) style="margin-bottom:52px;" @endif>
+        @foreach($featured_sols as $fIdx => $fSol)
+          @php
+            $card_photo = $sol_photo_map[$fSol['name']] ?? ($gallery_items[$fIdx]['url'] ?? ($vis['story_img'] ?? ''));
+          @endphp
+          <article class="fds-photo-card">
+            <div class="fds-photo-card-frame">
+              <img src="{!! esc_url($card_photo) !!}" alt="{{ $fSol['name'] }} — Full Drone Solutions" loading="lazy" decoding="async" width="800" height="500">
+            </div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;">
+              <h3 class="fds-h3">
+                @if($fSol['url'] !== '')
+                  <a href="{!! esc_url($fSol['url']) !!}" class="fds-stretched-link" style="color:var(--fds-ink-primary);">{{ $fSol['name'] }}</a>
+                @else
+                  <span>{{ $fSol['name'] }}</span>
+                @endif
+              </h3>
+              @if($fSol['url'] !== '')
+                <span class="fds-icon-cue" aria-hidden="true">{!! $arrow_svg !!}</span>
+              @endif
+            </div>
+            <p class="fds-caption" style="margin:6px 0 0;">{{ $fSol['desc'] }}</p>
+          </article>
+        @endforeach
+      </div>
+    @endif
+
+    @if(!empty($remaining_sols))
+      <div class="fds-scope-grid">
+        @foreach($remaining_sols as $rSol)
+          <article class="fds-hairline-row {{ $rSol['url'] !== '' ? 'fds-hairline-row--interactive' : '' }}">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;">
+              <h3 class="fds-h3">
+                @if($rSol['url'] !== '')
+                  <a href="{!! esc_url($rSol['url']) !!}" class="fds-stretched-link" style="color:var(--fds-ink-primary);">{{ $rSol['name'] }}</a>
+                @else
+                  <span>{{ $rSol['name'] }}</span>
+                @endif
+              </h3>
+              @if($rSol['url'] !== '')
+                <span class="fds-icon-cue" aria-hidden="true">{!! $arrow_svg !!}</span>
+              @endif
+            </div>
+            <p class="fds-caption" style="margin:6px 0 0;">{{ $rSol['desc'] }}</p>
+          </article>
+        @endforeach
       </div>
     @endif
   </div>
 </section>
 @endif
 
-{{-- 3. SOLUSI DAN LAYANAN (DIPERTAHANKAN 100%) --}}
-@if(!empty($sector['solutions']))
-<section id="solusi-sektor" class="bg-[#f5f5f7] py-20 sm:py-24 scroll-mt-16">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="mb-12">
-      <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $p_join((string) ($ui['sektor_solutions_eyebrow_prefix'] ?? 'Ruang Lingkup Sektor'), (string) ($sector['card_title'] ?? '')) }}</p>
-      <h2 class="text-[32px] sm:text-[42px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.12]">
-        {{ $ui['sektor_solutions_heading'] ?? 'Solusi dan Layanan' }}
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @foreach($sector['solutions'] as $sol)
-        @php
-          $raw_sol_url  = trim((string) ($sol['link_url'] ?? ''));
-          $sol_url      = ($raw_sol_url === '#form-penawaran') ? $kontak_form_url : $raw_sol_url;
-          $has_sol_link = $sol_url !== '';
-        @endphp
-        <article class="fds-service-card {{ $has_sol_link ? 'fds-service-card--interactive fds-service-card--light' : '' }} bg-white rounded-3xl p-6 sm:p-7 border border-black/[0.08] flex flex-col justify-between group">
-          <div>
-            <h3 class="text-[19px] sm:text-[20px] font-semibold tracking-[-0.015em] text-[#1d1d1f] leading-snug mb-2.5 {{ $has_sol_link ? 'group-hover:text-[#0a555c]' : '' }} transition-colors">
-              @if($has_sol_link)
-                <a href="{!! esc_url($sol_url) !!}" class="fds-stretched-link">
-                  {{ $sol['name'] }}
-                </a>
-              @else
-                <span>{{ $sol['name'] }}</span>
-              @endif
-            </h3>
-            <p class="text-[14.5px] text-[#515154] leading-relaxed">
-              {{ $sol['desc'] }}
-            </p>
-          </div>
-
-          @if($has_sol_link)
-            <div class="pt-5 mt-5 border-t border-black/[0.06]">
-              <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-[#0a555c] leading-none" aria-hidden="true">
-                <span>{{ $sol['link_label'] ?: 'Pelajari selengkapnya' }}</span>
-                <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 6h12v12"/>
-                  <path d="M6 18 18 6"/>
-                </svg>
-              </span>
+{{-- 4. MATRIKS PERBANDINGAN METODE (PHOTO SPLIT + NATIVE <DETAILS>) --}}
+@if(!empty($sector['method_comparison']['columns']) && !empty($sector['method_comparison']['rows']))
+@php $mc = $sector['method_comparison']; @endphp
+<section id="matriks-metode" class="fds-sec fds-bg-white">
+  <div class="fds-container">
+    <div class="fds-story-split fds-story-split--media-left">
+      <figure class="fds-media-stage">
+        <img src="{!! esc_url($vis['matrix_img'] ?? '') !!}"
+             alt="{{ $cln($vis['matrix_alt'] ?? 'Teknologi sensor UAV Full Drone Solutions') }}"
+             loading="lazy"
+             decoding="async"
+             width="1000"
+             height="625">
+      </figure>
+      <div>
+        <h2 class="fds-h2" style="margin-bottom:16px;">{{ $cln($mc['title'] ?? 'Perbandingan Metode Akuisisi') }}</h2>
+        @if(!empty($mc['subtitle']))
+          <p class="fds-lead">{{ $cln($mc['subtitle']) }}</p>
+        @endif
+        <details class="fds-quiet-details">
+          <summary class="fds-quiet-summary">Lihat matriks perbandingan metode survei {!! $chev_svg !!}</summary>
+          <div class="fds-quiet-body">
+            <div class="fds-table-wrap">
+              <table class="fds-table">
+                <thead>
+                  <tr>
+                    @foreach($mc['columns'] as $colTitle)
+                      <th scope="col">{{ $cln($colTitle) }}</th>
+                    @endforeach
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($mc['rows'] as $row)
+                    <tr>
+                      @foreach($row as $cIdx => $cell)
+                        <td @if($cIdx === 0) style="font-weight:600;color:var(--fds-ink-primary);" @endif>{{ $cln($cell) }}</td>
+                      @endforeach
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
-          @endif
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+</section>
+@endif
+
+{{-- 5. CAKUPAN TEKNIS & DELIVERABLES (BRIGHT TEAL WAVE + HARDWARE CUTOUT) --}}
+@if(!empty($sector['deliverable_groups']))
+<section id="deliverables" class="fds-sec fds-bg-teal scroll-mt-24">
+  <x-fds-wave type="fluid" :uid="'sec-deliv-' . $sec_slug" />
+  <div class="fds-container fds-sticky-split">
+    <div class="fds-sticky-col">
+      <h2 class="fds-h2" style="margin-bottom:14px;">
+        {{ $cln($ui['sektor_deliverables_heading'] ?? 'Cakupan Konsultasi, Analisis & Output Data') }}
+      </h2>
+      <p class="fds-lead">
+        {{ $cln($p_join((string) ($ui['sektor_deliverables_sub_prefix'] ?? 'Rincian aktivitas konsultasi, metode akuisisi, pengolahan spasial, hingga dashboard pemantauan pada sektor'), (string) ($sector['card_title'] ?? ''))) }}.
+      </p>
+      @if(!empty($vis['hardware_cutout']))
+        <div class="fds-hardware-cutout">
+          <img src="{!! esc_url($vis['hardware_cutout']) !!}"
+               alt="{{ $cln($vis['hardware_alt'] ?? 'Armada UAV Full Drone Solutions') }}"
+               loading="lazy"
+               decoding="async"
+               width="1148"
+               height="559">
+        </div>
+      @endif
+    </div>
+    <div class="fds-faq-list">
+      @foreach($sector['deliverable_groups'] as $gIdx => $group)
+        @php $gnum = str_pad((string) ($gIdx + 1), 2, '0', STR_PAD_LEFT); @endphp
+        <details class="fds-faq-row">
+          <summary class="fds-faq-summary">
+            <span>Bagian {{ $gnum }} — {{ $cln($group['title'] ?? '') }}</span>
+            {!! $chev_svg !!}
+          </summary>
+          <div class="fds-faq-body fds-prose">
+            <ul style="margin:0;padding-left:20px;display:grid;gap:6px;">
+              @foreach($group['items'] ?? [] as $item)
+                <li class="fds-body">{{ $cln($item) }}</li>
+              @endforeach
+            </ul>
+          </div>
+        </details>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+
+{{-- 6. ALUR KERJA LAPANGAN (WORKSHOP PHOTO + ACCORDION STEPS) --}}
+@if(!empty($sector['workflow_steps']))
+<section id="alur-kerja" class="fds-sec fds-bg-light scroll-mt-24">
+  <div class="fds-container fds-sticky-split">
+    <div class="fds-sticky-col">
+      <h2 class="fds-h2" style="margin-bottom:24px;">
+        {{ $cln($p_join((string) ($ui['sektor_workflow_heading_prefix'] ?? 'Alur Kerja Survei & Pengendalian Mutu Sektor'), (string) ($sector['card_title'] ?? ''))) }}
+      </h2>
+      <figure class="fds-media-stage">
+        <img src="{!! esc_url($vis['workflow_img'] ?? '') !!}"
+             alt="{{ $cln($vis['workflow_alt'] ?? 'Alur kerja pengendalian mutu Full Drone Solutions') }}"
+             loading="lazy"
+             decoding="async"
+             width="1200"
+             height="750">
+      </figure>
+    </div>
+    <div class="fds-faq-list">
+      @foreach($sector['workflow_steps'] as $ws)
+        <details class="fds-faq-row">
+          <summary class="fds-faq-summary">
+            <span>
+              <strong class="fds-num" style="color:var(--color-teal-800);margin-right:12px;">Tahap {{ $cln($ws['step'] ?? '') }}</strong>
+              {{ $cln($ws['title'] ?? '') }}
+            </span>
+            {!! $chev_svg !!}
+          </summary>
+          <div class="fds-faq-body fds-prose">
+            <p class="fds-body" style="margin:0;">{{ $cln($ws['desc'] ?? '') }}</p>
+          </div>
+        </details>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+
+{{-- 7. VARIABEL PEMBENTUK BIAYA --}}
+@if(!empty($sector['cost_framework']))
+@php $cf = $sector['cost_framework']; @endphp
+<section id="biaya" class="fds-sec fds-bg-white scroll-mt-24">
+  <div class="fds-container fds-sticky-split">
+    <div class="fds-sticky-col">
+      <h2 class="fds-h2" style="margin-bottom:24px;">{{ $cln($cf['title'] ?? 'Faktor Penentu Biaya Proyek') }}</h2>
+      <a href="{!! esc_url($kontak_form_url) !!}" class="fds-btn fds-btn--primary">
+        {{ $cln($ui['sektor_cost_cta_text'] ?? 'Kirim lokasi & batas AOI untuk estimasi resmi') }}
+      </a>
+    </div>
+    <div class="fds-faq-list">
+      @foreach($cf['factors'] ?? [] as $fac)
+        <details class="fds-faq-row">
+          <summary class="fds-faq-summary">
+            <span>{{ $cln($fac['name'] ?? '') }}</span>
+            {!! $chev_svg !!}
+          </summary>
+          <div class="fds-faq-body fds-prose">
+            <p class="fds-body" style="margin:0;">{{ $cln($fac['desc'] ?? '') }}</p>
+          </div>
+        </details>
+      @endforeach
+    </div>
+  </div>
+</section>
+@endif
+
+{{-- 8. GALERI DOKUMENTASI LAPANGAN & LIGHTBOX --}}
+@if(!empty($gallery_items))
+<section id="galeri" class="fds-sec fds-bg-light scroll-mt-24">
+  <div class="fds-container">
+    <div class="fds-sec-head">
+      <h2 class="fds-h2">Dokumentasi Lapangan &amp; Armada Survei.</h2>
+      <p class="fds-lead">Akuisisi data lapangan, operasi stasiun kendali, serta kesiapan armada Full Drone Solutions.</p>
+    </div>
+    <x-fds-gallery :items="$gallery_items" variant="bento" />
+  </div>
+</section>
+@endif
+
+{{-- 9. LAYANAN & SEKTOR TERKAIT --}}
+@if(!empty($sector['related_capabilities']))
+<section class="fds-sec fds-bg-white">
+  <div class="fds-container">
+    <div class="fds-sec-head fds-sec-head--split">
+      <div><h2 class="fds-h2">{{ $cln($ui['sektor_related_heading'] ?? 'Layanan & Sektor Terkait') }}</h2></div>
+      <div>
+        <a href="{!! esc_url(home_url('/layanan/')) !!}" class="fds-text-link">
+          {{ $cln($ui['sektor_related_all_link'] ?? 'Semua Layanan FDS') }} {!! $arrow_svg !!}
+        </a>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-9">
+      @foreach($sector['related_capabilities'] as $rel)
+        <article class="pt-5 border-t-2 border-[#0f808a] relative group">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;">
+            <h3 class="fds-h3">
+              <a href="{!! esc_url($rel['url']) !!}" class="fds-stretched-link" style="color:var(--fds-ink-primary);">{{ $cln($rel['title']) }}</a>
+            </h3>
+            <span class="fds-icon-cue" aria-hidden="true">{!! $arrow_svg !!}</span>
+          </div>
+          <p class="fds-caption" style="margin:0;">{{ $cln($rel['desc']) }}</p>
         </article>
       @endforeach
     </div>
@@ -215,378 +426,121 @@
 </section>
 @endif
 
-@php $use_white = true; @endphp
+{{-- 10. FAQ SEKTOR --}}
+<div id="faq" class="scroll-mt-24">
+  <x-service-faq
+    :title="$p_join((string) ($ui['sektor_faq_prefix'] ?? 'Pertanyaan Umum:'), (string) ($sector['card_title'] ?? 'Layanan'))"
+    :subtitle="$ui['sektor_faq_subtitle'] ?? 'Jawaban ringkas terkait metodologi, deliverables, integrasi software, dan tahapan kerja lapangan.'"
+    :faqs="$sector['faqs'] ?? []"
+    sectionBg="gray"
+  />
+</div>
 
-{{-- 4. BLOK NARASI PENUTUP & KONDISIONAL PRODUK/TEKNOLOGI + OUTPUT PEKERJAAN (DIPERTAHANKAN 100%) --}}
-@if(!empty($sector['products_tech']) || !empty($sector['work_outputs']) || !empty($sector['closing_paragraphs']))
-@php $bg_4 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; $card_4 = $use_white ? 'bg-[#f5f5f7]' : 'bg-white'; @endphp
-<section class="{{ $bg_4 }} py-16 sm:py-20 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 space-y-12">
-    @if(!empty($sector['products_tech']) || !empty($sector['work_outputs']))
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        @if(!empty($sector['products_tech']))
-          <div class="lg:col-span-7">
-            <h2 class="text-[28px] sm:text-[34px] font-semibold tracking-[-0.025em] text-[#1d1d1f] mb-5">
-              {{ $ui['sektor_products_heading'] ?? 'Produk dan Teknologi Pendukung' }}
-            </h2>
-            <ul class="divide-y divide-black/[0.08] border-t border-b border-black/[0.08]">
-              @foreach($sector['products_tech'] as $pt)
-                <li class="py-4 text-[15.5px] text-[#1d1d1f]">
-                  @if(!empty($pt['url']))
-                    <a href="{!! esc_url($pt['url']) !!}" class="inline-flex items-center min-h-[44px] sm:min-h-0 font-semibold text-[#0a555c] hover:underline underline-offset-4">
-                      {{ $pt['name'] }}
-                    </a>
-                  @else
-                    <span class="font-semibold">{{ $pt['name'] }}</span>
-                  @endif
+{{-- 11. APPLE-STYLE QUIET FOOTNOTE BAND (SELURUH DETAIL SEO TERJAGA DI DOM SSR) --}}
+@if(!empty($extra_intros) || !empty($sector['challenge_section']) || !empty($sector['products_tech']) || !empty($sector['closing_paragraphs']) || !empty($sector['software_integrations']) || !empty($sector['eeat_proof']))
+<section class="fds-footnote-band" aria-label="Referensi Teknis &amp; Dokumentasi {{ $cln($sector['card_title'] ?? '') }}">
+  <div class="fds-container">
+    <details class="fds-quiet-details" style="margin-top:0;">
+      <summary class="fds-quiet-summary">Referensi Teknis, Tantangan Lapangan &amp; Kompatibilitas Integrasi {!! $chev_svg !!}</summary>
+      <div class="fds-quiet-body fds-prose">
+        @foreach($extra_intros as $ep)
+          <p class="fds-body" style="margin-bottom:12px;">{{ $cln($ep) }}</p>
+        @endforeach
 
-                  @if(!empty($pt['sublinks']))
-                    <div class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[14px]">
-                      @foreach($pt['sublinks'] as $sub)
-                        <a href="{!! esc_url($sub['url']) !!}" class="inline-flex items-center gap-1 min-h-[44px] sm:min-h-0 font-semibold text-[#0f808a] hover:underline underline-offset-4 group leading-none">
-                          <span>Detail spesifikasi {{ $sub['label'] }}</span>
-                          <svg class="w-[15px] h-[15px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M6 6h12v12"/>
-                            <path d="M6 18 18 6"/>
-                          </svg>
-                        </a>
-                      @endforeach
-                    </div>
-                  @endif
-
-                  @if(!empty($pt['note']))
-                    <p class="mt-1.5 text-[13.5px] text-[#6e6e73]">{{ $pt['note'] }}</p>
-                  @endif
-                </li>
+        @if(!empty($sector['challenge_section']))
+          @php $ch = $sector['challenge_section']; @endphp
+          <h2 class="fds-h3" style="margin:20px 0 8px;">{{ $cln($ch['title'] ?? '') }}</h2>
+          @foreach($ch['paragraphs'] ?? [] as $cp)
+            <p class="fds-body" style="margin-bottom:8px;">{{ $cln($cp) }}</p>
+          @endforeach
+          @if(!empty($ch['pain_points']))
+            <ul style="margin:8px 0 16px;padding-left:20px;display:grid;gap:6px;">
+              @foreach($ch['pain_points'] as $pp)
+                <li class="fds-body"><strong>{{ $cln($pp['title'] ?? '') }}:</strong> {{ $cln($pp['desc'] ?? '') }}</li>
               @endforeach
             </ul>
-          </div>
+          @endif
         @endif
 
         @if(!empty($sector['work_outputs']))
-          <div class="lg:col-span-5 {{ $card_4 }} rounded-3xl p-7 sm:p-8 border border-black/[0.06]">
-            <h3 class="text-[22px] font-semibold text-[#1d1d1f] mb-3">{{ $ui['sektor_outputs_heading'] ?? 'Output Pekerjaan' }}</h3>
-            <p class="text-[15.5px] text-[#424245] leading-relaxed">
-              {{ $sector['work_outputs'] }}
-            </p>
-          </div>
+          <h3 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($ui['sektor_outputs_heading'] ?? 'Output Pekerjaan') }}</h3>
+          <p class="fds-body" style="margin-bottom:12px;">{{ $cln($sector['work_outputs']) }}</p>
         @endif
-      </div>
-    @endif
 
-    @if(!empty($sector['closing_paragraphs']))
-      <div class="{{ $card_4 }} rounded-3xl p-7 sm:p-10 border border-black/[0.06] grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div class="lg:col-span-4">
-          <h2 class="text-[26px] sm:text-[30px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-tight">
-            {{ $ui['sektor_closing_heading'] ?? 'Dukungan Lintas Tim Operasional' }}
-          </h2>
-        </div>
-        <div class="lg:col-span-8 space-y-3.5 text-[16px] text-[#424245] leading-relaxed">
-          @foreach($sector['closing_paragraphs'] as $cp)
-            <p>{{ $cp }}</p>
-          @endforeach
-        </div>
-      </div>
-    @endif
-  </div>
-</section>
-@php $use_white = !$use_white; @endphp
-@endif
-
-{{-- 5. MATRIKS PERBANDINGAN METODE --}}
-@if(!empty($sector['method_comparison']['columns']) && !empty($sector['method_comparison']['rows']))
-@php $mc = $sector['method_comparison']; $bg_5 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; @endphp
-<section class="{{ $bg_5 }} py-20 sm:py-24 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="max-w-[820px] mb-10">
-      @if(!empty($mc['eyebrow']))
-        <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $mc['eyebrow'] }}</p>
-      @endif
-      <h2 class="text-[32px] sm:text-[42px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.12]">
-        {{ $mc['title'] ?? 'Perbandingan Metode Akuisisi' }}
-      </h2>
-      @if(!empty($mc['subtitle']))
-        <p class="mt-3.5 text-[15.5px] sm:text-[16px] text-[#515154] leading-relaxed">
-          {{ $mc['subtitle'] }}
-        </p>
-      @endif
-    </div>
-
-    <div class="overflow-x-auto">
-      <table class="fds-seo-spec-table fds-comparison-table min-w-[720px]">
-        <thead>
-          <tr>
-            @foreach($mc['columns'] as $colTitle)
-              <th>{{ $colTitle }}</th>
-            @endforeach
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($mc['rows'] as $row)
-            <tr>
-              @foreach($row as $cIdx => $cell)
-                <td class="{{ $cIdx === 0 ? 'font-semibold text-[#1d1d1f]' : '' }}">{{ $cell }}</td>
-              @endforeach
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-@php $use_white = !$use_white; @endphp
-@endif
-
-{{-- 6. CAKUPAN TEKNIS, KONSULTASI & DELIVERABLES (SELURUH BUTIR DIPERTAHANKAN) --}}
-@if(!empty($sector['deliverable_groups']))
-@php $bg_6 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; $card_6 = $use_white ? 'bg-[#f5f5f7]' : 'bg-white'; @endphp
-<section id="deliverables" class="{{ $bg_6 }} py-20 sm:py-24 border-t border-black/[0.06] scroll-mt-16">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="max-w-[780px] mb-12 sm:mb-14">
-      <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $ui['sektor_deliverables_eyebrow'] ?? 'Detail Teknis & Deliverables' }}</p>
-      <h2 class="text-[32px] sm:text-[42px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.12]">
-        {{ $ui['sektor_deliverables_heading'] ?? 'Cakupan Konsultasi, Analisis & Output Data' }}
-      </h2>
-      <p class="mt-3.5 text-[16px] text-[#515154] leading-relaxed">
-        {{ $p_join((string) ($ui['sektor_deliverables_sub_prefix'] ?? 'Rincian aktivitas konsultasi, metode akuisisi, pengolahan spasial, hingga dashboard pemantauan pada sektor'), (string) ($sector['card_title'] ?? '')) }}.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-7">
-      @foreach($sector['deliverable_groups'] as $gIdx => $group)
-        <div class="{{ $card_6 }} rounded-3xl p-7 sm:p-8 border border-black/[0.08]">
-          <p class="text-[13px] font-semibold text-[#0a555c] mb-1.5">
-            Bagian {{ str_pad((string) ($gIdx + 1), 2, '0', STR_PAD_LEFT) }}
-          </p>
-          <h3 class="text-[20px] sm:text-[22px] font-semibold tracking-[-0.02em] text-[#1d1d1f] leading-snug mb-5">
-            {{ $group['title'] ?? '' }}
-          </h3>
-          <ul class="space-y-2.5 text-[14.5px] sm:text-[15px] text-[#424245] leading-relaxed list-disc pl-5">
-            @foreach($group['items'] ?? [] as $item)
-              <li>{{ $item }}</li>
+        @if(!empty($sector['products_tech']))
+          <h2 class="fds-h3" style="margin:18px 0 8px;">{{ $cln($ui['sektor_products_heading'] ?? 'Produk dan Teknologi Pendukung') }}</h2>
+          <ul style="margin:0 0 14px;padding-left:20px;display:grid;gap:6px;">
+            @foreach($sector['products_tech'] as $pt)
+              <li class="fds-body">
+                @if(!empty($pt['url']))
+                  <a href="{!! esc_url($pt['url']) !!}" style="color:var(--color-teal-800);font-weight:600;">{{ $cln($pt['name']) }}</a>
+                @else
+                  <strong>{{ $cln($pt['name']) }}</strong>
+                @endif
+                @if(!empty($pt['note'])) — {{ $cln($pt['note']) }}@endif
+                @foreach($pt['sublinks'] ?? [] as $sub)
+                  · <a href="{!! esc_url($sub['url']) !!}" style="color:var(--color-teal-800);">{{ $cln($sub['label']) }}</a>
+                @endforeach
+              </li>
             @endforeach
           </ul>
-        </div>
-      @endforeach
-    </div>
-  </div>
-</section>
-@php $use_white = !$use_white; @endphp
-@endif
+        @endif
 
-{{-- 7. ALUR KERJA LAPANGAN & INTEGRASI SOFTWARE ENGINEERING --}}
-@if(!empty($sector['workflow_steps']) || !empty($sector['software_integrations']))
-@php $bg_7 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; $card_7 = $use_white ? 'bg-[#f5f5f7]' : 'bg-white'; @endphp
-<section class="{{ $bg_7 }} py-20 sm:py-24 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-start">
-    @if(!empty($sector['workflow_steps']))
-      <div class="lg:col-span-7">
-        <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $ui['sektor_workflow_eyebrow'] ?? 'Standar Pelaksanaan' }}</p>
-        <h2 class="text-[30px] sm:text-[38px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.12] mb-8">
-          {{ $p_join((string) ($ui['sektor_workflow_heading_prefix'] ?? 'Alur Kerja Survei & Pengendalian Mutu Sektor'), (string) ($sector['card_title'] ?? '')) }}
-        </h2>
-        <ol class="space-y-4">
-          @foreach($sector['workflow_steps'] as $ws)
-            <li class="{{ $card_7 }} rounded-2xl p-6 border border-black/[0.08]">
-              <p class="text-[13px] font-semibold text-[#0a555c] mb-1">Tahap {{ $ws['step'] ?? '' }}</p>
-              <h3 class="text-[18px] font-semibold text-[#1d1d1f] mb-1.5">{{ $ws['title'] ?? '' }}</h3>
-              <p class="text-[14.5px] text-[#515154] leading-relaxed">{{ $ws['desc'] ?? '' }}</p>
-            </li>
+        @if(!empty($sector['closing_paragraphs']))
+          <h2 class="fds-h3" style="margin:18px 0 8px;">{{ $cln($ui['sektor_closing_heading'] ?? 'Dukungan Lintas Tim Operasional') }}</h2>
+          @foreach($sector['closing_paragraphs'] as $clp)
+            <p class="fds-body" style="margin-bottom:8px;">{{ $cln($clp) }}</p>
           @endforeach
-        </ol>
-      </div>
-    @endif
+        @endif
 
-    @if(!empty($sector['software_integrations']))
-      @php $si = $sector['software_integrations']; @endphp
-      <div class="lg:col-span-5 {{ $card_7 }} rounded-3xl p-7 sm:p-9 border border-black/[0.08] space-y-6">
-        <div>
-          @if(!empty($si['eyebrow']))
-            <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $si['eyebrow'] }}</p>
-          @endif
-          <h2 class="text-[24px] sm:text-[28px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-tight">
-            {{ $si['title'] ?? 'Format Output & Kompatibilitas Software' }}
-          </h2>
+        @if(!empty($sector['software_integrations']))
+          @php $si = $sector['software_integrations']; @endphp
+          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($si['title'] ?? 'Format Output & Kompatibilitas Software') }}</h2>
           @if(!empty($si['subtitle']))
-            <p class="mt-2.5 text-[14.5px] text-[#515154] leading-relaxed">
-              {{ $si['subtitle'] }}
-            </p>
+            <p class="fds-body" style="margin-bottom:8px;">{{ $cln($si['subtitle']) }}</p>
           @endif
-        </div>
-
-        @if(!empty($si['formats']))
-          <div class="pt-4 border-t border-black/[0.08]">
-            <h3 class="text-[15px] font-semibold text-[#1d1d1f] mb-3">{{ $ui['sektor_formats_heading'] ?? 'Format File Penyerahan' }}</h3>
-            <ul class="space-y-2.5 text-[14.5px] text-[#424245] leading-relaxed list-disc pl-5">
+          @if(!empty($si['formats']))
+            <ul style="margin:0 0 10px;padding-left:20px;display:grid;gap:4px;">
               @foreach($si['formats'] as $fmt)
-                <li>{{ $fmt }}</li>
+                <li class="fds-body">{{ $cln($fmt) }}</li>
               @endforeach
             </ul>
-          </div>
-        @endif
-
-        @if(!empty($si['tools']))
-          <div class="pt-4 border-t border-black/[0.08]">
-            <h3 class="text-[15px] font-semibold text-[#1d1d1f] mb-2">{{ $ui['sektor_tools_heading'] ?? 'Perangkat Lunak Penerima' }}</h3>
-            <p class="text-[14.5px] text-[#0a555c] font-semibold leading-relaxed">
-              {{ implode(' · ', $si['tools']) }}
-            </p>
-          </div>
-        @endif
-      </div>
-    @endif
-  </div>
-</section>
-@php $use_white = !$use_white; @endphp
-@endif
-
-{{-- 8. FAKTOR BIAYA, OTORITAS MANUFAKTUR FDS & TAUTAN TERKAIT --}}
-@if(!empty($sector['cost_framework']) || !empty($sector['eeat_proof']))
-@php $bg_8 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; $card_8 = $use_white ? 'bg-[#f5f5f7]' : 'bg-white'; @endphp
-<section class="{{ $bg_8 }} py-20 sm:py-24 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-    @if(!empty($sector['cost_framework']))
-      @php $cf = $sector['cost_framework']; @endphp
-      <div class="lg:col-span-6">
-        @if(!empty($cf['eyebrow']))
-          <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $cf['eyebrow'] }}</p>
-        @endif
-        <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.15] mb-4">
-          {{ $cf['title'] ?? 'Faktor Penentu Biaya Proyek' }}
-        </h2>
-        @if(!empty($cf['intro']))
-          <p class="text-[15.5px] text-[#515154] leading-relaxed mb-6">{{ $cf['intro'] }}</p>
-        @endif
-
-        @if(!empty($cf['factors']))
-          <div class="divide-y divide-black/[0.08] border-t border-b border-black/[0.08]">
-            @foreach($cf['factors'] as $fac)
-              <div class="py-4">
-                <h3 class="text-[16.5px] font-semibold text-[#1d1d1f] mb-1">{{ $fac['name'] ?? '' }}</h3>
-                <p class="text-[14.5px] text-[#515154] leading-relaxed">{{ $fac['desc'] ?? '' }}</p>
-              </div>
-            @endforeach
-          </div>
-        @endif
-
-        <div class="mt-6">
-          <a href="{!! esc_url($kontak_form_url) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] text-[14.5px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
-            <span>{{ $ui['sektor_cost_cta_text'] ?? 'Kirim lokasi & batas AOI untuk estimasi resmi' }}</span>
-            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M6 6h12v12"/>
-              <path d="M6 18 18 6"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-    @endif
-
-    @if(!empty($sector['eeat_proof']))
-      @php $ep = $sector['eeat_proof']; @endphp
-      <div class="lg:col-span-6 {{ $card_8 }} rounded-3xl p-7 sm:p-9 border border-black/[0.08] space-y-6">
-        <div>
-          @if(!empty($ep['eyebrow']))
-            <p class="text-[13px] font-semibold text-[#0a555c] mb-2">{{ $ep['eyebrow'] }}</p>
           @endif
-          <h2 class="text-[26px] sm:text-[32px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-tight">
-            {{ $ep['title'] ?? 'Standar Kualitas & Manufaktur FDS' }}
-          </h2>
+          @if(!empty($si['tools']))
+            <p class="fds-caption" style="color:var(--color-teal-800);font-weight:600;">{{ implode(' · ', array_map($cln, $si['tools'])) }}</p>
+          @endif
+        @endif
+
+        @if(!empty($sector['eeat_proof']))
+          @php $ep = $sector['eeat_proof']; @endphp
+          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($ep['title'] ?? 'Standar Kualitas & Manufaktur FDS') }}</h2>
           @if(!empty($ep['intro']))
-            <p class="mt-3 text-[15px] text-[#424245] leading-relaxed">{{ $ep['intro'] }}</p>
+            <p class="fds-body" style="margin-bottom:8px;">{{ $cln($ep['intro']) }}</p>
           @endif
-        </div>
-
-        @if(!empty($ep['bullets']))
-          <ul class="space-y-3 text-[14.5px] text-[#424245] leading-relaxed list-disc pl-5">
-            @foreach($ep['bullets'] as $eb)
-              <li>{{ $eb }}</li>
-            @endforeach
-          </ul>
-        @endif
-
-        @if(!empty($ep['portfolio_note']))
-          <p class="pt-4 border-t border-black/[0.08] text-[13.5px] text-[#6e6e73] leading-relaxed">
-            {{ $ep['portfolio_note'] }}
-          </p>
+          @if(!empty($ep['bullets']))
+            <ul style="margin:0 0 12px;padding-left:20px;display:grid;gap:4px;">
+              @foreach($ep['bullets'] as $eb)
+                <li class="fds-body">{{ $cln($eb) }}</li>
+              @endforeach
+            </ul>
+          @endif
+          @if(!empty($ep['portfolio_note']))
+            <p class="fds-caption" style="margin-bottom:10px;">{{ $cln($ep['portfolio_note']) }}</p>
+          @endif
         @endif
 
         @if(!empty($resolved_reading_links))
-          <div class="pt-5 border-t border-black/[0.08]">
-            <p class="text-[13px] font-semibold text-[#1d1d1f] mb-2.5">{{ $ui['sektor_reading_heading'] ?? 'Referensi Armada & Artikel Teknis' }}</p>
-            <ul class="space-y-1.5">
-              @foreach($resolved_reading_links as $rl)
-                <li>
-                  <a href="{!! esc_url($rl['url']) !!}" class="inline-flex items-center gap-1.5 min-h-[44px] sm:min-h-[32px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 group leading-none">
-                    <span>{{ $rl['label'] }}</span>
-                    <svg class="w-[15px] h-[15px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M6 6h12v12"/>
-                      <path d="M6 18 18 6"/>
-                    </svg>
-                  </a>
-                </li>
-              @endforeach
-            </ul>
-          </div>
+          <ul style="margin:8px 0 0;padding-left:20px;display:grid;gap:4px;">
+            @foreach($resolved_reading_links as $rl)
+              <li><a href="{!! esc_url($rl['url']) !!}" style="color:var(--color-teal-800);">{{ $rl['label'] }}</a></li>
+            @endforeach
+          </ul>
         @endif
       </div>
-    @endif
+    </details>
   </div>
 </section>
-@php $use_white = !$use_white; @endphp
 @endif
-
-{{-- 9. INTERNAL LINKING: KEMAMPUAN TERKAIT LINTAS SEKTOR --}}
-@if(!empty($sector['related_capabilities']))
-@php $bg_9 = $use_white ? 'bg-white' : 'bg-[#f5f5f7]'; @endphp
-<section class="{{ $bg_9 }} py-16 sm:py-24 border-t border-black/[0.06]">
-  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
-      <div>
-        <h2 class="text-[28px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-tight">
-          {{ $ui['sektor_related_heading'] ?? 'Layanan & Sektor Terkait' }}
-        </h2>
-        <p class="mt-2 text-[15.5px] text-[#515154]">
-          {{ $ui['sektor_related_subtitle'] ?? 'Telusuri metode sensor dan solusi lintas industri lainnya dari Full Drone Solutions.' }}
-        </p>
-      </div>
-      <a href="{{ home_url('/layanan/') }}"
-         class="inline-flex items-center gap-1.5 min-h-[44px] text-[14px] font-semibold text-[#0a555c] hover:underline underline-offset-4 flex-shrink-0 group leading-none">
-        <span>{{ $ui['sektor_related_all_link'] ?? 'Semua Layanan FDS' }}</span>
-        <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 6h12v12"/>
-          <path d="M6 18 18 6"/>
-        </svg>
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      @foreach($sector['related_capabilities'] as $rel)
-        <x-service-card
-          variant="light"
-          headingTag="h3"
-          :showImage="false"
-          :title="$rel['title']"
-          :desc="$rel['desc']"
-          :url="$rel['url']"
-          :ctaLabel="$ui['sektor_related_card_cta'] ?? 'Jelajahi layanan terkait'"
-        />
-      @endforeach
-    </div>
-  </div>
-</section>
-@php $use_white = !$use_white; @endphp
-@endif
-
-{{-- 10. FAQ SEKTOR --}}
-@php $faq_bg = $use_white ? 'white' : 'gray'; @endphp
-<x-service-faq
-  :title="$p_join((string) ($ui['sektor_faq_prefix'] ?? 'Pertanyaan Umum:'), (string) ($sector['card_title'] ?? 'Layanan'))"
-  :subtitle="$ui['sektor_faq_subtitle'] ?? 'Jawaban ringkas terkait metodologi, deliverables, integrasi software, dan tahapan kerja lapangan.'"
-  :faqs="$sector['faqs'] ?? []"
-  :sectionBg="$faq_bg"
-/>
-
-{{-- Mobile sticky CTA bar dirender terpusat oleh layouts/app.blade.php --}}
 
 @endif
 

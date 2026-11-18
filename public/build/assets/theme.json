@@ -404,6 +404,16 @@
           "color": "oklch(26.2% .051 172.552)"
         },
         {
+          "name": "Teal (50)",
+          "slug": "teal-50",
+          "color": "#e8fbfd"
+        },
+        {
+          "name": "Teal (200)",
+          "slug": "teal-200",
+          "color": "#a3eef5"
+        },
+        {
           "name": "Teal (700)",
           "slug": "teal-700",
           "color": "#0f808a"
@@ -1422,6 +1432,16 @@
           "name": "White",
           "slug": "white",
           "color": "#fff"
+        },
+        {
+          "name": "Primary",
+          "slug": "primary",
+          "color": "#0f808a"
+        },
+        {
+          "name": "Primary (Hover)",
+          "slug": "primary-hover",
+          "color": "#0a555c"
         }
       ]
     },

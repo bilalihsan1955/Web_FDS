@@ -63,7 +63,7 @@ if (typeof window !== 'undefined') {
   const initZeroReflowAOS = () => {
     if (!document.body) return;
     document.body.setAttribute('data-aos-easing', 'ease-out-cubic');
-    document.body.setAttribute('data-aos-duration', '500');
+    document.body.setAttribute('data-aos-duration', '320');
     document.body.setAttribute('data-aos-delay', '0');
 
     processRevealGroups();
@@ -73,12 +73,28 @@ if (typeof window !== 'undefined') {
     if (prefersReduced || typeof IntersectionObserver === 'undefined') {
       elements.forEach((el) => {
         el.classList.add('aos-init', 'aos-animate');
-        if (el.classList.contains('fds-service-card')) {
-          el.classList.add('fds-aos-settled');
-        }
+        markCardSettled(el);
       });
       return;
     }
+
+    const revealPassedOrInView = () => {
+      const limitY = window.innerHeight + 120;
+      const pending = [];
+      elements.forEach((el) => {
+        if (el.classList.contains('aos-animate')) return;
+        const cs = window.getComputedStyle(el);
+        if (cs.display === 'none') return;
+        if (el.getBoundingClientRect().top <= limitY) {
+          pending.push(el);
+        }
+      });
+      pending.forEach((el) => {
+        el.classList.add('aos-animate');
+        markCardSettled(el);
+        if (aosObserver) aosObserver.unobserve(el);
+      });
+    };
 
     if (!aosObserver) {
       aosObserver = new IntersectionObserver(
@@ -91,7 +107,7 @@ if (typeof window !== 'undefined') {
             obs.unobserve(entry.target);
           }
         },
-        { rootMargin: '40px 0px -16px 0px', threshold: 0.01 }
+        { rootMargin: '120px 0px 80px 0px', threshold: 0.01 }
       );
     }
 
@@ -140,6 +156,21 @@ if (typeof window !== 'undefined') {
         carouselObserver.observe(track);
       }
     });
+
+    revealPassedOrInView();
+    if (!window.__fdsRevealScrollBound) {
+      window.__fdsRevealScrollBound = true;
+      let scrollRaf = null;
+      const scheduleSweep = () => {
+        if (scrollRaf) return;
+        scrollRaf = window.requestAnimationFrame(() => {
+          scrollRaf = null;
+          revealPassedOrInView();
+        });
+      };
+      window.addEventListener('scroll', scheduleSweep, { passive: true });
+      window.addEventListener('hashchange', scheduleSweep, { passive: true });
+    }
   };
 
   // Expose global helper for dynamic content
@@ -397,9 +428,71 @@ if (typeof window !== 'undefined') {
     window.fdsSubmitInquiry(form);
   });
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initZeroReflowAOS, { once: true });
-  } else {
+  const initUiControllers = () => {
     initZeroReflowAOS();
+
+    // Sticky service sub-nav observer
+    const subnavLinks = Array.from(document.querySelectorAll('.fds-subnav-link[href^="#"]'));
+    if (subnavLinks.length && 'IntersectionObserver' in window) {
+      const subSections = subnavLinks
+        .map((a) => document.querySelector(a.getAttribute('href')))
+        .filter(Boolean);
+      const subIo = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          subnavLinks.forEach((a) => {
+            a.classList.toggle('is-active', a.getAttribute('href') === `#${entry.target.id}`);
+          });
+        });
+      }, { rootMargin: '-25% 0px -65% 0px' });
+      subSections.forEach((sec) => subIo.observe(sec));
+    }
+
+    // Native <dialog> Gallery Lightbox (progressive closedby fallback + Prev/Next)
+    const lightbox = document.getElementById('fds-lightbox-dialog');
+    const lbImg = document.getElementById('fds-lightbox-img');
+    const lbCap = document.getElementById('fds-lightbox-caption');
+    const lbPrev = document.getElementById('fds-lightbox-prev');
+    const lbNext = document.getElementById('fds-lightbox-next');
+    const galleryTiles = Array.from(document.querySelectorAll('[data-gallery-item]'));
+    if (lightbox && lbImg && lbCap && galleryTiles.length) {
+      let activeIndex = 0;
+      const showSlide = (idx) => {
+        activeIndex = (idx + galleryTiles.length) % galleryTiles.length;
+        const tile = galleryTiles[activeIndex];
+        lbImg.src = tile.getAttribute('data-src') || '';
+        lbImg.alt = tile.getAttribute('data-alt') || '';
+        lbCap.textContent = tile.getAttribute('data-caption') || lbImg.alt;
+      };
+      galleryTiles.forEach((btn, idx) => {
+        btn.addEventListener('click', () => {
+          showSlide(idx);
+          if (typeof lightbox.showModal === 'function') {
+            lightbox.showModal();
+          }
+        });
+      });
+      if (lbPrev) lbPrev.addEventListener('click', () => showSlide(activeIndex - 1));
+      if (lbNext) lbNext.addEventListener('click', () => showSlide(activeIndex + 1));
+      lightbox.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') showSlide(activeIndex - 1);
+        if (e.key === 'ArrowRight') showSlide(activeIndex + 1);
+      });
+      if (!('closedBy' in HTMLDialogElement.prototype)) {
+        const outside = (e, d) => {
+          const r = d.getBoundingClientRect();
+          return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+        };
+        let pressedOutside = false;
+        lightbox.addEventListener('pointerdown', (e) => { pressedOutside = outside(e, lightbox); });
+        lightbox.addEventListener('pointerup', (e) => { if (pressedOutside && outside(e, lightbox)) lightbox.close(); });
+      }
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUiControllers, { once: true });
+  } else {
+    initUiControllers();
   }
 }

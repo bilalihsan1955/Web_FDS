@@ -2457,5 +2457,115 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
 
         return $result;
     }
+
+    /**
+     * Resolusi galeri lapangan 3 foto dan ekstrak FAQ/panduan bersih untuk halaman detail drone.
+     */
+    function fds_get_drone_gallery_and_faqs(int $post_id, int $preview_id = 0, array $drone = []): array {
+        $img_base = get_template_directory_uri() . '/public/images/';
+        $slug     = strtolower((string) ($drone['slug'] ?? get_post_field('post_name', $post_id)));
+        $modelKey = strtolower((string) ($drone['model_key'] ?? fds_get_drone_model_key($post_id)));
+        $isFerto  = str_starts_with($modelKey, 'ferto-');
+        $hasSni   = in_array($modelKey, ['ferto-15l', 'ferto-22l'], true);
+        $name     = function_exists('fds_clean_string') ? fds_clean_string((string) ($drone['name'] ?? get_the_title($post_id))) : (string) get_the_title($post_id);
+        $heroUrl  = (string) ($drone['hero_url'] ?? ($img_base . 'drones/' . $modelKey . '.webp'));
+
+        $check_upload = static function (string $rel, string $fallback_url): string {
+            if ($rel !== '' && defined('ABSPATH') && file_exists(ABSPATH . ltrim($rel, '/'))) {
+                return home_url('/' . ltrim($rel, '/'));
+            }
+            return $fallback_url;
+        };
+
+        $op1 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_144352_462.jpg', $img_base . 'site/engineer-ops.webp');
+        $op2 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_143749_417.jpg', $img_base . 'site/workshop-deltav.webp');
+
+        if ($isFerto) {
+            $gallery = [
+                ['url' => $heroUrl, 'caption' => 'Operasi Lahan ' . $name],
+                ['url' => $op1, 'caption' => 'Operasi Pilot di Area Tanam'],
+                ['url' => $op2, 'caption' => 'Pemeriksaan Unit Sebelum Terbang'],
+            ];
+        } elseif ($modelKey === 'deltav') {
+            $gallery = [
+                ['url' => $heroUrl, 'caption' => 'Terbang Jelajah Fixed-Wing VTOL DELTAV'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Misi Pemetaan Koridor Area Luas'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Kalibrasi & Integrasi Payload Sleman'],
+            ];
+        } elseif ($modelKey === 'delfro') {
+            $gallery = [
+                ['url' => $heroUrl, 'caption' => 'Pengiriman Kargo Otonom DELFRO'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Inspeksi Kompartemen & Rangka'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis PT Karya Solusi Angkasa'],
+            ];
+        } else {
+            $gallery = [
+                ['url' => $heroUrl, 'caption' => 'Operasi Inspeksi & Pemetaan ' . $name],
+                ['url' => $img_base . 'sectors/energi-infrastruktur.webp', 'caption' => 'Inspeksi Infrastruktur Jarak Aman'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Kustomisasi Payload di Workshop FDS'],
+            ];
+        }
+
+        // Split specs -> Top 4 KPI strip + remaining details
+        $raw_specs = is_array($drone['specs'] ?? null) ? $drone['specs'] : [];
+        $stats4 = [];
+        $specs_rest = [];
+        foreach ($raw_specs as $idx => $pair) {
+            if (!is_array($pair) || count($pair) < 2) {
+                continue;
+            }
+            $lbl = trim(fds_clean_string((string) $pair[0]));
+            $val = trim(fds_clean_string((string) $pair[1]));
+            if (stripos($lbl, 'kapasitas tangki') === 0 || stripos($lbl, 'kapasitas payload') === 0 || $lbl === 'Kapasitas Tangki / Payload') {
+                $lbl = 'Payload';
+            }
+            if ($val === '' || preg_match('/^(?:resmi|standar\s*resmi|sertifikat\s*resmi|-|—|\s)*$/i', $val)) {
+                continue;
+            }
+            if (count($stats4) < 4) {
+                $stats4[] = ['num' => $val, 'lbl' => $lbl];
+            } else {
+                $specs_rest[] = [$lbl, $val];
+            }
+        }
+        // Fallback stats1..4 if specs fewer than 4
+        for ($si = 1; $si <= 4 && count($stats4) < 4; $si++) {
+            $sNum = trim(fds_clean_string((string) ($drone["stat{$si}_num"] ?? '')));
+            $sLbl = trim(fds_clean_string((string) ($drone["stat{$si}_lbl"] ?? '')));
+            if ($sNum !== '' && $sLbl !== '') {
+                $stats4[] = ['num' => $sNum, 'lbl' => $sLbl];
+            }
+        }
+
+        // Resolve clean guide + FAQ items (honors clean Gutenberg edits if non-legacy)
+        $src_id = $preview_id > 0 ? $preview_id : $post_id;
+        $raw_guide_body = trim((string) get_post_field('post_content', $src_id));
+        $has_legacy_marker = ($raw_guide_body !== '') && (
+            stripos($raw_guide_body, 'fds-seo-spec-table') !== false ||
+            preg_match('/(Best UAV|sejak\s*(?:tahun\s*)?2012|IP\s?(?:54|67|68)|\bFLIR\b|FDS STATION|>\s*50%|Bappenas)/i', $raw_guide_body) ||
+            (!$isFerto && preg_match('/TKDN|SNI\s*9199:2023/i', $raw_guide_body)) ||
+            ($isFerto && !$hasSni && stripos($raw_guide_body, 'SNI 9199:2023') !== false)
+        );
+
+        $structured = fds_get_drone_model_guide_and_faqs($post_id);
+        $guide_html = '';
+        if ($raw_guide_body !== '' && !$has_legacy_marker) {
+            $guide_html = apply_filters('the_content', $raw_guide_body);
+            if (is_string($guide_html) && $guide_html !== '') {
+                $guide_html = preg_replace('/<(\/?)h1\b/i', '<$1h2', $guide_html);
+            }
+        }
+
+        return [
+            'gallery'    => $gallery,
+            'stats4'     => array_slice($stats4, 0, 4),
+            'specs_rest' => $specs_rest,
+            'faqs'       => $structured['faqs'] ?? [],
+            'lead'       => $structured['lead'] ?? '',
+            'sections'   => $structured['sections'] ?? [],
+            'guide_html' => $guide_html,
+            'model_base' => trim((string) preg_replace('/\s*\(.*?\)/', '', $name)) ?: $name,
+        ];
+    }
 }
 

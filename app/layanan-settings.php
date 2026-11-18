@@ -73,6 +73,8 @@ function fds_merge_layanan_data(array $default, array $override): array {
         'outputs',
         'sector_links',
         'placeholders',
+        'gallery',
+        'kpis',
     ];
 
     $result = $default;
@@ -869,3 +871,274 @@ add_filter('page_template', function ($template) {
 
     return $template;
 }, 1);
+
+/**
+ * Helper aman memeriksa asset upload lokal atau fallback ke public/images tema.
+ */
+function fds_resolve_local_media(string $upload_rel, string $theme_fallback_rel): string {
+    $theme_uri = get_template_directory_uri() . '/public/images/' . ltrim($theme_fallback_rel, '/');
+    if ($upload_rel !== '' && defined('ABSPATH')) {
+        $rel_clean = ltrim($upload_rel, '/');
+        foreach (['-1024x768', '-scaled', ''] as $suffix) {
+            $candidate = ($suffix !== '')
+                ? (string) preg_replace('/\.(jpe?g|png)$/i', $suffix . '.$1', $rel_clean)
+                : $rel_clean;
+            if (file_exists(ABSPATH . $candidate)) {
+                return home_url('/' . $candidate);
+            }
+        }
+    }
+    return $theme_uri;
+}
+
+/**
+ * Resolusi fotografi visual & galeri per Sektor Industri (/layanan/{sektor}/).
+ */
+function fds_get_sector_visuals(string $slug, array $sector = []): array {
+    $img_base = get_template_directory_uri() . '/public/images/';
+    $upload_op_1 = fds_resolve_local_media('wp-content/uploads/2026/08/IMG_20260820_144352_462.jpg', 'site/engineer-ops.webp');
+    $upload_op_2 = fds_resolve_local_media('wp-content/uploads/2026/08/IMG_9256.jpg', 'site/about-team.webp');
+
+    $defaults = [
+        'pertambangan' => [
+            'hero_img'        => $img_base . 'sectors/pertambangan.webp',
+            'hero_alt'        => 'Pemetaan topografi pit pertambangan dengan drone LiDAR FDS',
+            'story_img'       => $img_base . 'site/hero-2.webp',
+            'story_alt'       => 'Wahana Fixed-Wing VTOL DELTAV Full Drone Solutions melintasi koridor pemetaan',
+            'matrix_img'      => $img_base . 'drones/multipurpose.webp',
+            'matrix_alt'      => 'Wahana multirotor inspeksi termal dan sensor LiDAR Full Drone Solutions',
+            'hardware_cutout' => $img_base . 'cutouts/deltav.png',
+            'hardware_alt'    => 'DELTAV Fixed-Wing VTOL Full Drone Solutions untuk pemetaan tambang',
+            'workflow_img'    => $img_base . 'site/workshop-deltav.webp',
+            'workflow_alt'    => 'Integrasi payload survei dan kalibrasi wahana di workshop PT Karya Solusi Angkasa',
+            'kpis'            => [
+                ['num' => 'Bare Earth', 'lbl' => 'Klasifikasi Ground DTM & LiDAR'],
+                ['num' => 'EOM Audit', 'lbl' => 'Rekonsiliasi Volume Stockpile & Pit'],
+                ['num' => 'Mine Grid', 'lbl' => 'Kompatibel Civil 3D, Minescape & Surpac'],
+            ],
+            'solution_photos' => [
+                'Drone LiDAR Survey'          => $img_base . 'sectors/pertambangan.webp',
+                'Mine Infrastructure Inspection' => $img_base . 'sectors/perencanaan.webp',
+                'Reclamation Monitoring'      => $img_base . 'sectors/kehutanan-lingkungan.webp',
+            ],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/pertambangan.webp', 'caption' => 'Pemetaan LiDAR Pit Terbuka'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Survei Koridor Fixed-Wing VTOL'],
+                ['url' => $upload_op_1, 'caption' => 'Operasi GCS di Lapangan'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Kalibrasi di Workshop Sleman'],
+                ['url' => $img_base . 'drones/multipurpose.webp', 'caption' => 'Inspeksi Sensor & Infrastruktur'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis Full Drone Solutions'],
+            ],
+        ],
+        'perkebunan-pertanian' => [
+            'hero_img'        => $img_base . 'sectors/perkebunan-pertanian.webp',
+            'hero_alt'        => 'Operasi drone sprayer dan pemetaan blok perkebunan Full Drone Solutions',
+            'story_img'       => $img_base . 'drones/ferto-22l.webp',
+            'story_alt'       => 'Armada FERTO melakukan aplikasi presisi di lahan perkebunan',
+            'matrix_img'      => $img_base . 'drones/ferto-15l.webp',
+            'matrix_alt'      => 'Unit FERTO untuk pemeliharaan tanaman skala komersial',
+            'hardware_cutout' => $img_base . 'cutouts/ferto-22l.png',
+            'hardware_alt'    => 'Drone Pertanian FERTO Full Drone Solutions bersertifikat TKDN + BMP',
+            'workflow_img'    => $upload_op_1,
+            'workflow_alt'    => 'Pilot FDS menjalankan misi penyemprotan dan pemetaan lahan',
+            'kpis'            => [
+                ['num' => 'NDVI & GIS', 'lbl' => 'Analisis Kesehatan Tajuk & Empty Spot'],
+                ['num' => '60,74%', 'lbl' => 'Nilai TKDN + BMP Seri FERTO'],
+                ['num' => 'SNI 9199', 'lbl' => 'Standar Uji FERTO 15 & FERTO 22'],
+            ],
+            'solution_photos' => [
+                'Jasa Foto Multispectral & Hyperspectral' => $img_base . 'drones/multipurpose.webp',
+                'Jasa Foto Udara & LiDAR'                 => $img_base . 'site/hero-2.webp',
+                'Pelatihan Operator & Pembentukan Divisi Drone Internal' => $upload_op_1,
+            ],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/perkebunan-pertanian.webp', 'caption' => 'Penyemprotan Presisi Skala Perkebunan'],
+                ['url' => $img_base . 'drones/ferto-22l.webp', 'caption' => 'Operasional Armada FERTO 22L'],
+                ['url' => $upload_op_1, 'caption' => 'Kendali Pilot di Area Tanam'],
+                ['url' => $img_base . 'drones/ferto-10l.webp', 'caption' => 'Misi Terjadwal Lahan Hortikultura'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Perakitan & QC Workshop Sleman'],
+                ['url' => $upload_op_2, 'caption' => 'Kolaborasi Riset Lapangan FDS'],
+            ],
+        ],
+        'kehutanan-lingkungan' => [
+            'hero_img'        => $img_base . 'sectors/kehutanan-lingkungan.webp',
+            'hero_alt'        => 'Pemetaan tutupan kanopi kehutanan dan lingkungan dengan UAV FDS',
+            'story_img'       => $img_base . 'site/hero-2.webp',
+            'story_alt'       => 'Fixed-Wing VTOL DELTAV untuk survei blok hutan dan DAS luas',
+            'matrix_img'      => $img_base . 'drones/deltav.webp',
+            'matrix_alt'      => 'Akuisisi data LiDAR penembus kanopi hutan rapat',
+            'hardware_cutout' => $img_base . 'cutouts/deltav.png',
+            'hardware_alt'    => 'DELTAV Fixed-Wing VTOL Full Drone Solutions untuk kehutanan',
+            'workflow_img'    => $img_base . 'site/workshop-deltav.webp',
+            'workflow_alt'    => 'Persiapan wahana pemetaan di workshop PT Karya Solusi Angkasa',
+            'kpis'            => [
+                ['num' => 'Canopy DTM', 'lbl' => 'Penetrasi LiDAR Bawah Tajuk'],
+                ['num' => 'Biomass', 'lbl' => 'Estimasi Karbon & CHM Terukur'],
+                ['num' => 'DAS & PPK', 'lbl' => 'Kontrol Geodetik Area Terpencil'],
+            ],
+            'solution_photos' => [],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/kehutanan-lingkungan.webp', 'caption' => 'Survei Ekosistem Mangrove & Pesisir'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Lintasan Fixed-Wing VTOL Area Hutan'],
+                ['url' => $img_base . 'drones/deltav.webp', 'caption' => 'Pemetaan Koridor Aliran Sungai'],
+                ['url' => $img_base . 'sectors/pertambangan.webp', 'caption' => 'Analisis Point Cloud Elevasi'],
+                ['url' => $upload_op_2, 'caption' => 'Koordinasi Tim Survei Lingkungan'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis Full Drone Solutions'],
+            ],
+        ],
+        'energi-infrastruktur' => [
+            'hero_img'        => $img_base . 'sectors/energi-infrastruktur.webp',
+            'hero_alt'        => 'Inspeksi jaringan transmisi dan infrastruktur energi dengan UAV FDS',
+            'story_img'       => $img_base . 'drones/multipurpose.webp',
+            'story_alt'       => 'Platform multirotor FDS untuk inspeksi aset energi dan menara SUTET',
+            'matrix_img'      => $img_base . 'sectors/perencanaan.webp',
+            'matrix_alt'      => 'Pemetaan koridor utilitas dan struktur sipil industrial',
+            'hardware_cutout' => $img_base . 'cutouts/multipurpose.png',
+            'hardware_alt'    => 'UAV Inspeksi Modular Full Drone Solutions untuk energi & infrastruktur',
+            'workflow_img'    => $img_base . 'site/workshop-deltav.webp',
+            'workflow_alt'    => 'Integrasi payload sensor termal dan zoom di workshop FDS',
+            'kpis'            => [
+                ['num' => 'Zero Shutdown', 'lbl' => 'Inspeksi Aset Tanpa Pemadaman'],
+                ['num' => 'Termal IR', 'lbl' => 'Deteksi Hotspot & Anomali Isolator'],
+                ['num' => 'ROW Audit', 'lbl' => 'Pemetaan Koridor Jalur Transmisi'],
+            ],
+            'solution_photos' => [],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/energi-infrastruktur.webp', 'caption' => 'Inspeksi Jaringan Transmisi Energi'],
+                ['url' => $img_base . 'drones/multipurpose.webp', 'caption' => 'Sensor Termal Inframerah & Zoom'],
+                ['url' => $img_base . 'sectors/perencanaan.webp', 'caption' => 'Dokumentasi Struktur Jembatan'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Kalibrasi Avionik Workshop Sleman'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Survei Koridor Pipa & Transmisi'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Kesiapan Tim Operasional FDS'],
+            ],
+        ],
+        'perencanaan' => [
+            'hero_img'        => $img_base . 'sectors/perencanaan.webp',
+            'hero_alt'        => 'Pemetaan kawasan konstruksi dan tata ruang dengan drone FDS',
+            'story_img'       => $img_base . 'site/hero-2.webp',
+            'story_alt'       => 'Pemetaan udara DELTAV Fixed-Wing VTOL untuk kawasan KEK dan industri',
+            'matrix_img'      => $img_base . 'drones/deltav.webp',
+            'matrix_alt'      => 'Ortofoto resolusi tinggi dan pemodelan 3D kawasan',
+            'hardware_cutout' => $img_base . 'cutouts/deltav.png',
+            'hardware_alt'    => 'DELTAV Fixed-Wing VTOL untuk pemetaan konstruksi dan tata ruang',
+            'workflow_img'    => $img_base . 'site/workshop-deltav.webp',
+            'workflow_alt'    => 'Tim teknik menyiapkan wahana survei topografi FDS',
+            'kpis'            => [
+                ['num' => 'Ortofoto', 'lbl' => 'Peta Situasi Resolusi Tinggi'],
+                ['num' => 'Cut & Fill', 'lbl' => 'Kalkulasi Volume Pekerjaan Tanah'],
+                ['num' => 'BIM / CAD', 'lbl' => 'Output Siap AutoCAD & GIS'],
+            ],
+            'solution_photos' => [],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/perencanaan.webp', 'caption' => 'Inspeksi & Pemetaan Infrastruktur Sipil'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Akuisisi Fixed-Wing VTOL DELTAV'],
+                ['url' => $img_base . 'drones/deltav.webp', 'caption' => 'Pemetaan Wilayah Pengembangan Kawasan'],
+                ['url' => $img_base . 'sectors/pertambangan.webp', 'caption' => 'Model Elevasi & Kontur Topografi'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Perakitan Wahana di Yogyakarta'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis Full Drone Solutions'],
+            ],
+        ],
+        'bencana-lingkungan' => [
+            'hero_img'        => $img_base . 'sectors/bencana-lingkungan.webp',
+            'hero_alt'        => 'Pemetaan cepat tanggap darurat bencana dan pemantauan lingkungan FDS',
+            'story_img'       => $img_base . 'drones/delfro.webp',
+            'story_alt'       => 'Wahana logistik dan pemantauan darurat DELFRO Full Drone Solutions',
+            'matrix_img'      => $img_base . 'drones/multipurpose.webp',
+            'matrix_alt'      => 'Survei visual & termal respons cepat area terdampak',
+            'hardware_cutout' => $img_base . 'cutouts/delfro.png',
+            'hardware_alt'    => 'DELFRO Drone Kargo & Logistik Darurat Full Drone Solutions',
+            'workflow_img'    => $img_base . 'site/about-team.webp',
+            'workflow_alt'    => 'Kesiapan tim operasional dan peralatan lapangan FDS',
+            'kpis'            => [
+                ['num' => 'Rapid Map', 'lbl' => 'Pemetaan Situasi Area Terdampak'],
+                ['num' => 'Termal IR', 'lbl' => 'Pemantauan Titik Panas & SAR'],
+                ['num' => '10 kg Cargo', 'lbl' => 'Dukungan Logistik Medis Terputus'],
+            ],
+            'solution_photos' => [],
+            'gallery' => [
+                ['url' => $img_base . 'sectors/bencana-lingkungan.webp', 'caption' => 'Pemetaan Cepat Area Terdampak'],
+                ['url' => $img_base . 'drones/delfro.webp', 'caption' => 'Distribusi Logistik Medis Darurat'],
+                ['url' => $img_base . 'drones/multipurpose.webp', 'caption' => 'Pengamatan Visual & Termal Udara'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Pemantauan Koridor Daerah Aliran Sungai'],
+                ['url' => $upload_op_2, 'caption' => 'Koordinasi Tim Operasi Lapangan'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis Full Drone Solutions'],
+            ],
+        ],
+    ];
+
+    $base = $defaults[$slug] ?? $defaults['pertambangan'];
+    if (!empty($sector['hero_image']) && is_string($sector['hero_image'])) {
+        $base['hero_img'] = $sector['hero_image'];
+    }
+    if (!empty($sector['story_image']) && is_string($sector['story_image'])) {
+        $base['story_img'] = $sector['story_image'];
+    }
+    if (!empty($sector['gallery']) && is_array($sector['gallery'])) {
+        $custom_gal = array_values(array_filter($sector['gallery'], static fn($g) => !empty($g['url'])));
+        if (!empty($custom_gal)) {
+            $base['gallery'] = $custom_gal;
+        }
+    }
+
+    return $base;
+}
+
+/**
+ * Resolusi fotografi visual & galeri per Kategori Layanan (/layanan/{kategori}/).
+ */
+function fds_get_category_visuals(string $slug, array $cat = []): array {
+    $img_base    = get_template_directory_uri() . '/public/images/';
+    $upload_op_1 = fds_resolve_local_media('wp-content/uploads/2026/08/IMG_20260820_144352_462.jpg', 'site/engineer-ops.webp');
+    $upload_op_2 = fds_resolve_local_media('wp-content/uploads/2026/08/WhatsApp-Image-2026-06-29-at-15.51.52.jpeg', 'site/about-team.webp');
+
+    $defaults = [
+        'jasa-foto-udara-lidar' => [
+            'hero_img'  => $img_base . 'sectors/pertambangan.webp',
+            'story_img' => $img_base . 'site/hero-2.webp',
+            'cutout'    => $img_base . 'cutouts/deltav.png',
+            'gallery'   => [
+                ['url' => $img_base . 'sectors/pertambangan.webp', 'caption' => 'Akuisisi LiDAR & Point Cloud 3D'],
+                ['url' => $img_base . 'site/hero-2.webp', 'caption' => 'Pemetaan Fotogrametri Fixed-Wing VTOL'],
+                ['url' => $img_base . 'sectors/perencanaan.webp', 'caption' => 'Ortofoto Infrastruktur & Konstruksi'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Kalibrasi Sensor di Workshop Sleman'],
+                ['url' => $img_base . 'drones/multipurpose.webp', 'caption' => 'Inspeksi Detail Koridor Aset'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Teknis Akuisisi & GIS'],
+            ],
+        ],
+        'jasa-multispectral-hyperspectral' => [
+            'hero_img'  => $img_base . 'sectors/perkebunan-pertanian.webp',
+            'story_img' => $img_base . 'drones/multipurpose.webp',
+            'cutout'    => $img_base . 'cutouts/multipurpose.png',
+            'gallery'   => [
+                ['url' => $img_base . 'sectors/perkebunan-pertanian.webp', 'caption' => 'Pemetaan Kesehatan Tajuk Perkebunan'],
+                ['url' => $img_base . 'drones/multipurpose.webp', 'caption' => 'Integrasi Sensor Spektral Presisi'],
+                ['url' => $upload_op_1, 'caption' => 'Kalibrasi Lapangan Operator FDS'],
+                ['url' => $img_base . 'sectors/kehutanan-lingkungan.webp', 'caption' => 'Analisis Vegetasi & Mangrove'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Pengujian Payload Workshop Sleman'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Tim Agronomi & Geospasial FDS'],
+            ],
+        ],
+        'pelatihan-sertifikasi' => [
+            'hero_img'  => $img_base . 'site/about-team.webp',
+            'story_img' => $upload_op_2,
+            'cutout'    => $img_base . 'cutouts/ferto-15l.png',
+            'gallery'   => [
+                ['url' => $upload_op_2, 'caption' => 'Sesi Pelatihan & Uji Lapangan Bersama FDS'],
+                ['url' => $upload_op_1, 'caption' => 'Praktik Kendali Misi FDS Station'],
+                ['url' => $img_base . 'site/workshop-deltav.webp', 'caption' => 'Workshop Maintenance & Perakitan UAV'],
+                ['url' => $img_base . 'drones/ferto-15l.webp', 'caption' => 'Simulasi Operasi Drone Pertanian Presisi'],
+                ['url' => $img_base . 'drones/deltav.webp', 'caption' => 'Misi Terbang Pemetaan Fixed-Wing VTOL'],
+                ['url' => $img_base . 'site/about-team.webp', 'caption' => 'Instruktur & Tim Teknik PT Karya Solusi Angkasa'],
+            ],
+        ],
+    ];
+
+    $base = $defaults[$slug] ?? $defaults['jasa-foto-udara-lidar'];
+    if (!empty($cat['gallery']) && is_array($cat['gallery'])) {
+        $custom = array_values(array_filter($cat['gallery'], static fn($g) => !empty($g['url'])));
+        if (!empty($custom)) {
+            $base['gallery'] = $custom;
+        }
+    }
+    return $base;
+}
