@@ -325,14 +325,19 @@
         {{ $ui['kat_sectors_heading'] ?? 'Penerapan di Sektor Industri' }}
       </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        @php $relSecCounter = 0; @endphp
         @foreach($cat['sector_links'] ?? [] as $sec_slug)
           @if(!empty($sectors[$sec_slug]))
-            @php $rel_sec = $sectors[$sec_slug]; @endphp
+            @php
+              $rel_sec = $sectors[$sec_slug];
+              $relSecCounter++;
+              $rel_sec_num = str_pad((string) $relSecCounter, 2, '0', STR_PAD_LEFT);
+            @endphp
             <x-service-card
               variant="light"
               headingTag="h3"
               :showImage="false"
-              :num="$rel_sec['num']"
+              :num="$rel_sec_num"
               :title="$rel_sec['card_title']"
               :desc="$rel_sec['card_desc']"
               :url="$rel_sec['url']"
