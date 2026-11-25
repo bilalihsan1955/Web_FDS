@@ -183,7 +183,8 @@ if (!function_exists('fds_scrub_legacy_text')) {
 
 if (!function_exists('fds_sort_drone_posts')) {
     /**
-     * Mengurutkan post CPT drone secara logis (FERTO 5 -> 10 -> 15 -> 22 -> 30 -> 50 -> DELTAV -> MULTIPURPOSE -> DELFRO).
+     * Mengurutkan post CPT drone: unit dengan menu_order > 0 lebih dulu (ascending),
+     * sisanya mengikuti urutan logis FDS (FERTO 5 -> 50 -> DELTAV -> MULTIPURPOSE -> DELFRO).
      */
     function fds_sort_drone_posts(array $posts): array {
         $priority = [
@@ -205,11 +206,30 @@ if (!function_exists('fds_sort_drone_posts')) {
         ];
 
         usort($posts, function ($a, $b) use ($priority) {
-            $sa = is_object($a) ? strtolower((string) $a->post_name) : '';
-            $sb = is_object($b) ? strtolower((string) $b->post_name) : '';
+            $ma = (is_object($a) && isset($a->menu_order)) ? (int) $a->menu_order : 0;
+            $mb = (is_object($b) && isset($b->menu_order)) ? (int) $b->menu_order : 0;
+            if ($ma > 0 && $mb > 0 && $ma !== $mb) {
+                return $ma <=> $mb;
+            }
+            if ($ma > 0 && $mb <= 0) {
+                return -1;
+            }
+            if ($mb > 0 && $ma <= 0) {
+                return 1;
+            }
+
+            $sa = is_object($a) ? strtolower((string) ($a->post_name ?? '')) : '';
+            $sb = is_object($b) ? strtolower((string) ($b->post_name ?? '')) : '';
             $wa = $priority[$sa] ?? 500;
             $wb = $priority[$sb] ?? 500;
             if ($wa === $wb) {
+                if ($wa === 500 && preg_match('/\d+/', $sa, $na) && preg_match('/\d+/', $sb, $nb)) {
+                    $pa = preg_replace('/\d+.*$/', '', $sa);
+                    $pb = preg_replace('/\d+.*$/', '', $sb);
+                    if ($pa === $pb && ((int) $na[0]) !== ((int) $nb[0])) {
+                        return ((int) $na[0]) <=> ((int) $nb[0]);
+                    }
+                }
                 return strcmp($sa, $sb);
             }
             return $wa <=> $wb;

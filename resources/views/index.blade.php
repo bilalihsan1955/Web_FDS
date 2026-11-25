@@ -126,7 +126,7 @@
             <input type="text" name="s" value="{{ $fds_blog_clean(get_search_query(false)) }}" placeholder="{{ $nr['blog_search_ph'] ?? 'Cari drone, artikel, topik...' }}" required autocomplete="off"
                    class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
             <button type="submit"
-                    class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[12.5px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
+                    class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[13px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
               {{ $nr['blog_search_btn'] ?? 'Cari' }}
             </button>
           </div>
@@ -190,9 +190,9 @@
         <p class="text-[14.5px] sm:text-[15.5px] text-[#64748b] leading-relaxed mb-6">{{ $nr['blog_empty_desc'] ?? 'Pantau terus untuk pembaruan dan berita terbaru dari tim FDS.' }}</p>
         @if(is_category() || is_tag())
           <a href="{!! esc_url($blog_url) !!}"
-             class="inline-flex items-center gap-2 bg-[#1d1d1f] hover:bg-[#0f808a] text-white text-[13px] font-semibold px-5.5 py-2.5 rounded-full transition-colors shadow-sm leading-none group">
+             class="inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-sm leading-none group">
             <span class="leading-none">{{ $nr['blog_empty_cta'] ?? 'Lihat Semua Topik' }}</span>
-            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
             </svg>
@@ -223,16 +223,16 @@
 
             <div class="lg:col-span-5 p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
               <div>
-                <div class="flex items-center gap-2 text-[12px] mb-3">
-                  <span class="bg-[#0f808a] text-white text-[11px] font-bold px-3 py-0.5 rounded-full tracking-wide">{{ $nr['blog_featured_badge'] ?? 'Terbaru' }}</span>
+                <div class="flex items-center gap-2 text-[13px] mb-3">
+                  <span class="bg-[#0f808a] text-white text-[12px] font-bold px-3 py-0.5 rounded-full tracking-wide">{{ $nr['blog_featured_badge'] ?? 'Terbaru' }}</span>
                   <span class="font-semibold text-[#0f808a] ml-1">{{ $featured['cat'] }}</span>
                   <span class="text-[#cbd5e1]">&bull;</span>
-                  <span class="text-[#86868b]">{{ $featured['date'] }}</span>
+                  <span class="text-[#5c5e63]">{{ $featured['date'] }}</span>
                 </div>
                 <h2 class="text-[24px] sm:text-[30px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.25] mb-3.5 group-hover:text-[#0f808a] transition-colors">
                   <a href="{!! esc_url($featured['permalink']) !!}" class="fds-stretched-link">{{ $featured['title'] }}</a>
                 </h2>
-                <p class="text-[14px] sm:text-[15px] text-[#515154] leading-relaxed line-clamp-3 mb-6">
+                <p class="text-[15px] text-[#424245] leading-[1.65] line-clamp-3 mb-6">
                   {{ $featured['excerpt'] }}
                 </p>
               </div>
@@ -271,22 +271,22 @@
                 </div>
 
                 <div class="p-6 sm:p-7 pb-4">
-                  <div class="flex items-center gap-2 text-[12px] mb-2.5">
+                  <div class="flex items-center gap-2 text-[13px] mb-2.5">
                     <span class="font-semibold text-[#0f808a]">{{ $post['cat'] }}</span>
                     <span class="text-[#cbd5e1]">&bull;</span>
-                    <span class="text-[#86868b]">{{ $post['date'] }}</span>
+                    <span class="text-[#5c5e63]">{{ $post['date'] }}</span>
                   </div>
-                  <h2 class="text-[17px] sm:text-[18.5px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[46px]">
+                  <h2 class="text-[18px] sm:text-[19px] font-semibold text-[#1d1d1f] leading-snug mb-2.5 group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[48px]">
                     <a href="{!! esc_url($post['permalink']) !!}" class="fds-stretched-link">{{ $post['title'] }}</a>
                   </h2>
-                  <p class="text-[13px] sm:text-[13.5px] text-[#64748b] leading-relaxed line-clamp-3">
+                  <p class="text-[14px] text-[#515154] leading-[1.62] line-clamp-3">
                     {{ $post['excerpt'] }}
                   </p>
                 </div>
               </div>
 
               <div class="px-6 sm:px-7 pb-6 pt-0">
-                <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
+                <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
                   <span class="leading-none">{{ $nr['blog_card_cta'] ?? 'Baca selengkapnya' }}</span>
                   <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M6 6h12v12"/>

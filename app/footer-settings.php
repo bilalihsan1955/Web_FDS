@@ -151,6 +151,8 @@ function fds_get_global_contact(bool $fresh = false) {
         'page_kontak_form_note'         => get_option('fds_page_kontak_form_note', 'Tim kami merespons pada hari kerja Senin–Sabtu. Data perusahaan Anda terlindungi.'),
         'page_kontak_opt_default'       => get_option('fds_page_kontak_opt_default', 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi') ?: 'Konsultasi Umum, Demo Unit & Kebutuhan Korporasi',
         'page_kontak_field_service_lbl' => get_option('fds_page_kontak_field_service_lbl', 'Fokus Layanan / Model UAV') ?: 'Fokus Layanan / Model UAV',
+        'page_kontak_field_fullname_lbl' => get_option('fds_page_kontak_field_fullname_lbl', 'Nama Lengkap') ?: 'Nama Lengkap',
+        'page_kontak_field_fullname_ph'  => get_option('fds_page_kontak_field_fullname_ph', 'Nama lengkap Anda') ?: 'Nama lengkap Anda',
         'page_kontak_field_fname_lbl'   => get_option('fds_page_kontak_field_fname_lbl', 'Nama Depan') ?: 'Nama Depan',
         'page_kontak_field_fname_ph'    => get_option('fds_page_kontak_field_fname_ph', 'Nama depan') ?: 'Nama depan',
         'page_kontak_field_lname_lbl'   => get_option('fds_page_kontak_field_lname_lbl', 'Nama Belakang') ?: 'Nama Belakang',
@@ -337,11 +339,23 @@ function render_global_contact_admin_page() {
         update_option('fds_page_kontak_form_loading', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_loading'] ?? ''))));
         update_option('fds_page_kontak_form_note', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_form_note'] ?? ''))));
         update_option('fds_page_kontak_opt_default', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_opt_default'] ?? ''))));
-        update_option('fds_page_kontak_field_service_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_service_lbl'] ?? ''))));
-        update_option('fds_page_kontak_field_fname_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fname_lbl'] ?? ''))));
-        update_option('fds_page_kontak_field_fname_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fname_ph'] ?? ''))));
-        update_option('fds_page_kontak_field_lname_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_lname_lbl'] ?? ''))));
-        update_option('fds_page_kontak_field_lname_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_lname_ph'] ?? ''))));
+        if (isset($_POST['fds_page_kontak_field_service_lbl'])) {
+            update_option('fds_page_kontak_field_service_lbl', sanitize_text_field(wp_unslash((string) $_POST['fds_page_kontak_field_service_lbl'])));
+        }
+        update_option('fds_page_kontak_field_fullname_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fullname_lbl'] ?? ''))));
+        update_option('fds_page_kontak_field_fullname_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_fullname_ph'] ?? ''))));
+        if (isset($_POST['fds_page_kontak_field_fname_lbl'])) {
+            update_option('fds_page_kontak_field_fname_lbl', sanitize_text_field(wp_unslash((string) $_POST['fds_page_kontak_field_fname_lbl'])));
+        }
+        if (isset($_POST['fds_page_kontak_field_fname_ph'])) {
+            update_option('fds_page_kontak_field_fname_ph', sanitize_text_field(wp_unslash((string) $_POST['fds_page_kontak_field_fname_ph'])));
+        }
+        if (isset($_POST['fds_page_kontak_field_lname_lbl'])) {
+            update_option('fds_page_kontak_field_lname_lbl', sanitize_text_field(wp_unslash((string) $_POST['fds_page_kontak_field_lname_lbl'])));
+        }
+        if (isset($_POST['fds_page_kontak_field_lname_ph'])) {
+            update_option('fds_page_kontak_field_lname_ph', sanitize_text_field(wp_unslash((string) $_POST['fds_page_kontak_field_lname_ph'])));
+        }
         update_option('fds_page_kontak_field_comp_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_comp_lbl'] ?? ''))));
         update_option('fds_page_kontak_field_comp_ph', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_comp_ph'] ?? ''))));
         update_option('fds_page_kontak_field_email_lbl', sanitize_text_field(wp_unslash((string) ($_POST['fds_page_kontak_field_email_lbl'] ?? ''))));
@@ -569,33 +583,19 @@ function render_global_contact_admin_page() {
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px;">
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Dropdown Fokus Layanan / UAV</label>
-                            <input type="text" name="fds_page_kontak_field_service_lbl" value="<?php echo esc_attr($c['page_kontak_field_service_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Opsi Default Dropdown Fokus Layanan</label>
-                            <input type="text" name="fds_page_kontak_opt_default" value="<?php echo esc_attr($c['page_kontak_opt_default']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
-                        </div>
+                    <div style="margin-bottom: 14px;">
+                        <label style="display: block; font-size: 12px; font-weight: 600; color: #334155; margin-bottom: 6px;">Label Sumber Lead Default (Saat Pengunjung Tanpa Parameter ?produk= / ?layanan=)</label>
+                        <input type="text" name="fds_page_kontak_opt_default" value="<?php echo esc_attr($c['page_kontak_opt_default']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px 12px; font-size: 13px;">
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                         <div>
-                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Nama Depan</label>
-                            <input type="text" name="fds_page_kontak_field_fname_lbl" value="<?php echo esc_attr($c['page_kontak_field_fname_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Nama Lengkap</label>
+                            <input type="text" name="fds_page_kontak_field_fullname_lbl" value="<?php echo esc_attr($c['page_kontak_field_fullname_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
                         </div>
                         <div>
-                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Nama Depan</label>
-                            <input type="text" name="fds_page_kontak_field_fname_ph" value="<?php echo esc_attr($c['page_kontak_field_fname_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Nama Belakang</label>
-                            <input type="text" name="fds_page_kontak_field_lname_lbl" value="<?php echo esc_attr($c['page_kontak_field_lname_lbl']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Nama Belakang</label>
-                            <input type="text" name="fds_page_kontak_field_lname_ph" value="<?php echo esc_attr($c['page_kontak_field_lname_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
+                            <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Placeholder: Nama Lengkap</label>
+                            <input type="text" name="fds_page_kontak_field_fullname_ph" value="<?php echo esc_attr($c['page_kontak_field_fullname_ph']); ?>" style="width: 100%; border: 1px solid #cbd5e1; border-radius: 6px; padding: 6px 10px; font-size: 12.5px;">
                         </div>
                         <div>
                             <label style="display: block; font-size: 11.5px; font-weight: 600; color: #334155; margin-bottom: 4px;">Label: Perusahaan / Instansi</label>

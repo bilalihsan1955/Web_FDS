@@ -1379,9 +1379,7 @@ function render_layanan_content_admin_page() {
                     'Label Bersama, Mega Menu & Footer Kolom Layanan' => [
                         'cta_wa_text'             => 'Teks Tombol WhatsApp Hero',
                         'trust_bar'               => 'Baris Trust Signal Hero',
-                        'sticky_cta_label'        => 'Label Tombol Sticky Bar Mobile',
                         'menu_industries_heading' => 'Mega Menu: Judul Kolom Sektor Industri',
-                        'menu_hub_link_text'      => 'Mega Menu: Teks Tautan Hub Layanan',
                         'menu_categories_heading' => 'Mega Menu: Judul Kolom Spesialis & Pelatihan',
                         'menu_all_services_text'  => 'Mega Menu: Teks "Lihat Semua Layanan"',
                         'footer_layanan_heading'  => 'Footer: Judul Kolom Layanan',

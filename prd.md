@@ -2,12 +2,12 @@
 ## Pengembangan Website Company Profile (Compro) & Lead Engine B2B Enterprise Full Drone Solutions (FDS)
 
 **STATUS: PRODUCTION (VERSI MULTI-HALAMAN COMPRO + FUNNEL LAYANAN B2B ENTERPRISE)**  
-**Versi Dokumen:** v2.5.1 (Enterprise Production Edition)  
+**Versi Dokumen:** v2.6.0 (Enterprise Production Edition)  
 **Tipe Platform:** Website Company Profile (Compro) & Lead Engine B2B Enterprise  
 **Entitas:** PT Karya Solusi Angkasa (`Full Drone Solutions`)  
 **Disusun oleh:** Bilal Al Ihsan (Pengembang Utama & UI/UX Specialist)  
 **Untuk:** Tim Manajemen & Stakeholder PT Karya Solusi Angkasa  
-**Tanggal Rilis:** 2026-11-12  
+**Tanggal Rilis:** 2026-11-25  
 **Dokumen Terkait:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md), [`PROJECT_MEMORY.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PROJECT_MEMORY.md), [`AGENTS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/AGENTS.md), [`INIT.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/INIT.md), [`SEO_KEYWORDS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/SEO_KEYWORDS.md)  
 
 ---
@@ -22,7 +22,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
    * **SNI 9199:2023** berlaku khusus untuk model **FERTO 15** (kapasitas kerja **17 Liter**) dan **FERTO 22**.
    * **ISO 9001:2015** Sistem Manajemen Mutu berlaku pada level **perusahaan / manufaktur PT Karya Solusi Angkasa** (bukan sertifikasi unit produk individual per drone) bersama pendampingan regulasi operator **DKPPU CASR Part 107**.
 2. Menyajikan katalog terstruktur berisi **9 model drone aktif** dalam **3 kategori utama** (`Agrikultur`, `Pemetaan & GIS`, dan `Kargo`), sekaligus funnel **Hub Layanan (`/layanan/`)**, **6 halaman sektor industri**, dan **3 halaman kategori layanan spesialis**.
-3. Mengonversi pengunjung korporasi, BUMN, dan instansi menjadi prospek terukur melalui **Formulir Konsultasi Terpadu (`/kontak/#hubungi-form`)** beserta auto-prefill `?layanan=` / `?produk=`, **Gated Download Brosur PDF**, **Mobile Sticky WhatsApp CTA**, dan **pelacakan telemetri GA4/GTM**.
+3. Mengonversi pengunjung korporasi, BUMN, dan instansi menjadi prospek terukur melalui **Formulir Konsultasi Terpadu (`/kontak/#hubungi-form`)** beserta auto-prefill `?layanan=` / `?produk=`, **Gated Download Brosur PDF**, **CTA Hero/Kontekstual & WhatsApp**, dan **pelacakan telemetri GA4/GTM**.
 4. Menjaga keterbacaan penuh oleh bot mesin pencari dan AI melalui **Server-Side Rendered (SSR)** HTML mentah (termasuk panduan teknis dan FAQ accordion `<details>`), **Schema JSON-LD `@graph`** yang valid tanpa field fiktif, dan `/llms.txt`.
 
 ---
@@ -70,7 +70,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
 ## 4.4 Funnel Layanan B2B (`/layanan/`, Sektor & Kategori Spesialis)
 * **LYN-1 (Hub Layanan `/layanan/`):** Merangkum 6 sektor industri, 3 layanan teknis, alur kerja survei, format luaran data spasial, daftar periksa KAK pengadaan, dan FAQ SSR (`<x-service-faq>`).
 * **LYN-2 (6 Halaman Sektor `/layanan/{sektor}/` & 3 Halaman Kategori `/layanan/{kategori}/`):** Menggunakan `template-layanan-sektor.blade.php` & `template-layanan-kategori.blade.php` berisi: Hero -> Ringkasan Tantangan & Solusi -> Tabel Perbandingan Metode SSR -> Daftar Luaran Deliverable & Perangkat Lunak -> Panduan Faktor Penentu Biaya & KAK -> FAQ Accordion SSR (`⌄`) -> CTA konversi terpusat menuju `/kontak/?layanan=...#hubungi-form`.
-* **LYN-3 (Mobile Sticky Bar):** Komponen `service-sticky-bar.blade.php` menampilkan tombol cepat penawaran (`/kontak/#hubungi-form`) dan WhatsApp di layar mobile tanpa menutupi konten utama.
+* **LYN-3 (Tampilan Mobile Bersih Tanpa Sticky Bottom Bar):** Bilah sticky melayang bawah mobile (*Minta Penawaran + WhatsApp*, komponen lama `service-sticky-bar.blade.php`) tidak dirender di layout global (`layouts/app.blade.php`) agar layar mobile tetap lega; CTA konversi tetap tersedia melalui tombol Hero, section CTA, menu mobile, dan footer menuju `/kontak/#hubungi-form`.
 * **LYN-4 (WP Admin Editable Hub `Konten Layanan`):** Seluruh tab dikelola non-destruktif per halaman di WP-Admin (`app/layanan-admin.php`) dengan tombol reset terisolasi per tab dan flush cache otomatis.
 
 ## 4.5 Halaman Komparasi (`/bandingkan/`), Profil (`/tentang-kami/`) & Kontak (`/kontak/`)
@@ -82,6 +82,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
 * **FTR-1 (Grid 4 Kolom & Penempatan Logo Partner):** Logo partner/sertifikasi dikunci di pojok kanan bawah kolom 4 pada desktop (`absolute right-0 bottom-0`) mengalir ke kiri, dan rata kiri di mobile.
 * **FTR-2 (Transparansi Multiply):** Logo footer memakai `mix-blend-mode: multiply !important; background-color: transparent !important;` tanpa parent opacity/transform.
 * **FTR-3 (Wave Background Vector & Ikon Konsisten):** Setiap `<section>` berlatar teal gelap memakai SVG gelombang organik *fill-only* (nol `stroke`), seluruh tautan/kartu interaktif memakai panah diagonal (`↗`), breadcrumb bebas garis miring awalan `/`, dan seluruh teks wajib Title Case / Sentence case (zero CSS `uppercase`).
+* **FTR-4 (Kontras Warna Section Terakhir vs Footer):** Karena `<footer>` menggunakan latar `#f5f5f7`, **section atau kontainer paling akhir tepat sebelum `<footer>` di seluruh halaman wajib TIDAK berwarna `#f5f5f7` / `.fds-bg-light`** — wajib kontras memakai `#ffffff` (`.fds-bg-white`) atau gradasi teal gelap (`.fds-bg-teal`), dengan selang-seling latar antar-section yang konsisten.
 
 ---
 
@@ -93,7 +94,7 @@ Platform ini dirancang sebagai **Website Company Profile & Lead Engine B2B Enter
   * Penonaktifan cache LiteSpeed untuk endpoint AJAX dinamis (`fds_submit_inquiry`, `fds_download_brochure`), penghapusan jejak `?ver=` WP, serta aturan `.htaccess` yang memblokir akses langsung HTTP ke `.agents/`, `scratch/`, file `.md`, `.env`, `.sql`, `.log`, dan sumber `.blade.php`.
   * Guard `noindex, nofollow` otomatis pada host staging (`compro.*`, `staging.*`, `.local`).
 * **Sanitasi Output & Anti-Double-Escaping:** Seluruh template Blade mendecode entity DB melalui `fds_clean_string()` / `fds_deep_decode()` + `fds_scrub_legacy_text()` agar `&amp;` / `&#038;` tidak pernah muncul secara harfiah, memakai `{!! esc_url(...) !!}` untuk URL berparameter query, `{!! wp_json_encode(...) !!}` untuk literal JS, serta `get_search_query(false)` untuk pencarian.
-* **Performa Frontend:** Penghentian hijacking scroll `Lenis` demi scrolling native compositor browser, sizing gambar responsif `fds_optimized_img_url()`, isolasi kontainer SVG `contain: layout paint`, dan view cache terkompilasi Laravel Acorn.
+* **Performa Frontend & Tipografi:** Sistem dua font modern (`Archivo` variable width untuk display `h1..h4` & angka KPI `tabular-nums`, dipadukan `Plus Jakarta Sans` untuk UI/body), scrolling halus ringan `Lenis` (`^1.3.27`, `autoRaf: true`, `syncTouch: false`, `respectReducedMotion: true`), reveal GPU `IntersectionObserver` (`[data-aos]`, `540ms`), parallax kompositor hero, sizing gambar responsif `fds_optimized_img_url()`, isolasi kontainer SVG `contain: layout paint`, transisi antar-band bebas garis pemisah (`border-t`), serta halaman `/kontak/` 3-band 5-field (`full_name`, `company`, `email`, `phone`, `message`) dengan atribusi URL silent.
 * **Non-Destructive Rule:** Auto-seeder dan skrip migrasi `app/migrations-2026.php` dilarang menimpa kustomisasi database admin maupun menghapus halaman/menu/tag lama tanpa persetujuan tertulis.
 
 ---

@@ -188,6 +188,16 @@ function fds_get_homepage_content(bool $fresh = false) {
         $layanan_cta_text_saved = 'Lihat Semua Layanan';
     }
 
+    $produk_stat4_num_saved = trim((string) get_option('fds_produk_stat4_num', 'Nasional'));
+    if ($produk_stat4_num_saved === '' || $produk_stat4_num_saved === '2012') {
+        $produk_stat4_num_saved = 'Nasional';
+    }
+
+    $card6_stat_saved = trim((string) get_option('fds_keunggulan_card6_stat', '2019'));
+    if ($card6_stat_saved === '' || $card6_stat_saved === '2012') {
+        $card6_stat_saved = '2019';
+    }
+
     $data = [
         // HERO
         'hero_badge'        => get_option('fds_hero_badge', 'Produsen Drone Pertanian & UAV Indonesia'),
@@ -216,7 +226,7 @@ function fds_get_homepage_content(bool $fresh = false) {
         'produk_stat2_lbl'  => get_option('fds_produk_stat2_lbl', 'SNI 9199:2023 (FERTO 15 & 22)'),
         'produk_stat3_num'  => get_option('fds_produk_stat3_num', '50 Liter'),
         'produk_stat3_lbl'  => get_option('fds_produk_stat3_lbl', 'Kapasitas Semprot Maksimal FERTO'),
-        'produk_stat4_num'  => get_option('fds_produk_stat4_num', 'Nasional'),
+        'produk_stat4_num'  => $produk_stat4_num_saved,
         'produk_stat4_lbl'  => get_option('fds_produk_stat4_lbl', 'Dukungan Servis & Suku Cadang Resmi'),
         'produk_filter_all'      => get_option('fds_produk_filter_all', 'Semua'),
         'produk_compare_text'    => get_option('fds_produk_compare_text', 'Bandingkan Model'),
@@ -255,9 +265,9 @@ function fds_get_homepage_content(bool $fresh = false) {
         'keunggulan_card5_desc'  => get_option('fds_keunggulan_card5_desc', 'Semua komponen arm, motor propulsi, nosel, dan baterai tersedia langsung di workshop tanpa perlu menunggu impor berbulan-bulan.'),
         'keunggulan_card5_img'   => get_option('fds_keunggulan_card5_img', get_template_directory_uri() . '/public/images/site/workshop-deltav.webp'),
 
-        'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Akademi Pilot'),
-        'keunggulan_card6_stat'  => get_option('fds_keunggulan_card6_stat', 'DKPPU'),
-        'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Pelatihan operator drone industri dan pendampingan persiapan sertifikasi pilot sesuai regulasi CASR Part 107.'),
+        'keunggulan_card6_badge' => get_option('fds_keunggulan_card6_badge', 'Rekam Jejak Perusahaan'),
+        'keunggulan_card6_stat'  => $card6_stat_saved,
+        'keunggulan_card6_desc'  => get_option('fds_keunggulan_card6_desc', 'Berpengalaman di industri UAV dengan rekayasa lokal Indonesia, resmi berbadan hukum PT sejak 2019.'),
         'keunggulan_card6_img'   => get_option('fds_keunggulan_card6_img', get_template_directory_uri() . '/public/images/site/about-team.webp'),
 
         'keunggulan_card7_badge' => get_option('fds_keunggulan_card7_badge', 'Skalabilitas Armada'),
@@ -449,7 +459,6 @@ function render_homepage_content_admin_page() {
 
         $fields_textarea = [
             'fds_hero_title', 'fds_hero_desc',
-            'fds_solusi_desc',
             'fds_produk_desc',
             'fds_keunggulan_card1_title', 'fds_keunggulan_card1_desc', 'fds_keunggulan_card2_desc', 'fds_keunggulan_card3_title', 'fds_keunggulan_card3_desc', 'fds_keunggulan_card4_desc', 'fds_keunggulan_card5_desc', 'fds_keunggulan_card6_desc', 'fds_keunggulan_card7_desc',
             'fds_layanan_desc',
@@ -813,10 +822,6 @@ function render_homepage_content_admin_page() {
                         <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Judul Utama Solusi</label>
                         <input type="text" name="fds_solusi_title" value="<?php echo esc_attr($solusi_admin['title'] ?? $c['solusi_title']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">
                     </div>
-                    <div>
-                        <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Deskripsi Solusi</label>
-                        <textarea name="fds_solusi_desc" rows="2" style="width: 100%; font-size: 13px;"><?php echo esc_textarea($solusi_admin['desc'] ?? $c['solusi_desc']); ?></textarea>
-                    </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
                         <div>
                             <label style="display: block; font-size: 12px; font-weight: 700; color: #334155; margin-bottom: 4px;">Teks Tombol CTA Kanan Atas</label>
@@ -1028,11 +1033,11 @@ function render_homepage_content_admin_page() {
                         </div>
                     </div>
 
-                    <!-- Bottom Row: Card Akademi Pilot & Card Ekosistem Multi-Sektor -->
+                    <!-- Bottom Row: Card Rekam Jejak 2019 & Card Ekosistem Multi-Sektor -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-                        <!-- Card Akademi Pilot -->
+                        <!-- Card Rekam Jejak & Legalitas PT 2019 -->
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px;">
-                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 5: Akademi Pilot &amp; Operasional (Bawah Kiri)</h4>
+                            <h4 style="margin: 0 0 8px; font-size: 13px; font-weight: 700; color: #0f808a;">Card 5: Rekam Jejak &amp; Legalitas 2019 (Bawah Kiri)</h4>
                             <div style="margin-bottom: 8px;">
                                 <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Nilai Stat</label>
                                 <input type="text" name="fds_keunggulan_card6_stat" value="<?php echo esc_attr($c['keunggulan_card6_stat']); ?>" style="width: 100%; font-size: 14px; font-weight: 600;">

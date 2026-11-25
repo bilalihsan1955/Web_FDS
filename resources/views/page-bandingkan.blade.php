@@ -252,7 +252,7 @@
   ];
 @endphp
 
-<div id="compare-page" class="w-full bg-[#f5f5f7] font-sans">
+<div id="compare-page" class="w-full bg-white font-sans">
 
   {{-- ── 1. HERO SECTION VIA GLOBAL COMPONENT ── --}}
   <x-page-hero
@@ -267,7 +267,7 @@
       <div id="sticky-slot-1" class="flex-1 flex items-center gap-2 justify-center text-center">
         <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot1'] ?? 'Pilih Drone 1' }}</span>
       </div>
-      <div class="px-3 text-[11px] font-bold text-[#86868b] tracking-wider">{{ $bk['sticky_vs'] ?? 'vs' }}</div>
+      <div class="px-3 text-[12.5px] font-bold text-[#5c5e63] tracking-wider">{{ $bk['sticky_vs'] ?? 'vs' }}</div>
       <div id="sticky-slot-2" class="flex-1 flex items-center gap-2 justify-center text-center">
         <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot2'] ?? 'Pilih Drone 2' }}</span>
       </div>
@@ -434,7 +434,7 @@
         
         {{-- D1 STATS --}}
         <div class="md:pr-10 lg:pr-16">
-          <p id="d1-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
+          <p id="d1-stats-header" class="text-[13.5px] font-semibold text-[#5c5e63] mb-6 text-center">
             {{ $bk['stats_empty_model1'] ?? 'Keunggulan Model 1' }}
           </p>
           <div id="d1-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
@@ -442,7 +442,7 @@
 
         {{-- D2 STATS --}}
         <div class="md:pl-10 lg:pl-16">
-          <p id="d2-stats-header" class="text-[13px] font-semibold text-[#86868b] mb-6 text-center">
+          <p id="d2-stats-header" class="text-[13.5px] font-semibold text-[#5c5e63] mb-6 text-center">
             {{ $bk['stats_empty_model2'] ?? 'Keunggulan Model 2' }}
           </p>
           <div id="d2-stats-row" class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center"></div>
@@ -456,8 +456,8 @@
   </section>
 
   {{-- ── 6B. PANDUAN MEMILIH ARMADA DRONE & PENGADAAN B2B (SSR) ── --}}
-  <section class="bg-[#f5f5f7] py-16 sm:py-24 border-t border-black/[0.06]">
-    <div class="max-w-[1100px] mx-auto px-6 lg:px-12 fds-drone-guide">
+  <section class="bg-[#f5f5f7] py-16 sm:py-24">
+    <div data-aos="fade-up" class="max-w-[820px] mx-auto px-6 lg:px-10 fds-drone-guide">
       @if(!empty($bk['guide_badge']))
         <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-3">{{ $bk['guide_badge'] }}</p>
       @endif
@@ -509,13 +509,17 @@
       </p>
       <div class="flex flex-wrap gap-4 justify-center">
         <a href="{!! esc_url($href_bk($bk['cta_primary_url'] ?? '/kontak/#hubungi-form')) !!}"
-           class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#0f808a] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20">
-          {{ $bk['cta_primary_text'] ?? 'Hubungi Tim Sales FDS' }}
+           class="group inline-flex items-center justify-center gap-2.5 min-h-[48px] bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#052b2e] hover:text-[#0a555c] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-lg shadow-black/20 leading-none">
+          <span>{{ $bk['cta_primary_text'] ?? 'Hubungi Tim Sales FDS' }}</span>
+          <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
         <a href="{!! esc_url($href_bk($bk['cta_secondary_url'] ?? '/blog/')) !!}"
-           class="inline-flex items-center text-white/80 hover:text-white text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
+           class="inline-flex items-center text-white/90 hover:text-white hover:underline text-[16px] font-medium transition-colors gap-2 px-4 py-3 leading-none group">
           <span class="leading-none">{{ $bk['cta_secondary_text'] ?? 'Baca studi kasus operasional' }}</span>
-          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
@@ -532,13 +536,13 @@
       <div class="p-6 pb-4 border-b border-black/[0.08] flex items-center justify-between bg-[#fbfbfd]">
         <div>
           <div class="flex items-center gap-2 mb-0.5">
-            <p class="text-[12px] font-semibold text-[#0f808a]">{{ $bk['modal_eyebrow'] ?? 'Katalog Produk' }}</p>
-            <span id="modal-category-badge" class="hidden text-[11px] font-medium text-[#0f808a] bg-[#0f808a]/10 px-2.5 py-0.5 rounded-full"></span>
+            <p class="text-[12.5px] font-semibold text-[#0f808a]">{{ $bk['modal_eyebrow'] ?? 'Katalog Produk' }}</p>
+            <span id="modal-category-badge" class="hidden text-[12px] font-medium text-[#0f808a] bg-[#0f808a]/10 px-2.5 py-0.5 rounded-full"></span>
           </div>
           <h3 id="modal-heading-text" class="text-[20px] sm:text-[24px] font-bold text-[#1d1d1f] tracking-tight">
             {{ $bk['modal_title'] ?? 'Pilih Model Drone' }}
           </h3>
-          <p id="modal-subheading-text" class="text-[13px] text-[#86868b] mt-0.5">
+          <p id="modal-subheading-text" class="text-[13.5px] text-[#5c5e63] mt-0.5">
             {{ $bk['modal_sub'] ?? 'Pilih produk drone yang ingin dibandingkan.' }}
           </p>
         </div>
@@ -570,7 +574,7 @@
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center gap-1.5 mb-1">
               @if(!empty($dItem['badge']))
-              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0f808a]/10 text-[#0f808a]">
+              <span class="text-[12px] font-semibold px-2.5 py-0.5 rounded-full bg-[#0f808a]/10 text-[#0f808a]">
                 {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['badge']) : $dItem['badge'] }}
               </span>
               @endif
@@ -578,7 +582,7 @@
             <h4 class="text-[16px] font-bold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight mb-1 truncate">
               {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['name']) : $dItem['name'] }}
             </h4>
-            <p class="text-[12px] text-[#86868b] truncate">
+            <p class="text-[12.5px] text-[#5c5e63] truncate">
               {{ function_exists('fds_clean_string') ? fds_clean_string((string) $dItem['kategori']) : $dItem['kategori'] }}
             </p>
           </div>
@@ -891,11 +895,13 @@
           </p>
 
           <div class="flex flex-wrap gap-2.5 justify-center">
-            <a href="${escapeHtml(KONTAK_URL_BASE)}?produk=${encodeURIComponent(drone.slug || '')}#hubungi-form" class="inline-flex items-center bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm">
-              ${escapeHtml(BK_UI.slot_offer_btn)}
+            <a href="${escapeHtml(KONTAK_URL_BASE)}?produk=${encodeURIComponent(drone.slug || '')}#hubungi-form" class="group inline-flex items-center justify-center gap-1.5 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all shadow-sm leading-none">
+              <span>${escapeHtml(BK_UI.slot_offer_btn)}</span>
+              <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
             </a>
-            <a href="${escapeHtml(drone.url || '#')}" class="inline-flex items-center bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-4 py-2.5 rounded-full transition-all border border-black/10 shadow-sm">
-              ${escapeHtml(BK_UI.slot_detail_btn)}
+            <a href="${escapeHtml(drone.url || '#')}" class="group inline-flex items-center justify-center gap-1.5 min-h-[44px] bg-white hover:bg-black/5 text-[#1d1d1f] text-[13px] sm:text-[14px] font-semibold px-5 py-2.5 rounded-full transition-all border border-black/10 shadow-sm leading-none">
+              <span>${escapeHtml(BK_UI.slot_detail_btn)}</span>
+              <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
             </a>
           </div>
         </div>
@@ -909,12 +915,12 @@
 
     if (!d1 && !d2) {
       container.innerHTML = `
-        <div class="py-16 text-center text-[#86868b]">
-          <div class="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#86868b]">
+        <div class="py-16 text-center text-[#5c5e63]">
+          <div class="w-12 h-12 rounded-full bg-[#f5f5f7] flex items-center justify-center mx-auto mb-3 text-[#5c5e63]">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
           </div>
-          <p class="text-[16px] font-semibold text-[#1d1d1f] mb-1">${escapeHtml(BK_UI.table_empty_title)}</p>
-          <p class="text-[13px]">${escapeHtml(BK_UI.table_empty_desc)}</p>
+          <p class="text-[16px] font-semibold text-[#1d1d1f] mb-1.5">${escapeHtml(BK_UI.table_empty_title)}</p>
+          <p class="text-[14px] text-[#5c5e63] max-w-lg mx-auto leading-relaxed">${escapeHtml(BK_UI.table_empty_desc)}</p>
         </div>
       `;
       return;
@@ -1084,26 +1090,26 @@
       if (d1Row) {
         d1Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'UAV')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Platform Industri')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'UAV')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Platform Industri')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '100%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'FDS Station GCS')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '100%')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'FDS Station GCS')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || 'Nasional')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'Dukungan Teknis')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || 'Nasional')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'Dukungan Teknis')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d1.stat4_num || 'Garansi')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d1.stat4_lbl || 'Purna Jual Resmi')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat4_num || 'Garansi')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat4_lbl || 'Purna Jual Resmi')}</p>
           </div>
         `;
       }
     } else {
       if (d1Header) d1Header.textContent = BK_UI.stats_empty_model1 || 'Keunggulan Model 1';
-      if (d1Row) d1Row.innerHTML = `<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
+      if (d1Row) d1Row.innerHTML = `<div class="col-span-4 text-center text-[14px] text-[#5c5e63] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
     }
 
     const d2Header = document.getElementById('d2-stats-header');
@@ -1113,26 +1119,26 @@
       if (d2Row) {
         d2Row.innerHTML = `
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'UAV')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Platform Industri')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'UAV')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Platform Industri')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '100%')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'FDS Station GCS')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '100%')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'FDS Station GCS')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || 'Nasional')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'Dukungan Teknis')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || 'Nasional')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'Dukungan Teknis')}</p>
           </div>
           <div>
-            <p class="text-[32px] sm:text-[36px] font-semibold tracking-[-0.04em] text-[#1d1d1f]">${escapeHtml(d2.stat4_num || 'Garansi')}</p>
-            <p class="text-[12px] font-medium text-[#86868b] tracking-normal mt-1">${escapeHtml(d2.stat4_lbl || 'Purna Jual Resmi')}</p>
+            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat4_num || 'Garansi')}</p>
+            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat4_lbl || 'Purna Jual Resmi')}</p>
           </div>
         `;
       }
     } else {
       if (d2Header) d2Header.textContent = BK_UI.stats_empty_model2 || 'Keunggulan Model 2';
-      if (d2Row) d2Row.innerHTML = `<div class="col-span-4 text-center text-[13px] text-[#86868b] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
+      if (d2Row) d2Row.innerHTML = `<div class="col-span-4 text-center text-[14px] text-[#5c5e63] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
     }
   }
 

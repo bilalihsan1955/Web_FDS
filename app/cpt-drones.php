@@ -91,7 +91,7 @@ add_action('init', function () {
         'menu_icon'           => 'dashicons-airplane',
         'capability_type'     => 'post',
         'hierarchical'        => false,
-        'supports'            => ['title', 'thumbnail'], // Hanya judul dan foto produk
+        'supports'            => ['title', 'thumbnail', 'page-attributes'], // Judul, foto produk & atribut urutan (menu_order)
         'taxonomies'          => ['kategori_drone'],
         'rewrite'             => ['slug' => 'drone', 'with_front' => false],
         'show_in_rest'        => false,
@@ -206,6 +206,7 @@ add_filter('manage_drone_posts_columns', function ($columns) {
     $new['drone_badge']    = 'Badge / Tipe';
     $new['drone_tagline']  = 'Tagline Ringkas';
     $new['drone_stats']    = 'Highlight Stats';
+    $new['drone_order']    = 'Urutan';
     if (isset($columns['date'])) {
         $new['date'] = $columns['date'];
     }
@@ -269,8 +270,157 @@ add_action('manage_drone_posts_custom_column', function ($column, $post_id) {
             if ($s3) echo '<strong>' . esc_html($s3) . '</strong>';
             echo '</div>';
             break;
+
+        case 'drone_order':
+            $m_order = (int) get_post_field('menu_order', $post_id);
+            echo $m_order > 0
+                ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:#e0f2fe;color:#0369a1;font-weight:700;font-size:11px;">#' . esc_html((string) $m_order) . '</span>'
+                : '<span style="color:#94a3b8;font-size:11.5px;">Otomatis</span>';
+            break;
     }
 }, 10, 2);
+
+// Field Urutan Tampil (fds_cat_order) & Kolom Admin pada Taksonomi 'kategori_drone'
+add_action('kategori_drone_add_form_fields', function () {
+    ?>
+    <div class="form-field term-fds-cat-order-wrap">
+        <label for="fds_cat_order">Urutan Tampil (Katalog &amp; Mega Menu)</label>
+        <input type="number" name="fds_cat_order" id="fds_cat_order" value="0" min="0" max="999" style="width:120px;">
+        <p class="description">Angka lebih kecil tampil lebih atas di halaman <code>/produk/</code>, Mega Dropdown, dan tab Beranda (<code>1, 2, 3...</code>). Isi <code>0</code> untuk urutan otomatis (mengikuti <em>Kategori Utama</em> di <strong>Logo &amp; Navbar</strong> &amp; terbanyak drone).</p>
+    </div>
+    <?php
+});
+
+add_action('kategori_drone_edit_form_fields', function ($term) {
+    $val = absint(get_term_meta((int) $term->term_id, 'fds_cat_order', true));
+    ?>
+    <tr class="form-field term-fds-cat-order-wrap">
+        <th scope="row"><label for="fds_cat_order">Urutan Tampil (Katalog &amp; Mega Menu)</label></th>
+        <td>
+            <input type="number" name="fds_cat_order" id="fds_cat_order" value="<?php echo esc_attr((string) $val); ?>" min="0" max="999" style="width:120px;">
+            <p class="description">Angka lebih kecil tampil lebih atas di halaman <code>/produk/</code>, Mega Dropdown, dan tab Beranda (<code>1, 2, 3...</code>). Isi <code>0</code> untuk urutan otomatis.</p>
+        </td>
+    </tr>
+    <?php
+});
+
+$fds_save_kategori_order = static function ($term_id): void {
+    if (!current_user_can('manage_categories')) {
+        return;
+    }
+    if (isset($_POST['fds_cat_order'])) {
+        $ord = absint(wp_unslash($_POST['fds_cat_order']));
+        update_term_meta((int) $term_id, 'fds_cat_order', $ord);
+        fds_purge_drone_catalog_caches();
+    }
+};
+add_action('created_kategori_drone', $fds_save_kategori_order);
+add_action('edited_kategori_drone', $fds_save_kategori_order);
+
+add_filter('manage_edit-kategori_drone_columns', function ($columns) {
+    $out = [];
+    foreach ($columns as $k => $v) {
+        if ($k === 'posts') {
+            $out['fds_cat_order'] = 'Urutan';
+        }
+        $out[$k] = $v;
+    }
+    if (!isset($out['fds_cat_order'])) {
+        $out['fds_cat_order'] = 'Urutan';
+    }
+    return $out;
+});
+
+add_filter('manage_kategori_drone_custom_column', function ($content, $column_name, $term_id) {
+    if ($column_name === 'fds_cat_order') {
+        $ord = absint(get_term_meta((int) $term_id, 'fds_cat_order', true));
+        return $ord > 0
+            ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:#e0f2fe;color:#0369a1;font-weight:700;font-size:11px;">#' . esc_html((string) $ord) . '</span>'
+            : '<span style="color:#94a3b8;font-size:11.5px;">Otomatis</span>';
+    }
+    return $content;
+}, 10, 3);
+
+/**
+ * Single Source of Truth Pengurutan Grup Kategori Drone untuk Mega Dropdown, /produk/, dan Beranda.
+ * Prioritas:
+ * 1. Term meta eksplisit `fds_cat_order > 0` (diatur di Produk Drone -> Kategori Drone),
+ * 2. Kategori Utama yang dipilih di Logo & Navbar (`fds_menu_prod_primary_cat`),
+ * 3. Jumlah unit terbanyak (descending), lalu fallback slug inti (agrikultur -> pemetaan-gis -> kargo) dan term_id.
+ */
+function fds_sort_drone_category_groups(array $groups): array {
+    $primary_cat_id = function_exists(__NAMESPACE__ . '\\fds_get_menu_prod_primary_cat_id')
+        ? fds_get_menu_prod_primary_cat_id()
+        : 0;
+    $core_fallback = [
+        'agrikultur'   => 1,
+        'pemetaan-gis' => 2,
+        'pemetaan'     => 2,
+        'kargo'        => 3,
+    ];
+
+    usort($groups, static function ($a, $b) use ($primary_cat_id, $core_fallback) {
+        $meta_for = static function ($item) use ($primary_cat_id, $core_fallback): array {
+            $tid   = (int) ($item['term_id'] ?? 0);
+            $slug  = strtolower((string) ($item['slug'] ?? ''));
+            $name  = (string) ($item['name'] ?? '');
+            $ord   = $tid > 0 ? absint(get_term_meta($tid, 'fds_cat_order', true)) : 0;
+            $cnt   = isset($item['drones']) && is_array($item['drones'])
+                ? count($item['drones'])
+                : (int) ($item['count'] ?? 0);
+
+            if ($ord > 0) {
+                $tier = 0;
+            } elseif ($primary_cat_id > 0 && $tid === $primary_cat_id) {
+                $tier = 1;
+            } else {
+                $tier = 2;
+            }
+
+            return [
+                'tier'   => $tier,
+                'ord'    => $ord,
+                'negcnt' => -$cnt,
+                'core'   => $core_fallback[$slug] ?? 99,
+                'tid'    => $tid > 0 ? $tid : PHP_INT_MAX,
+                'name'   => $name,
+            ];
+        };
+
+        $ka = $meta_for($a);
+        $kb = $meta_for($b);
+
+        foreach (['tier', 'ord', 'negcnt', 'core', 'tid'] as $field) {
+            if ($ka[$field] !== $kb[$field]) {
+                return $ka[$field] <=> $kb[$field];
+            }
+        }
+        return strcasecmp($ka['name'], $kb['name']);
+    });
+
+    return array_values($groups);
+}
+
+/**
+ * Mengurutkan array WP_Term taksonomi `kategori_drone` menggunakan aturan kanonik yang sama.
+ */
+function fds_sort_kategori_terms(array $terms): array {
+    $wrapped = [];
+    foreach ($terms as $t) {
+        if (!is_object($t) || empty($t->term_id)) {
+            continue;
+        }
+        $wrapped[] = [
+            'term_id' => (int) $t->term_id,
+            'slug'    => (string) ($t->slug ?? ''),
+            'name'    => (string) ($t->name ?? ''),
+            'count'   => (int) ($t->count ?? 0),
+            '_term'   => $t,
+        ];
+    }
+    $sorted = fds_sort_drone_category_groups($wrapped);
+    return array_values(array_map(static fn($item) => $item['_term'], $sorted));
+}
 
 // =========================================================================
 // 4. FORM TEXTFIELD MURNI DRONE (FDS DRONE DATA FORM)
@@ -578,6 +728,125 @@ function render_drone_pure_form_metabox($post) {
         </div>
     </div>
 
+    <?php
+    if (function_exists('wp_enqueue_media') && !did_action('wp_enqueue_media')) {
+        wp_enqueue_media();
+    }
+    $fds_admin_gf   = fds_get_drone_gallery_and_faqs($post->ID);
+    $fds_gal_custom = (get_post_meta($post->ID, 'drone_gallery_customized', true) === '1');
+    $fds_faq_custom = (get_post_meta($post->ID, 'drone_faq_customized', true) === '1');
+    ?>
+
+    <div class="fds-section-title" style="margin-top:26px;">
+        <span>5. Dokumentasi Uji Lapangan (3 Foto Galeri)</span>
+        <span style="font-size:12px;font-weight:400;color:#64748b;">Foto dan keterangan tampil pada bagian Galeri Uji Lapangan. Kosongkan URL jika ingin menghapus foto tertentu.</span>
+    </div>
+    <input type="hidden" name="drone_gallery_section_present" value="1">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-bottom:24px;">
+        <?php for ($gi = 1; $gi <= 3; $gi++) :
+            $g_def_item = $fds_admin_gf['gallery'][$gi - 1] ?? ['url' => '', 'caption' => ''];
+            $g_img_val  = $fds_gal_custom
+                ? (string) get_post_meta($post->ID, "drone_gallery_{$gi}_img", true)
+                : ((string) get_post_meta($post->ID, "drone_gallery_{$gi}_img", true) ?: (string) ($g_def_item['url'] ?? ''));
+            $g_cap_val  = $fds_gal_custom
+                ? (string) get_post_meta($post->ID, "drone_gallery_{$gi}_cap", true)
+                : ((string) get_post_meta($post->ID, "drone_gallery_{$gi}_cap", true) ?: (string) ($g_def_item['caption'] ?? ''));
+            $g_img_val  = trim(fds_clean_string($g_img_val));
+            $g_cap_val  = trim(fds_clean_string($g_cap_val));
+        ?>
+        <div class="fds-uc-card" style="display:flex;flex-direction:column;gap:8px;">
+            <h5>Foto Galeri <?php echo (int) $gi; ?></h5>
+            <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;height:130px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+                <img id="fds_gallery_prev_<?php echo (int) $gi; ?>" src="<?php echo esc_url($g_img_val); ?>" alt="" style="max-width:100%;max-height:100%;object-fit:cover;<?php echo $g_img_val ? '' : 'display:none;'; ?>">
+                <span id="fds_gallery_empty_<?php echo (int) $gi; ?>" style="font-size:12px;color:#94a3b8;<?php echo $g_img_val ? 'display:none;' : ''; ?>">Belum ada foto dipilih</span>
+            </div>
+            <div class="fds-field" style="margin-bottom:0;">
+                <input type="text" id="fds_gallery_img_<?php echo (int) $gi; ?>" class="fds-gal-url-input" data-slot="<?php echo (int) $gi; ?>" name="drone_gallery_<?php echo (int) $gi; ?>_img" value="<?php echo esc_attr($g_img_val); ?>" placeholder="URL Foto (https://... atau /wp-content/...)">
+            </div>
+            <div style="display:flex;gap:8px;">
+                <button type="button" class="button fds-gal-upload" data-slot="<?php echo (int) $gi; ?>">Pilih Foto</button>
+                <button type="button" class="button fds-gal-clear" data-slot="<?php echo (int) $gi; ?>">Hapus</button>
+            </div>
+            <div class="fds-field" style="margin-bottom:0;">
+                <input type="text" name="drone_gallery_<?php echo (int) $gi; ?>_cap" value="<?php echo esc_attr($g_cap_val); ?>" placeholder="Keterangan foto uji lapangan">
+            </div>
+        </div>
+        <?php endfor; ?>
+    </div>
+
+    <div class="fds-section-title">
+        <span>6. Pertanyaan Teknis (FAQ Produk)</span>
+        <span style="font-size:12px;font-weight:400;color:#64748b;">Maksimal 5 tanya jawab teknis di bawah galeri. Kosongkan pertanyaan &amp; jawaban pada slot yang tidak dipakai.</span>
+    </div>
+    <input type="hidden" name="drone_faq_section_present" value="1">
+    <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:18px;">
+        <?php for ($fi = 1; $fi <= 5; $fi++) :
+            $f_def_item = $fds_admin_gf['faqs'][$fi - 1] ?? ['q' => '', 'a' => ''];
+            $f_q_val    = $fds_faq_custom
+                ? (string) get_post_meta($post->ID, "drone_faq_{$fi}_q", true)
+                : ((string) get_post_meta($post->ID, "drone_faq_{$fi}_q", true) ?: (string) ($f_def_item['q'] ?? ''));
+            $f_a_val    = $fds_faq_custom
+                ? (string) get_post_meta($post->ID, "drone_faq_{$fi}_a", true)
+                : ((string) get_post_meta($post->ID, "drone_faq_{$fi}_a", true) ?: (string) ($f_def_item['a'] ?? ''));
+            $f_q_val    = trim(fds_clean_string($f_q_val));
+            $f_a_val    = trim(fds_clean_string($f_a_val));
+        ?>
+        <div class="fds-uc-card">
+            <h5>FAQ <?php echo (int) $fi; ?></h5>
+            <div class="fds-field" style="margin-bottom:8px;">
+                <input type="text" name="drone_faq_<?php echo (int) $fi; ?>_q" value="<?php echo esc_attr($f_q_val); ?>" placeholder="Pertanyaan teknis seputar unit ini...">
+            </div>
+            <div class="fds-field" style="margin-bottom:0;">
+                <textarea name="drone_faq_<?php echo (int) $fi; ?>_a" rows="2" placeholder="Jawaban ringkas dan faktual..." style="width:100%;"><?php echo esc_textarea($f_a_val); ?></textarea>
+            </div>
+        </div>
+        <?php endfor; ?>
+    </div>
+
+    <script>
+    (function($){
+        if (!$) return;
+        function syncGalleryPreview(slot, url) {
+            var $prev = $('#fds_gallery_prev_' + slot);
+            var $empty = $('#fds_gallery_empty_' + slot);
+            if (url && $.trim(url) !== '') {
+                $prev.attr('src', url).show();
+                $empty.hide();
+            } else {
+                $prev.attr('src', '').hide();
+                $empty.show();
+            }
+        }
+        $(document).on('click', '.fds-gal-upload', function(e){
+            e.preventDefault();
+            if (typeof wp === 'undefined' || !wp.media) return;
+            var slot = $(this).data('slot');
+            var frame = wp.media({
+                title: 'Pilih Foto Galeri Uji Lapangan',
+                button: { text: 'Gunakan Foto Ini' },
+                library: { type: 'image' },
+                multiple: false
+            });
+            frame.on('select', function(){
+                var att = frame.state().get('selection').first().toJSON();
+                var url = (att.sizes && att.sizes.large && att.sizes.large.url) ? att.sizes.large.url : att.url;
+                $('#fds_gallery_img_' + slot).val(url);
+                syncGalleryPreview(slot, url);
+            });
+            frame.open();
+        });
+        $(document).on('click', '.fds-gal-clear', function(e){
+            e.preventDefault();
+            var slot = $(this).data('slot');
+            $('#fds_gallery_img_' + slot).val('');
+            syncGalleryPreview(slot, '');
+        });
+        $(document).on('input change', '.fds-gal-url-input', function(){
+            syncGalleryPreview($(this).data('slot'), $(this).val());
+        });
+    })(window.jQuery);
+    </script>
+
     <script>
     jQuery(document).ready(function($) {
         // Media Uploader untuk File PDF Brosur
@@ -704,6 +973,33 @@ function fds_save_post_drone_handler($post_id) {
     }
     update_post_meta($post_id, 'drone_for', implode("\n", $uc_arr));
 
+    if (isset($_POST['drone_gallery_section_present'])) {
+        for ($gi = 1; $gi <= 3; $gi++) {
+            $g_img = esc_url_raw(trim(wp_unslash((string) ($_POST["drone_gallery_{$gi}_img"] ?? ''))));
+            $g_cap = sanitize_text_field(wp_unslash((string) ($_POST["drone_gallery_{$gi}_cap"] ?? '')));
+            update_post_meta($post_id, "drone_gallery_{$gi}_img", $g_img);
+            update_post_meta($post_id, "drone_gallery_{$gi}_cap", $g_cap);
+        }
+        update_post_meta($post_id, 'drone_gallery_customized', '1');
+    }
+
+    if (isset($_POST['drone_faq_section_present'])) {
+        for ($fi = 1; $fi <= 5; $fi++) {
+            $fq = sanitize_text_field(wp_unslash((string) ($_POST["drone_faq_{$fi}_q"] ?? '')));
+            $fa = sanitize_textarea_field(wp_unslash((string) ($_POST["drone_faq_{$fi}_a"] ?? '')));
+            update_post_meta($post_id, "drone_faq_{$fi}_q", $fq);
+            update_post_meta($post_id, "drone_faq_{$fi}_a", $fa);
+        }
+        update_post_meta($post_id, 'drone_faq_customized', '1');
+    }
+
+    if (function_exists('\App\fds_purge_drone_catalog_caches')) {
+        \App\fds_purge_drone_catalog_caches();
+    }
+    if (function_exists('wp_cache_flush')) {
+        wp_cache_flush();
+    }
+
     // Sinkronisasi kategori dari taksonomi checklist sidebar ke post meta 'drone_kategori'
     $terms = wp_get_post_terms($post_id, 'kategori_drone');
     if (!empty($terms) && !is_wp_error($terms)) {
@@ -720,11 +1016,22 @@ function fds_save_post_drone_handler($post_id) {
     $is_saving = false;
 }
 add_action('save_post_drone', __NAMESPACE__ . '\\fds_save_post_drone_handler', 10);
+add_action('save_post_drone', function ($post_id) {
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    if (wp_is_post_revision($post_id)) {
+        return;
+    }
+    fds_purge_drone_catalog_caches();
+}, 20);
 
 function fds_purge_drone_catalog_caches(): void {
     delete_transient('fds_mega_menu_data');
     delete_transient('fds_mega_menu_data_v2');
     delete_transient('fds_mega_menu_data_v3');
+    delete_transient('fds_mega_menu_data_v4');
+    delete_transient('fds_mega_menu_data_v5');
     delete_transient('fds_bandingkan_catalog_cache');
     delete_transient('fds_bandingkan_catalog_cache_v2');
     delete_transient('fds_bandingkan_catalog_cache_v3');
@@ -757,6 +1064,11 @@ add_action('delete_post', function ($post_id) {
 });
 add_action('saved_kategori_drone', __NAMESPACE__ . '\\fds_purge_drone_catalog_caches');
 add_action('delete_kategori_drone', __NAMESPACE__ . '\\fds_purge_drone_catalog_caches');
+add_action('set_object_terms', function ($object_id, $terms, $tt_ids, $taxonomy) {
+    if ($taxonomy === 'kategori_drone') {
+        fds_purge_drone_catalog_caches();
+    }
+}, 10, 4);
 
 /**
  * Identify normalized model key from post ID/slug/title
@@ -1203,9 +1515,8 @@ function fds_generate_drone_seo_content($post_id) {
     if (!empty($guide['faqs'])) {
         $html[] = '<h2>Pertanyaan Teknis Seputar ' . esc_html($model_base) . '</h2>';
         $html[] = '<div class="fds-seo-faq-group">';
-        foreach ($guide['faqs'] as $idx => $faq) {
-            $open_attr = $idx === 0 ? ' open' : '';
-            $html[]    = '<details class="fds-faq-item"' . $open_attr . '>';
+        foreach ($guide['faqs'] as $faq) {
+            $html[]    = '<details class="fds-faq-item">';
             $html[]    = '<summary>' . esc_html($faq['q']) . '</summary>';
             $html[]    = '<div class="faq-answer"><p>' . esc_html($faq['a']) . '</p></div>';
             $html[]    = '</details>';
@@ -2135,8 +2446,30 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             $drone['tagline'] = $get_meta('drone_tagline');
         }
 
-        $cpt_specs_raw = $get_meta('drone_specs_raw');
-        if ($cpt_specs_raw) {
+        $specs_raw_exists = metadata_exists('post', $source_id, 'drone_specs_raw');
+        $cpt_specs_raw    = $get_meta('drone_specs_raw');
+        $spec_kapasitas   = metadata_exists('post', $source_id, 'drone_spec_kapasitas') ? $get_meta('drone_spec_kapasitas') : $get_meta('drone_kapasitas');
+        $spec_baterai     = metadata_exists('post', $source_id, 'drone_spec_baterai') ? $get_meta('drone_spec_baterai') : $get_meta('drone_baterai');
+        $spec_prod        = metadata_exists('post', $source_id, 'drone_spec_produktivitas') ? $get_meta('drone_spec_produktivitas') : $get_meta('drone_cakupan');
+        $spec_fields      = [
+            'Payload'                   => $spec_kapasitas,
+            'Durasi Terbang'            => $get_meta('drone_spec_durasi'),
+            'Sistem Daya (Baterai)'     => $spec_baterai,
+            'Produktivitas / Jangkauan' => $spec_prod,
+            'Kecepatan Jelajah'         => $get_meta('drone_spec_kecepatan'),
+            'Ketahanan Lingkungan'      => $get_meta('drone_spec_ketahanan'),
+            'Sistem Otonomi & Navigasi' => $get_meta('drone_spec_otonomi'),
+            'Ground Control Station'    => $get_meta('drone_spec_gcs'),
+            'Sertifikasi & Standar'     => $get_meta('drone_spec_sertifikasi'),
+        ];
+        $custom_specs = [];
+        foreach ($spec_fields as $lbl => $val) {
+            if ($val) {
+                $custom_specs[] = [$lbl, $val];
+            }
+        }
+
+        if ($specs_raw_exists) {
             $parsed_specs = [];
             $lines        = explode("\n", (string) $cpt_specs_raw);
             foreach ($lines as $line) {
@@ -2149,38 +2482,20 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             }
             if (!empty($parsed_specs)) {
                 $drone['specs'] = $parsed_specs;
-            }
-        }
-
-        if (empty($drone['specs'])) {
-            $spec_fields = [
-                'Payload'                   => $get_meta('drone_spec_kapasitas') ?: $get_meta('drone_kapasitas'),
-                'Durasi Terbang'            => $get_meta('drone_spec_durasi'),
-                'Sistem Daya (Baterai)'     => $get_meta('drone_spec_baterai') ?: $get_meta('drone_baterai'),
-                'Produktivitas / Jangkauan' => $get_meta('drone_spec_produktivitas') ?: $get_meta('drone_cakupan'),
-                'Kecepatan Jelajah'         => $get_meta('drone_spec_kecepatan'),
-                'Ketahanan Lingkungan'      => $get_meta('drone_spec_ketahanan'),
-                'Sistem Otonomi & Navigasi' => $get_meta('drone_spec_otonomi'),
-                'Ground Control Station'    => $get_meta('drone_spec_gcs'),
-                'Sertifikasi & Standar'     => $get_meta('drone_spec_sertifikasi'),
-            ];
-            $custom_specs = [];
-            foreach ($spec_fields as $lbl => $val) {
-                if ($val) {
-                    $custom_specs[] = [$lbl, $val];
-                }
-            }
-            if (!empty($custom_specs)) {
+            } elseif (!empty($custom_specs)) {
                 $drone['specs'] = $custom_specs;
+            } else {
+                // Respect intentional clearing of all specs in WP Admin
+                $drone['specs'] = [];
             }
+        } elseif (!empty($custom_specs)) {
+            $drone['specs'] = $custom_specs;
         }
 
-        $cpt_for = $get_meta('drone_for');
-        if ($cpt_for) {
-            $parsed_for = array_filter(array_map('trim', explode("\n", (string) $cpt_for)));
-            if (!empty($parsed_for)) {
-                $drone['for'] = $parsed_for;
-            }
+        $for_exists = metadata_exists('post', $source_id, 'drone_for');
+        $cpt_for    = $get_meta('drone_for');
+        if ($for_exists) {
+            $drone['for'] = array_values(array_filter(array_map('trim', explode("\n", (string) $cpt_for))));
         }
 
         if (empty($drone['for'])) {
@@ -2279,21 +2594,13 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
         for ($sIdx = 1; $sIdx <= 4; $sIdx++) {
             $stNumKey = "stat{$sIdx}_num";
             $stLblKey = "stat{$sIdx}_lbl";
-            if (!empty($drone[$stLblKey])) {
-                $stVal = trim((string) $drone[$stLblKey]);
-                if (
-                    $stVal === 'Kapasitas Tangki' ||
-                    $stVal === 'Kapasitas Tangki / Payload' ||
-                    $stVal === 'Kapasitas Payload' ||
-                    stripos($stVal, 'kapasitas tangki') === 0 ||
-                    stripos($stVal, 'kapasitas payload') === 0
-                ) {
-                    $drone[$stLblKey] = 'Payload';
-                }
-            }
             $drone[$stNumKey] = $scrub_fn($drone[$stNumKey] ?? '');
             $drone[$stLblKey] = $scrub_fn($drone[$stLblKey] ?? '');
-            if ($modelKey === 'ferto-15l' && stripos((string) $drone[$stLblKey], 'Payload') !== false && stripos((string) $drone[$stNumKey], '15') !== false) {
+            if (
+                $modelKey === 'ferto-15l' &&
+                (stripos((string) $drone[$stLblKey], 'Payload') !== false || stripos((string) $drone[$stLblKey], 'Kapasitas Tangki') !== false) &&
+                stripos((string) $drone[$stNumKey], '15') !== false
+            ) {
                 $drone[$stNumKey] = '17 L';
             }
         }
@@ -2477,8 +2784,8 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             return $fallback_url;
         };
 
-        $op1 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_144352_462.jpg', $img_base . 'site/engineer-ops.webp');
-        $op2 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_143749_417.jpg', $img_base . 'site/workshop-deltav.webp');
+        $op1 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_144352_462-1024x768.jpg', $check_upload('wp-content/uploads/2026/08/IMG_20260820_144352_462.jpg', $img_base . 'site/engineer-ops.webp'));
+        $op2 = $check_upload('wp-content/uploads/2026/08/IMG_20260820_143749_417-1024x768.jpg', $check_upload('wp-content/uploads/2026/08/IMG_20260820_143749_417.jpg', $img_base . 'site/workshop-deltav.webp'));
 
         if ($isFerto) {
             $gallery = [
@@ -2506,11 +2813,42 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             ];
         }
 
-        // Split specs -> Top 4 KPI strip + remaining details
-        $raw_specs = is_array($drone['specs'] ?? null) ? $drone['specs'] : [];
-        $stats4 = [];
+        // Override default gallery with WP Admin Section 5 (Galeri Uji Lapangan) when populated
+        $g_source_id = $preview_id ?: $post_id;
+        if (get_post_meta($g_source_id, 'drone_gallery_customized', true) === '1') {
+            $custom_gallery = [];
+            for ($gi = 1; $gi <= 3; $gi++) {
+                $g_img = trim(fds_clean_string((string) get_post_meta($g_source_id, "drone_gallery_{$gi}_img", true)));
+                $g_cap = trim(fds_clean_string((string) get_post_meta($g_source_id, "drone_gallery_{$gi}_cap", true)));
+                if (function_exists('\App\fds_scrub_legacy_text')) {
+                    $g_cap = fds_scrub_legacy_text($g_cap);
+                }
+                if ($g_img !== '') {
+                    $custom_gallery[] = [
+                        'url'     => esc_url_raw($g_img),
+                        'caption' => $g_cap !== '' ? $g_cap : ($name . ' — Dokumentasi Lapangan ' . $gi),
+                    ];
+                }
+            }
+            $gallery = $custom_gallery;
+        } else {
+            for ($gi = 1; $gi <= 3; $gi++) {
+                $g_img = trim(fds_clean_string((string) get_post_meta($g_source_id, "drone_gallery_{$gi}_img", true)));
+                $g_cap = trim(fds_clean_string((string) get_post_meta($g_source_id, "drone_gallery_{$gi}_cap", true)));
+                $idx   = $gi - 1;
+                if ($g_img !== '' && isset($gallery[$idx])) {
+                    $gallery[$idx]['url'] = esc_url_raw($g_img);
+                }
+                if ($g_cap !== '' && isset($gallery[$idx])) {
+                    $gallery[$idx]['caption'] = function_exists('\App\fds_scrub_legacy_text') ? fds_scrub_legacy_text($g_cap) : $g_cap;
+                }
+            }
+        }
+
+        // Clean technical specifications -> full table in $specs_rest; Top 4 KPI strip prefers WP Admin stat1..4
+        $raw_specs  = is_array($drone['specs'] ?? null) ? $drone['specs'] : [];
         $specs_rest = [];
-        foreach ($raw_specs as $idx => $pair) {
+        foreach ($raw_specs as $pair) {
             if (!is_array($pair) || count($pair) < 2) {
                 continue;
             }
@@ -2522,17 +2860,14 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             if ($val === '' || preg_match('/^(?:resmi|standar\s*resmi|sertifikat\s*resmi|-|—|\s)*$/i', $val)) {
                 continue;
             }
-            if (count($stats4) < 4) {
-                $stats4[] = ['num' => $val, 'lbl' => $lbl];
-            } else {
-                $specs_rest[] = [$lbl, $val];
-            }
+            $specs_rest[] = [$lbl, $val];
         }
-        // Fallback stats1..4 if specs fewer than 4
-        for ($si = 1; $si <= 4 && count($stats4) < 4; $si++) {
+
+        $stats4 = [];
+        for ($si = 1; $si <= 4; $si++) {
             $sNum = trim(fds_clean_string((string) ($drone["stat{$si}_num"] ?? '')));
             $sLbl = trim(fds_clean_string((string) ($drone["stat{$si}_lbl"] ?? '')));
-            if ($sNum !== '' && $sLbl !== '') {
+            if ($sNum !== '' || $sLbl !== '') {
                 $stats4[] = ['num' => $sNum, 'lbl' => $sLbl];
             }
         }
@@ -2547,12 +2882,35 @@ if (!function_exists('\App\fds_get_drone_detail_data')) {
             ($isFerto && !$hasSni && stripos($raw_guide_body, 'SNI 9199:2023') !== false)
         );
 
-        $structured = fds_get_drone_model_guide_and_faqs($post_id);
+        $structured    = fds_get_drone_model_guide_and_faqs($post_id);
+        $faq_source_id = $preview_id ?: $post_id;
+        if (get_post_meta($faq_source_id, 'drone_faq_customized', true) === '1') {
+            $custom_faqs = [];
+            for ($fi = 1; $fi <= 5; $fi++) {
+                $fq = trim(fds_clean_string((string) get_post_meta($faq_source_id, "drone_faq_{$fi}_q", true)));
+                $fa = trim(fds_clean_string((string) get_post_meta($faq_source_id, "drone_faq_{$fi}_a", true)));
+                if (function_exists('\App\fds_scrub_legacy_text')) {
+                    $fq = fds_scrub_legacy_text($fq);
+                    $fa = fds_scrub_legacy_text($fa);
+                }
+                if ($fq !== '' && $fa !== '') {
+                    $custom_faqs[] = ['q' => $fq, 'a' => $fa];
+                }
+            }
+            $structured['faqs'] = $custom_faqs;
+        }
         $guide_html = '';
         if ($raw_guide_body !== '' && !$has_legacy_marker) {
             $guide_html = apply_filters('the_content', $raw_guide_body);
             if (is_string($guide_html) && $guide_html !== '') {
                 $guide_html = preg_replace('/<(\/?)h1\b/i', '<$1h2', $guide_html);
+                // FAQ sudah dirender statis di bagian FAQ; buang salinan accordion
+                // dari body panduan — tanpa duplikasi, tanpa dropdown.
+                $guide_html = preg_replace(
+                    '/<h2>Pertanyaan Teknis Seputar[^<]*<\/h2>\s*<div class="fds-seo-faq-group">\s*(?:<details\b[^>]*>.*?<\/details>\s*)*<\/div>/is',
+                    '',
+                    $guide_html
+                );
             }
         }
 

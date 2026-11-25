@@ -3839,6 +3839,8 @@ function fds_purge_ai_and_seo_caches(bool $purge_litespeed = true, bool $immedia
             'fds_mega_menu_data',
             'fds_mega_menu_data_v2',
             'fds_mega_menu_data_v3',
+            'fds_mega_menu_data_v4',
+            'fds_mega_menu_data_v5',
             'fds_bandingkan_catalog_cache',
             'fds_bandingkan_catalog_cache_v2',
             'fds_bandingkan_catalog_cache_v3',

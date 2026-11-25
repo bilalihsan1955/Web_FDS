@@ -25,7 +25,7 @@
       $s = function_exists('fds_clean_string') ? fds_clean_string($s) : html_entity_decode(wp_specialchars_decode($s, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
       return function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($s) : $s;
   };
-  $arrow_svg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>';
+  $arrow_svg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>';
   $chev_svg  = '<svg class="fds-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 9l-7 7-7-7"/></svg>';
 @endphp
 
@@ -69,21 +69,13 @@
        data-no-lazy="1">
   <div class="fds-cinema-scrim"></div>
   <div class="fds-container">
-    <div class="fds-cinema-content">
-      <h1 class="fds-h1" style="margin-bottom:20px;">
+    <div class="fds-cinema-content fds-hero-entrance fds-hero-delay-1">
+      <h1 class="fds-h1 fds-h1--soft" style="margin-bottom:20px;">
         {{ $cln($cat['h1'] ?? ($cat['short_title'] ?? '')) }}
       </h1>
       @if(!empty($cat['hero_summary']))
-        <p class="fds-lead" style="margin-bottom:32px;">{{ $cln($cat['hero_summary']) }}</p>
+        <p class="fds-lead">{{ $cln($cat['hero_summary']) }}</p>
       @endif
-      <div class="fds-btn-group">
-        <a href="{!! esc_url($kontak_form_url) !!}" class="fds-btn fds-btn--white-teal">
-          {{ $cln($p_join((string) ($ui['kat_cta_primary_prefix'] ?? 'Minta Penawaran'), (string) ($cat['short_title'] ?? ''))) }}
-        </a>
-        <a href="{!! esc_url($wa_cta_url) !!}" target="_blank" rel="noopener noreferrer" class="fds-btn fds-btn--whatsapp">
-          {{ $cln($ui['cta_wa_text'] ?? 'Konsultasi via WhatsApp') }}
-        </a>
-      </div>
     </div>
   </div>
 </section>
@@ -92,13 +84,13 @@
 <section class="fds-sec fds-bg-white">
   <div class="fds-container">
     <div class="fds-story-split">
-      <div>
+      <div data-aos="fade-up">
         <h2 class="fds-h2" style="margin-bottom:18px;">
           {{ $cln($p_join((string) ($ui['kat_intro_heading_prefix'] ?? 'Tentang'), (string) ($cat['short_title'] ?? ''))) }}
         </h2>
         <p class="fds-lead">{{ $lead_intro }}</p>
       </div>
-      <figure class="fds-media-stage">
+      <figure class="fds-media-stage" data-aos="fade-up" data-aos-delay="90">
         <img src="{!! esc_url($vis['story_img'] ?? '') !!}" alt="{{ $cln($cat['short_title'] ?? 'Layanan') }} — Operasi Lapangan FDS" loading="lazy" decoding="async" width="1200" height="750">
       </figure>
     </div>
@@ -109,10 +101,13 @@
 @if(!empty($cat['capabilities']))
 <section id="kapabilitas" class="fds-sec fds-bg-light scroll-mt-24">
   <div class="fds-container">
-    <div class="fds-sec-head">
-      <h2 class="fds-h2">{{ $cln($ui['kat_cap_heading'] ?? 'Kapabilitas & Ruang Lingkup Layanan') }}</h2>
+    <div class="fds-sec-intro" data-aos="fade-up">
+      <div>
+        <p class="fds-intro-label">{{ $cln($ui['kat_cap_eyebrow'] ?? 'Ruang Lingkup') }}</p>
+        <h2 class="fds-h2">{{ $cln($ui['kat_cap_heading'] ?? 'Kapabilitas & Ruang Lingkup Layanan') }}</h2>
+      </div>
     </div>
-    <div class="fds-scope-grid">
+    <div class="fds-scope-grid" data-reveal-group data-reveal-step="70" data-reveal-modulo="2">
       @foreach($cat['capabilities'] as $cap)
         <article class="fds-hairline-row">
           <h3 class="fds-h3">{{ $cln($cap['name'] ?? '') }}</h3>
@@ -124,42 +119,46 @@
 </section>
 @endif
 
-{{-- 4. OUTPUT & DELIVERABLES (OCEAN-TEAL WAVE BAND) --}}
+{{-- 4. OUTPUT & ALUR KERJA (QUIET TEAL WAVE + PROCESS RAIL) --}}
 @if(!empty($cat['outputs']) || !empty($cat['workflow_steps']))
 <section class="fds-sec fds-bg-teal">
-  <x-fds-wave type="fluid" :uid="'kat-wf-' . $cat_slug" />
-  <div class="fds-container fds-sticky-split">
-    <div class="fds-sticky-col">
-      <h2 class="fds-h2" style="margin-bottom:14px;">{{ $cln($ui['kat_outputs_heading'] ?? 'Output & Deliverables Utama') }}</h2>
-      @if(!empty($cat['outputs']))
-        <ul style="margin:16px 0 0;padding-left:20px;display:grid;gap:8px;">
-          @foreach($cat['outputs'] as $out)
-            <li class="fds-body">{{ $cln($out) }}</li>
-          @endforeach
-        </ul>
-      @endif
-      @if(!empty($vis['cutout']))
-        <div class="fds-hardware-cutout">
-          <img src="{!! esc_url($vis['cutout']) !!}" alt="Armada UAV {{ $cln($cat['short_title'] ?? 'FDS') }}" loading="lazy" decoding="async" width="1148" height="559">
-        </div>
-      @endif
+  <x-fds-wave type="quiet" :uid="'kat-wf-' . $cat_slug" />
+  <div class="fds-container">
+    <div class="fds-sec-intro" data-aos="fade-up">
+      <div>
+        <p class="fds-intro-label">{{ $cln($ui['kat_workflow_eyebrow'] ?? 'Standar Pelaksanaan') }}</p>
+        <h2 class="fds-h2">{{ $cln($ui['kat_outputs_heading'] ?? 'Output & Deliverables Utama') }}</h2>
+      </div>
     </div>
-    @if(!empty($cat['workflow_steps']))
-      <div class="fds-faq-list">
-        @foreach($cat['workflow_steps'] as $ws)
-          <details class="fds-faq-row">
-            <summary class="fds-faq-summary">
-              <span>
-                <strong class="fds-num" style="margin-right:12px;">Tahap {{ $cln($ws['step'] ?? '') }}</strong>
-                {{ $cln($ws['title'] ?? '') }}
-              </span>
-              {!! $chev_svg !!}
-            </summary>
-            <div class="fds-faq-body fds-prose">
-              <p class="fds-body" style="margin:0;">{{ $cln($ws['desc'] ?? '') }}</p>
-            </div>
-          </details>
+
+    @if(!empty($cat['outputs']))
+      <ul data-aos="fade-up" data-aos-delay="70" style="margin:0;padding-left:20px;display:grid;gap:8px;">
+        @foreach($cat['outputs'] as $out)
+          <li class="fds-body">{{ $cln($out) }}</li>
         @endforeach
+      </ul>
+    @endif
+
+    @if(!empty($cat['workflow_steps']))
+      <h3 data-aos="fade-up" class="fds-h3" style="margin:40px 0 20px;">
+        {{ $cln($p_join((string) ($ui['kat_workflow_heading_prefix'] ?? 'Alur Kerja & Kontrol Kualitas'), (string) ($cat['short_title'] ?? ''))) }}
+      </h3>
+      <div class="fds-process-block">
+        <div class="fds-process-rail" data-reveal-group data-reveal-step="80">
+          @foreach($cat['workflow_steps'] as $ws)
+            <div class="fds-process-step">
+              <p class="fds-process-step-label">Tahap {{ $cln($ws['step'] ?? '') }}</p>
+              <p class="fds-process-step-title">{{ $cln($ws['title'] ?? '') }}</p>
+              <p class="fds-body">{{ $cln($ws['desc'] ?? '') }}</p>
+            </div>
+          @endforeach
+        </div>
+      </div>
+    @endif
+
+    @if(!empty($vis['cutout']))
+      <div class="fds-hardware-cutout" data-aos="zoom-in" style="margin-top:40px;">
+        <img src="{!! esc_url($vis['cutout']) !!}" alt="Armada UAV {{ $cln($cat['short_title'] ?? 'FDS') }}" loading="lazy" decoding="async" width="1148" height="559">
       </div>
     @endif
   </div>
@@ -168,78 +167,63 @@
 
 {{-- 5. METODE & BIAYA --}}
 @if(!empty($cat['method_comparison']['columns']) || !empty($cat['cost_framework']))
-<section class="fds-sec fds-bg-white">
-  <div class="fds-container fds-sticky-split">
-    <div class="fds-sticky-col">
-      @if(!empty($cat['cost_framework']))
-        @php $cf = $cat['cost_framework']; @endphp
-        <h2 class="fds-h2" style="margin-bottom:14px;">{{ $cln($cf['title'] ?? 'Faktor Penentu Biaya Proyek') }}</h2>
-        @if(!empty($cf['intro']))
-          <p class="fds-lead" style="margin-bottom:24px;">{{ $cln($cf['intro']) }}</p>
+@php
+  $cf = $cat['cost_framework'] ?? [];
+  $mc = $cat['method_comparison'] ?? [];
+@endphp
+<section class="fds-sec fds-bg-light">
+  <div class="fds-container">
+    <div class="fds-sec-intro" data-aos="fade-up">
+      <div>
+        @if(!empty($cf))
+          <p class="fds-intro-label">{{ $cln($cf['eyebrow'] ?? 'Perencanaan Anggaran') }}</p>
+          <h2 class="fds-h2">{{ $cln($cf['title'] ?? 'Faktor Penentu Biaya Proyek') }}</h2>
+        @elseif(!empty($mc['title']))
+          <h2 class="fds-h2">{{ $cln($mc['title']) }}</h2>
         @endif
-        <a href="{!! esc_url($kontak_form_url) !!}" class="fds-btn fds-btn--primary">
-          {{ $cln($ui['kat_cost_cta_text'] ?? 'Kirim rincian kebutuhan untuk estimasi penawaran') }}
-        </a>
-      @elseif(!empty($cat['method_comparison']['title']))
-        <h2 class="fds-h2">{{ $cln($cat['method_comparison']['title']) }}</h2>
-      @endif
-    </div>
-    <div>
-      @if(!empty($cat['cost_framework']['factors']))
-        <div class="fds-faq-list">
-          @foreach($cat['cost_framework']['factors'] as $fac)
-            <details class="fds-faq-row">
-              <summary class="fds-faq-summary"><span>{{ $cln($fac['name'] ?? '') }}</span> {!! $chev_svg !!}</summary>
-              <div class="fds-faq-body fds-prose"><p class="fds-body" style="margin:0;">{{ $cln($fac['desc'] ?? '') }}</p></div>
-            </details>
-          @endforeach
+      </div>
+      @if(!empty($cf))
+        <div>
+          @if(!empty($cf['intro']))
+            <p class="fds-body" style="margin:0 0 16px;">{{ $cln($cf['intro']) }}</p>
+          @endif
+          <a href="{!! esc_url($kontak_form_url) !!}" class="fds-btn fds-btn--primary">
+            <span>{{ $cln($ui['kat_cost_cta_text'] ?? 'Kirim rincian kebutuhan untuk estimasi penawaran') }}</span>
+            {!! $arrow_svg !!}
+          </a>
         </div>
       @endif
-
-      @if(!empty($cat['method_comparison']['columns']) && !empty($cat['method_comparison']['rows']))
-        @php $mc = $cat['method_comparison']; @endphp
-        <details class="fds-quiet-details">
-          <summary class="fds-quiet-summary">Lihat tabel perbandingan metode ({!! $cln($mc['title'] ?? 'Perbandingan Metode') !!}) {!! $chev_svg !!}</summary>
-          <div class="fds-quiet-body">
-            <div class="fds-table-wrap">
-              <table class="fds-table">
-                <thead>
-                  <tr>
-                    @foreach($mc['columns'] as $colTitle)
-                      <th scope="col">{{ $cln($colTitle) }}</th>
-                    @endforeach
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($mc['rows'] as $row)
-                    <tr>
-                      @foreach($row as $cIdx => $cell)
-                        <td @if($cIdx === 0) style="font-weight:600;color:var(--fds-ink-primary);" @endif>{{ $cln($cell) }}</td>
-                      @endforeach
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </details>
-      @endif
     </div>
+
+    @if(!empty($cf['factors']))
+      <div class="fds-definition-list" data-reveal-group data-reveal-step="70">
+        @foreach($cf['factors'] as $fac)
+          <div class="fds-definition-row">
+            <h3>{{ $cln($fac['name'] ?? '') }}</h3>
+            <p class="fds-body">{{ $cln($fac['desc'] ?? '') }}</p>
+          </div>
+        @endforeach
+      </div>
+    @endif
+
   </div>
 </section>
 @endif
 
 {{-- 6. PENERAPAN DI SEKTOR INDUSTRI (SEQUENTIAL DYNAMIC NUMBERING PRESERVED) --}}
 @if(!empty($cat['sector_links']))
-<section class="fds-sec fds-bg-light">
+<section class="fds-sec fds-bg-white">
   <div class="fds-container">
-    <div class="fds-sec-head fds-sec-head--split">
+    <div class="fds-sec-head fds-sec-head--split" data-aos="fade-up">
       <div><h2 class="fds-h2">{{ $cln($ui['kat_sectors_heading'] ?? 'Penerapan di Sektor Industri') }}</h2></div>
       <div>
-        <a href="{!! esc_url(home_url('/layanan/')) !!}" class="fds-text-link">Semua Layanan FDS {!! $arrow_svg !!}</a>
+        <a href="{!! esc_url(home_url('/layanan/')) !!}" class="fds-btn fds-btn--primary">
+          <span>Semua Layanan FDS</span>
+          {!! $arrow_svg !!}
+        </a>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-9">
+    <div class="fds-hairline-list" data-reveal-group data-reveal-step="70">
       @php $relSecCounter = 0; @endphp
       @foreach($cat['sector_links'] as $sec_slug)
         @if(!empty($sectors[$sec_slug]))
@@ -248,14 +232,14 @@
             $relSecCounter++;
             $rel_sec_num = str_pad((string) $relSecCounter, 2, '0', STR_PAD_LEFT);
           @endphp
-          <article class="pt-5 border-t-2 border-[#0f808a] relative group">
-            <p class="fds-caption fds-num" style="margin:0 0 6px;color:var(--color-teal-800);font-weight:600;">{{ $rel_sec_num }}</p>
-            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;">
-              <h3 class="fds-h3">
+          <article class="fds-hairline-row fds-hairline-row--split fds-hairline-row--interactive">
+            <div style="display:flex;align-items:baseline;gap:14px;">
+              <span class="fds-num" style="color:var(--color-teal-800);font-weight:600;">{{ $rel_sec_num }}</span>
+              <h3 class="fds-h3" style="margin:0;">
                 <a href="{!! esc_url($rel_sec['url']) !!}" class="fds-stretched-link" style="color:var(--fds-ink-primary);">{{ $cln($rel_sec['card_title']) }}</a>
               </h3>
-              <span class="fds-icon-cue" aria-hidden="true">{!! $arrow_svg !!}</span>
             </div>
+            <span class="fds-icon-cue" aria-hidden="true">{!! $arrow_svg !!}</span>
             <p class="fds-caption" style="margin:0;">{{ $cln($rel_sec['card_desc']) }}</p>
           </article>
         @endif
@@ -267,11 +251,12 @@
 
 {{-- 7. GALERI DOKUMENTASI LAPANGAN --}}
 @if(!empty($gallery_items))
-<section id="galeri" class="fds-sec fds-bg-white scroll-mt-24">
+@php
+  $kat_galeri_cls = !empty($cat['faqs']) ? 'fds-bg-light' : 'fds-bg-white';
+@endphp
+<section id="galeri" class="fds-sec {{ $kat_galeri_cls }} scroll-mt-24">
   <div class="fds-container">
-    <div class="fds-sec-head">
-      <h2 class="fds-h2">Dokumentasi Lapangan &amp; Operasi Teknis.</h2>
-    </div>
+    <h2 data-aos="fade-up" class="fds-h2" style="margin-bottom:28px;">Dokumentasi Lapangan &amp; Operasi Teknis</h2>
     <x-fds-gallery :items="$gallery_items" variant="bento" />
   </div>
 </section>
@@ -282,57 +267,8 @@
   :title="$p_join((string) ($ui['kat_faq_prefix'] ?? 'Pertanyaan Umum:'), (string) ($cat['short_title'] ?? 'Layanan'))"
   :subtitle="$ui['kat_faq_subtitle'] ?? 'Penjelasan teknis, format file keluaran, dan informasi yang dapat Anda konsultasikan bersama tim FDS.'"
   :faqs="$cat['faqs'] ?? []"
-  sectionBg="gray"
+  sectionBg="white"
 />
-
-{{-- 9. QUIET FOOTNOTE REFERENCE BAND --}}
-@if(!empty($extra_intros) || !empty($cat['challenge_section']) || !empty($cat['software_integrations']) || !empty($cat['eeat_proof']))
-<section class="fds-footnote-band" aria-label="Referensi Teknis {{ $cln($cat['short_title'] ?? '') }}">
-  <div class="fds-container">
-    <details class="fds-quiet-details" style="margin-top:0;">
-      <summary class="fds-quiet-summary">Referensi Teknis &amp; Standar Operasional {!! $chev_svg !!}</summary>
-      <div class="fds-quiet-body fds-prose">
-        @foreach($extra_intros as $ep)
-          <p class="fds-body" style="margin-bottom:10px;">{{ $cln($ep) }}</p>
-        @endforeach
-        @if(!empty($cat['challenge_section']))
-          @php $ch = $cat['challenge_section']; @endphp
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($ch['title'] ?? '') }}</h2>
-          @foreach($ch['paragraphs'] ?? [] as $cp)
-            <p class="fds-body" style="margin-bottom:8px;">{{ $cln($cp) }}</p>
-          @endforeach
-        @endif
-        @if(!empty($cat['software_integrations']))
-          @php $si = $cat['software_integrations']; @endphp
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($si['title'] ?? 'Format File & Kompatibilitas') }}</h2>
-          @if(!empty($si['formats']))
-            <ul style="margin:0 0 10px;padding-left:20px;display:grid;gap:4px;">
-              @foreach($si['formats'] as $fmt)<li class="fds-body">{{ $cln($fmt) }}</li>@endforeach
-            </ul>
-          @endif
-        @endif
-        @if(!empty($cat['eeat_proof']))
-          @php $ep = $cat['eeat_proof']; @endphp
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($ep['title'] ?? 'Standar Kualitas & Manufaktur FDS') }}</h2>
-          @if(!empty($ep['intro']))<p class="fds-body" style="margin-bottom:8px;">{{ $cln($ep['intro']) }}</p>@endif
-          @if(!empty($ep['bullets']))
-            <ul style="margin:0 0 10px;padding-left:20px;display:grid;gap:4px;">
-              @foreach($ep['bullets'] as $eb)<li class="fds-body">{{ $cln($eb) }}</li>@endforeach
-            </ul>
-          @endif
-        @endif
-        @if(!empty($resolved_reading_links))
-          <ul style="margin:8px 0 0;padding-left:20px;display:grid;gap:4px;">
-            @foreach($resolved_reading_links as $rl)
-              <li><a href="{!! esc_url($rl['url']) !!}" style="color:var(--color-teal-800);">{{ $rl['label'] }}</a></li>
-            @endforeach
-          </ul>
-        @endif
-      </div>
-    </details>
-  </div>
-</section>
-@endif
 
 @endif
 

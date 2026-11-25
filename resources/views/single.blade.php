@@ -24,9 +24,9 @@
     <article>
 
       {{-- Header --}}
-      <header class="max-w-[1100px] mx-auto px-6 lg:px-12 pt-14 pb-10 text-center">
-        <p class="text-[13px] font-medium text-[#86868b] mb-4 fds-hero-entrance fds-hero-delay-1">{{ get_the_date('j F Y') }}</p>
-        <h1 class="text-[38px] sm:text-[54px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] fds-hero-entrance fds-hero-delay-2">{{ $single_title_clean }}</h1>
+      <header class="max-w-[960px] mx-auto px-6 lg:px-12 pt-14 pb-10 text-center">
+        <p class="text-[13.5px] font-medium text-[#5c5e63] mb-4 fds-hero-entrance fds-hero-delay-1">{{ get_the_date('j F Y') }}</p>
+        <h1 class="text-[36px] sm:text-[50px] font-semibold tracking-[-0.025em] text-[#1d1d1f] leading-[1.12] fds-hero-entrance fds-hero-delay-2">{{ $single_title_clean }}</h1>
       </header>
 
       {{-- Featured image --}}
@@ -52,10 +52,10 @@
         </div>
       @endif
 
-      {{-- Article body --}}
-      <x-reveal :delay="200" class="max-w-[1100px] mx-auto px-6 lg:px-12">
+      {{-- Article body (Optimal 65ch reading measure) --}}
+      <x-reveal :delay="200" class="max-w-[760px] mx-auto px-6 lg:px-8">
         <div class="prose max-w-none"
-             style="font-family: inherit; font-size: 18px; line-height: 1.8; color: #1d1d1f;">
+             style="font-family: inherit; font-size: 17.5px; line-height: 1.76; color: #374151;">
           @php
             $post_body_html = apply_filters('the_content', get_the_content());
             if (is_string($post_body_html) && $post_body_html !== '') {
@@ -92,15 +92,15 @@
 </div>
 
 <style>
-  .prose p { margin-bottom: 1.5em; }
-  .prose h2 { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; margin: 2em 0 0.75em; color: #1d1d1f; }
-  .prose h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5em 0 0.75em; color: #1d1d1f; }
-  .prose a { color: #0f808a; text-decoration: none; }
+  .prose p { margin-bottom: 1.5em; color: #374151; }
+  .prose h2 { font-family: var(--fds-font-display); font-size: 1.625rem; line-height: 1.24; font-weight: 600; letter-spacing: -0.02em; margin: 2.1em 0 0.75em; color: #1d1d1f; }
+  .prose h3 { font-family: var(--fds-font-display); font-size: 1.3125rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.01em; margin: 1.65em 0 0.7em; color: #1d1d1f; }
+  .prose a { color: #0f808a; font-weight: 500; text-decoration: none; }
   .prose a:hover { text-decoration: underline; }
-  .prose blockquote { border-left: 3px solid #d2d2d7; padding-left: 1.25rem; color: #515154; font-style: normal; margin: 2em 0; font-size: 1.1em; line-height: 1.6; }
-  .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.5em; }
-  .prose ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 1.5em; }
-  .prose li { margin-bottom: 0.5em; }
+  .prose blockquote { border-left: 3px solid #0f808a; padding-left: 1.25rem; color: #424245; font-style: normal; margin: 2em 0; font-size: 1.06em; line-height: 1.68; }
+  .prose ul { list-style: disc; padding-left: 1.5em; margin-bottom: 1.5em; color: #374151; }
+  .prose ol { list-style: decimal; padding-left: 1.5em; margin-bottom: 1.5em; color: #374151; }
+  .prose li { margin-bottom: 0.55em; line-height: 1.72; }
   .prose strong { font-weight: 600; color: #1d1d1f; }
   .prose img { border-radius: 1rem; margin: 2em 0; }
 </style>

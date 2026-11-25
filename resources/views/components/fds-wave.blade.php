@@ -49,6 +49,16 @@
   <path d="M-87.4837 43.4736C-65.1233 14.551 -71.703 -9.63438 27.815 2.49305C127.333 14.6205 180.184 94.5513 338.738 73.6039C402.333 65.2021 433.365 58.4269 447.725 53.3251L453.437 41.8199C453.437 41.8199 469.167 45.7069 447.725 53.3251L389.303 171L-53.1488 161.803C-53.1488 161.803 -110.695 73.4967 -87.4837 43.4736Z" fill="url(#{{ $safe_id }}-p2)"/>
   <path d="M52.5537 76.3607C17.9455 66.8521 -56.751 53.9736 -56.751 53.9736L-46.402 162.355L187.493 166.765C187.493 166.765 114.012 93.2462 52.5537 76.3607Z" fill="url(#{{ $safe_id }}-p3)"/>
 </svg>
+@elseif($type === 'quiet')
+<svg class="fds-wave-bg w-full h-full" viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="{{ $safe_id }}-q1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f808a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#052b2e" stop-opacity="0.72"/>
+    </linearGradient>
+  </defs>
+  <path d="M0,230 C320,270 680,390 1040,430 C1240,452 1360,444 1440,420 L1440,500 L0,500 Z" fill="url(#{{ $safe_id }}-q1)"/>
+</svg>
 @elseif($type === 'kontak')
 <svg class="fds-wave-bg w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>

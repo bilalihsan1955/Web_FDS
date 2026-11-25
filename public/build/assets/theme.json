@@ -1470,7 +1470,7 @@
         {
           "name": "sans",
           "slug": "sans",
-          "fontFamily": "-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Noto Sans, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji"
+          "fontFamily": "Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif"
         },
         {
           "name": "serif",
@@ -1480,7 +1480,12 @@
         {
           "name": "mono",
           "slug": "mono",
-          "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace"
+          "fontFamily": "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
+        },
+        {
+          "name": "display",
+          "slug": "display",
+          "fontFamily": "Archivo, Plus Jakarta Sans, -apple-system, BlinkMacSystemFont, sans-serif"
         }
       ],
       "fontSizes": [

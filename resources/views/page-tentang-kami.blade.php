@@ -99,13 +99,13 @@
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 pt-24 pb-0 relative z-10">
 
     <div class="max-w-[1140px] mx-auto text-center flex flex-col items-center">
-      <p class="text-[13px] sm:text-[14px] font-semibold text-white/80 tracking-wide mb-6 fds-hero-entrance fds-hero-delay-1">
+      <p class="text-[13.5px] sm:text-[14px] font-semibold text-white/85 tracking-wide leading-[1.6] mb-6 fds-hero-entrance fds-hero-delay-1">
         {{ $fds_about_scrub($about['hero_sub'] ?? 'PT Karya Solusi Angkasa (Full Drone Solutions) · Manufaktur UAV Nasional · Yogyakarta', true, false) }}
       </p>
-      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.04em] text-white leading-[1.04] max-w-[1080px] fds-hero-entrance fds-hero-delay-2">
+      <h1 class="text-[44px] sm:text-[60px] lg:text-[76px] font-semibold tracking-[-0.025em] text-white leading-[1.06] max-w-[1020px] fds-hero-entrance fds-hero-delay-2">
         {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_about_scrub($about['hero_title'] ?? "Advanced UAV Engineering,\nManufacturing & AI Technology.", false, false)))) !!}
       </h1>
-      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/80 max-w-[880px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
+      <p class="mt-7 text-[18px] sm:text-[20px] lg:text-[21px] text-white/90 max-w-[720px] mx-auto leading-[1.65] fds-hero-entrance fds-hero-delay-3">
         {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_about_scrub($about['hero_desc'] ?? 'Resmi berbadan hukum PT Karya Solusi Angkasa pada 2019 di Sleman, Yogyakarta. Kami merancang desain aerodinamis, sistem avionik in-house, rangka karbon komposit lokal, serta analitik AI untuk kemandirian teknologi udara Indonesia.', true, false)))) !!}
       </p>
     </div>
@@ -191,10 +191,10 @@
       @foreach($about_stats_list as $ast)
       <div>
         @if(!empty($ast['num']))
-        <p class="text-[44px] font-semibold tracking-[-0.04em] text-white">{{ $ast['num'] }}</p>
+        <p class="font-display tabular-nums text-[44px] font-semibold tracking-[-0.04em] text-white">{{ $ast['num'] }}</p>
         @endif
         @if(!empty($ast['lbl']))
-        <p class="text-[13px] font-medium text-white/75 mt-1">{{ $ast['lbl'] }}</p>
+        <p class="text-[14px] font-medium text-white/85 mt-1.5 leading-snug">{{ $ast['lbl'] }}</p>
         @endif
       </div>
       @endforeach
@@ -233,7 +233,7 @@
       </x-reveal>
 
       {{-- Right: story text (Dikelola terpusat satu pintu via menu Konten Tentang Kami / About FDS) --}}
-      <x-reveal-group :step="70" class="space-y-8 text-[18px] text-[#515154] leading-[1.7]">
+      <x-reveal-group :step="70" class="space-y-7 text-[17.5px] sm:text-[18px] text-[#424245] leading-[1.75] max-w-[66ch]">
         @if (!empty($about['story_p1']))
           <p>{!! wp_kses_post($fds_about_scrub($about['story_p1'])) !!}</p>
         @endif
@@ -387,7 +387,7 @@
           <div class="py-8 grid grid-cols-1 sm:grid-cols-12 gap-3 sm:gap-6 items-start">
             <div class="sm:col-span-5">
               @if(!empty($act['cat']))
-              <p class="text-[12px] font-medium text-[#86868b] tracking-normal mb-1">{{ $fds_about_scrub($act['cat']) }}</p>
+              <p class="text-[13px] font-semibold text-[#5c5e63] tracking-normal mb-1.5">{{ $fds_about_scrub($act['cat']) }}</p>
               @endif
               <h3 class="text-[18px] font-semibold text-[#1d1d1f] leading-snug">{{ $fds_about_scrub($act['name']) }}</h3>
             </div>
@@ -762,7 +762,7 @@
           <p class="text-[13px] font-semibold text-white/70 tracking-wide mb-4 sm:mb-5">{{ $fds_about_scrub($about['cert1_badge'] ?? 'Kemenperin RI', true, false) }}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert1_val'] ?? '60,74%', true, false) }}</p>
+          <p class="font-display tabular-nums text-[56px] sm:text-[64px] lg:text-[72px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert1_val'] ?? '60,74%', true, false) }}</p>
           <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert1_desc'] ?? 'Nilai TKDN + Bobot Manfaat Perusahaan (BMP) Kemenperin RI untuk lini drone pertanian seri FERTO.', true, false) }}</p>
         </div>
       </div>
@@ -794,7 +794,7 @@
           <p class="text-[13px] font-semibold text-[#515154] tracking-wide mb-4 sm:mb-5">{{ $fds_about_scrub($about['cert2_badge'] ?? 'Standar Produk & Manajemen', false, true) }}</p>
         </div>
         <div class="relative z-10">
-          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-[#1d1d1f] tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert2_val'] ?? 'ISO & SNI', false, true) }}</p>
+          <p class="font-display tabular-nums text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-[#1d1d1f] tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($about['cert2_val'] ?? 'ISO & SNI', false, true) }}</p>
           <p class="text-[13.5px] sm:text-[14px] text-[#515154] mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert2_desc'] ?? 'Sistem manajemen mutu perusahaan ISO 9001:2015 (PT Karya Solusi Angkasa) dan standar produk SNI 9199:2023 pada FERTO 15 & FERTO 22.', false, true) }}</p>
         </div>
       </div>
@@ -832,7 +832,7 @@
           }
         @endphp
         <div class="relative z-10">
-          <p class="text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($tk_cert3_val) }}</p>
+          <p class="font-display tabular-nums text-[48px] sm:text-[54px] lg:text-[60px] font-bold text-white tracking-[-0.04em] leading-[0.92] mb-2">{{ $fds_about_scrub($tk_cert3_val) }}</p>
           <p class="text-[13.5px] sm:text-[14px] text-white/80 mt-2.5 leading-relaxed">{{ $fds_about_scrub($about['cert3_desc'] ?? 'Dukungan servis, suku cadang asli, dan sertifikasi pilot resmi di seluruh Indonesia.') }}</p>
         </div>
       </div>
@@ -909,17 +909,21 @@
             }
           @endphp
           <a href="{!! esc_url($tk_cta_btn1_url) !!}"
-             class="inline-flex items-center bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#1d1d1f] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-md">
-            {{ $fds_about_scrub($about['cta_btn1_text'] ?? 'Mulai Konsultasi') }}
+             class="group inline-flex items-center justify-center gap-2.5 min-h-[48px] bg-white hover:bg-[#f5f5f7] active:scale-[0.98] text-[#052b2e] hover:text-[#0a555c] text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-150 shadow-md leading-none">
+            <span>{{ $fds_about_scrub($about['cta_btn1_text'] ?? 'Mulai Konsultasi') }}</span>
+            <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
           </a>
           @php
             $btn2_label = $fds_about_scrub($about['cta_btn2_text'] ?? 'Baca Studi Kasus');
             $btn2_label = preg_replace('/(&rsaquo;|&gt;|&raquo;|›|>|»|\s)+$/u', '', $btn2_label);
           @endphp
           <a href="{!! esc_url($about['cta_btn2_url'] ?? home_url('/blog/')) !!}"
-             class="inline-flex items-center text-white/85 text-[16px] font-medium hover:text-white transition-colors gap-2 leading-none group">
+             class="inline-flex items-center text-white/90 text-[16px] font-medium hover:text-white hover:underline transition-colors gap-2 leading-none group">
             <span class="leading-none">{{ $btn2_label }}</span>
-            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
             </svg>

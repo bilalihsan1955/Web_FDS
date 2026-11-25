@@ -24,20 +24,20 @@
   $droneName   = $clean_bro($droneName);
   $cleanUrl    = trim((string) $fileUrl);
   $hasPdf      = ($cleanUrl !== '' && $cleanUrl !== '#');
-  $descPending = 'Permintaan brosur diterima. Tim teknis kami akan mengirimkan dokumen spesifikasi ' . $droneName . ' ke email Anda pada jam kerja.';
+  $pdfHref     = $hasPdf ? $cleanUrl : home_url('/kontak/#hubungi-form');
 @endphp
 
-<div class="bg-[#f5f5f7] rounded-3xl p-8 sm:p-10 border border-black/[0.08] shadow-sm">
+<div data-aos="fade-up" class="bg-[#f5f5f7] rounded-3xl p-8 sm:p-10 border border-black/[0.08] shadow-sm">
   <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-8 lg:gap-12">
     
     {{-- Left: Big Heading & Subtitle --}}
     <div class="max-w-2xl">
-      <h3 class="text-[26px] sm:text-[32px] lg:text-[36px] font-bold text-[#1d1d1f] tracking-tight leading-[1.18]">
+      <h3 class="text-[22px] sm:text-[26px] lg:text-[28px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.2]">
         {{ $title }}
       </h3>
       <p class="fds-brochure-desc-text text-[15px] sm:text-[17px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
          data-desc-initial="{{ $descInitial }}"
-         data-desc-ready="{{ $hasPdf ? $descReady : $descPending }}">
+         data-desc-ready="{{ $descReady }}">
         {{ $descInitial }}
       </p>
     </div>
@@ -67,34 +67,24 @@
                 id="fds-brochure-submit-btn" 
                 class="h-[54px] sm:h-[58px] px-8 sm:px-10 bg-[#1d1d1f] hover:bg-black active:scale-[0.98] text-white text-[15px] sm:text-[16px] font-semibold rounded-full flex items-center justify-center gap-2.5 transition-all duration-150 cursor-pointer whitespace-nowrap min-h-[44px] leading-none group">
           <span class="leading-none">{{ $submitText }}</span>
-          <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
         </button>
       </form>
 
-      {{-- STATE 2: TOMBOL DOWNLOAD AKTIF (Hanya dirender jika URL PDF valid, zero # anchor) --}}
+      {{-- STATE 2: TOMBOL DOWNLOAD AKTIF — selalu tersedia setelah email terverifikasi --}}
       <div id="fds-brochure-download-ready" class="hidden items-center" role="status" aria-live="polite">
-        @if($hasPdf)
-        <a id="fds-brochure-download-link" 
-           href="{!! esc_url($cleanUrl) !!}" 
-           target="_blank" 
-           rel="noopener noreferrer"
+        <a id="fds-brochure-download-link"
+           href="{!! esc_url($pdfHref) !!}"
+           @if($hasPdf) target="_blank" rel="noopener noreferrer" @endif
            class="inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer shadow-md shadow-black/15 min-h-[44px]">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
           </svg>
           <span>{{ $btnText }}</span>
         </a>
-        @else
-        <div id="fds-brochure-email-queued" class="inline-flex items-center gap-3 bg-[#e8fbfd] border border-[#0f808a]/25 text-[#052b2e] px-6 py-4 rounded-2xl text-[14.5px] font-medium">
-          <svg class="w-5 h-5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          <span>Permintaan tercatat. Brosur dikirim ke email Anda.</span>
-        </div>
-        @endif
       </div>
 
       {{-- Feedback message --}}
@@ -114,25 +104,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const descTexts = document.querySelectorAll('.fds-brochure-desc-text');
   const initialPdf = {!! wp_json_encode($hasPdf ? $cleanUrl : '') !!};
   const submitLabel = {!! wp_json_encode((string) $submitText) !!};
-  const btnTextLabel = {!! wp_json_encode((string) $btnText) !!};
   const ajaxEndpoint = {!! wp_json_encode(admin_url('admin-ajax.php')) !!};
 
   if (!form || !readyBox) return;
 
   function applyResolvedPdf(pdfUrl) {
-    if (!pdfUrl || pdfUrl === '#') return;
-    if (downloadLink) {
-      downloadLink.href = pdfUrl;
-      return;
-    }
-    const link = document.createElement('a');
-    link.id = 'fds-brochure-download-link';
-    link.href = pdfUrl;
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    link.className = 'inline-flex items-center justify-center gap-3 bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.98] text-white h-[54px] sm:h-[58px] px-10 sm:px-12 rounded-full font-semibold text-[15px] sm:text-[16px] transition-all duration-150 whitespace-nowrap cursor-pointer shadow-md shadow-black/15 min-h-[44px]';
-    link.textContent = btnTextLabel;
-    readyBox.replaceChildren(link);
+    if (!pdfUrl || pdfUrl === '#' || !downloadLink) return;
+    downloadLink.href = pdfUrl;
+    downloadLink.target = '_blank';
+    downloadLink.rel = 'noopener noreferrer';
   }
 
   function updateDescToReady() {

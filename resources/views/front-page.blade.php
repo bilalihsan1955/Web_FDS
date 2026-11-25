@@ -17,14 +17,14 @@
 @endphp
 
 {{-- ========================================================== --}}
-{{-- 1. HERO — Full-Bleed Background Hero Section (Dinamis)    --}}
+{{-- 1. HERO ΓÇö Full-Bleed Background Hero Section (Dinamis)    --}}
 {{-- ========================================================== --}}
 @php
   $hero_slides = \App\fds_get_hero_slides();
 @endphp
 <section id="overview" class="relative w-full h-screen min-h-[100vh] min-h-[100dvh] flex flex-col justify-between overflow-hidden bg-[#070b14] pt-[52px] select-none">
   
-  {{-- ── FULL-BLEED BACKGROUND SLIDER ──────────────────────── --}}
+  {{-- ΓöÇΓöÇ FULL-BLEED BACKGROUND SLIDER ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ --}}
   <div id="fds-hero-slider" class="absolute inset-0 w-full h-full z-0 overflow-hidden" data-slide-count="{{ count($hero_slides) }}">
     @foreach($hero_slides as $i => $slide)
     <div class="fds-hero-slide absolute inset-0 w-full h-full transition-all duration-1000 ease-out {{ $i === 0 ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0' }}" data-index="{{ $i }}">
@@ -47,38 +47,42 @@
         height="1080"
         alt="{{ $fds_clean($slide['alt'] ?: 'Full Drone Solutions') }}"
       >
-      {{-- Balanced Ocean-Teal Contrast Scrim --}}
-      <div class="absolute inset-0 bg-gradient-to-b from-[#031e20]/65 via-[#052b2e]/35 to-[#052b2e]/85 z-10 pointer-events-none"></div>
+      {{-- Balanced Cinematic Contrast Overlay (Vibrant Drone BG with High Text Legibility) --}}
+      <div class="absolute inset-0 bg-gradient-to-b from-[#070b14]/70 via-[#070b14]/35 to-[#070b14]/80 z-10 pointer-events-none"></div>
     </div>
     @endforeach
   </div>
 
-  {{-- ── FOREGROUND CONTENT (CENTER STAGE) ─────────────────── --}}
-  <div class="relative z-20 max-w-[1240px] w-full mx-auto px-6 md:px-8 xl:px-12 flex-1 flex flex-col justify-center items-center text-center py-8 sm:py-12 my-auto">
-
+  {{-- ΓöÇΓöÇ FOREGROUND CONTENT (CENTER STAGE) ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ --}}
+  <div class="relative z-20 max-w-[1400px] w-full mx-auto px-6 lg:px-12 flex-1 flex flex-col justify-center items-center text-center py-6 sm:py-10 my-auto">
+    
     @if(!empty($hp['hero_badge']))
-    <p class="text-[14px] sm:text-[15px] font-medium text-[#a3eef5] tracking-[0.01em] mb-4 fds-hero-entrance fds-hero-delay-1">
-      {{ $fds_hp_scrub($hp['hero_badge'] ?? 'Produsen Drone Pertanian & UAV Indonesia') }}
-    </p>
+    <div class="inline-flex items-center bg-white/15 hover:bg-white/25 text-white backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-[13px] sm:text-[14px] font-medium tracking-wide shadow-sm mb-6 transition-all fds-hero-entrance fds-hero-delay-1">
+      <span>{{ $fds_hp_scrub($hp['hero_badge'] ?? 'Produsen Drone Pertanian & UAV Indonesia') }}</span>
+    </div>
     @endif
 
-    <h1 class="text-[42px] sm:text-[62px] lg:text-[76px] xl:text-[84px] font-semibold tracking-[-0.03em] text-white leading-[1.04] max-w-[920px] mx-auto fds-hero-entrance fds-hero-delay-2" style="text-wrap:balance;">
+    <h1 class="text-[46px] sm:text-[64px] lg:text-[80px] xl:text-[88px] font-semibold tracking-[-0.025em] text-white leading-[1.04] max-w-[960px] mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] fds-hero-entrance fds-hero-delay-2">
       {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['hero_title'] ?? "Solusi Drone Pertanian &\nIndustrial Indonesia.")))) !!}
     </h1>
 
-    <p class="mt-6 text-[17px] sm:text-[20px] lg:text-[21px] text-white/90 font-normal max-w-[660px] mx-auto leading-[1.55] fds-hero-entrance fds-hero-delay-3" style="text-wrap:pretty;">
+    <p class="mt-6 text-[18px] sm:text-[21px] lg:text-[23px] text-white/95 font-normal max-w-[700px] mx-auto leading-[1.6] drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] fds-hero-entrance fds-hero-delay-3">
       {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['hero_desc'] ?? 'Produsen UAV dengan manajemen mutu ISO 9001:2015, serta sertifikasi produk TKDN 60,74% (seri FERTO) dan SNI 9199:2023 (FERTO 15 & FERTO 22). Solusi drone pertanian sprayer, pemetaan LiDAR, dan inspeksi industri.')))) !!}
     </p>
 
     <div class="mt-9 flex items-center justify-center gap-4 flex-wrap fds-hero-entrance fds-hero-delay-4">
-      <a href="{!! esc_url($hp['hero_cta1_url'] ?? '#solusi') !!}"
-         class="fds-btn fds-btn--primary shadow-lg shadow-black/25">
-        {{ $fds_hp_scrub($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') }}
+      <a href="{!! esc_url($hp['hero_cta1_url'] ?? '#solusi') !!}" 
+         class="group inline-flex items-center justify-center gap-2.5 min-h-[48px] bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[15px] sm:text-[16px] font-semibold px-8 py-4 rounded-full transition-all duration-200 leading-none shadow-lg shadow-black/25 hover:shadow-xl hover:shadow-black/35 hover:-translate-y-0.5">
+        <span>{{ $fds_hp_scrub($hp['hero_cta1_text'] ?? 'Jelajahi Solusi Kami') }}</span>
+        <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6h12v12"/>
+          <path d="M6 18 18 6"/>
+        </svg>
       </a>
-      <a href="{!! esc_url($hp['hero_cta2_url'] ?? '#kontak') !!}"
-         class="group inline-flex items-center justify-center min-h-[44px] bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/35 text-[15px] font-medium px-6 py-2.5 rounded-full transition-colors gap-2 leading-none">
+      <a href="{!! esc_url($hp['hero_cta2_url'] ?? '#kontak') !!}" 
+         class="group inline-flex items-center justify-center min-h-[48px] bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/30 text-[15px] sm:text-[16px] font-medium px-8 py-4 rounded-full transition-all duration-200 gap-2.5 leading-none hover:-translate-y-0.5 shadow-lg">
         <span>{{ $fds_hp_scrub($hp['hero_cta2_text'] ?? 'Konsultasi Enterprise') }}</span>
-        <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M6 6h12v12"/>
           <path d="M6 18 18 6"/>
         </svg>
@@ -87,7 +91,7 @@
 
   </div>
 
-  {{-- ── BOTTOM SLIDER NAVIGATION BAR ──────────────────────── --}}
+  {{-- ΓöÇΓöÇ BOTTOM SLIDER NAVIGATION BAR ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ --}}
   <div class="relative z-20 w-full border-t border-white/10 bg-black/25 backdrop-blur-md py-3 sm:py-3.5">
     <div class="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-end">
       
@@ -254,30 +258,38 @@
 
 
 {{-- ========================================================== --}}
-{{-- 2. MITRA — Infinite marquee scroll                        --}}
+{{-- 2. MITRA ΓÇö Infinite marquee scroll                        --}}
 {{-- ========================================================== --}}
 @php
   $mitra_posts = get_posts(['post_type'=>'mitra','numberposts'=>-1,'orderby'=>'menu_order','order'=>'ASC']);
-  $mitra_with_logo = array_values(array_filter($mitra_posts, fn($m) => get_the_post_thumbnail_url($m->ID, 'medium')));
+  $mitra_with_logo = array_filter($mitra_posts, fn($m) => get_the_post_thumbnail_url($m->ID, 'medium'));
 @endphp
 
 @if(!empty($mitra_with_logo))
-<section class="fds-sec fds-sec--tight fds-bg-white">
-  <div class="fds-container">
+<section class="bg-white py-14 overflow-hidden">
+  <div class="text-center mb-10" data-aos="fade-up">
     @php
       $mitra_title = $hp['mitra_heading'] ?? 'Dipercaya oleh Lembaga Nasional & Internasional';
       if (mb_strtoupper($mitra_title) === $mitra_title && mb_strlen($mitra_title) > 5) {
           $mitra_title = 'Dipercaya oleh Lembaga Nasional & Internasional';
       }
-      $mitra_primary = array_slice($mitra_with_logo, 0, 8);
-      $mitra_extra   = array_slice($mitra_with_logo, 8);
     @endphp
-    <p class="fds-caption text-center mb-9" data-aos="fade-up">
+    <p class="text-[13.5px] font-semibold text-[#5c5e63] tracking-wide">
       {{ $fds_clean($mitra_title) }}
     </p>
+  </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 items-center justify-items-center gap-x-7 gap-y-6">
-      @foreach($mitra_primary as $mitra)
+  {{-- Marquee track --}}
+  <div class="relative">
+    {{-- Fade mask kiri & kanan --}}
+    <div class="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+         style="background: linear-gradient(to right, white 0%, transparent 100%);"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+         style="background: linear-gradient(to left, white 0%, transparent 100%);"></div>
+
+    {{-- Scroll track --}}
+    <div class="flex" style="animation: fds-marquee 35s linear infinite;">
+      @foreach($mitra_with_logo as $mitra)
         @php
           $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
           $m_inst = function_exists('fds_resolve_mitra_alt')
@@ -285,57 +297,48 @@
               : (trim($fds_clean($mitra->post_title)) ?: 'Mitra Full Drone Solutions');
           $m_alt = $m_inst . ' — Mitra Full Drone Solutions';
         @endphp
-        <div class="flex items-center justify-center w-full h-16">
+        <div class="flex-shrink-0 flex items-center justify-center px-10">
           <img src="{!! esc_url($logo) !!}"
                alt="{{ $m_alt }}"
-               width="150"
-               height="64"
+               width="180"
+               height="96"
                loading="lazy"
                decoding="async"
-               class="max-h-14 w-auto max-w-[130px] object-contain"
-               style="mix-blend-mode: multiply !important; background-color: transparent !important;"
+               class="h-24 w-auto object-contain"
                title="{{ $m_inst }}">
         </div>
       @endforeach
-    </div>
-
-    @if(!empty($mitra_extra))
-    <div class="text-center">
-      <details class="fds-quiet-details inline-block text-left">
-        <summary class="fds-quiet-summary">Lihat seluruh {{ count($mitra_with_logo) }} mitra institusi</summary>
-        <div class="fds-quiet-body grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 items-center justify-items-center gap-x-7 gap-y-6">
-          @foreach($mitra_extra as $mitra)
-            @php
-              $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
-              $m_inst = function_exists('fds_resolve_mitra_alt')
-                  ? fds_resolve_mitra_alt((int) $mitra->ID, (string) $logo)
-                  : (trim($fds_clean($mitra->post_title)) ?: 'Mitra Full Drone Solutions');
-              $m_alt = $m_inst . ' — Mitra Full Drone Solutions';
-            @endphp
-            <div class="flex items-center justify-center w-full h-14">
-              <img src="{!! esc_url($logo) !!}"
-                   alt="{{ $m_alt }}"
-                   width="140"
-                   height="56"
-                   loading="lazy"
-                   decoding="async"
-                   class="max-h-12 w-auto max-w-[120px] object-contain"
-                   style="mix-blend-mode: multiply !important; background-color: transparent !important;"
-                   title="{{ $m_inst }}">
-            </div>
-          @endforeach
+      @foreach($mitra_with_logo as $mitra)
+        @php
+          $logo = get_the_post_thumbnail_url($mitra->ID, 'medium');
+          $m_inst = function_exists('fds_resolve_mitra_alt')
+              ? fds_resolve_mitra_alt((int) $mitra->ID, (string) $logo)
+              : (trim($fds_clean($mitra->post_title)) ?: 'Mitra Full Drone Solutions');
+          $m_alt = $m_inst . ' — Mitra Full Drone Solutions';
+        @endphp
+        <div class="flex-shrink-0 flex items-center justify-center px-10" aria-hidden="true">
+          <img src="{!! esc_url($logo) !!}" alt="{{ $m_alt }}" width="180" height="96" loading="lazy" decoding="async" class="h-24 w-auto object-contain">
         </div>
-      </details>
+      @endforeach
     </div>
-    @endif
   </div>
+
+  <style>
+    @keyframes fds-marquee {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      [style*="fds-marquee"] { animation: none; }
+    }
+  </style>
 </section>
 @endif
 
 
 
 {{-- ========================================================== --}}
-{{-- 3. SOLUSI INDUSTRI — Ocean-Teal Wave + Grid 6 Sektor       --}}
+{{-- 3. SOLUSI INDUSTRI ΓÇö 100% Dinamis dari WP Admin            --}}
 {{-- ========================================================== --}}
 @php
   $solusi_data = function_exists('App\fds_get_solusi_data') ? \App\fds_get_solusi_data() : [
@@ -347,34 +350,99 @@
     'cards'    => [],
   ];
 @endphp
-<section id="solusi" class="fds-sec fds-bg-teal">
-  <x-fds-wave type="fluid" uid="home-solusi" />
+<section id="solusi" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32 overflow-hidden">
+  
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" style="contain: layout paint;">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="solusi-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
+        </radialGradient>
 
-  <div class="fds-container">
-    <x-reveal id="solusi-header-container" class="fds-sec-head fds-sec-head--split">
+        {{-- Gradient Fade di Bagian Bawah --}}
+        <linearGradient id="solusi-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.65" />
+        </linearGradient>
+
+        {{-- Lapisan 1 (Terluar - Lekukan Halus, Menukik Anggun & Mengangkat di Ujung Kanan) --}}
+        <linearGradient id="solusi-wave-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.60" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Aksen Biru Hidup dengan Gradasi Lembut) --}}
+        <linearGradient id="solusi-wave-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.70" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="solusi-wave-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.80" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="solusi-wave-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.25" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.85" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#solusi-ambient-bl)" />
+
+      <!-- 4 Lapisan Vektor Organik: Mengalir Luwes, Elegan & Mengangkat di Sisi Kanan -->
+      <path d="M0,110 C280,130 580,270 860,420 C1120,550 1300,570 1440,520 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill1)" />
+      <path d="M0,250 C280,290 560,410 820,530 C1060,610 1260,620 1440,580 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill2)" />
+      <path d="M0,390 C250,420 500,500 740,580 C980,640 1200,645 1440,620 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill3)" />
+      <path d="M0,510 C180,520 380,580 600,630 C840,670 1100,675 1440,655 L1440,700 L0,700 Z" fill="url(#solusi-wave-fill4)" />
+
+      <!-- Gradient Overlay di Bagian Bawah untuk Transisi Halus -->
+      <rect y="420" width="1440" height="280" fill="url(#solusi-bottom-dark)" />
+    </svg>
+  </div>
+
+  {{-- Header inside 1400px Container --}}
+  <x-reveal id="solusi-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12 sm:mb-14 relative z-10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>
-        @if(!empty($solusi_data['badge']))
-          <p class="fds-caption" style="color:var(--color-teal-200);font-weight:600;margin-bottom:10px;">{{ $fds_clean($solusi_data['badge']) }}</p>
-        @endif
-        <h2 class="fds-h2" style="color:var(--fds-white);max-width:620px;">
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{{ $fds_clean($solusi_data['badge']) }}</p>
+        <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] max-w-[640px]">
           {{ $fds_clean($solusi_data['title']) }}
         </h2>
       </div>
-      <div class="flex flex-col items-start md:items-end gap-4 max-w-[440px]">
-        <p class="fds-body" style="color:rgba(255,255,255,0.88);">
-          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($solusi_data['desc'])))) !!}
-        </p>
-        @if(!empty($solusi_data['cta_text']))
+      @if(!empty($solusi_data['cta_text']))
+      <div class="flex-shrink-0">
         <a href="{!! esc_url(!empty($solusi_data['cta_url']) ? $solusi_data['cta_url'] : home_url('/layanan/')) !!}"
-           class="fds-btn fds-btn--white-teal">
-          {{ $fds_clean($solusi_data['cta_text']) }}
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-md leading-none">
+          <span>{{ $fds_clean($solusi_data['cta_text']) }}</span>
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
-        @endif
       </div>
-    </x-reveal>
+      @endif
+    </div>
+  </x-reveal>
 
-    @if(!empty($solusi_data['cards']))
-    <x-reveal-group :step="60" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-7 gap-y-10">
+  {{-- Full Width Carousel Track (Apple Style: Horizontal Slide Carousel + Stretched-Link UX) --}}
+  @if(!empty($solusi_data['cards']))
+  <div class="w-full relative z-10">
+    <x-reveal-group :step="55" :modulo="4" data-reveal-carousel="true" id="solusi-carousel-track"
+         class="flex gap-6 overflow-x-auto snap-x snap-proximity pb-6 pt-2 hide-scrollbar w-full solusi-track-padding">
+
       @foreach($solusi_data['cards'] as $card)
       @php
         $card_href      = !empty($card['link_url']) ? $card['link_url'] : home_url('/layanan/');
@@ -396,57 +464,185 @@
           ? \App\fds_optimized_img_url($card_img_raw, 'large')
           : (function_exists('fds_optimized_img_url') ? fds_optimized_img_url($card_img_raw, 'large') : $card_img_raw);
         $card_alt_raw = !empty($card['image_alt']) ? $card['image_alt'] : ($card['title'] ?? '');
+        $card_cta_lbl = trim((string) ($card['link_text'] ?? ''));
+        if ($card_cta_lbl === '') {
+            $card_cta_lbl = 'Pelajari solusi sektor';
+        }
       @endphp
-      <article class="fds-photo-card group">
-        <div class="fds-photo-card-frame" style="background-color:#031e20;">
-          <img src="{!! esc_url($card_img_url) !!}"
-               alt="{{ $fds_clean($card_alt_raw) }}"
-               width="720"
-               height="450"
-               loading="lazy"
-               decoding="async">
+      <article class="solusi-carousel-card fds-service-card fds-service-card--dark fds-service-card--interactive w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-[#052b2e] rounded-[1.5rem] overflow-hidden group hover:bg-[#0a555c] transition-[transform,background-color,border-color] duration-200 flex flex-col justify-between select-none shadow-md border border-white/15 cursor-pointer">
+        <div>
+          {{-- Image Box --}}
+          <div class="h-[170px] sm:h-[190px] overflow-hidden relative bg-[#031e20]">
+            <img src="{!! esc_url($card_img_url) !!}"
+                 alt="{{ $fds_clean($card_alt_raw) }}"
+                 width="720"
+                 height="380"
+                 loading="lazy"
+                 decoding="async"
+                 class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#052b2e]/80 via-transparent to-transparent pointer-events-none"></div>
+          </div>
+
+          {{-- Body --}}
+          <div class="p-5 sm:p-6 pb-3">
+            <h3 class="text-[17px] sm:text-[19px] font-semibold text-white mb-2 leading-snug">
+              <a href="{!! esc_url($card_href) !!}" class="fds-stretched-link text-white group-hover:text-[#75e6f0] transition-colors">
+                {{ $fds_clean($card['title'] ?? '') }}
+              </a>
+            </h3>
+            @if(!empty($card['desc']))
+            <p class="text-[13.5px] sm:text-[14px] text-white/85 leading-[1.62]">
+              {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($card['desc'])))) !!}
+            </p>
+            @endif
+          </div>
         </div>
-        <h3 class="fds-h3 flex items-center justify-between gap-3" style="color:var(--fds-white);margin-bottom:8px;">
-          <a href="{!! esc_url($card_href) !!}" class="fds-stretched-link text-white group-hover:text-[#a3eef5] transition-colors" style="text-decoration:none;">
-            {{ $fds_clean($card['title'] ?? '') }}
-          </a>
-          <span class="fds-icon-cue" aria-hidden="true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
-          </span>
-        </h3>
-        @if(!empty($card['desc']))
-        <p class="fds-body" style="color:rgba(255,255,255,0.86);font-size:0.9375rem;">
-          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($card['desc'])))) !!}
-        </p>
-        @endif
+
+        {{-- Footer Cue --}}
+        <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-0">
+          <div class="pt-3.5 border-t border-white/[0.12] flex items-center justify-end gap-2">
+            <span class="fds-card-cta-cue text-[13.5px] font-semibold text-white group-hover:text-[#75e6f0] inline-flex items-center gap-1.5 transition-colors leading-none flex-shrink-0" aria-hidden="true">
+              <span>{{ $fds_clean($card_cta_lbl) }}</span>
+              <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
+            </span>
+          </div>
+        </div>
       </article>
       @endforeach
+
     </x-reveal-group>
-    @endif
   </div>
+
+  {{-- Bottom Right Circular Arrow Buttons (44px Minimum Tap Target) --}}
+  <x-reveal :delay="150" class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button id="solusi-prev-btn" type="button" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
+              class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed border border-white/20 cursor-pointer">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="solusi-next-btn" type="button" onclick="scrollSolusiCarousel(1)" aria-label="Berikutnya"
+              class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed border border-white/20 cursor-pointer">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </x-reveal>
+  @endif
 </section>
 
+<style>
+  .solusi-track-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    scroll-padding-left: 1.5rem;
+    scroll-padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .solusi-track-padding {
+      padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+    }
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+function alignSolusiTrack() {
+  const headerContainer = document.getElementById('solusi-header-container');
+  const track = document.getElementById('solusi-carousel-track');
+  if (!headerContainer || !track) return;
+
+  const rect = headerContainer.getBoundingClientRect();
+  const cs = window.getComputedStyle(headerContainer);
+  const padLeft = parseFloat(cs.paddingLeft) || 24;
+  const padRight = parseFloat(cs.paddingRight) || 24;
+
+  const exactLeft = Math.max(24, Math.round(rect.left + padLeft));
+  const exactRight = Math.max(24, Math.round(window.innerWidth - rect.right + padRight));
+
+  track.style.paddingLeft = exactLeft + 'px';
+  track.style.paddingRight = exactRight + 'px';
+  track.style.scrollPaddingLeft = exactLeft + 'px';
+  track.style.scrollPaddingRight = exactRight + 'px';
+}
+
+function scrollSolusiCarousel(direction) {
+  const track = document.getElementById('solusi-carousel-track');
+  if (!track) return;
+  const card = track.querySelector('.solusi-carousel-card');
+  const scrollAmount = card ? (card.offsetWidth + 24) : 384;
+  track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+function updateSolusiCarouselControls() {
+  const track = document.getElementById('solusi-carousel-track');
+  const prevBtn = document.getElementById('solusi-prev-btn');
+  const nextBtn = document.getElementById('solusi-next-btn');
+  if (!track) return;
+
+  const canScroll = track.scrollWidth > (track.clientWidth + 5);
+  if (!canScroll) {
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    return;
+  }
+
+  const isAtStart = track.scrollLeft <= 8;
+  const isAtEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 12;
+
+  if (prevBtn) prevBtn.disabled = isAtStart;
+  if (nextBtn) nextBtn.disabled = isAtEnd;
+}
+
+window.addEventListener('resize', function() {
+  alignSolusiTrack();
+  updateSolusiCarouselControls();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  alignSolusiTrack();
+  const track = document.getElementById('solusi-carousel-track');
+  if (track) {
+    track.addEventListener('scroll', updateSolusiCarouselControls, { passive: true });
+    setTimeout(function() {
+      alignSolusiTrack();
+      updateSolusiCarouselControls();
+    }, 100);
+  }
+});
+</script>
+
 
 {{-- ========================================================== --}}
-{{-- 4. KEUNGGULAN — Bento grid (Masonry Reference Architecture) --}}
+{{-- 4. KEUNGGULAN ΓÇö Bento grid (Masonry Reference Architecture) --}}
 {{-- ========================================================== --}}
-<section id="keunggulan" class="fds-sec fds-bg-light">
-  <div class="fds-container">
+<section id="keunggulan" class="bg-[#f5f5f7] pt-20 pb-24 sm:pt-28 sm:pb-32">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     {{-- Section header --}}
-    <x-reveal class="fds-sec-head">
-      <p class="fds-caption" style="color:var(--color-teal-800);font-weight:600;">
+    <x-reveal class="mb-12 sm:mb-14">
+      <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">
         {{ $fds_hp_scrub($hp['keunggulan_badge'] ?? 'Keunggulan Manufaktur FDS') }}
       </p>
-      <h2 class="fds-h2" style="color:var(--fds-ink-primary);max-width:700px;">
+      <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[700px]">
         {{ $fds_hp_scrub($hp['keunggulan_title'] ?? 'Mengapa Memilih Produsen Drone Lokal?') }}
       </h2>
     </x-reveal>
 
-    {{-- Bento Grid --}}
+    {{-- Bento Grid (Sesuai Referensi: Kiri Atas Lebar, Kanan Tinggi 2 Baris TKDN, Tengah 2 Kotak, & Bawah Lebar) --}}
     <x-reveal-group :step="90" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-      {{-- Card 1: Kiri Atas Lebar — Manufaktur Sleman --}}
+      {{-- Card 1: Kiri Atas Lebar (md:col-span-2 lg:col-span-2) ΓÇö Manufaktur Sleman --}}
       @php
         $card1_default_img = get_template_directory_uri() . '/public/images/site/workshop-deltav.webp';
         $card1_raw_img     = trim((string) ($hp['keunggulan_card1_img'] ?? fds_img('keunggulan', '')));
@@ -454,7 +650,7 @@
             ? $card1_raw_img
             : $card1_default_img;
       @endphp
-      <div class="md:col-span-2 lg:col-span-2 bg-[#052b2e] rounded-3xl overflow-hidden relative min-h-[320px] sm:min-h-[280px] group flex flex-col justify-end p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.05)]">
+      <div class="md:col-span-2 lg:col-span-2 bg-[#0d1117] rounded-3xl overflow-hidden relative min-h-[340px] sm:min-h-[280px] lg:min-h-[240px] group flex flex-col justify-end p-5 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         <div class="absolute inset-0 z-0">
           <img src="{!! esc_url(fds_optimized_img_url($card1_final_img, 'large')) !!}"
                alt="Pabrik &amp; Workshop FDS"
@@ -463,50 +659,68 @@
                loading="lazy"
                decoding="async"
                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#031e20]/95 via-[#031e20]/60 via-48% to-transparent"></div>
+          {{-- Gradasi Halus Terkalibrasi: Gelap Mantap di Area Teks Bawah (~45%) Agar Teks Sangat Kontras & Tajam di Mobile, Tablet, dan Desktop --}}
+          <div class="absolute inset-0 bg-gradient-to-t from-[#070b14]/95 via-[#070b14]/65 via-45% to-transparent sm:from-[#070b14]/90 sm:via-[#070b14]/55 sm:via-45% lg:from-[#070b14]/90 lg:via-[#070b14]/50 lg:via-45% lg:to-transparent"></div>
         </div>
         <div class="relative z-10">
-          <h3 class="text-[20px] sm:text-[24px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2 max-w-[600px]">
+          <span class="text-[12.5px] font-medium text-white/85 block mb-1 drop-shadow-sm">{{ $fds_hp_scrub($hp['keunggulan_card1_badge'] ?? 'Riset & Perakitan Sleman') }}</span>
+          <h3 class="text-[20px] sm:text-[24px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2 max-w-[600px] drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]">
             {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card1_title'] ?? "Desain Aerodinamis & Avionik In-House.")))) !!}
           </h3>
-          <p class="text-[14px] text-white/90 max-w-[560px] leading-relaxed">
+          <p class="text-[13.5px] sm:text-[14px] text-white/90 max-w-[560px] leading-[1.6] drop-shadow-[0_1px_4px_rgba(0,0,0,0.6)]">
             {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card1_desc'] ?? 'Rangka karbon komposit lokal, avionik in-house, dan integrasi payload kustom di workshop PT Karya Solusi Angkasa (FDS).')))) !!}
           </p>
         </div>
       </div>
 
-      {{-- Card 2: Kolom Kanan Tinggi 2 Baris — TKDN & Bangga Buatan Indonesia --}}
+      {{-- Card 2: Kolom Kanan Tinggi Gabung 2 Baris di Desktop (md:col-span-2 lg:col-span-1 lg:row-span-2) ΓÇö TKDN & Bangga Buatan Indonesia --}}
       @php
         $card2_default_img = get_template_directory_uri() . '/public/images/bangga-buatan-indonesia.svg';
         $card2_raw_img     = trim((string) ($hp['keunggulan_card2_img'] ?? ''));
         $card2_img         = ($card2_raw_img !== '' && stripos($card2_raw_img, 'unsplash.com') === false) ? $card2_raw_img : $card2_default_img;
         $card2_desc_text   = $fds_hp_scrub($hp['keunggulan_card2_desc'] ?? 'Sertifikat resmi TKDN + BMP untuk seluruh model drone pertanian seri FERTO. Memenuhi prioritas belanja pemerintah di e-Katalog LKPP.');
       @endphp
-      <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
+      <div class="md:col-span-2 lg:col-span-1 lg:row-span-2 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-7 flex flex-col md:flex-row lg:flex-col justify-between md:items-center lg:items-stretch gap-6 min-h-[300px] md:min-h-[220px] lg:min-h-full relative overflow-hidden group shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
+        
+        {{-- Concentric Wave Circles (Teal Sistem #0f808a) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <svg class="absolute -bottom-10 -left-10 w-[550px] h-[550px]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg class="absolute -bottom-10 -left-10 w-[550px] h-[550px]" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Lingkaran 5 (Paling Luar) -->
             <circle cx="40" cy="460" r="440" fill="#ffffff" fill-opacity="0.04" />
+            <!-- Lingkaran 4 -->
             <circle cx="40" cy="460" r="330" fill="#ffffff" fill-opacity="0.06" />
+            <!-- Lingkaran 3 -->
             <circle cx="40" cy="460" r="230" fill="#ffffff" fill-opacity="0.09" />
+            <!-- Lingkaran 2 -->
             <circle cx="40" cy="460" r="140" fill="#ffffff" fill-opacity="0.14" />
+            <!-- Lingkaran 1 (Dalam) -->
             <circle cx="40" cy="460" r="70" fill="#ffffff" fill-opacity="0.20" />
           </svg>
         </div>
+
+        {{-- Bottom Dark Gradient Overlay --}}
         <div class="absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t from-[#031e20]/90 via-[#052b2e]/45 to-transparent pointer-events-none z-0"></div>
 
+        {{-- Bagian Atas / Kiri: Stat & Teks Deskripsi (Di Mobile & Tablet: Deskripsi Langsung di Samping/Bawah Stat Tanpa Divider) --}}
         <div class="relative z-10 flex-1 md:max-w-[58%] lg:max-w-full">
-          <div class="my-1">
-            <p class="fds-num text-[48px] sm:text-[56px] font-semibold text-white tracking-[-0.04em] leading-none">{{ $fds_hp_scrub($hp['keunggulan_card2_stat'] ?? '60,74%') }}</p>
-            <p class="text-[13.5px] font-medium text-white/95 mt-1.5">{{ $fds_hp_scrub($hp['keunggulan_card2_substat'] ?? 'TKDN + BMP Seri FERTO Kemenperin RI') }}</p>
+          <span class="text-[12.5px] font-medium text-white/85 block mb-2">{{ $fds_hp_scrub($hp['keunggulan_card2_badge'] ?? 'Legalitas Pengadaan') }}</span>
+          
+          {{-- Persentase TKDN --}}
+          <div class="my-1.5">
+            <p class="font-display tabular-nums text-[48px] sm:text-[56px] font-semibold text-white tracking-[-0.03em] leading-none">{{ $fds_hp_scrub($hp['keunggulan_card2_stat'] ?? '60,74%') }}</p>
+            <p class="text-[13px] font-medium text-white/90 mt-1.5">{{ $fds_hp_scrub($hp['keunggulan_card2_substat'] ?? 'TKDN + BMP Seri FERTO Kemenperin RI') }}</p>
           </div>
-          <p class="block lg:hidden text-[14px] text-white/90 leading-relaxed mt-3">
+
+          {{-- Teks Deskripsi Khusus Mobile & Tablet (Tanpa Garis Divider) --}}
+          <p class="block lg:hidden text-[13.5px] sm:text-[14px] text-white/90 leading-[1.6] mt-2.5">
             {{ $card2_desc_text }}
           </p>
         </div>
 
+        {{-- Logo Bangga Buatan Indonesia (Tengah pada Layar Besar) --}}
         <div class="relative z-10 my-auto py-2 flex justify-center items-center flex-shrink-0 md:max-w-[38%] lg:max-w-full">
-          <img src="{!! esc_url(fds_optimized_img_url($card2_img, 'medium')) !!}"
-               alt="Bangga Buatan Indonesia"
+          <img src="{!! esc_url(fds_optimized_img_url($card2_img, 'medium')) !!}" 
+               alt="Bangga Buatan Indonesia" 
                width="320"
                height="180"
                loading="lazy"
@@ -514,17 +728,20 @@
                class="w-auto max-w-[95%] sm:max-w-full max-h-[140px] md:max-h-[160px] lg:max-h-[205px] object-contain drop-shadow-md group-hover:scale-105 transition-transform duration-500">
         </div>
 
-        <div class="hidden lg:block relative z-10 pt-4 border-t border-white/15">
-          <p class="text-[13.5px] text-white/90 leading-relaxed">
+        {{-- Teks Deskripsi Khusus Layar Besar / Desktop (Posisi di Bawah Gambar Logo dengan Divider) --}}
+        <div class="hidden lg:block relative z-10 pt-3 border-t border-white/15">
+          <p class="text-[13.5px] text-white/90 leading-[1.6]">
             {{ $card2_desc_text }}
           </p>
         </div>
       </div>
 
-      {{-- Card 3: Tengah Kiri — Software Kendali FDS Station --}}
-      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-8 flex flex-col justify-end min-h-[195px] sm:min-h-[210px] relative overflow-hidden group shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
+      {{-- Card 3: Tengah Kiri (md:col-span-1 lg:col-span-1) ΓÇö Pure Organic Wave Curves (Teal Palette) --}}
+      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] rounded-3xl p-6 sm:p-7 flex flex-col justify-between min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(15,128,138,0.12)]">
+        
+        {{-- Vector Background: Pure Organic Wave Fills (Teal Palette) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <svg class="w-full h-full" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <svg class="w-full h-full" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
             <defs>
               <linearGradient id="gcs-wave-fill1" x1="0%" y1="100%" x2="100%" y2="0%">
                 <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25" />
@@ -542,94 +759,148 @@
                 <stop offset="100%" stop-color="#052b2e" stop-opacity="0.0" />
               </linearGradient>
             </defs>
+
+            <!-- Pure Fluid Wave Fills -->
             <path d="M0,170 C90,160 150,110 250,75 C290,60 310,50 320,40 L320,200 L0,200 Z" fill="url(#gcs-wave-fill1)" />
             <path d="M0,195 C120,190 190,140 280,95 C305,80 315,70 320,60 L320,200 L0,200 Z" fill="url(#gcs-wave-fill2)" />
             <path d="M140,200 C190,170 250,150 320,110 L320,200 Z" fill="url(#gcs-wave-fill3)" />
           </svg>
         </div>
+
         <div class="relative z-10">
-          <h3 class="text-[22px] sm:text-[26px] font-semibold text-white tracking-[-0.03em] leading-snug mb-2">
+          <span class="text-[12.5px] font-medium text-white/90 block mb-1">{{ $fds_hp_scrub($hp['keunggulan_card3_badge'] ?? 'Software Kendali') }}</span>
+          
+          <h3 class="text-[22px] sm:text-[25px] lg:text-[27px] font-semibold text-white tracking-[-0.025em] leading-snug my-2">
             {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['keunggulan_card3_title'] ?? "FDS Station GCS\nBahasa Indonesia.")))) !!}
           </h3>
-          <p class="text-[14px] text-white/90 leading-relaxed">
+          
+          <p class="text-[13.5px] sm:text-[14px] text-white/90 leading-[1.6]">
             {{ $fds_hp_scrub($hp['keunggulan_card3_desc'] ?? 'Misi otomatis & telemetri Bahasa Indonesia.') }}
           </p>
         </div>
       </div>
 
-      {{-- Card 4: Tengah Kanan — ISO & SNI --}}
-      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#0a555c] via-[#052b2e] to-[#031e20] rounded-3xl p-6 sm:p-8 flex flex-col justify-end min-h-[195px] sm:min-h-[210px] relative overflow-hidden group shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+      {{-- Card 4: Tengah Kanan (md:col-span-1 lg:col-span-1) ΓÇö Lingkaran Konsentris Terbalik (Natural Inverted Circles) --}}
+      <div class="md:col-span-1 lg:col-span-1 bg-gradient-to-br from-[#1c1f26] via-[#13151b] to-[#0a0c10] rounded-3xl p-6 sm:p-7 flex flex-col justify-end min-h-[185px] sm:min-h-[200px] relative overflow-hidden group transition-all duration-300 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        
+        {{-- Vector Background: Lingkaran Konsentris Terbalik (Proporsi Sedang / Golden Ratio di Pojok Kanan Atas, Teal Sistem #0f808a) --}}
         <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-          <svg class="absolute -top-6 -right-6 w-[400px] sm:w-[440px] h-[400px] sm:h-[440px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <circle cx="370" cy="30" r="320" fill="#18d6e7" fill-opacity="0.06" />
-            <circle cx="370" cy="30" r="220" fill="#18d6e7" fill-opacity="0.11" />
-            <circle cx="370" cy="30" r="130" fill="#18d6e7" fill-opacity="0.18" />
-            <circle cx="370" cy="30" r="60" fill="#18d6e7" fill-opacity="0.28" />
+          <svg class="absolute -top-6 -right-6 w-[400px] sm:w-[440px] h-[400px] sm:h-[440px]" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Lingkaran 4 (Luar) ΓÇö Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="320" fill="#0f808a" fill-opacity="0.06" />
+            <!-- Lingkaran 3 (Sedang) ΓÇö Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="220" fill="#0f808a" fill-opacity="0.12" />
+            <!-- Lingkaran 2 (Tengah) ΓÇö Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="130" fill="#0f808a" fill-opacity="0.20" />
+            <!-- Lingkaran 1 (Inti) ΓÇö Teal Sistem #0f808a -->
+            <circle cx="370" cy="30" r="60" fill="#0f808a" fill-opacity="0.35" />
           </svg>
         </div>
+
         <div class="relative z-10">
-          <p class="text-[46px] sm:text-[56px] lg:text-[62px] font-semibold text-white tracking-[-0.03em] leading-[0.95] mb-2.5">{{ $fds_hp_scrub($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') }}</p>
-          <p class="text-[14px] text-white/90 leading-relaxed max-w-[380px]">
+          <p class="font-display tabular-nums text-[50px] sm:text-[60px] lg:text-[66px] xl:text-[72px] font-semibold text-white tracking-[-0.025em] leading-[0.94] mb-2.5">{{ $fds_hp_scrub($hp['keunggulan_card4_stat'] ?? 'ISO & SNI') }}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/90 leading-[1.6] max-w-[380px]">
             {{ $fds_hp_scrub($hp['keunggulan_card4_desc'] ?? 'Sistem manajemen mutu perusahaan ISO 9001:2015 serta standar keselamatan produk SNI 9199:2023 pada FERTO 15 dan FERTO 22.') }}
           </p>
         </div>
       </div>
 
-      {{-- Card 6: Bawah Kiri — Akademi Pilot & Regulasi DKPPU --}}
+      {{-- Card 6: Bawah Kiri (md:col-span-1 lg:col-span-1) ΓÇö Akademi Pilot & Regulasi DKPPU --}}
       @php
         $card6_default_img = get_template_directory_uri() . '/public/images/site/about-team.webp';
         $card6_raw_img     = trim((string) ($hp['keunggulan_card6_img'] ?? ''));
         $card6_img         = ($card6_raw_img !== '' && stripos($card6_raw_img, 'unsplash.com') === false) ? $card6_raw_img : $card6_default_img;
         $card6_stat_raw    = trim((string) ($hp['keunggulan_card6_stat'] ?? ''));
-        $card6_stat        = ($card6_stat_raw !== '' && $card6_stat_raw !== '2012') ? $fds_hp_scrub($card6_stat_raw) : 'DKPPU';
+        $card6_stat        = ($card6_stat_raw !== '' && $card6_stat_raw !== '2012') ? $fds_hp_scrub($card6_stat_raw) : '2019';
         $card6_desc_raw    = trim((string) ($hp['keunggulan_card6_desc'] ?? ''));
         if ($card6_desc_raw === '' || preg_match('/sejak\s*(?:tahun\s*)?2012|\b2012\b/i', $card6_desc_raw)) {
-            $card6_desc = 'Pelatihan operator drone industri dan pendampingan persiapan sertifikasi pilot sesuai regulasi CASR Part 107.';
+            $card6_desc = 'Berpengalaman di industri UAV dengan rekayasa lokal Indonesia, resmi berbadan hukum PT sejak 2019.';
         } else {
             $card6_desc = $fds_hp_scrub($card6_desc_raw);
         }
       @endphp
-      <div class="md:col-span-1 lg:col-span-1 bg-[#031e20] rounded-3xl overflow-hidden relative min-h-[200px] group flex flex-col justify-end p-6 sm:p-8 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+      <div class="md:col-span-1 lg:col-span-1 bg-[#0a0c10] rounded-3xl overflow-hidden relative min-h-[185px] sm:min-h-[200px] group flex flex-col justify-end p-6 sm:p-7 shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+        {{-- Background Image Foto Pilot/Operasional --}}
         <div class="absolute inset-0 z-0">
-          <img src="{!! esc_url(fds_optimized_img_url($card6_img, 'large')) !!}"
-               alt="Akademi Pilot &amp; Riset FDS"
+          <img src="{!! esc_url(fds_optimized_img_url($card6_img, 'large')) !!}" 
+               alt="Tim Engineer &amp; Workshop PT Karya Solusi Angkasa (FDS)" 
                width="800"
                height="500"
                loading="lazy"
                decoding="async"
-               class="w-full h-full object-cover brightness-[0.95] group-hover:scale-105 transition-all duration-700">
-          <div class="absolute inset-0 bg-gradient-to-t from-[#031e20]/90 via-[#031e20]/45 to-transparent"></div>
+               class="w-full h-full object-cover brightness-[0.95] group-hover:scale-105 group-hover:brightness-105 transition-all duration-700">
+          {{-- Vignette Halus Terkalibrasi (Cukup Gelap di Bagian Teks Bawah) --}}
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-black/10"></div>
         </div>
+
         <div class="relative z-10">
-          <p class="text-[54px] sm:text-[66px] lg:text-[74px] font-semibold text-white tracking-[-0.04em] leading-[0.9] mb-2.5">{{ $card6_stat }}</p>
-          <p class="text-[14px] text-white/95 leading-relaxed max-w-[380px]">
+          <p class="font-display tabular-nums text-[64px] sm:text-[76px] lg:text-[88px] xl:text-[96px] font-semibold text-white tracking-[-0.03em] leading-[0.9] mb-3 drop-shadow-md">{{ $card6_stat }}</p>
+          <p class="text-[13.5px] sm:text-[14px] text-white/95 leading-[1.6] drop-shadow-sm max-w-[380px]">
             {{ $card6_desc }}
           </p>
         </div>
       </div>
 
-      {{-- Card 5: Bawah Kanan — Satu ekosistem (Clean Typographic List, Zero Pill Slop) --}}
-      <div class="md:col-span-1 lg:col-span-2 bg-[#052b2e] rounded-3xl p-6 sm:p-8 min-h-[200px] flex flex-col justify-between gap-4 relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.10)]">
-        <x-fds-wave type="eko" uid="home-keunggulan-eko" />
-        <div class="relative z-10 max-w-[600px]">
-          <h3 class="text-[22px] sm:text-[26px] font-semibold text-white tracking-[-0.02em] leading-snug mb-2">
+      {{-- Card 5: Bawah Kanan (md:col-span-1 lg:col-span-2) ΓÇö 100% Exact Math Geometry from CONTOH.svg --}}
+      <div class="md:col-span-1 lg:col-span-2 bg-[#0c1018] rounded-3xl p-6 sm:p-7 min-h-[185px] sm:min-h-[200px] flex flex-col lg:flex-row lg:items-center justify-between gap-5 relative overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.12)] group">
+        
+        {{-- Exact 100% Math Paths from CONTOH.svg (Figma Export) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="w-full h-full" viewBox="0 0 398 96" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+            <g>
+              <rect width="398" height="96" fill="url(#paint0_dark_eko)"/>
+              <path d="M-18.2893 -6.32697C-136.964 10.9814 -24.6036 35.4983 -46.9639 64.4209C-70.1751 94.444 4.76287 155.377 4.76287 155.377L406.77 160.338L455.686 19.5816C455.686 19.5816 486.61 10.9501 346.048 50.0886C205.485 89.2271 100.385 -23.6353 -18.2893 -6.32697Z" fill="url(#paint1_dark_eko)"/>
+              <path d="M-87.4837 43.4736C-65.1233 14.551 -71.703 -9.63438 27.815 2.49305C127.333 14.6205 180.184 94.5513 338.738 73.6039C402.333 65.2021 433.365 58.4269 447.725 53.3251L453.437 41.8199C453.437 41.8199 469.167 45.7069 447.725 53.3251L389.303 171L-53.1488 161.803C-53.1488 161.803 -110.695 73.4967 -87.4837 43.4736Z" fill="url(#paint2_dark_eko)"/>
+              <path d="M52.5537 76.3607C17.9455 66.8521 -56.751 53.9736 -56.751 53.9736L-46.402 162.355L187.493 166.765C187.493 166.765 114.012 93.2462 52.5537 76.3607Z" fill="url(#paint3_dark_eko)"/>
+            </g>
+            <defs>
+              <linearGradient id="paint0_dark_eko" x1="199" y1="0" x2="199" y2="96" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0a555c" stop-opacity="0.30"/>
+                <stop offset="0.915" stop-color="#052b2e"/>
+              </linearGradient>
+              <linearGradient id="paint1_dark_eko" x1="192.438" y1="-8.14648" x2="192.438" y2="160.338" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#13abb9" stop-opacity="0.40"/>
+                <stop offset="0.915" stop-color="#0f808a" stop-opacity="0.15"/>
+              </linearGradient>
+              <linearGradient id="paint2_dark_eko" x1="183" y1="-0.710449" x2="183" y2="171" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#46deec" stop-opacity="0.35"/>
+                <stop offset="0.49" stop-color="#0f808a" stop-opacity="0.22"/>
+                <stop offset="0.9999" stop-color="#031e20"/>
+              </linearGradient>
+              <linearGradient id="paint3_dark_eko" x1="65.3711" y1="53.9736" x2="65.3711" y2="166.765" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#75e6f0" stop-opacity="0.40"/>
+                <stop offset="0.49" stop-color="#13abb9" stop-opacity="0.25"/>
+                <stop offset="0.9999" stop-color="#031e20"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        {{-- Left: Content Heading & Description (Tanpa Badge) --}}
+        <div class="flex-1 relative z-10">
+          <h3 class="text-[20px] sm:text-[24px] lg:text-[26px] font-semibold text-white tracking-[-0.02em] leading-snug mb-1.5">
             {{ $fds_hp_scrub($hp['keunggulan_card7_title'] ?? 'Satu ekosistem. Banyak solusi.') }}
           </h3>
-          <p class="text-[14px] text-white/90 leading-relaxed">
+          <p class="text-[13.5px] sm:text-[14px] text-white/90 leading-[1.6] max-w-[500px]">
             {{ $fds_hp_scrub($hp['keunggulan_card7_desc'] ?? 'Agrikultur, pemetaan topografi, inspeksi infrastruktur, kehutanan, dan pertambangan.') }}
           </p>
         </div>
+
+        {{-- Right: Sector Badges (Wrap Rapi Tanpa Terpotong) --}}
         @php
           $chips_raw = (string) ($hp['keunggulan_card7_chips'] ?? 'Agri, Mapping, Inspeksi, Tambang, Hutan, BUMN');
           $chips_arr = array_values(array_filter(array_map('trim', explode(',', $chips_raw)), fn($s) => $s !== ''));
           if (empty($chips_arr)) {
               $chips_arr = ['Agri', 'Mapping', 'Inspeksi', 'Tambang', 'Hutan', 'BUMN'];
           }
-          $chips_clean = array_map(fn($s) => $fds_hp_scrub($s), $chips_arr);
         @endphp
-        <p class="relative z-10 text-[14px] font-medium text-white/95 tracking-[0.01em] pt-3 border-t border-white/15">
-          {{ implode(' · ', $chips_clean) }}
-        </p>
+        <div class="flex flex-wrap gap-2 max-w-full sm:max-w-[340px] flex-shrink-0 relative z-10">
+          @foreach($chips_arr as $sector)
+            <span class="bg-white/10 hover:bg-white/20 text-white rounded-full px-3.5 py-1 text-[12.5px] font-medium border border-white/15 hover:border-[#46deec]/40 transition-all backdrop-blur-md cursor-default shadow-sm">
+              {{ $fds_hp_scrub($sector) }}
+            </span>
+          @endforeach
+        </div>
       </div>
 
     </x-reveal-group>
@@ -638,7 +909,7 @@
 
 
 {{-- ========================================================== --}}
-{{-- 5. PRODUCT LINEUP — Header Dinamis, List dari CPT Drone   --}}
+{{-- 5. PRODUCT LINEUP ΓÇö Header Dinamis, List dari CPT Drone   --}}
 {{-- ========================================================== --}}
 @php
   $hp_compare_text    = trim($fds_hp_scrub($hp['produk_compare_text'] ?? '')) ?: 'Bandingkan Model';
@@ -648,28 +919,32 @@
   $hp_prod_empty_text = trim($fds_hp_scrub($hp['produk_empty_text'] ?? '')) ?: 'Produk kategori ini akan segera hadir.';
   $hp_prod_empty_cta  = trim($fds_hp_scrub($hp['produk_empty_cta_text'] ?? '')) ?: 'Hubungi Tim Sales FDS';
 @endphp
-<section id="produk" class="fds-sec fds-bg-white">
-  <div class="fds-container">
+<section id="produk" class="bg-white py-24 sm:py-32">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
-    <x-reveal class="fds-sec-head fds-sec-head--split" style="margin-bottom:40px;">
+    <x-reveal class="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>
-        <p class="fds-caption" style="color:var(--color-teal-800);font-weight:600;margin-bottom:10px;">{{ $fds_hp_scrub($hp['produk_badge'] ?? 'Lini Produk Drone') }}</p>
-        <h2 class="fds-h2" style="color:var(--fds-ink-primary);">
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{{ $fds_hp_scrub($hp['produk_badge'] ?? 'Lini Produk Drone') }}</p>
+        <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1]">
           {{ $fds_hp_scrub($hp['produk_title'] ?? 'Teknologi UAV Rekayasa Indonesia.') }}
         </h2>
-        <p class="fds-lead" style="margin-top:16px;">
+        <p class="mt-4 text-[18px] text-[#515154] max-w-[580px] leading-relaxed">
           {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['produk_desc'] ?? 'TKDN + BMP 60,74% pada seri FERTO, SNI 9199:2023 untuk FERTO 15 & 22, software FDS Station Bahasa Indonesia, dan garansi purna jual resmi.')))) !!}
         </p>
       </div>
-      <div class="fds-btn-group flex-shrink-0">
+      <div class="flex flex-wrap items-center gap-3 flex-shrink-0">
         <a href="{!! esc_url(home_url('/bandingkan/')) !!}"
-           class="fds-btn" style="background-color:#f5f5f7;color:#1d1d1f;border-color:#d2d2d7;">
-          {{ $hp_compare_text }}
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#f5f5f7] hover:bg-black/[0.06] active:scale-[0.97] text-[#1d1d1f] text-[14px] font-semibold px-6 py-2.5 rounded-full border border-black/[0.08] transition-all duration-150 leading-none">
+          <span>{{ $hp_compare_text }}</span>
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
         <a href="{!! esc_url(home_url('/produk/')) !!}"
-           class="fds-btn fds-btn--primary group">
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-sm leading-none">
           <span>{{ $hp_catalog_text }}</span>
-          <svg class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
@@ -685,6 +960,9 @@
           'orderby'    => 'term_id',
           'order'      => 'ASC',
       ]);
+      if (!empty($tax_terms) && !is_wp_error($tax_terms) && function_exists('\App\fds_sort_kategori_terms')) {
+          $tax_terms = \App\fds_sort_kategori_terms($tax_terms);
+      }
 
       $categories = [$hp_filter_all];
       if (!empty($tax_terms) && !is_wp_error($tax_terms)) {
@@ -801,66 +1079,70 @@
       @endforeach
     </div>
 
-    {{-- Product rows (Horizontal list layout original di beranda — Rule 15) --}}
-    <x-reveal-group :step="50" class="space-y-0 border-t border-[#e5e5ea]" id="drone-list">
+    {{-- Product rows (Horizontal list layout original di beranda) --}}
+    <x-reveal-group :step="50" class="space-y-0 border-t border-black/[0.06]" id="drone-list">
       @php
         $global_drone_icon = function_exists('App\fds_get_drone_icon') ? \App\fds_get_drone_icon() : (function_exists('App\fds_get_navbar_drone_icon') ? \App\fds_get_navbar_drone_icon() : '');
       @endphp
 
       @foreach($products as $p)
-      <article class="drone-row relative border-b border-[#e5e5ea]" data-cat="{{ $p['cat'] }}">
-        <div class="grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#fbfbfd] rounded-2xl px-4 -mx-4 transition-colors duration-150">
+      <div class="drone-row border-b border-black/[0.06]" data-cat="{{ $p['cat'] }}">
+        <div class="grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#f5f5f7] rounded-2xl px-4 -mx-4 transition-colors duration-150 cursor-pointer"
+             data-href="{!! esc_url($p['url']) !!}"
+             onclick="location.href=this.getAttribute('data-href')">
 
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
             <div class="w-11 h-11 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
               @if(!empty($global_drone_icon))
-                <div class="w-[26px] h-[26px] bg-[#0a555c] transition-colors flex-shrink-0"
+                <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
                      style="-webkit-mask-image: url('{!! esc_url($global_drone_icon) !!}'); mask-image: url('{!! esc_url($global_drone_icon) !!}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
                      role="img" aria-label="Drone Icon"></div>
               @else
-                <svg class="w-6 h-6 text-[#0a555c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
               @endif
             </div>
           </div>
 
           {{-- Name + category --}}
           <div class="col-span-7 sm:col-span-3">
-            <p class="text-[13px] font-medium text-[#0a555c] mb-0.5">{{ $p['cat'] }}</p>
-            <h3 class="text-[20px] font-semibold text-[#1d1d1f] tracking-tight leading-snug">
-              <a href="{!! esc_url($p['url']) !!}" class="fds-stretched-link text-[#1d1d1f] group-hover:text-[#0a555c] transition-colors" style="text-decoration:none;">
-                {{ $p['name'] }}
-              </a>
-            </h3>
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <p class="text-[12.5px] font-semibold text-[#5c5e63] tracking-wide">{{ $p['cat'] }}</p>
+              <span class="text-[12px] font-semibold text-[#0a555c] bg-[#0f808a]/10 px-2.5 py-0.5 rounded-full">{{ $p['badge'] }}</span>
+            </div>
+            <h3 class="text-[20px] font-semibold text-[#1d1d1f] tracking-[-0.015em]">{{ $p['name'] }}</h3>
           </div>
 
           {{-- Description --}}
           <div class="hidden md:block col-span-4">
-            <p class="text-[15px] text-[#424245] leading-relaxed">{{ $p['desc'] }}</p>
+            <p class="text-[15px] text-[#424245] leading-[1.65]">{{ $p['desc'] }}</p>
           </div>
 
-          {{-- Specs + Detail Cue --}}
-          <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-2 sm:gap-5">
-            <p class="hidden lg:block text-[13.5px] text-[#5c5e63]">{{ $p['specs'] }}</p>
-            <span class="fds-icon-cue text-[14px] font-semibold text-[#0a555c] whitespace-nowrap inline-flex items-center gap-1.5 leading-none flex-shrink-0" aria-hidden="true">
+          {{-- Specs + CTA --}}
+          <div class="col-span-5 sm:col-span-4 flex flex-col sm:flex-row items-end sm:items-center justify-end gap-3 sm:gap-6">
+            <p class="hidden lg:block text-[13.5px] text-[#5c5e63] font-medium leading-[1.6]">{{ $p['specs'] }}</p>
+            <a href="{!! esc_url($p['url']) !!}"
+               aria-label="{{ $hp_row_detail_text }} {{ strip_tags($p['name']) }}"
+               class="text-[13.5px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 py-1.5 leading-none group"
+               onclick="event.stopPropagation()">
               <span>{{ $hp_row_detail_text }}</span>
-              <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 6h12v12"/>
                 <path d="M6 18 18 6"/>
               </svg>
-            </span>
+            </a>
           </div>
 
         </div>
-      </article>
+      </div>
       @endforeach
 
       {{-- Empty state untuk kategori yang belum ada produk --}}
-      <div id="drone-empty" class="hidden py-16 text-center border-b border-[#e5e5ea]">
-        <p class="fds-body" style="margin-inline:auto;">{{ $hp_prod_empty_text }}</p>
-        <a href="{!! esc_url(home_url('/kontak/#hubungi-form')) !!}" class="fds-text-link mt-3 group">
+      <div id="drone-empty" class="hidden py-16 text-center border-b border-black/[0.06]">
+        <p class="text-[15px] text-[#515154]">{{ $hp_prod_empty_text }}</p>
+        <a href="{!! esc_url(home_url('/kontak/#hubungi-form')) !!}" class="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group">
           <span>{{ $hp_prod_empty_cta }}</span>
-          <svg class="w-4 h-4 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
@@ -869,11 +1151,14 @@
 
     </x-reveal-group>
 
-    {{-- USP strip (Hairline Stats Band — Dinamis & Adaptif) --}}
+    {{-- USP strip (Dinamis & Adaptif: Otomatis Sembunyi Jika Dikosongkan) --}}
     @php
       $usp_stats_list = [];
       for ($ui = 1; $ui <= 4; $ui++) {
           $uNum = trim((string)($hp["produk_stat{$ui}_num"] ?? ''));
+          if ($uNum === '2012') {
+              $uNum = $ui === 4 ? 'Nasional' : '2019';
+          }
           $uLbl = trim((string)($hp["produk_stat{$ui}_lbl"] ?? ''));
           if ($uNum !== '' || $uLbl !== '') {
               $usp_stats_list[] = [
@@ -886,18 +1171,18 @@
     @endphp
 
     @if($total_usp_stats > 0)
-    <div class="fds-stats-band {{ $total_usp_stats >= 4 ? 'fds-stats-band--4' : '' }} mt-12">
+    <x-reveal-group :step="100" class="mt-14 grid grid-cols-2 {{ $total_usp_stats === 1 ? 'md:grid-cols-1 max-w-sm mx-auto' : ($total_usp_stats === 2 ? 'md:grid-cols-2 max-w-2xl mx-auto' : ($total_usp_stats === 3 ? 'md:grid-cols-3 max-w-4xl mx-auto' : 'md:grid-cols-4')) }} gap-6">
       @foreach($usp_stats_list as $ust)
-      <div class="fds-stat-cell">
+      <div class="text-center">
         @if(!empty($ust['num']))
-        <span class="fds-stat-num">{{ $ust['num'] }}</span>
+        <p class="font-display tabular-nums text-[32px] font-semibold text-[#1d1d1f] tracking-[-0.03em]">{{ $ust['num'] }}</p>
         @endif
         @if(!empty($ust['lbl']))
-        <span class="fds-stat-label">{{ $ust['lbl'] }}</span>
+        <p class="text-[13.5px] text-[#5c5e63] mt-1.5 font-medium">{{ $ust['lbl'] }}</p>
         @endif
       </div>
       @endforeach
-    </div>
+    </x-reveal-group>
     @endif
 
   </div>
@@ -941,23 +1226,84 @@ function filterDrones(btn) {
   $layanan_items = function_exists('App\fds_get_layanan_items') ? \App\fds_get_layanan_items() : [];
 @endphp
 @if(!empty($layanan_items) || !empty($hp['layanan_title']))
-<section id="layanan" class="fds-sec fds-bg-dark">
-  <x-fds-wave type="sektor" uid="home-layanan" />
+<section id="layanan" class="relative bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-24 sm:py-32">
+  
+  {{-- Vector Background: Lekukan Gelombang Organik Fluida (Harmonis dengan Teal Sistem #0f808a) --}}
+  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" style="contain: layout paint;">
+    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 700" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        {{-- Ambient Bottom-Left Glow --}}
+        <radialGradient id="layanan-ambient-bl" cx="10%" cy="90%" r="75%" fx="0%" fy="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.12" />
+          <stop offset="100%" stop-color="#0f808a" stop-opacity="0.0" />
+        </radialGradient>
 
-  <div class="fds-container">
-    <div class="fds-sticky-split">
+        {{-- Gradient Fade di Bagian Bawah --}}
+        <linearGradient id="layanan-bottom-dark" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#0f808a" stop-opacity="0.0" />
+          <stop offset="50%" stop-color="#0a555c" stop-opacity="0.25" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.65" />
+        </linearGradient>
 
-      <x-reveal-group :step="100" class="fds-sticky-col">
+        {{-- Lapisan 1 (Terluar - Lekukan Lebih Dalam, Halus, Alami & Tidak Datar) --}}
+        <linearGradient id="layanan-curve-fill1" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+          <stop offset="45%" stop-color="#75e6f0" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.60" />
+        </linearGradient>
+
+        {{-- Lapisan 2 (Tengah - Aksen Teal Hidup dengan Gradasi Lembut) --}}
+        <linearGradient id="layanan-curve-fill2" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#a3eef5" stop-opacity="0.20" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.18" />
+          <stop offset="100%" stop-color="#0a555c" stop-opacity="0.70" />
+        </linearGradient>
+
+        {{-- Lapisan 3 (Inti Luminous Wave di Sudut Kiri Bawah) --}}
+        <linearGradient id="layanan-curve-fill3" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.22" />
+          <stop offset="45%" stop-color="#46deec" stop-opacity="0.20" />
+          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.80" />
+        </linearGradient>
+
+        {{-- Lapisan 4 (Aksen Halus di Ujung Gelombang) --}}
+        <linearGradient id="layanan-curve-fill4" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#d1f7fa" stop-opacity="0.25" />
+          <stop offset="45%" stop-color="#18d6e7" stop-opacity="0.15" />
+          <stop offset="100%" stop-color="#031e20" stop-opacity="0.85" />
+        </linearGradient>
+      </defs>
+
+      <!-- Ambient Light Kiri Bawah -->
+      <rect width="1440" height="700" fill="url(#layanan-ambient-bl)" />
+
+      <!-- 4 Lapisan Vektor Organik: Lapisan Atas Dibuat Sangat Halus & Mengalir Luwes -->
+      <path d="M0,130 C260,150 540,290 820,440 C1080,570 1280,590 1440,540 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill1)" />
+      <path d="M0,290 C280,330 560,460 820,570 C1040,640 1260,655 1440,625 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill2)" />
+      <path d="M0,430 C240,450 480,530 720,610 C940,660 1180,670 1440,650 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill3)" />
+      <path d="M0,540 C180,550 360,610 560,650 C780,680 1060,685 1440,670 L1440,700 L0,700 Z" fill="url(#layanan-curve-fill4)" />
+
+      <!-- Gradient Overlay di Bagian Bawah untuk Transisi Halus -->
+      <rect y="420" width="1440" height="280" fill="url(#layanan-bottom-dark)" />
+    </svg>
+  </div>
+
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 relative z-10">
+
+    <div class="grid grid-cols-1 {{ !empty($layanan_items) ? 'lg:grid-cols-2' : 'max-w-2xl' }} gap-16 items-start">
+
+      <x-reveal-group :step="100" class="lg:sticky lg:top-28">
         @if(!empty($hp['layanan_badge']))
-        <p class="fds-caption" style="color:var(--color-teal-200);font-weight:600;margin-bottom:10px;">{{ $fds_hp_scrub($hp['layanan_badge']) }}</p>
+        <p class="text-[13px] font-semibold text-white/90 tracking-wide mb-4">{{ $fds_hp_scrub($hp['layanan_badge']) }}</p>
         @endif
         @if(!empty($hp['layanan_title']))
-        <h2 class="fds-h2" style="color:var(--fds-white);margin-bottom:18px;">
+        <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-white leading-[1.1] mb-5">
           {{ $fds_hp_scrub($hp['layanan_title']) }}
         </h2>
         @endif
         @if(!empty($hp['layanan_desc']))
-        <p class="fds-lead" style="color:rgba(255,255,255,0.88);margin-bottom:28px;">
+        <p class="text-[18px] text-white/80 leading-relaxed max-w-[380px] mb-8">
           {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['layanan_desc'])))) !!}
         </p>
         @endif
@@ -965,9 +1311,16 @@ function filterDrones(btn) {
         @php
           $layanan_cta_href = trim((string) ($hp['layanan_cta_url'] ?? '')) ?: home_url('/layanan/');
         @endphp
-        <a href="{!! esc_url($layanan_cta_href) !!}" class="fds-btn fds-btn--white-teal">
-          {{ $fds_hp_scrub($hp['layanan_cta_text']) }}
-        </a>
+        <div>
+          <a href="{!! esc_url($layanan_cta_href) !!}"
+             class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-md leading-none">
+            <span>{{ $fds_hp_scrub($hp['layanan_cta_text']) }}</span>
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
+          </a>
+        </div>
         @endif
       </x-reveal-group>
 
@@ -975,28 +1328,29 @@ function filterDrones(btn) {
       @php
         $hp_layanan_detail_text = trim($fds_hp_scrub($hp['layanan_detail_text'] ?? '')) ?: 'Lihat Detail';
       @endphp
-      <x-reveal-group :step="80" class="fds-hairline-list">
+      <x-reveal-group :step="100" class="divide-y divide-white/15">
         @foreach($layanan_items as $lItem)
         @php
           $item_href = (!empty($lItem['url']) && $lItem['url'] !== '#') ? $lItem['url'] : home_url('/layanan/');
         @endphp
-        <article class="fds-hairline-row fds-hairline-row--split fds-hairline-row--interactive group">
-          <div>
-            <h3 class="fds-h3" style="color:var(--fds-white);margin-bottom:6px;">
-              <a href="{!! esc_url($item_href) !!}" class="fds-stretched-link text-white group-hover:text-[#a3eef5] transition-colors" style="text-decoration:none;">
-                {{ $fds_clean($lItem['title']) }}
-              </a>
-            </h3>
-            @if(!empty($lItem['desc']))
-            <p class="fds-body" style="color:rgba(255,255,255,0.84);font-size:0.9375rem;">
-              {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($lItem['desc'])))) !!}
-            </p>
-            @endif
-          </div>
-          <span class="fds-icon-cue justify-self-end" aria-hidden="true">
-            <span class="sr-only">{{ $hp_layanan_detail_text }}</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
-          </span>
+        <article class="fds-service-card fds-service-card--dark py-7 cursor-pointer">
+          <h3 class="text-[17px] font-semibold text-white mb-1.5 flex items-center justify-between gap-4">
+            <a href="{!! esc_url($item_href) !!}" class="fds-stretched-link text-white">
+              {{ $fds_clean($lItem['title']) }}
+            </a>
+            <span class="fds-card-cta-cue text-[12.5px] font-semibold text-[#a3eef5] inline-flex items-center gap-1.5 leading-none flex-shrink-0" aria-hidden="true">
+              <span>{{ $hp_layanan_detail_text }}</span>
+              <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
+            </span>
+          </h3>
+          @if(!empty($lItem['desc']))
+          <p class="text-[15px] text-white/85 leading-relaxed">
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_clean($lItem['desc'])))) !!}
+          </p>
+          @endif
         </article>
         @endforeach
       </x-reveal-group>
@@ -1009,7 +1363,7 @@ function filterDrones(btn) {
 
 
 {{-- ========================================================== --}}
-{{-- 6. BLOG / NEWSROOM — Carousel 7 Berita Terbaru             --}}
+{{-- 6. BLOG / NEWSROOM ΓÇö Carousel 7 Berita Terbaru             --}}
 {{-- ========================================================== --}}
 @php
   $recent_posts = get_posts([
@@ -1018,111 +1372,214 @@ function filterDrones(btn) {
     'orderby'      => 'date',
     'order'        => 'DESC',
   ]);
-  $news_primary = !empty($recent_posts) ? array_slice($recent_posts, 0, 3) : [];
-  $news_more    = !empty($recent_posts) ? array_slice($recent_posts, 3) : [];
 @endphp
-<section id="blog" class="fds-sec fds-bg-light">
-  <div class="fds-container">
-    <x-reveal id="news-header-container" class="fds-sec-head fds-sec-head--split">
+<section id="blog" class="bg-[#f5f5f7] py-24 sm:py-32 overflow-hidden">
+  {{-- Header inside 1400px Container --}}
+  <x-reveal id="news-header-container" class="max-w-[1400px] mx-auto px-6 lg:px-12 mb-12">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
       <div>
-        <p class="fds-caption" style="color:var(--color-teal-800);font-weight:600;margin-bottom:10px;">{{ $fds_hp_scrub($hp['blog_badge'] ?? 'Newsroom') }}</p>
-        <h2 class="fds-h2" style="color:var(--fds-ink-primary);max-width:620px;">
+        <p class="text-[13px] font-semibold text-[#0f808a] tracking-wide mb-4">{{ $fds_hp_scrub($hp['blog_badge'] ?? 'Newsroom') }}</p>
+        <h2 class="text-[36px] sm:text-[48px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] max-w-[640px]">
           {{ $fds_hp_scrub($hp['blog_title'] ?? 'Berita & Pembaruan Terkini.') }}
         </h2>
       </div>
-      <a href="{!! esc_url(home_url('/blog/')) !!}" class="fds-text-link group flex-shrink-0">
-        <span>{{ $fds_hp_scrub($hp['blog_cta_text'] ?? 'Lihat semua artikel') }}</span>
-        <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6 6h12v12"/>
-          <path d="M6 18 18 6"/>
-        </svg>
-      </a>
-    </x-reveal>
+      <div class="flex-shrink-0">
+        <a href="{!! esc_url(home_url('/blog/')) !!}"
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-sm leading-none">
+          <span>{{ $fds_hp_scrub($hp['blog_cta_text'] ?? 'Lihat semua artikel') }}</span>
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </x-reveal>
 
-    @if(!empty($news_primary))
-    <x-reveal-group :step="70" class="fds-photo-cards-3">
-      @foreach($news_primary as $post)
+  {{-- Full Width Carousel Track (Apple Style: Bleeds to Screen Edge, Aligns to 1400px Left Padding) --}}
+  @if(!empty($recent_posts))
+  <div class="w-full">
+    <x-reveal-group :step="55" :modulo="4" data-reveal-carousel="true" id="news-carousel-track"
+         class="flex gap-6 overflow-x-auto snap-x snap-proximity pb-6 pt-2 hide-scrollbar w-full news-track-padding">
+
+      @foreach($recent_posts as $post)
         @php
           setup_postdata($post);
           $categories = get_the_category($post->ID);
           $cat_name = !empty($categories) ? $fds_clean($categories[0]->name) : 'Berita';
-          $n_thumb_id = get_post_thumbnail_id($post->ID);
-          $n_alt = $n_thumb_id ? trim($fds_clean(get_post_meta($n_thumb_id, '_wp_attachment_image_alt', true))) : '';
-          if ($n_alt === '') {
-              $n_alt = trim($fds_clean(get_the_title($post->ID))) . ' — Newsroom Full Drone Solutions';
-          }
         @endphp
-        <article class="fds-photo-card group">
-          <div class="fds-photo-card-frame" style="background-color:#e5e5ea;">
-            @if(has_post_thumbnail($post->ID))
-              {!! get_the_post_thumbnail($post->ID, 'medium_large', [
-                'class'    => 'w-full h-full object-cover',
-                'sizes'    => '(max-width: 768px) 100vw, 380px',
-                'alt'      => $n_alt,
-                'loading'  => 'lazy',
-                'decoding' => 'async',
-              ]) !!}
-            @else
-              <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8fbfd] to-[#d1f7fa]">
-                <svg class="w-10 h-10 text-[#0f808a]/35" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <article class="news-carousel-card fds-service-card fds-service-card--light fds-service-card--interactive fds-news-card w-[280px] sm:w-[320px] md:w-[340px] lg:w-[360px] min-h-[420px] sm:min-h-[440px] flex-shrink-0 snap-start bg-white rounded-[1.5rem] overflow-hidden group transition-[transform,border-color] duration-200 flex flex-col justify-between select-none shadow-sm border border-black/[0.04] cursor-pointer">
+          <div>
+            {{-- Image Box (Clean without covering tags) --}}
+            @php
+              $n_thumb_id = get_post_thumbnail_id($post->ID);
+              $n_alt = $n_thumb_id ? trim($fds_clean(get_post_meta($n_thumb_id, '_wp_attachment_image_alt', true))) : '';
+              if ($n_alt === '') {
+                  $n_alt = trim($fds_clean(get_the_title($post->ID))) . ' — Newsroom Full Drone Solutions';
+              }
+            @endphp
+            <div class="h-[180px] sm:h-[195px] overflow-hidden relative bg-[#e8e8ed]">
+              @if(has_post_thumbnail($post->ID))
+                {!! get_the_post_thumbnail($post->ID, 'medium_large', [
+                  'class'    => 'w-full h-full object-cover',
+                  'sizes'    => '(max-width: 640px) 280px, 360px',
+                  'alt'      => $n_alt,
+                  'loading'  => 'lazy',
+                  'decoding' => 'async',
+                ]) !!}
+              @else
+                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e8fbfd] to-[#d1f7fa]">
+                  <svg class="w-10 h-10 text-[#0f808a]/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+              @endif
+            </div>
+
+            {{-- Editorial Body --}}
+            <div class="p-6 sm:p-7 pb-4">
+              {{-- Category & Date Inline Meta --}}
+              <div class="flex items-center gap-2 text-[13px] mb-2.5">
+                <span class="font-semibold text-[#0f808a]">{{ $cat_name }}</span>
+                <span class="text-[#cbd5e1]">&bull;</span>
+                <span class="text-[#5c5e63]">{{ get_the_date('d M Y', $post->ID) }}</span>
               </div>
-            @endif
+
+              {{-- Article Title (Primary Stretched Link for Full-Card Click Area) --}}
+              <h3 class="text-[18px] sm:text-[19px] font-semibold text-[#1d1d1f] mb-2.5 leading-snug group-hover:text-[#0f808a] transition-colors line-clamp-2 min-h-[48px]">
+                <a href="{!! esc_url(get_permalink($post->ID)) !!}" class="fds-stretched-link">{{ $fds_clean(get_the_title($post->ID)) }}</a>
+              </h3>
+
+              {{-- Article Excerpt --}}
+              <p class="text-[14px] text-[#515154] leading-[1.62] line-clamp-3">
+                {{ $fds_clean(wp_strip_all_tags(get_the_excerpt($post->ID))) }}
+              </p>
+            </div>
           </div>
-          <p class="fds-caption mb-2" style="color:var(--fds-ink-muted-aa);">
-            <span style="color:var(--color-teal-800);font-weight:600;">{{ $cat_name }}</span> &middot; {{ get_the_date('d M Y', $post->ID) }}
-          </p>
-          <h3 class="fds-h3 flex items-start justify-between gap-3" style="color:var(--fds-ink-primary);">
-            <a href="{!! esc_url(get_permalink($post->ID)) !!}" class="fds-stretched-link text-[#1d1d1f] group-hover:text-[#0a555c] transition-colors" style="text-decoration:none;">
-              {{ $fds_clean(get_the_title($post->ID)) }}
-            </a>
-            <span class="fds-icon-cue mt-1" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
+
+          {{-- Clean Editorial Read More Action (Visual Cue; Entire Card Is Clickable) --}}
+          <div class="px-6 sm:px-7 pb-6 pt-0">
+            <span class="fds-card-cta-cue inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors leading-none" aria-hidden="true">
+              <span class="leading-none">{{ trim($fds_hp_scrub($hp['newsroom_read_more_text'] ?? '')) ?: 'Baca selengkapnya' }}</span>
+              <svg class="w-[18px] h-[18px] flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 6h12v12"/>
+                <path d="M6 18 18 6"/>
+              </svg>
             </span>
-          </h3>
+          </div>
         </article>
       @endforeach
+      @php wp_reset_postdata(); @endphp
+
     </x-reveal-group>
-
-    @if(!empty($news_more))
-    <details class="fds-quiet-details mt-10">
-      <summary class="fds-quiet-summary">Lihat artikel terbaru lainnya ({{ count($news_more) }})</summary>
-      <div class="fds-quiet-body fds-hairline-list" style="margin-top:16px;">
-        @foreach($news_more as $post)
-          @php
-            setup_postdata($post);
-            $categories = get_the_category($post->ID);
-            $cat_name = !empty($categories) ? $fds_clean($categories[0]->name) : 'Berita';
-          @endphp
-          <article class="fds-hairline-row fds-hairline-row--split fds-hairline-row--interactive group">
-            <div>
-              <p class="fds-caption mb-1">{{ $cat_name }} &middot; {{ get_the_date('d M Y', $post->ID) }}</p>
-              <h3 class="fds-h3" style="font-size:1.0625rem;">
-                <a href="{!! esc_url(get_permalink($post->ID)) !!}" class="fds-stretched-link text-[#1d1d1f] group-hover:text-[#0a555c] transition-colors" style="text-decoration:none;">
-                  {{ $fds_clean(get_the_title($post->ID)) }}
-                </a>
-              </h3>
-            </div>
-            <span class="fds-icon-cue justify-self-end" aria-hidden="true">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>
-            </span>
-          </article>
-        @endforeach
-      </div>
-    </details>
-    @endif
-    @php wp_reset_postdata(); @endphp
-
-    @else
-    <div class="bg-white rounded-3xl p-12 text-center border border-[#e5e5ea]">
-      <p class="fds-lead" style="margin-inline:auto;">{{ trim($fds_hp_scrub($hp['newsroom_empty_text'] ?? '')) ?: 'Belum ada artikel yang diterbitkan.' }}</p>
-    </div>
-    @endif
   </div>
+
+  {{-- Bottom Controls (Arrow Buttons Flush to 1400px Right Padding) --}}
+  <x-reveal :delay="150" class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="flex items-center justify-end gap-3 mt-6">
+      <button id="news-prev-btn" type="button" onclick="scrollNewsCarousel(-1)" aria-label="Sebelumnya"
+              class="w-11 h-11 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06] cursor-pointer">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="news-next-btn" type="button" onclick="scrollNewsCarousel(1)" aria-label="Berikutnya"
+              class="w-11 h-11 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06] cursor-pointer">
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </x-reveal>
+  @else
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
+    <div class="bg-[#f5f5f7] rounded-[1.5rem] p-12 text-center">
+      <p class="text-[17px] text-[#515154]">{{ trim($fds_hp_scrub($hp['newsroom_empty_text'] ?? '')) ?: 'Belum ada artikel yang diterbitkan.' }}</p>
+    </div>
+  </div>
+  @endif
 </section>
+
+<style>
+  .news-track-padding {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    scroll-padding-left: 1.5rem;
+    scroll-padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .news-track-padding {
+      padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-left: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+      scroll-padding-right: max(3rem, calc((100% - 1400px) / 2 + 3rem));
+    }
+  }
+</style>
+
+<script>
+function alignNewsTrack() {
+  const headerContainer = document.getElementById('news-header-container');
+  const track = document.getElementById('news-carousel-track');
+  if (!headerContainer || !track) return;
+
+  const rect = headerContainer.getBoundingClientRect();
+  const cs = window.getComputedStyle(headerContainer);
+  const padLeft = parseFloat(cs.paddingLeft) || 24;
+  const padRight = parseFloat(cs.paddingRight) || 24;
+
+  const exactLeft = Math.max(24, Math.round(rect.left + padLeft));
+  const exactRight = Math.max(24, Math.round(window.innerWidth - rect.right + padRight));
+
+  track.style.paddingLeft = exactLeft + 'px';
+  track.style.paddingRight = exactRight + 'px';
+  track.style.scrollPaddingLeft = exactLeft + 'px';
+  track.style.scrollPaddingRight = exactRight + 'px';
+}
+
+function scrollNewsCarousel(direction) {
+  const track = document.getElementById('news-carousel-track');
+  if (!track) return;
+  const card = track.querySelector('.news-carousel-card');
+  const scrollAmount = card ? (card.offsetWidth + 24) : 360;
+  track.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+}
+
+function updateNewsCarouselControls() {
+  const track = document.getElementById('news-carousel-track');
+  const prevBtn = document.getElementById('news-prev-btn');
+  const nextBtn = document.getElementById('news-next-btn');
+  if (!track) return;
+
+  const canScroll = track.scrollWidth > (track.clientWidth + 5);
+  if (!canScroll) {
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    return;
+  }
+
+  const isAtStart = track.scrollLeft <= 8;
+  const isAtEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 12;
+
+  if (prevBtn) prevBtn.disabled = isAtStart;
+  if (nextBtn) nextBtn.disabled = isAtEnd;
+}
+
+window.addEventListener('resize', function() {
+  alignNewsTrack();
+  updateNewsCarouselControls();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  alignNewsTrack();
+  const track = document.getElementById('news-carousel-track');
+  if (track) {
+    track.addEventListener('scroll', updateNewsCarouselControls, { passive: true });
+    setTimeout(function() {
+      alignNewsTrack();
+      updateNewsCarouselControls();
+    }, 100);
+  }
+});
+</script>
 
 
 {{-- ========================================================== --}}
-{{-- 7. CONTACT — Ocean-Teal Wave Split & Elevated Inquiry Card --}}
+{{-- 7. CONTACT ΓÇö Premium split layout & Full-width Map        --}}
 {{-- ========================================================== --}}
 @php
   $global_c  = function_exists('\App\fds_get_global_contact') ? \App\fds_get_global_contact() : [];
@@ -1133,65 +1590,102 @@ function filterDrones(btn) {
   $c_maps        = $global_c['maps_url'] ?? ($hp['kontak_maps'] ?? 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4859.550770370755!2d110.35575187584948!3d-7.733164692285225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a59ea1c47127b%3A0xd9a7f206f6f28d07!2sFull%20Drone%20Solutions!5e1!3m2!1sid!2sid!4v1787546079011!5m2!1sid!2sid');
   $show_map_home = isset($global_c['show_map_home']) ? (bool) $global_c['show_map_home'] : (isset($hp['show_map_home']) ? (bool) $hp['show_map_home'] : (bool) get_option('fds_show_map_home', 1));
 @endphp
-<section id="kontak" class="fds-sec fds-bg-teal">
-  <x-fds-wave type="kontak" uid="home-kontak" />
+<section id="kontak" class="bg-white py-16 sm:py-24 overflow-hidden">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
 
-  <div class="fds-container">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+    {{-- Unified Master Card: Seamless Dual-Surface (Apple/Linear Enterprise Hub) --}}
+    <x-reveal class="bg-white rounded-[2rem] border border-black/[0.08] shadow-2xl shadow-black/[0.06] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-stretch">
 
-      {{-- Left: Clean Contact Info Directly on Ocean-Teal Wave --}}
-      <div class="lg:col-span-5">
-        @if(!empty($hp['kontak_badge']))
-        <p class="fds-caption" style="color:var(--color-teal-200);font-weight:600;margin-bottom:10px;">
-          {{ $fds_hp_scrub($hp['kontak_badge'] ?? 'Enterprise Sales') }}
-        </p>
-        @endif
-        <h2 class="fds-h2" style="color:var(--fds-white);margin-bottom:16px;">
-          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")))) !!}
-        </h2>
-        <p class="fds-lead" style="color:rgba(255,255,255,0.9);margin-bottom:32px;">
-          {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor khusus, hingga program pelatihan operasional pilot.')))) !!}
-        </p>
+      {{-- Left Side: Vibrant Teal Architectural Panel (5 cols) with Ambient Dual-Orb Glow --}}
+      <div class="lg:col-span-5 bg-gradient-to-br from-[#13abb9] via-[#0f808a] to-[#0a555c] py-8 sm:py-9 px-8 sm:px-10 lg:px-12 text-white flex flex-col justify-between relative overflow-hidden border-b lg:border-b-0 lg:border-r border-white/[0.08] group">
 
-        <div class="fds-hairline-list" style="margin-bottom:28px;">
-          <div class="fds-hairline-row" style="padding-block:16px;">
-            <span class="fds-caption">{{ trim($fds_hp_scrub($hp['kontak_phone_label'] ?? '')) ?: 'Telepon / WhatsApp' }}</span>
-            <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener noreferrer"
-               class="text-[19px] font-semibold text-white hover:text-white/95 transition-colors" style="text-decoration:none;">
+        {{-- Vector Background: Ambient Dual-Orb Gradient Glow (Ref: Frame 3716.svg) --}}
+        <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+          <svg class="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105" viewBox="0 0 335 160" preserveAspectRatio="xMaxYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="orb1-kontak" x1="323.781" y1="-61" x2="286" y2="80" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
+              </linearGradient>
+              <linearGradient id="orb2-kontak" x1="239.637" y1="64.8558" x2="201.856" y2="205.856" gradientUnits="userSpaceOnUse">
+                <stop offset="0.15" stop-color="#0f808a" stop-opacity="0.1"/>
+                <stop offset="1" stop-color="#46deec" stop-opacity="1"/>
+              </linearGradient>
+            </defs>
+            <g opacity="0.65">
+              <circle cx="286" cy="5" r="75" fill="url(#orb1-kontak)"/>
+              <circle cx="201.856" cy="130.856" r="75" transform="rotate(-165 201.856 130.856)" fill="url(#orb2-kontak)"/>
+            </g>
+          </svg>
+        </div>
+
+        {{-- Top Header Section --}}
+        <div class="relative z-10">
+          <div class="mb-2">
+            <span class="text-[13px] font-semibold text-white/85 tracking-wide">
+              {{ $fds_hp_scrub($hp['kontak_badge'] ?? 'Enterprise Sales') }}
+            </span>
+          </div>
+
+          <h2 class="text-[24px] sm:text-[28px] lg:text-[30px] font-semibold tracking-tight text-white leading-tight mb-2.5">
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_title'] ?? "Hubungi tim Enterprise FDS.")))) !!}
+          </h2>
+          <p class="text-[14px] text-white/85 leading-[1.6] max-w-[420px]">
+            {!! nl2br(e(preg_replace('/(?<!\s)\R/u', " \n", $fds_hp_scrub($hp['kontak_desc'] ?? 'Konsultasi teknis armada UAV, integrasi sensor AI khusus, hingga program sertifikasi operasional pilot.')))) !!}
+          </p>
+        </div>
+
+        {{-- Direct Contact Information (Pinned to Bottom with Adaptive Space) --}}
+        <div class="mt-8 pt-2 space-y-4 relative z-10">
+          {{-- WhatsApp Channel --}}
+          <div>
+            <p class="text-[12.5px] font-medium text-white/80 mb-1">{{ trim($fds_hp_scrub($hp['kontak_phone_label'] ?? '')) ?: 'Telepon / WhatsApp' }}</p>
+            <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener"
+               class="text-[16px] sm:text-[17px] font-bold text-white hover:text-white/80 transition-colors">
               {{ $fds_clean($c_phone) }}
             </a>
           </div>
-          <div class="fds-hairline-row" style="padding-block:16px;">
-            <span class="fds-caption">{{ trim($fds_hp_scrub($hp['kontak_email_label'] ?? '')) ?: 'Email Bisnis' }}</span>
+
+          {{-- Email Channel --}}
+          <div>
+            <p class="text-[12.5px] font-medium text-white/80 mb-1">{{ trim($fds_hp_scrub($hp['kontak_email_label'] ?? '')) ?: 'Email Bisnis' }}</p>
             <a href="mailto:{{ $fds_clean($c_email) }}"
-               class="text-[16px] font-medium text-white hover:text-white/95 transition-colors break-all" style="text-decoration:none;">
+               class="text-[14.5px] sm:text-[15.5px] font-bold text-white hover:text-white/80 transition-colors break-all">
               {{ $fds_clean($c_email) }}
             </a>
           </div>
-          <div class="fds-hairline-row" style="padding-block:16px;">
-            <span class="fds-caption">{{ trim($fds_hp_scrub($hp['kontak_address_label'] ?? '')) ?: 'Lokasi Workshop & Testing Center' }}</span>
-            <p class="fds-body" style="color:rgba(255,255,255,0.92);font-size:0.9375rem;">
+
+          {{-- Workshop Location --}}
+          <div>
+            <p class="text-[12.5px] font-medium text-white/80 mb-1">{{ trim($fds_hp_scrub($hp['kontak_address_label'] ?? '')) ?: 'Lokasi Workshop & Testing Center' }}</p>
+            <p class="text-[13.5px] text-white/90 leading-[1.6] max-w-[400px]">
               {{ $fds_clean($c_address) }}
             </p>
           </div>
-        </div>
 
-        <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener noreferrer" class="fds-btn fds-btn--whatsapp">
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-          <span>{{ $fds_hp_scrub($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') }}</span>
-        </a>
+          {{-- WhatsApp Action Button --}}
+          <div class="pt-2">
+            <a href="{!! esc_url($c_wa_link) !!}" target="_blank" rel="noopener"
+               class="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.97] text-[#052b2e] font-semibold text-[14px] px-6 py-2.5 rounded-full transition-all duration-150 shadow-md min-h-[44px] leading-none">
+              <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              <span>{{ $fds_hp_scrub($hp['kontak_wa_text'] ?? 'Chat via WhatsApp') }}</span>
+            </a>
+          </div>
+        </div>
       </div>
 
-      {{-- Right: Elevated White Form Card --}}
-      <div class="lg:col-span-7 bg-white text-[#1d1d1f] rounded-[20px] p-7 sm:p-9 shadow-[0_24px_64px_-20px_rgba(3,30,32,0.35)]">
-        <div class="mb-6">
-          <h3 class="fds-h3 mb-1.5" style="color:var(--fds-ink-primary);">
+      {{-- Right Side: Streamlined Inquiry Form (7 cols) --}}
+      <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-[#f5f5f7] flex flex-col justify-between">
+        {{-- Form Header --}}
+        <div class="mb-4 sm:mb-5">
+          <h3 class="text-[20px] sm:text-[22px] font-semibold text-[#1d1d1f] tracking-tight mb-1.5">
             {{ $fds_hp_scrub($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') }}
           </h3>
-          <p class="fds-caption" style="margin:0;color:var(--fds-ink-muted-aa);">{{ $fds_hp_scrub($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') }}</p>
+          <p class="text-[14px] text-[#515154] leading-relaxed">{{ $fds_hp_scrub($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') }}</p>
         </div>
 
-        <form id="fds-inquiry-form" class="space-y-4" onsubmit="fdsSubmitInquiry(event)">
+        {{-- Form Body (Flex-1 to fill space evenly and balance with left panel) --}}
+        <form id="fds-inquiry-form" class="flex-1 flex flex-col justify-between space-y-3.5" onsubmit="fdsSubmitInquiry(event)">
           @php
             wp_nonce_field('fds_inquiry_nonce', 'fds_inquiry_nonce_val');
             $_fds_home_track = function_exists('App\fds_get_tracking_config') ? \App\fds_get_tracking_config() : [];
@@ -1201,7 +1695,7 @@ function filterDrones(btn) {
           @endphp
           <input type="hidden" name="service_slug" value="beranda-inquiry">
 
-          {{-- Anti-Bot Honeypot Trap --}}
+          {{-- Anti-Bot Honeypot Trap (Hidden from real users, traps spambots) --}}
           <div style="display:none !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
             <label for="fds_website_url_hp">Do not fill this field</label>
             <input type="text" id="fds_website_url_hp" name="website_url_hp" value="" tabindex="-1" autocomplete="off">
@@ -1223,59 +1717,62 @@ function filterDrones(btn) {
             $hp_map_title   = trim($fds_hp_scrub($hp['kontak_map_title'] ?? '')) ?: 'Lokasi Full Drone Solutions Sleman Yogyakarta';
             $hp_loading_txt = trim($fds_hp_scrub($hp['kontak_form_loading'] ?? '')) ?: 'Mengirim Pesan...';
           @endphp
+          <div class="space-y-3.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_fname_lbl }} <span class="text-red-500">*</span></label>
+                <input type="text" name="first_name" required maxlength="60" placeholder="{{ $hp_fname_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_lname_lbl }} <span class="text-red-500">*</span></label>
+                <input type="text" name="last_name" required maxlength="60" placeholder="{{ $hp_lname_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+            </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="home-fname" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_fname_lbl }} <span class="text-red-600">*</span></label>
-              <input id="home-fname" type="text" name="first_name" required maxlength="60" autocomplete="given-name" placeholder="{{ $hp_fname_ph }}"
-                class="w-full min-h-[46px] bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div>
+                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_company_lbl }} <span class="text-red-500">*</span></label>
+                <input type="text" name="company" required maxlength="100" placeholder="{{ $hp_company_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
+              <div>
+                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_email_lbl }} <span class="text-red-500">*</span></label>
+                <input type="email" name="email" required maxlength="100" placeholder="{{ $hp_email_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              </div>
             </div>
+
             <div>
-              <label for="home-lname" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_lname_lbl }} <span class="text-red-600">*</span></label>
-              <input id="home-lname" type="text" name="last_name" required maxlength="60" autocomplete="family-name" placeholder="{{ $hp_lname_ph }}"
-                class="w-full min-h-[46px] bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none">
+              <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_phone_lbl }} <span class="text-red-500">*</span></label>
+              <input type="tel" name="phone" required maxlength="30" placeholder="{{ $hp_phone_ph }}"
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
             </div>
+
+            <div>
+              <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_msg_lbl }} <span class="text-red-500">*</span></label>
+              <textarea name="message" rows="3" required maxlength="3000" placeholder="{{ $hp_msg_ph }}"
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+            </div>
+
+            @if($_fds_home_use_ts)
+              <div class="pt-1">
+                <div class="cf-turnstile" data-sitekey="{{ $_fds_home_ts_key }}" data-theme="light"></div>
+              </div>
+              @once
+                <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+              @endonce
+            @endif
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label for="home-company" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_company_lbl }} <span class="text-red-600">*</span></label>
-              <input id="home-company" type="text" name="company" required maxlength="100" autocomplete="organization" placeholder="{{ $hp_company_ph }}"
-                class="w-full min-h-[46px] bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none">
-            </div>
-            <div>
-              <label for="home-email" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_email_lbl }} <span class="text-red-600">*</span></label>
-              <input id="home-email" type="email" name="email" required maxlength="100" autocomplete="email" placeholder="{{ $hp_email_ph }}"
-                class="w-full min-h-[46px] bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none">
-            </div>
-          </div>
-
-          <div>
-            <label for="home-phone" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_phone_lbl }} <span class="text-red-600">*</span></label>
-            <input id="home-phone" type="tel" name="phone" required maxlength="30" autocomplete="tel" placeholder="{{ $hp_phone_ph }}"
-              class="w-full min-h-[46px] bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none">
-          </div>
-
-          <div>
-            <label for="home-msg" class="block text-[13.5px] font-semibold text-[#1d1d1f] mb-1.5">{{ $hp_msg_lbl }} <span class="text-red-600">*</span></label>
-            <textarea id="home-msg" name="message" rows="3" required maxlength="3000" placeholder="{{ $hp_msg_ph }}"
-              class="w-full bg-[#fbfbfd] border border-[#d2d2d7] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[15px] text-[#1d1d1f] placeholder-[#73767d] outline-none resize-none"></textarea>
-          </div>
-
-          @if($_fds_home_use_ts)
-            <div class="pt-1">
-              <div class="cf-turnstile" data-sitekey="{{ $_fds_home_ts_key }}" data-theme="light"></div>
-            </div>
-            @once
-              <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-            @endonce
-          @endif
-
-          <div class="pt-2">
-            <button type="submit" id="fds-inquiry-btn" class="fds-btn fds-btn--primary group">
+          {{-- Submit Row (Docked to bottom, without divider line) --}}
+          <div class="pt-2 mt-auto">
+            <button type="submit" id="fds-inquiry-btn"
+              class="bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white font-semibold text-[14px] px-6 py-2.5 min-h-[44px] rounded-full transition-all duration-200 whitespace-nowrap shadow-md shadow-black/15 inline-flex items-center justify-center gap-2 leading-none cursor-pointer group">
               <span id="fds-inquiry-btn-text">{{ $fds_hp_scrub($hp['kontak_form_btn_text'] ?? 'Kirim Permintaan Konsultasi') }}</span>
-              <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" aria-hidden="true">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <span id="fds-inquiry-btn-arrow" class="inline-flex items-center justify-center transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0">
+                <svg class="w-[17px] h-[17px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M6 6h12v12"/>
                   <path d="M6 18 18 6"/>
                 </svg>
@@ -1288,32 +1785,33 @@ function filterDrones(btn) {
               }
             @endphp
             @if($home_form_note_raw !== '')
-            <p class="fds-caption mt-3 flex items-center gap-1.5" style="color:var(--fds-ink-muted-aa);">
-              <svg class="w-4 h-4 text-[#0a555c] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <p class="text-[12.5px] text-[#515154] leading-relaxed mt-3 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
               <span>{{ $home_form_note_raw }}</span>
             </p>
             @endif
           </div>
+
         </form>
       </div>
 
-    </div>
-
-    @if($show_map_home && !empty($c_maps))
-    <div class="mt-12 rounded-[18px] overflow-hidden shadow-[0_18px_48px_-12px_rgba(3,30,32,0.35)] border border-white/20" style="height: 300px;">
-      <iframe
-        src="{!! esc_url($c_maps) !!}"
-        width="100%"
-        height="100%"
-        style="border:0;"
-        allowfullscreen=""
-        loading="lazy"
-        referrerpolicy="strict-origin-when-cross-origin"
-        title="{{ $hp_map_title }}">
-      </iframe>
-    </div>
-    @endif
+    </x-reveal>
   </div>
+
+  @if($show_map_home && !empty($c_maps))
+  <x-reveal :delay="100" class="w-full overflow-hidden border-t border-black/[0.08] relative mt-12" style="height: 320px;">
+    <iframe
+      src="{!! esc_url($c_maps) !!}"
+      width="100%"
+      height="100%"
+      style="border:0;"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      title="{{ $hp_map_title }}">
+    </iframe>
+  </x-reveal>
+  @endif
 </section>
 
 {{-- Floating Bottom-Right Toast / Snackbar Notification --}}

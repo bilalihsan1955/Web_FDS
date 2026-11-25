@@ -348,6 +348,14 @@ HTML;
                     update_option($opt_name, 'Lokal');
                     continue;
                 }
+                if ($opt_name === 'fds_keunggulan_card6_stat' && trim((string) $raw_val) === '2012') {
+                    update_option($opt_name, '2019');
+                    continue;
+                }
+                if ($opt_name === 'fds_produk_stat4_num' && trim((string) $raw_val) === '2012') {
+                    update_option($opt_name, 'Nasional');
+                    continue;
+                }
                 if ($opt_name === 'fds_about_stat1_lbl' && preg_match('/2012|Berdiri/i', (string) $raw_val)) {
                     update_option($opt_name, 'Desain & Perakitan Indonesia');
                     continue;
@@ -553,6 +561,8 @@ HTML;
             'fds_mega_menu_data',
             'fds_mega_menu_data_v2',
             'fds_mega_menu_data_v3',
+            'fds_mega_menu_data_v4',
+            'fds_mega_menu_data_v5',
             'fds_bandingkan_catalog_cache',
             'fds_bandingkan_catalog_cache_v2',
             'fds_bandingkan_catalog_cache_v3',

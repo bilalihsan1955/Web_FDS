@@ -28,24 +28,11 @@
       $s = function_exists('fds_clean_string') ? fds_clean_string($s) : html_entity_decode(wp_specialchars_decode($s, ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8');
       return function_exists('fds_scrub_legacy_text') ? fds_scrub_legacy_text($s) : $s;
   };
-  $arrow_svg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>';
+  $arrow_svg = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h12v12"/><path d="M6 18 18 6"/></svg>';
   $chev_svg  = '<svg class="fds-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 9l-7 7-7-7"/></svg>';
-  $img_base  = get_template_directory_uri() . '/public/images/';
-
-  $resolved_reading_links = [];
-  foreach (($hub['reading_links'] ?? []) as $rl) {
-      $url = !empty($rl['url'])
-          ? (string) $rl['url']
-          : (!empty($rl['slug']) && function_exists('App\fds_resolve_optional_post_url')
-              ? \App\fds_resolve_optional_post_url((string) $rl['slug'])
-              : '');
-      if ($url !== '' && !empty($rl['label'])) {
-          $resolved_reading_links[] = ['label' => $cln($rl['label']), 'url' => $url];
-      }
-  }
-  $intro_paras  = $hub['intro_paragraphs'] ?? [];
-  $lead_intro   = !empty($intro_paras[0]) ? $cln($intro_paras[0]) : $cln($hub['hero_summary'] ?? '');
-  $extra_intros = array_slice($intro_paras, 1);
+  $img_base    = get_template_directory_uri() . '/public/images/';
+  $intro_paras = $hub['intro_paragraphs'] ?? [];
+  $lead_intro  = !empty($intro_paras[0]) ? $cln($intro_paras[0]) : $cln($hub['hero_summary'] ?? '');
 
   $hub_gallery = [
       ['url' => $img_base . 'sectors/pertambangan.webp', 'caption' => 'Akuisisi Drone LiDAR Sektor Pertambangan'],
@@ -70,21 +57,13 @@
        data-no-lazy="1">
   <div class="fds-cinema-scrim"></div>
   <div class="fds-container">
-    <div class="fds-cinema-content">
-      <h1 class="fds-h1" style="margin-bottom:20px;">
+    <div class="fds-cinema-content fds-hero-entrance fds-hero-delay-1">
+      <h1 class="fds-h1 fds-h1--soft" style="margin-bottom:20px;">
         {{ $cln($hub['h1'] ?? 'UAV Technology. Intelligent Data. Real Industrial Solutions.') }}
       </h1>
-      <p class="fds-lead" style="margin-bottom:32px;">
+      <p class="fds-lead">
         {{ $cln($hub['hero_summary'] ?? ($hub['subtitle'] ?? '')) }}
       </p>
-      <div class="fds-btn-group">
-        <a href="{!! esc_url($hub_primary_cta_url) !!}" class="fds-btn fds-btn--white-teal">
-          {{ $cln($hub['cta_primary_text'] ?? 'Minta Penawaran Proyek') }}
-        </a>
-        <a href="{!! esc_url($wa_cta_url) !!}" target="_blank" rel="noopener noreferrer" class="fds-btn fds-btn--whatsapp">
-          {{ $cln($ui['cta_wa_text'] ?? 'Konsultasi via WhatsApp') }}
-        </a>
-      </div>
     </div>
   </div>
 </section>
@@ -93,13 +72,13 @@
 <section class="fds-sec fds-bg-white">
   <div class="fds-container">
     <div class="fds-story-split">
-      <div>
+      <div data-aos="fade-up">
         <h2 class="fds-h2" style="margin-bottom:18px;">
           {{ $cln($ui['hub_intro_heading'] ?? 'Ekosistem Layanan Pemetaan, Sensor & UAV Nasional') }}
         </h2>
         <p class="fds-lead">{{ $lead_intro }}</p>
       </div>
-      <figure class="fds-media-stage">
+      <figure class="fds-media-stage" data-aos="fade-up" data-aos-delay="90">
         <img src="{!! esc_url($img_base . 'site/workshop-deltav.webp') !!}" alt="Ekosistem Manufaktur dan Layanan UAV Full Drone Solutions" loading="lazy" decoding="async" width="1200" height="750">
       </figure>
     </div>
@@ -110,15 +89,15 @@
 <section id="solusi-industri" class="fds-sec fds-bg-teal scroll-mt-24">
   <x-fds-wave type="fluid" uid="hub-sectors" />
   <div class="fds-container">
-    <div class="fds-sec-head fds-sec-head--split">
+    <div class="fds-sec-head fds-sec-head--split" data-aos="fade-up">
       <div>
         <h2 class="fds-h2">{{ $cln($ui['hub_sectors_heading'] ?? 'Enam Sektor Industri Strategis') }}</h2>
         <p class="fds-lead" style="margin-top:14px;">{{ $cln($ui['hub_sectors_desc'] ?? 'Pilih sektor operasional Anda untuk mempelajari cakupan survei udara dan output teknis lengkap.') }}</p>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-reveal-group data-reveal-step="80" data-reveal-modulo="3">
       @foreach($sectors as $sector)
-        <article class="relative rounded-2xl overflow-hidden min-h-[290px] flex flex-col justify-end p-6 sm:p-7 bg-[#052b2e] group">
+        <article class="relative rounded-2xl overflow-hidden aspect-[16/10] flex flex-col justify-end p-6 sm:p-7 bg-[#052b2e] group">
           <img src="{!! esc_url($sector['image']) !!}" alt="{{ $cln($sector['image_alt']) }}" loading="lazy" decoding="async" width="800" height="500"
                class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 z-0">
           <div class="absolute inset-0 pointer-events-none z-10" style="background:linear-gradient(180deg, rgba(5,43,46,0.06) 0%, rgba(5,43,46,0.65) 54%, rgba(3,30,32,0.96) 100%);"></div>
@@ -138,13 +117,13 @@
 </section>
 
 {{-- 4. KATEGORI LAYANAN SPESIALIS & PELATIHAN --}}
-<section id="kategori-layanan" class="fds-sec fds-bg-white scroll-mt-24">
+<section id="kategori-layanan" class="fds-sec fds-bg-light scroll-mt-24">
   <div class="fds-container">
-    <div class="fds-sec-head fds-sec-head--split">
+    <div class="fds-sec-head fds-sec-head--split" data-aos="fade-up">
       <div><h2 class="fds-h2">{{ $cln($ui['hub_categories_heading'] ?? 'Foto Udara, LiDAR, Sensor Spektral & Pelatihan Tim') }}</h2></div>
       <div><p class="fds-lead">{{ $cln($ui['hub_categories_desc'] ?? 'Kapabilitas akuisisi data geospasial dan peningkatan kapasitas operator lintas sektor.') }}</p></div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-9">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-9" data-reveal-group data-reveal-step="85" data-reveal-modulo="3">
       @foreach($categories as $cat)
         <article class="pt-5 border-t-2 border-[#0f808a] relative group">
           <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;">
@@ -161,39 +140,41 @@
 </section>
 
 {{-- 5. ALUR KERJA & MATRIKS SENSOR --}}
-<section class="fds-sec fds-bg-light">
+<section class="fds-sec fds-bg-white">
   <div class="fds-container fds-sticky-split">
     <div class="fds-sticky-col">
-      <h2 class="fds-h2" style="margin-bottom:14px;">{{ $cln($hub['workflow']['title'] ?? 'Alur Kerja Layanan Lapangan hingga Dashboard Operasional') }}</h2>
-      <p class="fds-lead" style="margin-bottom:24px;">{{ $cln($hub['workflow']['desc'] ?? '') }}</p>
-      @if(!empty($hub['method_comparison']['columns']) && !empty($hub['method_comparison']['rows']))
-        @php $mc = $hub['method_comparison']; @endphp
-        <details class="fds-quiet-details" style="margin-top:0;">
-          <summary class="fds-quiet-summary">Lihat matriks perbandingan metode sensor {!! $chev_svg !!}</summary>
-          <div class="fds-quiet-body">
-            <div class="fds-table-wrap">
-              <table class="fds-table">
-                <thead>
-                  <tr>
-                    @foreach($mc['columns'] as $colTitle)<th scope="col">{{ $cln($colTitle) }}</th>@endforeach
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach($mc['rows'] as $row)
+      <div data-aos="fade-up">
+        <h2 class="fds-h2" style="margin-bottom:14px;">{{ $cln($hub['workflow']['title'] ?? 'Alur Kerja Layanan Lapangan hingga Dashboard Operasional') }}</h2>
+        <p class="fds-lead" style="margin-bottom:24px;">{{ $cln($hub['workflow']['desc'] ?? '') }}</p>
+        @if(!empty($hub['method_comparison']['columns']) && !empty($hub['method_comparison']['rows']))
+          @php $mc = $hub['method_comparison']; @endphp
+          <details class="fds-quiet-details" style="margin-top:0;">
+            <summary class="fds-quiet-summary">Lihat matriks perbandingan metode sensor {!! $chev_svg !!}</summary>
+            <div class="fds-quiet-body">
+              <div class="fds-table-wrap">
+                <table class="fds-table">
+                  <thead>
                     <tr>
-                      @foreach($row as $cIdx => $cell)
-                        <td @if($cIdx === 0) style="font-weight:600;color:var(--fds-ink-primary);" @endif>{{ $cln($cell) }}</td>
-                      @endforeach
+                      @foreach($mc['columns'] as $colTitle)<th scope="col">{{ $cln($colTitle) }}</th>@endforeach
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    @foreach($mc['rows'] as $row)
+                      <tr>
+                        @foreach($row as $cIdx => $cell)
+                          <td @if($cIdx === 0) style="font-weight:600;color:var(--fds-ink-primary);" @endif>{{ $cln($cell) }}</td>
+                        @endforeach
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        </details>
-      @endif
+          </details>
+        @endif
+      </div>
     </div>
-    <div class="fds-faq-list">
+    <div class="fds-faq-list" data-reveal-group data-reveal-step="60">
       @foreach($hub['workflow']['steps'] ?? [] as $step)
         <details class="fds-faq-row">
           <summary class="fds-faq-summary">
@@ -212,10 +193,14 @@
   </div>
 </section>
 
+@php
+  $hub_galeri_cls = !empty($hub['faqs']) ? 'fds-bg-light' : 'fds-bg-white';
+@endphp
+
 {{-- 6. GALERI DOKUMENTASI LAPANGAN --}}
-<section id="galeri" class="fds-sec fds-bg-white scroll-mt-24">
+<section id="galeri" class="fds-sec {{ $hub_galeri_cls }} scroll-mt-24">
   <div class="fds-container">
-    <div class="fds-sec-head">
+    <div class="fds-sec-head" data-aos="fade-up">
       <h2 class="fds-h2">Dokumentasi Operasi Lintas Sektor.</h2>
     </div>
     <x-fds-gallery :items="$hub_gallery" variant="bento" />
@@ -227,56 +212,7 @@
   :title="$ui['hub_faq_title'] ?? 'Pertanyaan Umum Layanan FDS'"
   :subtitle="$ui['hub_faq_subtitle'] ?? 'Informasi awal terkait ruang lingkup proyek, pemilihan metode survei udara, integrasi data spasial GIS, dan prosedur konsultasi.'"
   :faqs="$hub['faqs'] ?? []"
-  sectionBg="gray"
+  sectionBg="white"
 />
-
-{{-- 8. QUIET FOOTNOTE BAND --}}
-@if(!empty($extra_intros) || !empty($hub['challenge_section']) || !empty($hub['why_fds']) || !empty($hub['cost_framework']) || !empty($hub['eeat_proof']))
-<section class="fds-footnote-band" aria-label="Referensi Teknis Layanan UAV FDS">
-  <div class="fds-container">
-    <details class="fds-quiet-details" style="margin-top:0;">
-      <summary class="fds-quiet-summary">Referensi Teknis, Persiapan KAK &amp; Keandalan Manufaktur {!! $chev_svg !!}</summary>
-      <div class="fds-quiet-body fds-prose">
-        @foreach($extra_intros as $ep)
-          <p class="fds-body" style="margin-bottom:10px;">{{ $cln($ep) }}</p>
-        @endforeach
-        @if(!empty($hub['why_fds']['items']))
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($hub['why_fds']['title'] ?? '') }}</h2>
-          <ul style="margin:0 0 12px;padding-left:20px;display:grid;gap:6px;">
-            @foreach($hub['why_fds']['items'] as $why)
-              <li class="fds-body"><strong>{{ $cln($why['title'] ?? '') }}:</strong> {{ $cln($why['desc'] ?? '') }}</li>
-            @endforeach
-          </ul>
-        @endif
-        @if(!empty($hub['cost_framework']['factors']))
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($hub['cost_framework']['title'] ?? '') }}</h2>
-          <ul style="margin:0 0 12px;padding-left:20px;display:grid;gap:6px;">
-            @foreach($hub['cost_framework']['factors'] as $fac)
-              <li class="fds-body"><strong>{{ $cln($fac['name'] ?? '') }}:</strong> {{ $cln($fac['desc'] ?? '') }}</li>
-            @endforeach
-          </ul>
-        @endif
-        @if(!empty($hub['eeat_proof']))
-          @php $ep = $hub['eeat_proof']; @endphp
-          <h2 class="fds-h3" style="margin:18px 0 6px;">{{ $cln($ep['title'] ?? '') }}</h2>
-          @if(!empty($ep['intro']))<p class="fds-body" style="margin-bottom:8px;">{{ $cln($ep['intro']) }}</p>@endif
-          @if(!empty($ep['bullets']))
-            <ul style="margin:0 0 12px;padding-left:20px;display:grid;gap:4px;">
-              @foreach($ep['bullets'] as $eb)<li class="fds-body">{{ $cln($eb) }}</li>@endforeach
-            </ul>
-          @endif
-        @endif
-        @if(!empty($resolved_reading_links))
-          <ul style="margin:8px 0 0;padding-left:20px;display:grid;gap:4px;">
-            @foreach($resolved_reading_links as $rl)
-              <li><a href="{!! esc_url($rl['url']) !!}" style="color:var(--color-teal-800);">{{ $rl['label'] }}</a></li>
-            @endforeach
-          </ul>
-        @endif
-      </div>
-    </details>
-  </div>
-</section>
-@endif
 
 @endsection

@@ -59,7 +59,7 @@
     </div>
 
     <div class="p-6 sm:p-7 pb-4">
-      <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11.5px] font-semibold leading-tight min-h-[20px] mb-2">
+      <div class="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[12.5px] font-semibold leading-snug min-h-[22px] mb-2">
         <span class="text-[#0f808a]">{{ $kategori }}</span>
         @if($isFerto)
           <span class="text-[#d2d2d7]" aria-hidden="true">/</span>
@@ -77,7 +77,7 @@
         </a>
       </h3>
 
-      <p class="mt-2 text-[14px] text-[#515154] leading-relaxed line-clamp-2 min-h-[45px]">
+      <p class="mt-2 text-[14.5px] text-[#424245] leading-[1.6] line-clamp-2 min-h-[48px]">
         {{ $tagline !== '' ? $tagline : 'Platform UAV manufaktur PT Karya Solusi Angkasa (FDS) Sleman, Yogyakarta.' }}
       </p>
     </div>
@@ -86,11 +86,11 @@
   <div class="px-6 sm:px-7 pb-6 pt-3 mt-auto">
     <dl class="pt-3.5 mb-4 border-t border-black/[0.07] grid grid-cols-2 gap-3 text-[13px]">
       <div>
-        <dt class="text-[#6e6e73] font-medium">Kapasitas / Muatan</dt>
+        <dt class="text-[#5c5e63] font-medium">Kapasitas / Muatan</dt>
         <dd class="text-[#1d1d1f] font-semibold mt-0.5 truncate" title="{{ $kapasitas !== '' ? $kapasitas : 'Modular' }}">{{ $kapasitas !== '' ? $kapasitas : 'Modular' }}</dd>
       </div>
       <div>
-        <dt class="text-[#6e6e73] font-medium">{{ $metricLabel }}</dt>
+        <dt class="text-[#5c5e63] font-medium">{{ $metricLabel }}</dt>
         <dd class="text-[#1d1d1f] font-semibold mt-0.5 truncate" title="{{ $metricValue }}">{{ $metricValue }}</dd>
       </div>
     </dl>

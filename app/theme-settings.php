@@ -165,6 +165,28 @@ add_action('admin_enqueue_scripts', function ($hook) {
     }
 });
 
+// 3b. PENGATURAN KATEGORI UTAMA MEGA MENU PRODUK (berbasis term_id, aman saat nama/slug diubah)
+if (!function_exists(__NAMESPACE__ . '\\fds_get_menu_prod_primary_cat_id')) {
+    function fds_get_menu_prod_primary_cat_id(): int {
+        $raw = trim((string) get_option('fds_menu_prod_primary_cat', 'auto'));
+        if ($raw === '' || $raw === 'auto') {
+            return 0;
+        }
+        return absint($raw);
+    }
+}
+
+if (!function_exists(__NAMESPACE__ . '\\fds_get_menu_prod_limits')) {
+    function fds_get_menu_prod_limits(): array {
+        $primary_raw = (int) get_option('fds_menu_prod_primary_limit', 6);
+        $other_raw   = (int) get_option('fds_menu_prod_other_limit', 2);
+        return [
+            'primary' => max(1, min(12, $primary_raw > 0 ? $primary_raw : 6)),
+            'other'   => max(1, min(12, $other_raw > 0 ? $other_raw : 2)),
+        ];
+    }
+}
+
 // 4. HELPER UNTUK MENGAMBIL DATA LOGO & BRAND NAVBAR DI FRONTEND
 function fds_get_navbar_brand(bool $fresh = false) {
     static $memo = null;
@@ -272,6 +294,9 @@ function fds_get_navbar_brand(bool $fresh = false) {
         'menu_prod_heading'       => get_option('fds_menu_prod_heading', 'Ekosistem & Standar Mutu'),
         'menu_prod_all_label'     => get_option('fds_menu_prod_all_label', 'Lihat Semua Produk UAV') ?: 'Lihat Semua Produk UAV',
         'menu_prod_ferto_suffix'  => get_option('fds_menu_prod_ferto_suffix', '(Seri FERTO)') ?: '(Seri FERTO)',
+        'menu_prod_primary_cat'   => get_option('fds_menu_prod_primary_cat', 'auto') ?: 'auto',
+        'menu_prod_primary_limit' => (int) get_option('fds_menu_prod_primary_limit', 6) ?: 6,
+        'menu_prod_other_limit'   => (int) get_option('fds_menu_prod_other_limit', 2) ?: 2,
         'menu_prod_more_prefix'   => get_option('fds_menu_prod_more_prefix', '+ Lihat {count} lainnya') ?: '+ Lihat {count} lainnya',
         'menu_prod_empty_label'   => get_option('fds_menu_prod_empty_label', 'Belum ada drone pada kategori ini.') ?: 'Belum ada drone pada kategori ini.',
         'menu_prod_item1_title'   => get_option('fds_menu_prod_item1_title', 'FDS Station GCS'),
@@ -533,6 +558,12 @@ function render_navbar_settings_admin_page() {
         $menu_prod_heading      = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')));
         $menu_prod_all_label    = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_all_label'] ?? 'Lihat Semua Produk UAV')));
         $menu_prod_ferto_suffix = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_ferto_suffix'] ?? '(Seri FERTO)')));
+        $menu_prod_primary_cat  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_primary_cat'] ?? 'auto')));
+        $menu_prod_primary_cat  = ($menu_prod_primary_cat === '' || $menu_prod_primary_cat === 'auto') ? 'auto' : (string) absint($menu_prod_primary_cat);
+        $menu_prod_primary_limit = absint($_POST['fds_menu_prod_primary_limit'] ?? 6);
+        $menu_prod_other_limit   = absint($_POST['fds_menu_prod_other_limit'] ?? 2);
+        $menu_prod_primary_limit = max(1, min(12, $menu_prod_primary_limit > 0 ? $menu_prod_primary_limit : 6));
+        $menu_prod_other_limit   = max(1, min(12, $menu_prod_other_limit > 0 ? $menu_prod_other_limit : 2));
         $menu_prod_more_prefix  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_more_prefix'] ?? '+ Lihat {count} lainnya')));
         $menu_prod_empty_label  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_empty_label'] ?? 'Belum ada drone pada kategori ini.')));
         $menu_prod_item1_title  = sanitize_text_field(wp_unslash((string) ($_POST['fds_menu_prod_item1_title'] ?? 'FDS Station GCS')));
@@ -585,6 +616,9 @@ function render_navbar_settings_admin_page() {
         update_option('fds_menu_prod_heading', $menu_prod_heading);
         update_option('fds_menu_prod_all_label', $menu_prod_all_label);
         update_option('fds_menu_prod_ferto_suffix', $menu_prod_ferto_suffix);
+        update_option('fds_menu_prod_primary_cat', $menu_prod_primary_cat);
+        update_option('fds_menu_prod_primary_limit', $menu_prod_primary_limit);
+        update_option('fds_menu_prod_other_limit', $menu_prod_other_limit);
         update_option('fds_menu_prod_more_prefix', $menu_prod_more_prefix);
         update_option('fds_menu_prod_empty_label', $menu_prod_empty_label);
         update_option('fds_menu_prod_item1_title', $menu_prod_item1_title);
@@ -609,6 +643,8 @@ function render_navbar_settings_admin_page() {
         delete_transient('fds_navbar_brand_cache_v4');
         delete_transient('fds_mega_menu_data_v2');
         delete_transient('fds_mega_menu_data_v3');
+        delete_transient('fds_mega_menu_data_v4');
+        delete_transient('fds_mega_menu_data_v5');
         delete_transient('fds_bandingkan_catalog_cache_v2');
         delete_transient('fds_bandingkan_catalog_cache_v3');
         delete_transient('fds_bandingkan_catalog_cache_v4');
@@ -1331,6 +1367,40 @@ function render_navbar_settings_admin_page() {
                                         <input type="text" name="fds_menu_prod_empty_label" value="<?php echo esc_attr($brand_data['menu_prod_empty_label']); ?>" style="width: 100%; font-size: 12px;">
                                     </div>
                                 </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 10px; border-top: 1px dashed #e2e8f0;">
+                                    <div>
+                                        <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Kategori Paling Banyak (Utama)</label>
+                                        <select name="fds_menu_prod_primary_cat" style="width: 100%; font-size: 12px;">
+                                            <option value="auto" <?php selected((string) $brand_data['menu_prod_primary_cat'], 'auto'); ?>>Otomatis (terbanyak drone)</option>
+                                            <?php
+                                            $fds_menu_cats = get_terms([
+                                                'taxonomy'   => 'kategori_drone',
+                                                'hide_empty' => false,
+                                                'orderby'    => 'name',
+                                                'order'      => 'ASC',
+                                            ]);
+                                            if (!is_wp_error($fds_menu_cats)) {
+                                                foreach ($fds_menu_cats as $fds_menu_cat) {
+                                                    echo '<option value="' . esc_attr((int) $fds_menu_cat->term_id) . '" '
+                                                        . selected((string) $brand_data['menu_prod_primary_cat'], (string) (int) $fds_menu_cat->term_id, false) . '>'
+                                                        . esc_html($fds_menu_cat->name) . '</option>';
+                                                }
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                        <div>
+                                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Jumlah Utama</label>
+                                            <input type="number" min="1" max="12" name="fds_menu_prod_primary_limit" value="<?php echo esc_attr((string) $brand_data['menu_prod_primary_limit']); ?>" style="width: 100%; font-size: 12px;">
+                                        </div>
+                                        <div>
+                                            <label style="display: block; font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 2px;">Jumlah Lainnya</label>
+                                            <input type="number" min="1" max="12" name="fds_menu_prod_other_limit" value="<?php echo esc_attr((string) $brand_data['menu_prod_other_limit']); ?>" style="width: 100%; font-size: 12px;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <p style="margin: 0; color: #64748b; font-size: 11px; line-height: 1.5;">Menu memakai ID kategori WordPress (aman saat nama/slug diganti) dan tersinkronisasi 1:1 dengan halaman katalog <code>/produk/</code>. Untuk mengatur urutan angka detail setiap kategori (1, 2, 3...), gunakan kolom <strong>Urutan Tampil</strong> di <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=kategori_drone&post_type=drone')); ?>">Produk Drone &rarr; Kategori Drone</a>.</p>
                             </div>
                         </div>
 

@@ -1,8 +1,10 @@
 import 'aos/dist/aos.css';
+import Lenis from 'lenis';
 
 // Initialize on client side with zero main-thread scroll blocking (0ms TBT)
 if (typeof window !== 'undefined') {
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let fdsLenisInstance = null;
 
   // Helper: auto-orchestrate reveal groups with staggered animation delays
   const processRevealGroups = () => {
@@ -63,7 +65,7 @@ if (typeof window !== 'undefined') {
   const initZeroReflowAOS = () => {
     if (!document.body) return;
     document.body.setAttribute('data-aos-easing', 'ease-out-cubic');
-    document.body.setAttribute('data-aos-duration', '320');
+    document.body.setAttribute('data-aos-duration', '540');
     document.body.setAttribute('data-aos-delay', '0');
 
     processRevealGroups();
@@ -428,8 +430,36 @@ if (typeof window !== 'undefined') {
     window.fdsSubmitInquiry(form);
   });
 
+  const initLenisScroll = () => {
+    if (prefersReduced || fdsLenisInstance) return;
+    try {
+      fdsLenisInstance = new Lenis({
+        autoRaf: true,
+        lerp: 0.1,
+        smoothWheel: true,
+        syncTouch: false,
+        anchors: { offset: -68 },
+        stopInertiaOnNavigate: true,
+        respectReducedMotion: true,
+      });
+      window.fdsLenis = fdsLenisInstance;
+
+      // Subtle compositor-only hero background depth parallax (0 layout reads on scroll)
+      const heroBg = document.querySelector('.fds-cinema-hero > .fds-cinema-bg');
+      if (heroBg) {
+        fdsLenisInstance.on('scroll', ({ scroll }) => {
+          if (scroll <= 900) {
+            const shift = Math.min(Math.max(scroll, 0) * 0.12, 64);
+            heroBg.style.transform = `translate3d(0, ${shift.toFixed(1)}px, 0) scale(1.06)`;
+          }
+        });
+      }
+    } catch (err) {}
+  };
+
   const initUiControllers = () => {
     initZeroReflowAOS();
+    initLenisScroll();
 
     // Sticky service sub-nav observer
     const subnavLinks = Array.from(document.querySelectorAll('.fds-subnav-link[href^="#"]'));
@@ -467,10 +497,14 @@ if (typeof window !== 'undefined') {
       galleryTiles.forEach((btn, idx) => {
         btn.addEventListener('click', () => {
           showSlide(idx);
+          if (fdsLenisInstance) fdsLenisInstance.stop();
           if (typeof lightbox.showModal === 'function') {
             lightbox.showModal();
           }
         });
+      });
+      lightbox.addEventListener('close', () => {
+        if (fdsLenisInstance) fdsLenisInstance.start();
       });
       if (lbPrev) lbPrev.addEventListener('click', () => showSlide(activeIndex - 1));
       if (lbNext) lbNext.addEventListener('click', () => showSlide(activeIndex + 1));

@@ -48,7 +48,8 @@ Every agent working on this repository **MUST** strictly obey these **17 rules**
   ```
 - **CRITICAL:** Do NOT add `opacity < 1` or `transform: scale(...)` to the parent wrapper or link, as this forces the browser into an isolated stacking context which breaks `mix-blend-mode: multiply`.
 
-### Rule 6: Footer Layout & Alignment Rules
+### Rule 6: Footer Layout, Background Contrast & Alignment Rules
+- **Last Section vs Footer Contrast (Mandatory):** Because the global footer ([`layouts/app.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/layouts/app.blade.php)) uses `#f5f5f7`, the **last rendered `<section>` or page wrapper before `<footer>` MUST NEVER use `#f5f5f7` / `.fds-bg-light`**. It must contrast clearly using `#ffffff` (`bg-white` / `.fds-bg-white`) or dark teal wave (`.fds-bg-teal` / `from-[#0f808a] ...`), while keeping adjacent sections alternating without consecutive identical backgrounds.
 - **Desktop (`md:` and above):** Column 4 (Dukungan) has `relative min-h-[160px] pb-10 md:pb-12`. Partner/certification logos are anchored with `absolute right-0 bottom-0 w-max max-w-none` so the right edge is flush with the right padding boundary and logos flow cleanly to the **LEFT**.
 - **Mobile (`< md`):** Logos span full 2 columns underneath (`col-span-2 md:hidden pt-2`) and are aligned to the **LEFT** (`justify-start overflow-x-auto no-scrollbar`).
 - **Middle Row:** Company info on the left (`lg:col-span-8`), Social media icons on the right (`lg:col-span-4 justify-end`).
@@ -108,7 +109,7 @@ Every agent working on this repository **MUST** strictly obey these **17 rules**
 - **WordPress Search & Thumbnails:** Pass `get_search_query(false)` inside Blade `{{ ... }}` (since `get_search_query()` defaults to escaping `&` into `&amp;`), and pass clean plain text (NEVER `esc_attr(...)`) into `get_the_post_thumbnail(..., ['alt' => ...])`.
 
 ### Rule 17: Unified Inquiry Funnel & Security Hardening
-- **Unified Lead Route:** Service CTAs, category CTAs, and sticky bars route commercial inquiries to `/kontak/#hubungi-form?layanan=...` ([`page-kontak.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/page-kontak.blade.php)), handled by [`app/inquiry-handler.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/inquiry-handler.php) with WP Nonce CSRF validation, honeypot field, optional Cloudflare Turnstile verification, GA4/GTM event telemetry (`generate_lead`, `click_whatsapp`, `click_quotation_cta`), and redirect to `/terima-kasih/` (`noindex`).
+- **Unified Lead Route:** Service CTAs, category CTAs, and header/section buttons route commercial inquiries to `/kontak/#hubungi-form?layanan=...` ([`page-kontak.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/page-kontak.blade.php)), handled by [`app/inquiry-handler.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/inquiry-handler.php) with WP Nonce CSRF validation, honeypot field, optional Cloudflare Turnstile verification, GA4/GTM event telemetry (`generate_lead`, `click_whatsapp`, `click_quotation_cta`), and redirect to `/terima-kasih/` (`noindex`).
 - **Zero Public Dev Exposure:** `.htaccess`, [`app/security.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/security.php), and [`app/migrations-2026.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/migrations-2026.php) ensure `.agents/`, `scratch/`, `.env`, `.sql`, `.log`, `.md`, and `.blade.php` sources are never accessible via HTTP on the active theme mirror, and `compro.fulldronesolutions.co.id` enforces `noindex, nofollow`.
 
 ---

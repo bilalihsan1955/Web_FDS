@@ -2,7 +2,7 @@
 **Website:** Full Drone Solutions (FDS) — PT Karya Solusi Angkasa (Website Company Profile & Lead Engine B2B Enterprise)  
 **Platform:** WordPress Custom Theme (Roots Sage 10 / Laravel Acorn Blade + Tailwind CSS + Vite)  
 **Dokumen Operasional Utama:** [`COMPRO_GUIDE.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/COMPRO_GUIDE.md) & [`PRD.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/PRD.md)  
-**Terakhir Diperbarui:** 2026-11-12  
+**Terakhir Diperbarui:** 2026-11-25  
 
 ---
 
@@ -30,7 +30,7 @@
 ### A. Core Engine, Funnel, Security & Backend Logic (`app/` — 24 Modul via `functions.php`)
 | File | Fungsi & Tanggung Jawab Utama |
 | :--- | :--- |
-| `app/setup.php` & `app/filters.php` | Inisialisasi tema Sage, enqueuing aset Vite, navigasi menu, dan filter template kustom. |
+| `app/setup.php` & `app/filters.php` | Inisialisasi tema Sage, enqueuing aset Vite, navigasi menu, filter template kustom, dan paginasi arsip blog eksak: `10` post di halaman 1, `12` post berikutnya, `max_num_pages` dari `found_posts` mentah tanpa filter inflasi (anti halaman hantu/404). |
 | `app/helpers.php` | Helper sanitasi entity & teks (`fds_clean_string`, `fds_deep_decode`, `fds_scrub_legacy_text`), pengurutan logis model (`fds_sort_drone_posts`), responsif gambar WP (`fds_optimized_img_url`), dan paginasi blog (`fds_posts_pagination`). |
 | `app/security.php` | HTTP Security Headers (OWASP), no-cache AJAX dinamis (`fds_submit_inquiry`, `fds_download_brochure`), anti-enumerasi/penghapusan `?ver=` WP, serta guard `noindex, nofollow` otomatis pada host staging/lokal (`compro.*`, `staging.*`, `.local`). |
 | `app/admin-perf.php` | Optimasi backend WP-Admin: throttle Heartbeat API ke 60 detik, hapus RSS widget eksternal, dan batasi revisi post ke 5. |
@@ -62,12 +62,12 @@
 | `taxonomy-kategori_drone.blade.php` | Arsip `/kategori-drone/{slug}/` menggunakan Grid `<x-drone-card>` seragam dengan panah diagonal `↗`. |
 | `single-drone.blade.php` | Detail Drone: Hero + 4 stat card, Tabel Spesifikasi + gambar offset melayang (`z-30`), Unduh Brosur PDF 2-State (`#0f808a`), 4 Use Cases, **Panduan Teknis 250–400w + FAQ Accordion `<details>` chevron `⌄`**, CTA Band gelombang teal. |
 | `page-bandingkan.blade.php` | Alat Komparasi spesifikasi **9 model live CPT** secara berdampingan (*side-by-side*) dengan narasi & panduan pemilihan editable dari `Konten Katalog`. |
-| `template-layanan-hub.blade.php` | Hub `/layanan/`: 6 kartu Sektor, 3 kartu Kategori Layanan Spesialis, alur survei, format luaran, KAK, dan FAQ `<x-service-faq>`. |
-| `template-layanan-sektor.blade.php` & `template-layanan-kategori.blade.php` | Template SSR detail 6 sektor industri & 3 kategori layanan lengkap dengan tabel metode, deliverable, panduan biaya, `<x-service-faq>` (ikon chevron `⌄`), CTA terarah ke `/kontak/#hubungi-form`, dan `service-sticky-bar.blade.php`. |
+| `template-layanan-hub.blade.php` | Hub `/layanan/`: 6 kartu Sektor, 3 kartu Kategori Layanan Spesialis, alur survei + tabel matriks metode sensor, galeri, dan FAQ `<x-service-faq>` (section footnote *"Referensi Teknis, Persiapan KAK & Keandalan Manufaktur"* dihapus). |
+| `template-layanan-sektor.blade.php` & `template-layanan-kategori.blade.php` | Template SSR detail 6 sektor industri & 3 kategori layanan dengan deliverable, panduan biaya, galeri, `<x-service-faq>` (ikon chevron `⌄`), dan CTA terarah ke `/kontak/#hubungi-form`. Bilah sticky melayang bawah mobile (`service-sticky-bar.blade.php`), dropdown matriks perbandingan metode, dan **"Referensi teknis & integrasi"** sengaja tidak dirender pada Sektor/Kategori. |
 | `page-tentang-kami.blade.php` | Profil PT Karya Solusi Angkasa (`2019`), 3 Spektrum Teknologi, Aktivitas Kemitraan, Galeri, Sertifikasi, Peta Workshop Sleman. |
 | `page-kontak.blade.php` & `page-terima-kasih.blade.php` | Hub Kontak terpusat (auto-prefill parameter `?layanan=` / `?produk=`), Google Maps, dan konfirmasi konversi `/terima-kasih/` (`noindex`). |
 | `index.blade.php`, `single.blade.php`, `search.blade.php`, `page.blade.php`, `404.blade.php` | Arsip Newsroom, detail artikel, hasil pencarian (`get_search_query(false)`), halaman standar, dan 404 dengan gelombang vektor teal. |
-| `components/*` | `drone-card`, `service-card`, `service-faq`, `service-sticky-bar`, `breadcrumbs` (tanpa awalan `/`), `inquiry-hub`, `modal-brochure`, `google-map-card`, `page-hero`, `cta-band`, `section-header`, `badge`, `button`. |
+| `components/*` | `drone-card`, `service-card`, `service-faq`, `breadcrumbs` (tanpa awalan `/`), `inquiry-hub`, `modal-brochure`, `google-map-card`, `page-hero`, `cta-band`, `section-header`, `badge`, `button` (komponen lama `service-sticky-bar` tidak dirender). |
 
 ---
 
@@ -126,12 +126,20 @@ if (Test-Path "..\wp-content\cache\acorn\framework\views") {
 
 ---
 
+## 🔄 Pembaruan Arsitektur Terbaru (v2.6.0 — 2026-11-25)
+- **Tipografi & Hierarki Skala:** Display `Archivo` (`wdth,wght@100..110,500..800`) untuk `h1..h4` dan statistik KPI (`font-display tabular-nums`) + `Plus Jakarta Sans` (`400..700`) untuk tubuh teks dan UI kontrol di [`layouts/app.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/layouts/app.blade.php) dan [`resources/css/app.css`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/css/app.css).
+- **Scrolling Ringan & Animasi Reveal:** `Lenis` `^1.3.27` (`autoRaf: true`, `lerp: 0.1`, `smoothWheel: true`, `syncTouch: false`, `anchors: { offset: -68 }`, `stopInertiaOnNavigate: true`, `respectReducedMotion: true`) di [`resources/js/app.js`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/js/app.js), dipadukan reveal GPU `540ms` (`[data-aos]`) lintas 12 rute aktif dan parallax kompositor pada `.fds-cinema-hero > .fds-cinema-bg`.
+- **Halaman Kontak 5-Field & Section Tanpa Divider:** [`page-kontak.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/page-kontak.blade.php) disederhanakan menjadi 3 band (Hero Wave Teal -> Studio `#f5f5f7` dengan kartu form `#ffffff` berisi 5 field `full_name`, `company`, `email`, `phone`, `message` + silent `?layanan=`/`?produk=` -> Map `#ffffff`), dikelola lewat opsi tambahan `fds_page_kontak_field_fullname_lbl` dan `fds_page_kontak_field_fullname_ph` di [`app/footer-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/footer-settings.php). Divider antar-section dihapus di seluruh halaman utama.
+- **Detail Drone Single Source of Truth:** [`app/cpt-drones.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/cpt-drones.php) (`\App\fds_get_drone_hero_media()`, `\App\fds_get_drone_detail_data()`) dan [`app/produk-content-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/produk-content-settings.php) (`fds_drone_detail_ui_v1` via `fds_get_drone_detail_ui()`) menjadi pengendali teks UI detail unit `single-drone.blade.php`.
+
+---
+
 ## 🛑 5. Strict AI Behavioral & UI Architecture Rules (Ringkasan Kepatuhan 2026-11)
 Seluruh daftar aturan wajib tersedia rinci di [`AGENTS.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/AGENTS.md) dan [`anti-hallucination-and-strict-guidelines.md`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/.agents/rules/anti-hallucination-and-strict-guidelines.md). Poin krusial:
 1. **Warna Brand Teal `#0f808a`:** Jangan pernah memakai `#0066cc` pada tombol, link aktif, fokus, maupun ilustrasi.
 2. **Bebas ALL-CAPS (`uppercase`):** Gunakan Title Case atau Sentence case (`FDS Station`, badge, heading, CTA).
 3. **Nol Nested Container / Decorative Dots:** Tanpa card-inside-card dan tanpa bullet/dot dekoratif di samping judul/badge.
-4. **Logo Footer & `mix-blend-mode: multiply`:** Terkunci di pojok kanan bawah kolom 4 desktop mengalir ke kiri; rata kiri di mobile; tanpa wrapper `opacity < 1` atau `transform`.
+4. **Logo Footer, Kontras Section Terakhir & `mix-blend-mode: multiply`:** Footer berlatar `#f5f5f7`, sehingga **section paling akhir sebelum `<footer>` wajib kontras** (dilarang `#f5f5f7`/`.fds-bg-light`, wajib `#ffffff` atau teal gelap). Logo partner terkunci di pojok kanan bawah kolom 4 desktop mengalir ke kiri; rata kiri di mobile; tanpa wrapper `opacity < 1` atau `transform`.
 5. **Wave SVG Organik Tanpa Stroke di Setiap Section Teal Gelap:** Setiap section berlatar teal gelap/utama di semua halaman wajib memiliki vektor gelombang fluida gradien *fill-only* (`stroke` dilarang).
 6. **Paritas Ikon & Breadcrumb:**
    * Seluruh kartu/tautan interaktif memakai panah diagonal (`↗`).

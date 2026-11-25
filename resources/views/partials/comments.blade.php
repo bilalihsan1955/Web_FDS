@@ -75,7 +75,7 @@
               <h4 class="text-[15px] font-semibold text-[#1d1d1f] leading-tight">
                 {{ $author_name }}
               </h4>
-              <p class="text-[12px] text-[#86868b] mt-0.5">
+              <p class="text-[13px] text-[#5c5e63] mt-0.5">
                 {{ $comment_date }} WIB
               </p>
             </div>
@@ -92,7 +92,7 @@
       <svg class="w-10 h-10 text-[#94a3b8] mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
       </svg>
-      <p class="text-[14px] text-[#64748b]">
+      <p class="text-[14.5px] text-[#515154] leading-[1.65]">
         Belum ada komentar untuk artikel ini. Jadilah yang pertama membagikan tanggapan Anda!
       </p>
     </div>
@@ -104,7 +104,7 @@
       <h3 class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] mb-2 tracking-tight">
         Tinggalkan Komentar
       </h3>
-      <p class="text-[13px] text-[#86868b] mb-6">
+      <p class="text-[13.5px] text-[#5c5e63] leading-[1.6] mb-6">
         Alamat email Anda tidak akan dipublikasikan. Ruas yang wajib ditandai <span class="text-red-500">*</span>
       </p>
 
@@ -126,14 +126,14 @@
           {{-- Field Nama & Email untuk Tamu --}}
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-[12px] font-semibold text-[#334155] mb-1.5">
+              <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
                 Nama Lengkap <span class="text-red-500">*</span>
               </label>
               <input type="text" name="author" required maxlength="60" placeholder="Nama lengkap Anda"
                      class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
             </div>
             <div>
-              <label class="block text-[12px] font-semibold text-[#334155] mb-1.5">
+              <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
                 Alamat Email <span class="text-red-500">*</span>
               </label>
               <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
@@ -144,7 +144,7 @@
 
         {{-- Textarea Komentar --}}
         <div>
-          <label class="block text-[12px] font-semibold text-[#334155] mb-1.5">
+          <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
             Komentar Anda <span class="text-red-500">*</span>
           </label>
           <textarea name="comment" rows="4" required maxlength="2000" placeholder="Tulis tanggapan, pertanyaan, atau pandangan Anda terkait artikel ini..."
@@ -158,9 +158,9 @@
         {{-- Submit Button --}}
         <div class="pt-2">
           <button type="submit"
-                  class="inline-flex items-center justify-center gap-2 leading-none bg-[#1d1d1f] hover:bg-[#0f808a] active:scale-95 text-white text-[13.5px] font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm cursor-pointer group">
+                  class="inline-flex items-center justify-center gap-2 min-h-[44px] leading-none bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-sm cursor-pointer group">
             <span>Kirim Komentar</span>
-            <svg class="w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M6 6h12v12"/>
               <path d="M6 18 18 6"/>
             </svg>

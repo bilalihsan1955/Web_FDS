@@ -21,8 +21,8 @@ add_filter('excerpt_more', function () {
 
 /**
  * Search & Archive Query Configuration:
- * - Search strictly across 'post' (Berita & Artikel FDS saja)
- * - 7 items per page
+ * - Search strictly across 'post' (Berita & Artikel FDS saja), 9 items per page
+ * - Blog archive: 10 items on page 1, 12 items per subsequent page
  * - Strict sanitization and max 80 char protection against ReDoS / XSS
  */
 add_action('pre_get_posts', function ($query) {
@@ -74,40 +74,8 @@ add_action('pre_get_posts', function ($query) {
 });
 
 /**
- * Synchronize found_posts for Blog pagination with offset
- */
-add_filter('found_posts', function ($found_posts, $query) {
-    if (!is_admin() && $query->is_main_query()) {
-        $is_blog_archive = $query->is_home() || (
-            $query->is_archive()
-            && !$query->is_post_type_archive('drone')
-            && !$query->is_tax('kategori_drone')
-        );
-
-        if ($is_blog_archive) {
-            $first_page = 10;
-            $paged = 1;
-            if ($query->get('paged')) {
-                $paged = (int) $query->get('paged');
-            } elseif ($query->get('page')) {
-                $paged = (int) $query->get('page');
-            } elseif (get_query_var('paged')) {
-                $paged = (int) get_query_var('paged');
-            } elseif (get_query_var('page')) {
-                $paged = (int) get_query_var('page');
-            }
-            $paged = max(1, $paged);
-
-            if ($found_posts > $first_page && $paged > 1) {
-                return $found_posts + 2;
-            }
-        }
-    }
-    return $found_posts;
-}, 10, 2);
-
-/**
- * Synchronize max_num_pages so pagination controls (prev/next/page numbers) are exact on all pages
+ * Synchronize max_num_pages so pagination controls (prev/next/page numbers) are exact on all pages.
+ * Uses raw found_posts: inflating it created a phantom last page that 404'd.
  */
 add_filter('the_posts', function ($posts, $query) {
     if (!is_admin() && $query->is_main_query()) {

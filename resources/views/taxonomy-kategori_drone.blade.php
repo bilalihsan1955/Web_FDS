@@ -3,6 +3,8 @@
 @section('content')
 
 @php
+  $img_base = get_template_directory_uri() . '/public/images/';
+
   $decode_fn = function ($val) {
     $v = function_exists('fds_clean_string')
       ? fds_clean_string((string) $val)
@@ -70,6 +72,9 @@
     'orderby'    => 'term_id',
     'order'      => 'ASC',
   ]);
+  if (!empty($all_cats) && !is_wp_error($all_cats) && function_exists('App\fds_sort_kategori_terms')) {
+    $all_cats = \App\fds_sort_kategori_terms($all_cats);
+  }
 
   $drones_args = [
     'post_type'      => 'drone',
@@ -96,29 +101,28 @@
   $cta_kontak_label = $active_copy['cta_kontak_label'] ?: (($term_slug === 'agrikultur') ? 'Konsultasi Pengadaan & TKDN' : 'Konsultasi Pengadaan & Demo Unit');
   $cta_kontak_url   = $href((string) ($active_copy['cta_kontak_url'] ?: ('/kontak/?layanan=' . urlencode('kategori-' . $term_slug) . '#hubungi-form')));
   $hero_compare_url = $href((string) ($ui['hero_compare_url'] ?? '/bandingkan/'));
+  $hero_img = [
+    'agrikultur'   => 'sectors/perkebunan-pertanian.webp',
+    'pemetaan-gis' => 'sectors/perencanaan.webp',
+    'kargo'        => 'site/hero-3.webp',
+  ][$term_slug] ?? 'site/hero-1.webp';
 @endphp
 
-{{-- 1. HERO KATEGORI DRONE (Brand Teal Palette) --}}
-<section class="relative pt-32 sm:pt-40 pb-20 sm:pb-24 bg-gradient-to-br from-[#0f808a] via-[#0a555c] to-[#052b2e] overflow-hidden">
-  <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
-    <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 1440 500" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="cat-wave1" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
-          <stop offset="100%" stop-color="#052b2e" stop-opacity="0.55" />
-        </linearGradient>
-        <linearGradient id="cat-wave2" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#75e6f0" stop-opacity="0.18" />
-          <stop offset="100%" stop-color="#031e20" stop-opacity="0.75" />
-        </linearGradient>
-      </defs>
-      <path d="M0,180 C340,220 720,340 1080,380 C1260,400 1380,390 1440,365 L1440,500 L0,500 Z" fill="url(#cat-wave1)" />
-      <path d="M0,310 C320,330 680,410 1040,440 C1240,455 1360,450 1440,435 L1440,500 L0,500 Z" fill="url(#cat-wave2)" />
-    </svg>
-  </div>
-
-  <div class="relative z-10 max-w-[1400px] mx-auto px-6 lg:px-12">
-    <h1 class="text-[36px] sm:text-[48px] lg:text-[56px] font-semibold tracking-[-0.03em] text-white leading-[1.08] max-w-[820px]">
+{{-- 1. HERO KATEGORI DRONE (Foto + Brand Teal) --}}
+<section class="fds-cinema-hero">
+  <img src="{!! esc_url($img_base . $hero_img) !!}"
+       alt="{{ $term_name }} — drone UAV Full Drone Solutions"
+       class="fds-cinema-bg"
+       width="1200"
+       height="750"
+       loading="eager"
+       fetchpriority="high"
+       decoding="sync"
+       data-no-lazy="1">
+  <div class="fds-cinema-scrim"></div>
+  <div class="fds-container">
+    <div class="fds-cinema-content fds-hero-entrance fds-hero-delay-1">
+    <h1 class="text-[42px] sm:text-[56px] lg:text-[66px] font-bold tracking-[-0.03em] text-white leading-[1.06] max-w-[820px]">
       {{ $active_copy['headline'] }}
     </h1>
 
@@ -131,28 +135,45 @@
     <div class="mt-8 flex flex-wrap items-center gap-4">
       @if(!empty($ui['hero_compare_text']))
         <a href="{!! esc_url($hero_compare_url) !!}"
-           class="inline-flex items-center gap-2 bg-white text-[#052b2e] hover:bg-[#f5f5f7] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-colors shadow-lg shadow-black/15">
-          {{ $ui['hero_compare_text'] }}
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-lg shadow-black/15 leading-none">
+          <span>{{ $ui['hero_compare_text'] }}</span>
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
       @endif
       @if($cta_kontak_label !== '')
         <a href="{!! esc_url($cta_kontak_url) !!}"
-           class="inline-flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white border border-white/25 text-[14px] sm:text-[15px] font-medium px-6 py-3 rounded-full transition-colors">
-          {{ $cta_kontak_label }}
+           class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/25 text-[14px] sm:text-[15px] font-medium px-6 py-3 rounded-full transition-all duration-150 leading-none">
+          <span>{{ $cta_kontak_label }}</span>
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h12v12"/>
+            <path d="M6 18 18 6"/>
+          </svg>
         </a>
       @endif
+    </div>
     </div>
   </div>
 </section>
 
 {{-- 2. NAVIGASI KATEGORI & KATALOG UNIT --}}
-<section class="bg-[#f5f5f7] py-16 sm:py-24">
+@php
+  $has_cat_faqs = !empty($cat_faqs);
+  $cat_sec2_bg  = $has_cat_faqs ? 'bg-white' : 'bg-[#f5f5f7]';
+  $cat_sec3_bg  = $has_cat_faqs ? 'bg-[#f5f5f7]' : 'bg-white';
+  $cat_tab_idle = $has_cat_faqs
+      ? 'bg-[#f5f5f7] text-[#1d1d1f] border-black/10 hover:border-[#0f808a] hover:text-[#0f808a]'
+      : 'bg-white text-[#1d1d1f] border-black/10 hover:border-[#0f808a] hover:text-[#0f808a]';
+@endphp
+<section class="{{ $cat_sec2_bg }} py-16 sm:py-24">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12">
 
     @if(!empty($all_cats) && !is_wp_error($all_cats))
     <div class="flex flex-wrap items-center gap-2.5 mb-12">
       <a href="{!! esc_url(home_url('/produk/')) !!}"
-         class="px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all border bg-white text-[#1d1d1f] border-black/10 hover:border-[#0f808a] hover:text-[#0f808a]">
+         class="inline-flex items-center min-h-[44px] px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all border {{ $cat_tab_idle }}">
         {{ $ui['all_products_label'] ?? 'Semua Produk' }}
       </a>
       @foreach($all_cats as $cat)
@@ -163,7 +184,7 @@
         @endphp
         @if(!is_wp_error($c_link))
           <a href="{!! esc_url($c_link) !!}"
-             class="px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all border {{ $is_curr ? 'bg-[#0f808a] text-white border-[#0f808a]' : 'bg-white text-[#1d1d1f] border-black/10 hover:border-[#0f808a] hover:text-[#0f808a]' }}">
+             class="inline-flex items-center min-h-[44px] px-5 py-2.5 rounded-full text-[13.5px] font-semibold transition-all border {{ $is_curr ? 'bg-[#0f808a] text-white border-[#0f808a]' : $cat_tab_idle }}">
             {{ $decode_fn($cat->name) }}
           </a>
         @endif
@@ -178,11 +199,11 @@
         @endforeach
       </x-reveal-group>
     @else
-      <div class="bg-white rounded-3xl p-12 text-center border border-black/[0.06]">
+      <div class="{{ $has_cat_faqs ? 'bg-[#f5f5f7]' : 'bg-white' }} rounded-3xl p-12 text-center border border-black/[0.06]">
         <p class="text-[17px] text-[#515154] mb-4">{{ $ui['empty_text_prefix'] ?? 'Belum ada unit drone terdaftar dalam kategori' }} {{ $term_name }}.</p>
-        <a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group leading-none">
+        <a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-flex items-center justify-center gap-2 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] active:scale-[0.97] text-white text-[14px] font-semibold px-6 py-2.5 rounded-full transition-all duration-150 shadow-sm group leading-none">
           <span>{{ $ui['empty_link_text'] ?? 'Lihat seluruh katalog armada FDS' }}</span>
-          <svg class="w-[16px] h-[16px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
@@ -194,16 +215,16 @@
 </section>
 
 {{-- 3. PANDUAN TEKNIS & INTERNAL LINKS KATEGORI --}}
-<section class="bg-white py-16 sm:py-24 border-t border-black/[0.06]">
+<section class="{{ $cat_sec3_bg }} py-16 sm:py-24">
   <div class="max-w-[1400px] mx-auto px-6 lg:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-    <div class="lg:col-span-8 fds-drone-guide">
+    <div data-aos="fade-up" class="lg:col-span-8 fds-drone-guide">
       <h2>{{ $active_copy['guide_title'] }}</h2>
       @foreach((array) ($active_copy['paragraphs'] ?? []) as $para)
         <p>{{ $para }}</p>
       @endforeach
     </div>
 
-    <div class="lg:col-span-4 space-y-6 border-t lg:border-t-0 lg:border-l border-black/[0.08] pt-8 lg:pt-0 lg:pl-10">
+    <div data-aos="fade-up" data-aos-delay="100" class="lg:col-span-4 space-y-6 border-t lg:border-t-0 lg:border-l border-black/[0.08] pt-8 lg:pt-0 lg:pl-10">
       <div>
         <h3 class="text-[18px] font-semibold text-[#1d1d1f] mb-2">{{ $ui['sidebar_title'] ?? 'Dukungan Manufaktur Lokal' }}</h3>
         @if(!empty($ui['sidebar_desc']))
@@ -241,7 +262,7 @@
     :title="trim(($ui['faq_title_prefix'] ?? 'Pertanyaan Umum: Drone') . ' ' . $term_name)"
     :subtitle="$ui['faq_subtitle'] ?? 'Informasi sertifikasi, pilihan kapasitas muatan, pelatihan operator, dan kesiapan pengadaan B2B maupun instansi.'"
     :faqs="$cat_faqs"
-    section-bg="gray"
+    section-bg="white"
   />
 @endif
 

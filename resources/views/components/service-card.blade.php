@@ -94,7 +94,7 @@
       </{{ $safe_heading }}>
 
       @if($desc !== '')
-        <p class="text-[14.5px] {{ $desc_cls }} leading-relaxed">
+        <p class="text-[14.5px] {{ $desc_cls }} leading-[1.62]">
           {{ $desc }}
         </p>
       @endif
@@ -103,7 +103,7 @@
 
   <div class="px-6 sm:px-7 pb-6 pt-2 mt-auto">
     @if(!empty($norm_tags))
-      <div class="pt-3.5 mb-3.5 border-t {{ $divider_cls }} flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px]">
+      <div class="pt-3.5 mb-3.5 border-t {{ $divider_cls }} flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
         @foreach($norm_tags as $tIdx => $tagItem)
           @if($tIdx > 0)
             <span aria-hidden="true" class="{{ $sep_cls }}">&middot;</span>

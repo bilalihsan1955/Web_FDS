@@ -2,9 +2,14 @@
 ## (Operational Runbook & Content Management Guide for PT Karya Solusi Angkasa)
 **Tipe Platform:** Website Company Profile (Compro) & Lead Engine B2B Enterprise  
 **Teknologi:** WordPress Custom Theme (Roots Sage 10 + Laravel Acorn Blade + Tailwind CSS + Vite)  
-**Versi:** 2.5.1 (Enterprise Production Edition)  
+**Versi:** 2.6.0 (Enterprise Production Edition)  
 **Status:** Dokumen Resmi Pengelolaan Konten Website Compro  
-**Terakhir Diperbarui:** 2026-11-12  
+**Terakhir Diperbarui:** 2026-11-25  
+
+> **Pembaruan v2.6.0 (2026-11-25):**
+> - **Halaman Kontak (`/kontak/`, [`page-kontak.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/page-kontak.blade.php)):** Studio form 3-band tanpa garis pembatas antar-section dengan 5 field utama (`full_name`, `company`, `email`, `phone`, `message`) dan atribusi `?layanan=` / `?produk=` otomatis di belakang layar. Label & placeholder nama lengkap dikelola via WP Admin **Kontak & Sosmed** (`fds_page_kontak_field_fullname_lbl`, `fds_page_kontak_field_fullname_ph` di [`app/footer-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/footer-settings.php)).
+> - **Detail Unit Drone ([`single-drone.blade.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/resources/views/single-drone.blade.php)):** Copy UI & heading section spesifikasi dikelola non-destruktif via `fds_drone_detail_ui_v1` di **Produk Drone → Konten Katalog** ([`app/produk-content-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/produk-content-settings.php)); jika kosong otomatis memakai fallback default bersih (`Direkayasa untuk performa nyata.` & `Hubungi Tim Sales`).
+> - **Tipografi & Motion:** Memakai kombinasi display `Archivo` (`h1..h4` & metrik KPI `tabular-nums`) + body/UI `Plus Jakarta Sans`, scrolling ringan `Lenis` (`^1.3.27`), reveal kompositor GPU `[data-aos]`, serta ritme section tanpa divider `border-t` di seluruh halaman utama.
 
 ---
 
@@ -52,11 +57,13 @@ Sebelum mengedit teks apa pun di WP-Admin, editor wajib mematuhi batasan berikut
 ### 3.2 Header, Unified Mega Menu & Footer
 1. **Logo & Navbar:** Atur logo PNG transparan/SVG, brand text, tinggi logo (`34px` default desktop), teks CTA kanan atas, label tab menu produk (`Semua Model`), 3 kartu highlight Mega Menu Produk dan 2 kartu highlight Layanan di panel **Logo & Navbar**.
 2. **Logo Sertifikasi/Partner di Footer:** Diatur dari panel **Logo & Navbar**; render otomatis di pojok kanan bawah kolom 4 desktop mengalir ke kiri (rata kiri di mobile) dengan blending `mix-blend-mode: multiply` agar bebas kotak putih. Label judul kolom, link hukum, & teks `/kontak/` diatur di panel **Kontak & Sosmed**.
+3. **Kontras Section Terakhir vs Footer (`#f5f5f7`):** Footer global berlatar `#f5f5f7`. Section terakhir sebelum `<footer>` pada setiap halaman dilarang berlatar `#f5f5f7` / `.fds-bg-light` (wajib `#ffffff` atau teal gelap agar batas ke footer jelas).
 
 ### 3.3 Beranda (`/`) & Katalog Produk (`/produk/` & `/kategori-drone/*`)
 1. **Beranda (`/`) & Newsroom:** Kelola **9 tab** di menu **Konten Beranda**: Hero & Slider, Mitra, Solusi Industri (6 sektor terpadu), Keunggulan Bento, Header/Filter Produk, Layanan Enterprise, Newsroom/Blog, Kontak & Form, serta Tab **Newsroom, Search & 404** (untuk halaman arsip `/blog/`, single post, pencarian, dan 404). Bagian `#produk` di Beranda menampilkan daftar baris `.drone-row` yang ringkas.
 2. **Katalog Hub (`/produk/`) & Arsip Kategori (`/kategori-drone/*`):** Menampilkan seluruh **9 model drone aktif** dalam tampilan grid kartu `<x-drone-card>` berseragam penuh *object-cover*. Seluruh **foto Hero, badge TKDN/SNI, kategori, tagline, dan metrik utama pada kartu maupun tabel matriks ringkasan spesifikasi `/produk/` per kategori (memakai tab `.drone-tab` identik Beranda `Agrikultur`, `Pemetaan & GIS`, dan `Kargo` tanpa angka hitungan, tiap baris dapat diklik langsung ke halaman detail, serta kolom `Status Sertifikasi` dinamis pada kategori bersertifikat produk seperti `Agrikultur`) tersinkronisasi 1:1 secara otomatis dari data Detail Unit Drone** ([`app/cpt-drones.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/cpt-drones.php)).
 3. **Edit Konten Non-Card Katalog (`Produk Drone` &rarr; `Konten Katalog`):** Kelola seluruh teks Hero `/produk/`, bar highlight sertifikasi, header kategori, judul/deskripsi matriks, panduan kategori, label antarmuka halaman Detail Drone & Komparasi `/bandingkan/`, sidebar dukungan lokal, FAQ SSR, CTA penutup, serta SEO Meta Title/Description & Schema secara non-destruktif dengan tombol Reset terisolasi per tab ([`app/produk-content-settings.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/produk-content-settings.php)).
+4. **Paginasi Arsip `/blog/` & Pencarian:** [`app/filters.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/filters.php) memakai `found_posts` mentah dan `max_num_pages = ceil((N - 10) / 12) + 1` (`N > 10`), jika tidak `1`. [`fds_posts_pagination()`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/helpers.php) hanya merender link sampai batas itu. Jangan menambah filter `found_posts` penambah offset: dulu menyisipkan nomor halaman terakhir palsu yang berujung 404.
 
 ### 3.4 Pengelolaan Unit Drone & Unduh Brosur PDF
 1. **Edit Unit (`Produk Drone`):** Kelola melalui **Produk Drone &rarr; Semua Drone** (judul, **Featured Image / Gambar Unggulan yang menjadi gambar Hero Detail sekaligus foto kartu katalog**, foto spesifikasi transparan offset melayang, 4 kartu statistik atas, 8 parameter teknis, 4 skenario penggunaan, dan file PDF brosur). Penyimpanan unit otomatis menghapus cache katalog & Mega Menu (`fds_purge_drone_catalog_caches()`).
@@ -67,6 +74,7 @@ Sebelum mengedit teks apa pun di WP-Admin, editor wajib mematuhi batasan berikut
 1. Buka menu **Konten Layanan** di sidebar kiri WP-Admin (atau klik tombol pintasan *"Buka Editor Konten Layanan"* di sidebar halaman WordPress terkait).
 2. Setiap tab (`Hub Layanan`, `01. Pertambangan` s.d. `06. Bencana dan Lingkungan`, 3 kategori spesialis, serta `UI Bersama & Terima Kasih`) menyimpan override secara terisolasi tanpa mengubah tab lain dan memiliki tombol **"Reset Halaman Ini ke Default"**.
 3. Catatan internal tim (`placeholders`) hanya muncul pada kotak kuning di WP-Admin dan tidak pernah dicetak di HTML publik. Seluruh CTA layanan mengarahkan prospek ke `/kontak/#hubungi-form?layanan=...`.
+4. **Tampilan Hub, Sektor & Kategori:** Dropdown **"Lihat matriks perbandingan metode survei"**, **"Lihat tabel perbandingan metode (...)"**, dan **"Referensi teknis & integrasi"** tidak dirender pada Sektor/Kategori, dan blok footnote **"Referensi Teknis, Persiapan KAK & Keandalan Manufaktur"** juga telah dihapus dari Hub `/layanan/`. FAQ SSR, CTA, galeri, serta tabel matriks metode sensor pada Hub `/layanan/` dan seluruh teks editable WP-Admin tetap berlaku.
 
 ### 3.6 Halaman Tentang Kami (`/tentang-kami/`), Kontak (`/kontak/`) & Pesan Masuk
 1. **Tentang Kami:** Dikelola penuh dari menu **Konten Tentang Kami** (7 tab). Editor standar WordPress Pages pada halaman ini hanya dipakai untuk metadata SEO Rank Math agar layout Apple minimalist tetap konsisten.
@@ -79,7 +87,7 @@ Sebelum mengedit teks apa pun di WP-Admin, editor wajib mematuhi batasan berikut
 
 1. **Dual-Engine & `@graph` Terpadu:** Saat Rank Math aktif, [`app/seo.php`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/seo.php) menyelaraskan schema JSON-LD agar tidak terjadi metadata ganda.
 2. **Schema B2B Bebas Error Search Console:** Halaman single drone memancarkan `ItemPage` (`about: Thing`) + `FAQPage` + `BreadcrumbList` tanpa `Product`/`Offer`/rating fiktif. `Organization`/`LocalBusiness` menggunakan `legalName: PT Karya Solusi Angkasa` tanpa field usang `priceRange: "$$$$"`.
-3. **Skor Rank Math di Admin vs Frontend:** Skor editor WP-Admin hanya menilai teks di editor klasik/Gutenberg; Googlebot & perayap membaca HTML SSR penuh (tabel spesifikasi, panduan teknis, tabel metode layanan, dan akordeon `<details>`).
+3. **Skor Rank Math di Admin vs Frontend:** Skor editor WP-Admin hanya menilai teks di editor klasik/Gutenberg; Googlebot & perayap membaca HTML SSR penuh (tabel spesifikasi, panduan teknis, tabel metode pada Hub `/layanan/`, dan akordeon `<details>` FAQ).
 4. **AI Search Readiness (`/llms.txt` vs `/llms-full.txt`) & Auto-Purge Terpusat:** Berkas `/llms.txt` menyajikan indeks ringkas eksekutif yang mengarahkan ke `/llms-full.txt`, sedangkan `/llms-full.txt` menyajikan korpus pengetahuan penuh (spesifikasi detail 9 wahana, 6 sektor, 3 kategori, matriks sensor, deliverables, FAQ, dan artikel Newsroom terkini). Keduanya bebas `&amp;` mentah dan diperbarui otomatis bersama cache Rank Math Sitemap & LiteSpeed via [`\App\fds_purge_ai_and_seo_caches()`](file:///c:/Users/BILALIHSAN/Local%20Sites/fds/app/public/fds-theme/app/seo.php) setiap kali post, page, drone, taksonomi, atau opsi konten disimpan.
 
 ---

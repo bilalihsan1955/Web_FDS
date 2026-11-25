@@ -117,6 +117,8 @@ function fds_flush_layanan_cache(): void {
     delete_transient('fds_navbar_brand_cache_v4');
     delete_transient('fds_mega_menu_data_v2');
     delete_transient('fds_mega_menu_data_v3');
+    delete_transient('fds_mega_menu_data_v4');
+    delete_transient('fds_mega_menu_data_v5');
     delete_transient('fds_bandingkan_catalog_cache_v2');
     delete_transient('fds_bandingkan_catalog_cache_v3');
     delete_transient('fds_bandingkan_catalog_cache_v4');

@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="pt-[52px] bg-[#f5f5f7] min-h-[70vh]">
+<div class="pt-[52px] bg-white min-h-[70vh]">
   @while(have_posts())
     @php
       the_post();
     @endphp
     <article>
       {{-- Page Hero --}}
-      <header class="bg-white border-b border-black/[0.06]">
+      <header class="bg-[#f5f5f7] border-b border-black/[0.06]">
         <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 sm:py-20">
           <h1 class="text-[40px] sm:text-[56px] font-semibold tracking-[-0.03em] text-[#1d1d1f] leading-[1.1] fds-hero-entrance">
             {{ function_exists('fds_clean_string') ? fds_clean_string(get_the_title()) : html_entity_decode(wp_specialchars_decode(get_the_title(), ENT_QUOTES), ENT_QUOTES | ENT_HTML5, 'UTF-8') }}

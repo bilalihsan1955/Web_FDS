@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"></noscript>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..110,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..110,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"></noscript>
 
     {{-- Prioritas utama: Muat stylesheet aplikasi seawal mungkin sebelum wp_head (dikunci dengan data-no-optimize agar tidak di-404-kan oleh LiteSpeed Combine) --}}
     {!! str_replace(['<link ', '<script '], ['<link data-no-optimize="1" data-no-minify="1" ', '<script data-no-optimize="1" data-no-minify="1" '], \Illuminate\Support\Facades\Vite::withEntryPoints(['resources/css/app.css', 'resources/js/app.js'])->toHtml()) !!}
@@ -31,14 +31,17 @@
 
     <style>
       *, *::before, *::after { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
+      html:not(.lenis) { scroll-behavior: smooth; }
       body {
-        font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Inter', 'Segoe UI', sans-serif;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         -webkit-font-smoothing: antialiased;
         background-color: #f5f5f7;
         color: #1d1d1f;
         margin: 0;
         padding: 0;
+      }
+      h1, h2, h3, h4 {
+        font-family: 'Archivo', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       }
       ::-webkit-scrollbar { width: 6px; }
       ::-webkit-scrollbar-track { background: #f5f5f7; }
@@ -161,18 +164,19 @@
     @endif
 
     @php
-      // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT (Cached via Transient v3)
-      $drones_by_cat_slug = get_transient('fds_mega_menu_data_v3');
+      // 100% Dynamic WP Query from 'kategori_drone' Taxonomy & 'drone' CPT (Cached via Transient v5)
+      // Grup memakai term_id WordPress, bukan slug, agar drone tetap tampil saat nama/slug kategori diganti.
+      $menu_cat_data = get_transient('fds_mega_menu_data_v5');
 
-      if ($drones_by_cat_slug !== false && strpos(serialize($drones_by_cat_slug), '#produk') !== false) {
-          $drones_by_cat_slug = false;
+      if ($menu_cat_data !== false && (strpos(serialize($menu_cat_data), '/kategori-drone/') !== false || strpos(serialize($menu_cat_data), '#produk') !== false)) {
+          $menu_cat_data = false;
       }
 
-      if (is_array($drones_by_cat_slug) && function_exists('fds_deep_decode')) {
-          $drones_by_cat_slug = fds_deep_decode($drones_by_cat_slug);
+      if (is_array($menu_cat_data) && function_exists('fds_deep_decode')) {
+          $menu_cat_data = fds_deep_decode($menu_cat_data);
       }
 
-      if ($drones_by_cat_slug === false) {
+      if ($menu_cat_data === false) {
           $tax_terms = get_terms([
               'taxonomy'   => 'kategori_drone',
               'hide_empty' => true,
@@ -182,9 +186,9 @@
 
           if (empty($tax_terms) || is_wp_error($tax_terms)) {
               $tax_terms = [
-                  (object)['name' => 'Agrikultur', 'slug' => 'agrikultur', 'description' => 'Pertanian Presisi FERTO 5L – 50L'],
-                  (object)['name' => 'Pemetaan & GIS', 'slug' => 'pemetaan-gis', 'description' => 'Survei Geospasial & Inspeksi Aset'],
-                  (object)['name' => 'Kargo', 'slug' => 'kargo', 'description' => 'Distribusi Logistik Cepat 10 kg'],
+                  (object)['term_id' => -1, 'name' => 'Agrikultur', 'slug' => 'agrikultur', 'description' => 'Pertanian Presisi FERTO 5L – 50L'],
+                  (object)['term_id' => -2, 'name' => 'Pemetaan & GIS', 'slug' => 'pemetaan-gis', 'description' => 'Survei Geospasial & Inspeksi Aset'],
+                  (object)['term_id' => -3, 'name' => 'Kargo', 'slug' => 'kargo', 'description' => 'Distribusi Logistik Cepat 10 kg'],
               ];
           } else {
               $tax_terms = array_values(array_filter($tax_terms, function ($t) {
@@ -196,17 +200,26 @@
               'post_type'      => 'drone',
               'posts_per_page' => -1,
               'post_status'    => 'publish',
-              'orderby'        => 'ID',
+              'orderby'        => 'menu_order ID',
               'order'          => 'ASC',
           ]);
+          if (function_exists('fds_sort_drone_posts') && !empty($nav_drones)) {
+              $nav_drones = fds_sort_drone_posts($nav_drones);
+          }
 
-          $drones_by_cat_slug = [];
+          $menu_cat_data = [];
           foreach ($tax_terms as $t) {
-              $t_link = (isset($t->term_id) && taxonomy_exists('kategori_drone')) ? get_term_link($t) : home_url('/kategori-drone/' . $t->slug . '/');
-              $drones_by_cat_slug[$t->slug] = [
-                  'term'     => $t,
-                  'term_url' => (!is_wp_error($t_link) && is_string($t_link)) ? $t_link : home_url('/produk/'),
-                  'drones'   => [],
+              $gid = (int) ($t->term_id ?? 0);
+              $clean_cat_slug = sanitize_title((string) ($t->slug ?? ''));
+              $catalog_sec_url = home_url('/produk/#kategori-' . ($clean_cat_slug !== '' ? $clean_cat_slug : 'lainnya'));
+              $menu_cat_data[$gid] = [
+                  'term_id'     => $gid,
+                  'name'        => $fds_nav_clean((string) $t->name),
+                  'slug'        => (string) $t->slug,
+                  'description' => $fds_nav_clean((string) ($t->description ?? '')),
+                  'term_url'    => $catalog_sec_url,
+                  'drones'      => [],
+                  'is_ferto'    => false,
               ];
           }
 
@@ -220,24 +233,43 @@
               $is_sni_model = in_array($nd_slug_chk, ['ferto-15', 'ferto-15l', 'ferto-22', 'ferto-22l'], true);
 
               $terms = get_the_terms($nd->ID, 'kategori_drone');
-              $cat_slug = '';
+              $gid   = 0;
               if (!empty($terms) && !is_wp_error($terms)) {
-                  $cat_slug = $terms[0]->slug;
+                  $gid = (int) $terms[0]->term_id;
               } else {
-                  $meta_cat = $fds_nav_clean(get_post_meta($nd->ID, 'drone_kategori', true) ?: 'Agrikultur');
-                  $cat_slug = sanitize_title($meta_cat);
+                  // Fallback untuk drone tanpa term: cocokkan meta kategori ke term yang ada (slug/name), bukan slug hardcode.
+                  $meta_cat  = $fds_nav_clean((string) (get_post_meta($nd->ID, 'drone_kategori', true) ?: 'Agrikultur'));
+                  $meta_slug = sanitize_title($meta_cat);
+                  foreach ($tax_terms as $t) {
+                      if (strtolower((string) $t->slug) === $meta_slug || strcasecmp((string) $t->name, $meta_cat) === 0) {
+                          $gid = (int) $t->term_id;
+                          break;
+                      }
+                  }
+                  if (!$gid) {
+                      $gid = 'meta_' . $meta_slug;
+                  }
               }
-              if (stripos((string) $cat_slug, 'rebo') !== false) {
+              if (stripos((string) $gid, 'rebo') !== false) {
                   continue;
               }
 
-              if (!isset($drones_by_cat_slug[$cat_slug])) {
-                  $t_obj = (object)['name' => (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : ($meta_cat ?? 'Agrikultur'), 'slug' => $cat_slug, 'description' => ''];
-                  $t_link = (!empty($terms) && !is_wp_error($terms)) ? get_term_link($terms[0]) : home_url('/kategori-drone/' . $cat_slug . '/');
-                  $drones_by_cat_slug[$cat_slug] = [
-                      'term'     => $t_obj,
-                      'term_url' => (!is_wp_error($t_link) && is_string($t_link)) ? $t_link : home_url('/produk/'),
-                      'drones'   => [],
+              if (!isset($menu_cat_data[$gid])) {
+                  $t_obj = (object)[
+                      'name'        => (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : ($meta_cat ?? 'Agrikultur'),
+                      'slug'        => (string) ($meta_slug ?? ''),
+                      'description' => '',
+                  ];
+                  $fb_slug = sanitize_title((string) $t_obj->slug);
+                  $fb_sec_url = home_url('/produk/#kategori-' . ($fb_slug !== '' ? $fb_slug : 'lainnya'));
+                  $menu_cat_data[$gid] = [
+                      'term_id'     => is_int($gid) ? $gid : 0,
+                      'name'        => $fds_nav_clean((string) $t_obj->name),
+                      'slug'        => $t_obj->slug,
+                      'description' => '',
+                      'term_url'    => $fb_sec_url,
+                      'drones'      => [],
+                      'is_ferto'    => false,
                   ];
               }
 
@@ -269,7 +301,7 @@
                   $raw_spec = preg_replace('/\b15\s*(?:L|Liter)\b/i', '17 Liter', $raw_spec);
               }
 
-              $drones_by_cat_slug[$cat_slug]['drones'][] = [
+              $menu_cat_data[$gid]['drones'][] = [
                   'id'       => $nd->ID,
                   'url'      => get_permalink($nd->ID),
                   'name'     => $fds_nav_clean((string) $nd->post_title),
@@ -278,36 +310,66 @@
                   'desc'     => $raw_desc,
                   'spec'     => $raw_spec,
               ];
-          }
-
-          if (!empty($drones_by_cat_slug['agrikultur']['drones'])) {
-              usort($drones_by_cat_slug['agrikultur']['drones'], function ($a, $b) {
-                  preg_match('/\d+/', (string) ($a['slug'] ?? ''), $ma);
-                  preg_match('/\d+/', (string) ($b['slug'] ?? ''), $mb);
-                  return ((int) ($ma[0] ?? 999)) <=> ((int) ($mb[0] ?? 999));
-              });
+              if ($is_ferto) {
+                  $menu_cat_data[$gid]['is_ferto'] = true;
+              }
           }
 
           if (function_exists('fds_deep_decode')) {
-              $drones_by_cat_slug = fds_deep_decode($drones_by_cat_slug);
+              $menu_cat_data = fds_deep_decode($menu_cat_data);
           }
 
-          set_transient('fds_mega_menu_data_v3', $drones_by_cat_slug, 12 * HOUR_IN_SECONDS);
+          set_transient('fds_mega_menu_data_v5', $menu_cat_data, 12 * HOUR_IN_SECONDS);
       }
 
-      // Build ordered flat list for footer without extra DB queries on cache hit
+      // Susun grup terurut secara kanonik (Urutan Kategori Drone -> Kategori Utama Logo & Navbar -> terbanyak drone).
+      $menu_limits = function_exists('App\\fds_get_menu_prod_limits') ? \App\fds_get_menu_prod_limits() : ['primary' => 6, 'other' => 2];
+
+      $groups_with_drones = array_values(array_filter($menu_cat_data, function ($g) {
+          return !empty($g['drones']);
+      }));
+
+      if (function_exists('App\\fds_sort_drone_category_groups')) {
+          $menu_groups = \App\fds_sort_drone_category_groups($groups_with_drones);
+      } else {
+          $primary_cat_id = function_exists('App\\fds_get_menu_prod_primary_cat_id') ? \App\fds_get_menu_prod_primary_cat_id() : 0;
+          usort($groups_with_drones, function ($a, $b) {
+              $ca = count($a['drones']);
+              $cb = count($b['drones']);
+              if ($ca === $cb) {
+                  return strcmp((string) ($a['term_id'] ?? ''), (string) ($b['term_id'] ?? ''));
+              }
+              return $cb <=> $ca;
+          });
+          $menu_groups = [];
+          if ($primary_cat_id > 0 && !empty($menu_cat_data[$primary_cat_id]['drones'])) {
+              $menu_groups[] = $menu_cat_data[$primary_cat_id];
+              foreach ($groups_with_drones as $g) {
+                  if ((int) ($g['term_id'] ?? 0) === $primary_cat_id) {
+                      continue;
+                  }
+                  $menu_groups[] = $g;
+              }
+          } else {
+              $menu_groups = $groups_with_drones;
+          }
+      }
+
+      foreach ($menu_groups as $gi => $gdata) {
+          $limit = ($gi === 0) ? (int) $menu_limits['primary'] : (int) $menu_limits['other'];
+          $menu_groups[$gi]['limit']     = $limit;
+          $menu_groups[$gi]['shown']     = array_slice($gdata['drones'], 0, $limit);
+          $menu_groups[$gi]['remaining'] = max(0, count($gdata['drones']) - $limit);
+      }
+
+      // Daftar datar untuk footer tanpa query tambahan saat cache hit.
       $footer_drones = [];
-      if (is_array($drones_by_cat_slug)) {
-          foreach ($drones_by_cat_slug as $cslug => $cdata) {
-              if (stripos((string) $cslug, 'rebo') !== false || empty($cdata['drones'])) {
-                  continue;
-              }
-              foreach ($cdata['drones'] as $cd_item) {
-                  $footer_drones[$cd_item['id']] = $cd_item;
-              }
+      foreach ($menu_groups as $gdata) {
+          foreach ($gdata['drones'] as $cd_item) {
+              $footer_drones[$cd_item['id']] = $cd_item;
           }
-          ksort($footer_drones);
       }
+      ksort($footer_drones);
     @endphp
 
     @php
@@ -464,55 +526,38 @@
         <!-- UNIFIED MEGA MENU DRAWER — Apple-Style Editorial Layout  -->
         <!-- ===================================================== -->
         <div id="mega-menu-drawer"
-             class="absolute top-full inset-x-0 bg-white/95 backdrop-blur-2xl border-b border-black/[0.08] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] overflow-hidden"
+             class="absolute top-full inset-x-0 bg-white/95 backdrop-blur-2xl border-b border-black/[0.08] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] max-h-[calc(100vh-56px)] overflow-y-auto"
              style="opacity:0; transform:translateY(-6px); pointer-events:none; transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform;">
           <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-10">
 
             <!-- 1. PANE PRODUK (100% Dinamis dari Taksonomi WordPress) -->
             <div id="mega-pane-produk" class="mega-pane transition-opacity duration-150 opacity-100">
               @php
-                $agri_cat = $drones_by_cat_slug['agrikultur'] ?? null;
-                $pemetaan_cat = $drones_by_cat_slug['pemetaan-gis'] ?? ($drones_by_cat_slug['pemetaan'] ?? null);
-                $kargo_cat = $drones_by_cat_slug['kargo'] ?? ($drones_by_cat_slug['cargo'] ?? null);
-
-                $agri_url = $agri_cat['term_url'] ?? home_url('/kategori-drone/agrikultur/');
-                $pemetaan_url = $pemetaan_cat['term_url'] ?? home_url('/kategori-drone/pemetaan-gis/');
-                $kargo_url = $kargo_cat['term_url'] ?? home_url('/kategori-drone/kargo/');
-
-                $agri_limit = 6;
-                $agri_drones = $agri_cat ? array_slice($agri_cat['drones'], 0, $agri_limit) : [];
-                $agri_remaining = $agri_cat ? max(0, count($agri_cat['drones']) - $agri_limit) : 0;
-
-                $pemetaan_limit = 2;
-                $pemetaan_drones = $pemetaan_cat ? array_slice($pemetaan_cat['drones'], 0, $pemetaan_limit) : [];
-                $pemetaan_remaining = $pemetaan_cat ? max(0, count($pemetaan_cat['drones']) - $pemetaan_limit) : 0;
-
-                $kargo_limit = 2;
-                $kargo_drones = $kargo_cat ? array_slice($kargo_cat['drones'], 0, $kargo_limit) : [];
-                $kargo_remaining = $kargo_cat ? max(0, count($kargo_cat['drones']) - $kargo_limit) : 0;
-
                 $raw_compare_url = trim((string) ($nb_brand['menu_prod_compare_url'] ?? ''));
                 if ($raw_compare_url === '' || preg_match('#/bandingkan$#i', $raw_compare_url)) {
                     $compare_href = home_url('/bandingkan/');
                 } else {
                     $compare_href = $raw_compare_url;
                 }
+                $primary_group   = $menu_groups[0] ?? null;
+                $secondary_group = $menu_groups[1] ?? null;
+                $other_groups    = array_slice($menu_groups, 2);
               @endphp
 
               <div class="grid grid-cols-12 gap-10">
                 
-                <!-- Column 1 & 2: Agrikultur (Atas) + Pemetaan & GIS (Bawah) (Col 6) -->
+                <!-- Kolom 1 & 2: kategori utama (atas) + kategori kedua (bawah) (Col 6) -->
                 <div class="col-span-6 border-r border-black/[0.06] pr-10">
                   
-                  <!-- Agrikultur (Atas) -->
+                  @if($primary_group)
                   <div>
                     <div class="mb-3 flex items-center justify-between">
-                      <a href="{!! esc_url($agri_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
-                        {{ $fds_nav_clean(!empty($agri_cat['term']->name) ? (string) $agri_cat['term']->name : 'UAV Agrikultur') }} {{ $fds_nav_clean((string) ($nb_brand['menu_prod_ferto_suffix'] ?? '(Seri FERTO)')) }}
+                      <a href="{!! esc_url($primary_group['term_url']) !!}" class="text-[12.5px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
+                        {{ $fds_nav_clean((string) $primary_group['name']) }} @if(!empty($primary_group['is_ferto'])){{ $fds_nav_clean((string) ($nb_brand['menu_prod_ferto_suffix'] ?? '(Seri FERTO)')) }}@endif
                       </a>
-                      @if($agri_remaining > 0)
-                      <a href="{!! esc_url($agri_url) !!}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-1 group leading-none">
-                        <span>{{ $nb_more_text((int) $agri_remaining) }}</span>
+                      @if($primary_group['remaining'] > 0)
+                      <a href="{!! esc_url($primary_group['term_url']) !!}" class="text-[12px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-1 group leading-none">
+                        <span>{{ $nb_more_text((int) $primary_group['remaining']) }}</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M6 6h12v12"/>
                           <path d="M6 18 18 6"/>
@@ -521,14 +566,14 @@
                       @endif
                     </div>
 
-                    @if(!empty($agri_drones))
+                    @if(!empty($primary_group['shown']))
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
-                      @foreach($agri_drones as $item)
+                      @foreach($primary_group['shown'] as $item)
                       <a href="{!! esc_url($item['url']) !!}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $item['name']) }}
                         </div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">
                           {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
                         </div>
                       </a>
@@ -538,17 +583,17 @@
                     <p class="text-[13px] text-[#5c5e63]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_empty_label'] ?? 'Belum ada drone pada kategori ini.')) }}</p>
                     @endif
                   </div>
+                  @endif
 
-                  <!-- Pemetaan & GIS (Bawah Kategori Agrikultur) -->
-                  @if(!empty($pemetaan_cat) && !empty($pemetaan_drones))
+                  @if($secondary_group && !empty($secondary_group['shown']))
                   <div class="pt-4 mt-4 border-t border-black/[0.06]">
                     <div class="mb-3 flex items-center justify-between">
-                      <a href="{!! esc_url($pemetaan_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
-                        {{ $fds_nav_clean((string) $pemetaan_cat['term']->name) }}
+                      <a href="{!! esc_url($secondary_group['term_url']) !!}" class="text-[12.5px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
+                        {{ $fds_nav_clean((string) $secondary_group['name']) }} @if(!empty($secondary_group['is_ferto'])){{ $fds_nav_clean((string) ($nb_brand['menu_prod_ferto_suffix'] ?? '(Seri FERTO)')) }}@endif
                       </a>
-                      @if($pemetaan_remaining > 0)
-                      <a href="{!! esc_url($pemetaan_url) !!}" class="text-[11px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-1 group leading-none">
-                        <span>{{ $nb_more_text((int) $pemetaan_remaining) }}</span>
+                      @if($secondary_group['remaining'] > 0)
+                      <a href="{!! esc_url($secondary_group['term_url']) !!}" class="text-[12px] font-semibold text-[#0f808a] hover:underline inline-flex items-center gap-1 group leading-none">
+                        <span>{{ $nb_more_text((int) $secondary_group['remaining']) }}</span>
                         <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M6 6h12v12"/>
                           <path d="M6 18 18 6"/>
@@ -558,12 +603,12 @@
                     </div>
 
                     <div class="grid grid-cols-2 gap-x-8 gap-y-3">
-                      @foreach($pemetaan_drones as $item)
+                      @foreach($secondary_group['shown'] as $item)
                       <a href="{!! esc_url($item['url']) !!}" class="group py-0.5 block transition-colors">
                         <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $item['name']) }}
                         </div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">
                           {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
                         </div>
                       </a>
@@ -574,60 +619,60 @@
 
                 </div>
 
-                <!-- Column 3: Kargo & Logistik (Col 3) -->
+                <!-- Kolom 3: semua kategori lain (Col 3), mengikuti term taksonomi yang ada -->
                 <div class="col-span-3 border-r border-black/[0.06] pr-8 space-y-5">
-                  
-                  <!-- Kargo -->
-                  @if(!empty($kargo_cat) && !empty($kargo_drones))
-                  <div>
-                    <a href="{!! esc_url($kargo_url) !!}" class="text-[12px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors mb-2.5 inline-block">
-                      {{ $fds_nav_clean((string) $kargo_cat['term']->name) }}
-                    </a>
-                    <div class="space-y-2.5">
-                      @foreach($kargo_drones as $item)
-                      <a href="{!! esc_url($item['url']) !!}" class="group py-0.5 block transition-colors">
-                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
-                          {{ $fds_nav_clean((string) $item['name']) }}
-                        </div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">
-                          {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
-                        </div>
+                  @foreach($other_groups as $group)
+                    @if(!empty($group['shown']))
+                    <div>
+                      <a href="{!! esc_url($group['term_url']) !!}" class="text-[12.5px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors mb-2.5 inline-block">
+                        {{ $fds_nav_clean((string) $group['name']) }} @if(!empty($group['is_ferto'])){{ $fds_nav_clean((string) ($nb_brand['menu_prod_ferto_suffix'] ?? '(Seri FERTO)')) }}@endif
                       </a>
-                      @endforeach
-                      @if($kargo_remaining > 0)
-                      <a href="{!! esc_url($kargo_url) !!}" class="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0f808a] hover:underline pt-0.5 group leading-none">
-                        <span>{{ $nb_more_text((int) $kargo_remaining) }}</span>
-                        <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                          <path d="M6 6h12v12"/>
-                          <path d="M6 18 18 6"/>
-                        </svg>
-                      </a>
-                      @endif
+                      <div class="space-y-2.5">
+                        @foreach($group['shown'] as $item)
+                        <a href="{!! esc_url($item['url']) !!}" class="group py-0.5 block transition-colors">
+                          <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
+                            {{ $fds_nav_clean((string) $item['name']) }}
+                          </div>
+                          <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">
+                            {{ $fds_nav_clean((string) ($item['spec'] ?: $item['desc'])) }}
+                          </div>
+                        </a>
+                        @endforeach
+                        @if($group['remaining'] > 0)
+                        <a href="{!! esc_url($group['term_url']) !!}" class="inline-flex items-center gap-1 text-[12px] font-semibold text-[#0f808a] hover:underline pt-0.5 group leading-none">
+                          <span>{{ $nb_more_text((int) $group['remaining']) }}</span>
+                          <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M6 6h12v12"/>
+                            <path d="M6 18 18 6"/>
+                          </svg>
+                        </a>
+                        @endif
+                      </div>
                     </div>
-                  </div>
-                  @endif
+                    @endif
+                  @endforeach
 
                 </div>
 
                 <!-- Column 4: Ekosistem & Standar (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#5c5e63] mb-4">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')) }}</p>
+                    <p class="text-[12.5px] font-semibold text-[#5c5e63] mb-4">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_heading'] ?? 'Ekosistem & Standar Mutu')) }}</p>
                     
                     <div class="space-y-3.5">
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean(str_ireplace('FDS STATION', 'FDS Station', (string) ($nb_brand['menu_prod_item1_title'] ?? 'FDS Station GCS'))) }}</div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')) }}</div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item1_desc'] ?? 'Software Ground Control Bahasa Indonesia')) }}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_title'] ?? 'TKDN + BMP 60,74%')) }}</div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_desc'] ?? 'Berlaku resmi untuk seluruh lini seri FERTO')) }}</div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item2_desc'] ?? 'Berlaku resmi untuk seluruh lini seri FERTO')) }}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_title'] ?? 'Standar SNI 9199:2023')) }}</div>
-                        <div class="text-[11px] text-[#5c5e63] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_desc'] ?? 'Teruji resmi pada FERTO 15 & FERTO 22')) }}</div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_item3_desc'] ?? 'Teruji resmi pada FERTO 15 & FERTO 22')) }}</div>
                       </div>
                     </div>
                   </div>
@@ -635,7 +680,7 @@
                   <div class="pt-5 border-t border-black/[0.06] space-y-2.5">
                     <a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-flex items-center text-[#1d1d1f] hover:text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
                       <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_all_label'] ?? 'Lihat Semua Produk UAV')) }}</span>
-                      <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h12v12"/>
                         <path d="M6 18 18 6"/>
                       </svg>
@@ -643,7 +688,7 @@
                     <div>
                       <a href="{!! esc_url($compare_href) !!}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
                         <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone')) }}</span>
-                        <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M6 6h12v12"/>
                           <path d="M6 18 18 6"/>
                         </svg>
@@ -661,94 +706,105 @@
               $menu_categories = function_exists('App\fds_get_layanan_categories') ? \App\fds_get_layanan_categories() : [];
               $menu_ui         = function_exists('App\fds_get_layanan_ui_texts') ? \App\fds_get_layanan_ui_texts() : [];
               $menu_layanan_cta_href = trim((string) ($nb_brand['menu_layanan_cta_url'] ?? '')) ?: home_url('/kontak/#hubungi-form');
+              $menu_sector_short_sub = [
+                'pertambangan'           => 'Survei LiDAR, stockpile & topografi',
+                'perkebunan-pertanian'   => 'Spraying presisi & pemetaan lahan',
+                'kehutanan-lingkungan'   => 'Pemetaan vegetasi, karbon & reklamasi',
+                'energi-infrastruktur'   => 'Inspeksi aset & koridor infrastruktur',
+                'perencanaan'            => 'Ortomosaik, DTM & survei kawasan',
+                'bencana-lingkungan'     => 'Pemetaan cepat & asesmen pascabencana',
+              ];
+              $menu_cat_short_sub = [
+                'jasa-foto-udara-lidar'             => 'Ortomosaik, DTM/DSM & point cloud 3D',
+                'jasa-multispectral-hyperspectral'  => 'Analisis spektral & kesehatan vegetasi',
+                'pelatihan-sertifikasi'             => 'Sertifikasi pilot & bootcamp operasional',
+              ];
             @endphp
             <div id="mega-pane-layanan" class="mega-pane transition-opacity duration-150 opacity-0 hidden">
               <div class="grid grid-cols-12 gap-10">
 
-                <!-- Column 1: Solusi Industri (6 Sektor) (Col 5) -->
-                <div class="col-span-5 border-r border-black/[0.06] pr-8">
-                  <div class="mb-4 flex items-center justify-between">
-                    <a href="{!! esc_url(home_url('/layanan/#solusi-industri')) !!}" class="text-[12px] font-semibold text-[#515154] hover:text-[#0f808a] transition-colors">
+                <!-- Column 1: Solusi Industri (6 Sektor) (Col 6 — identik proporsi Produk) -->
+                <div class="col-span-6 border-r border-black/[0.06] pr-10">
+                  <div class="mb-3">
+                    <a href="{!! esc_url(home_url('/layanan/#solusi-industri')) !!}" class="text-[12.5px] font-semibold text-[#5c5e63] hover:text-[#0f808a] transition-colors">
                       {{ $fds_nav_clean((string) ($menu_ui['menu_industries_heading'] ?? 'Solusi Industri (6 Sektor)')) }}
-                    </a>
-                    <a href="{!! esc_url(home_url('/layanan/')) !!}" class="inline-flex items-center gap-1 text-[11.5px] font-semibold text-[#0a555c] hover:underline group leading-none">
-                      <span>{{ $fds_nav_clean((string) ($menu_ui['menu_hub_link_text'] ?? 'Hub Layanan')) }}</span>
-                      <svg class="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <path d="M6 6h12v12"/>
-                        <path d="M6 18 18 6"/>
-                      </svg>
                     </a>
                   </div>
 
-                  <div class="grid grid-cols-2 gap-x-6 gap-y-3.5">
+                  <div class="grid grid-cols-2 gap-x-8 gap-y-3">
                     @foreach($menu_sectors as $sec)
+                      @php
+                        $sec_slug_key = (string) ($sec['slug'] ?? '');
+                        $sec_menu_sub = $menu_sector_short_sub[$sec_slug_key] ?? $fds_nav_clean((string) ($sec['subtitle'] ?? ''));
+                      @endphp
                       <a href="{!! esc_url($sec['url']) !!}" class="group py-0.5 block transition-colors">
-                        <div class="text-[14.5px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
+                        <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
                           {{ $fds_nav_clean((string) $sec['card_title']) }}
                         </div>
-                        <div class="text-[11.5px] text-[#6e6e73] mt-0.5 font-normal leading-snug line-clamp-2">
-                          {{ $fds_nav_clean((string) $sec['subtitle']) }}
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">
+                          {{ $sec_menu_sub }}
                         </div>
                       </a>
                     @endforeach
                   </div>
                 </div>
 
-                <!-- Column 2: Layanan Spesialis & Pelatihan (3 Kategori) (Col 4) -->
-                <div class="col-span-4 border-r border-black/[0.06] pr-8 flex flex-col justify-between">
-                  <div>
-                    <p class="text-[12px] font-semibold text-[#515154] mb-4">{{ $fds_nav_clean((string) ($menu_ui['menu_categories_heading'] ?? 'Layanan Spesialis & Pelatihan')) }}</p>
-                    <div class="space-y-4">
-                      @foreach($menu_categories as $cat)
-                        <a href="{!! esc_url($cat['url']) !!}" class="group py-0.5 block transition-colors">
-                          <div class="text-[15px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
-                            {{ $fds_nav_clean((string) $cat['short_title']) }}
-                          </div>
-                          <div class="text-[11.5px] text-[#6e6e73] mt-0.5 font-normal leading-snug line-clamp-2">
-                            {{ $fds_nav_clean((string) $cat['hero_summary']) }}
-                          </div>
-                        </a>
-                      @endforeach
-                    </div>
-                  </div>
-
-                  <div class="pt-5 mt-5 border-t border-black/[0.06]">
-                    <a href="{!! esc_url(home_url('/layanan/')) !!}" class="inline-flex items-center text-[#0a555c] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
-                      <span class="leading-none">{{ $fds_nav_clean((string) ($menu_ui['menu_all_services_text'] ?? 'Lihat Semua Layanan')) }}</span>
-                      <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 6h12v12"/>
-                        <path d="M6 18 18 6"/>
-                      </svg>
-                    </a>
+                <!-- Column 2: Layanan Spesialis & Pelatihan (3 Kategori) (Col 3) -->
+                <div class="col-span-3 border-r border-black/[0.06] pr-8">
+                  <p class="text-[12.5px] font-semibold text-[#5c5e63] mb-3">{{ $fds_nav_clean((string) ($menu_ui['menu_categories_heading'] ?? 'Layanan Spesialis & Pelatihan')) }}</p>
+                  <div class="space-y-3.5">
+                    @foreach($menu_categories as $cat)
+                      @php
+                        $cat_slug_key = (string) ($cat['slug'] ?? '');
+                        $cat_menu_sub = $menu_cat_short_sub[$cat_slug_key] ?? wp_trim_words($fds_nav_clean((string) ($cat['hero_summary'] ?? '')), 6, '');
+                      @endphp
+                      <a href="{!! esc_url($cat['url']) !!}" class="group py-0.5 block transition-colors">
+                        <div class="text-[14px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors leading-tight">
+                          {{ $fds_nav_clean((string) $cat['short_title']) }}
+                        </div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">
+                          {{ $cat_menu_sub }}
+                        </div>
+                      </a>
+                    @endforeach
                   </div>
                 </div>
 
                 <!-- Column 3: Hubungi Spesialis Layanan (Col 3) -->
                 <div class="col-span-3 flex flex-col justify-between">
                   <div>
-                    <p class="text-[12px] font-semibold text-[#515154] mb-4">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_heading'] ?? 'Dukungan Teknis Langsung')) }}</p>
+                    <p class="text-[12.5px] font-semibold text-[#5c5e63] mb-3">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_heading'] ?? 'Dukungan Teknis Langsung')) }}</p>
 
-                    <div class="space-y-4">
+                    <div class="space-y-3.5">
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item1_title'] ?? 'Pilot Bersertifikat Resmi')) }}</div>
-                        <div class="text-[12px] text-[#6e6e73] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item1_desc'] ?? 'Tim Operasional & Pemetaan Berpengalaman')) }}</div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item1_desc'] ?? 'Tim Operasional & Pemetaan Berpengalaman')) }}</div>
                       </div>
 
                       <div>
                         <div class="text-[14px] font-semibold text-[#1d1d1f] leading-tight">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item2_title'] ?? 'Workshop Sleman Yogyakarta')) }}</div>
-                        <div class="text-[12px] text-[#6e6e73] mt-0.5 font-normal leading-snug">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli')) }}</div>
+                        <div class="text-[12.5px] text-[#5c5e63] mt-0.5 font-normal leading-[1.45]">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_item2_desc'] ?? 'Pusat Perakitan, Riset, & Suku Cadang Asli')) }}</div>
                       </div>
                     </div>
                   </div>
 
-                  <div class="pt-6 border-t border-black/[0.06]">
-                    <a href="{!! esc_url($menu_layanan_cta_href) !!}" class="inline-flex items-center text-[#0a555c] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
-                      <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi')) }}</span>
-                      <svg class="w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <div class="pt-5 border-t border-black/[0.06] space-y-2.5">
+                    <a href="{!! esc_url(home_url('/layanan/')) !!}" class="inline-flex items-center text-[#1d1d1f] hover:text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                      <span class="leading-none">{{ $fds_nav_clean((string) ($menu_ui['menu_all_services_text'] ?? 'Lihat Semua Layanan')) }}</span>
+                      <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h12v12"/>
                         <path d="M6 18 18 6"/>
                       </svg>
                     </a>
+                    <div>
+                      <a href="{!! esc_url($menu_layanan_cta_href) !!}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
+                        <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_layanan_cta_text'] ?? 'Jadwalkan Demo & Konsultasi')) }}</span>
+                        <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                          <path d="M6 6h12v12"/>
+                          <path d="M6 18 18 6"/>
+                        </svg>
+                      </a>
+                    </div>
                   </div>
                 </div>
 
@@ -771,9 +827,9 @@
                 <a href="{!! esc_url(home_url('/produk/')) !!}" class="mobile-nav-link min-h-[44px] flex items-center font-semibold text-[#0a555c]">
                   {{ $nb_mob_prod_all }}
                 </a>
-                @foreach($drones_by_cat_slug as $cslug => $cdata)
+                @foreach($menu_groups as $cdata)
                   @if(!empty($cdata['drones']))
-                    <p class="text-[12px] font-semibold text-[#6e6e73] mt-2">{{ $fds_nav_clean((string) $cdata['term']->name) }}</p>
+                    <p class="text-[12px] font-semibold text-[#6e6e73] mt-2">{{ $fds_nav_clean((string) $cdata['name']) }}</p>
                     @foreach($cdata['drones'] as $d)
                       @php
                         $is_this_drone = is_single($d['id']) || (is_singular('drone') && get_the_ID() === $d['id']);
@@ -840,41 +896,6 @@
       </main>
 
       @php
-        $hide_sticky_cta = $is_active_kontak || is_page('terima-kasih') || is_404();
-        $sticky_label    = $fds_nav_clean((string) ($menu_ui['sticky_cta_label'] ?? 'Minta Penawaran'));
-        $sticky_url      = home_url('/kontak/#hubungi-form');
-        $sticky_wa       = 'Halo tim Enterprise FDS, kami ingin berkonsultasi mengenai solusi UAV, pemetaan, dan pengadaan drone.';
-
-        if (!$hide_sticky_cta) {
-          $layanan_ctx_sticky = function_exists('App\fds_get_current_layanan_context') ? \App\fds_get_current_layanan_context() : null;
-          if (is_array($layanan_ctx_sticky) && !empty($layanan_ctx_sticky['data'])) {
-            $l_slug = (string) ($layanan_ctx_sticky['slug'] ?? 'layanan');
-            $sticky_url = home_url('/kontak/?layanan=' . urlencode($l_slug) . '#hubungi-form');
-            if (!empty($layanan_ctx_sticky['data']['quote']['wa_prefill'])) {
-              $sticky_wa = $fds_nav_clean((string) $layanan_ctx_sticky['data']['quote']['wa_prefill']);
-            } elseif (!empty($layanan_ctx_sticky['data']['quote_defaults']['wa_prefill'])) {
-              $sticky_wa = $fds_nav_clean((string) $layanan_ctx_sticky['data']['quote_defaults']['wa_prefill']);
-            }
-          } elseif (is_singular('drone')) {
-            $d_slug_sticky = (string) get_post_field('post_name', get_the_ID());
-            $d_title_sticky = trim($fds_nav_clean((string) get_the_title()));
-            $sticky_url = home_url('/kontak/?produk=' . urlencode($d_slug_sticky) . '#hubungi-form');
-            $sticky_wa  = "Halo tim Enterprise FDS, kami tertarik berkonsultasi terkait pengadaan unit {$d_title_sticky}.";
-          } elseif (is_tax('kategori_drone')) {
-            $t_sticky = get_queried_object();
-            if ($t_sticky && !empty($t_sticky->slug)) {
-              $t_sticky_name = trim($fds_nav_clean((string) $t_sticky->name));
-              $sticky_url = home_url('/kontak/?layanan=' . urlencode('kategori-' . $t_sticky->slug) . '#hubungi-form');
-              $sticky_wa  = "Halo tim Enterprise FDS, kami ingin berkonsultasi mengenai lini drone kategori {$t_sticky_name}.";
-            }
-          }
-        }
-      @endphp
-      @if(!$hide_sticky_cta)
-        <x-service-sticky-bar :cta-label="$sticky_label" :cta-url="$sticky_url" :wa-prefill="$sticky_wa" />
-      @endif
-
-      @php
         $footer_data        = function_exists('\App\fds_get_footer_data') ? \App\fds_get_footer_data() : [];
         $footer_logos       = function_exists('\App\fds_get_footer_logos') ? \App\fds_get_footer_logos() : [];
         $footer_logo_height = intval(get_option('fds_footer_logo_height', 28)) ?: 28;
@@ -917,8 +938,8 @@
           <!-- Link columns -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-10 border-b border-black/[0.08]">
             <div>
-              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col1_title }}</h4>
-              <ul class="space-y-1 text-[12px] text-[#515154]">
+              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col1_title }}</h4>
+              <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-block py-1 font-semibold text-[#1d1d1f] hover:text-[#0f808a] hover:underline">{{ $f_col1_all }}</a></li>
                 @foreach($footer_drones as $d)
                 <li><a href="{!! esc_url($d['url']) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $fds_nav_clean((string) $d['name']) }}</a></li>
@@ -926,8 +947,8 @@
               </ul>
             </div>
             <div>
-              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col2_title }}</h4>
-              <ul class="space-y-1 text-[12px] text-[#515154]">
+              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col2_title }}</h4>
+              <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/layanan/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_col2_all }}</a></li>
                 @foreach($menu_categories as $cat)
                   <li><a href="{!! esc_url($cat['url']) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $fds_nav_clean((string) $cat['short_title']) }}</a></li>
@@ -938,8 +959,8 @@
               </ul>
             </div>
             <div>
-              <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col3_title }}</h4>
-              <ul class="space-y-1 text-[12px] text-[#515154]">
+              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col3_title }}</h4>
+              <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/tentang-kami/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_about_lbl }}</a></li>
                 @if(!empty($menu_sectors['perkebunan-pertanian']))
                   <li><a href="{!! esc_url($menu_sectors['perkebunan-pertanian']['url']) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_sector_prefix . $fds_nav_clean((string) $menu_sectors['perkebunan-pertanian']['card_title']) }}</a></li>
@@ -953,8 +974,8 @@
             </div>
             <div class="relative flex flex-col justify-between h-full min-h-[160px] pb-10 md:pb-12">
               <div>
-                <h4 class="text-[12px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col4_title }}</h4>
-                <ul class="space-y-1 text-[12px] text-[#515154]">
+                <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col4_title }}</h4>
+                <ul class="space-y-1 text-[13px] text-[#515154]">
                   <li><a href="{!! esc_url(home_url('/kontak/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_kontak_lbl }}</a></li>
                   <li><a href="{!! esc_url(home_url('/kontak/#lokasi-workshop')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_workshop_lbl }}</a></li>
                   <li><a href="{!! esc_url(home_url('/kontak/#hubungi-form')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_rfp_lbl }}</a></li>
@@ -1025,12 +1046,12 @@
             @endphp
             <div class="lg:col-span-8 flex flex-col justify-center">
               <div>
-                <p class="text-[13px] font-semibold text-[#1d1d1f]">{{ $f_company }}</p>
-                <p class="text-[12px] text-[#515154] mt-1.5 max-w-2xl leading-relaxed">
+                <p class="text-[14px] font-semibold text-[#1d1d1f]">{{ $f_company }}</p>
+                <p class="text-[13px] text-[#515154] mt-1.5 max-w-2xl leading-[1.6]">
                   {!! nl2br(e($f_address)) !!}
                 </p>
               </div>
-              <div class="flex flex-wrap items-center gap-4 mt-3 text-[12px] text-[#515154]">
+              <div class="flex flex-wrap items-center gap-4 mt-3 text-[13px] text-[#515154]">
                 @if(!empty($f_phone))
                 <a href="tel:{{ preg_replace('/[^0-9+]/', '', $f_phone) }}" class="hover:text-[#0f808a] font-medium transition-colors">{{ $f_tel_prefix . $f_phone }}</a>
                 @endif
@@ -1101,7 +1122,7 @@
 
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
           <!-- Bottom bar (Copyright & Links) -->
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[11px] text-[#5c5e63]">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 text-[12px] text-[#5c5e63]">
             <span>{{ $f_copyright }}</span>
             <div class="flex items-center gap-4">
               <a href="{!! esc_url(!empty($footer_data['privacy_url']) && $footer_data['privacy_url'] !== '#' ? $footer_data['privacy_url'] : home_url('/privacy-policy/')) !!}" class="hover:text-[#1d1d1f] hover:underline">{{ $f_privacy_lbl }}</a>
@@ -1295,6 +1316,9 @@
       if (drawer) {
         drawer.addEventListener('mouseenter', cancelClose);
         drawer.addEventListener('mouseleave', () => scheduleClose(200));
+        drawer.querySelectorAll('a[href]').forEach(link => {
+          link.addEventListener('click', () => closeMegaMenu());
+        });
       }
 
       if (siteHeader) {

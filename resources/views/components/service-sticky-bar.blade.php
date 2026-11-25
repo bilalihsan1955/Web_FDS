@@ -23,8 +23,12 @@
      class="lg:hidden fixed inset-x-0 bottom-0 z-[9990] bg-white/95 backdrop-blur-lg border-t border-black/[0.1] shadow-[0_-8px_24px_rgba(0,0,0,0.08)] px-4 py-3 transition-all duration-300 translate-y-0 opacity-100">
   <div class="flex items-center gap-3 max-w-[600px] mx-auto">
     <a href="{!! esc_url($target_cta_url) !!}"
-       class="flex-1 inline-flex items-center justify-center min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13.5px] font-semibold px-4 py-2.5 rounded-full transition-colors">
-      {{ $ctaLabel }}
+       class="flex-1 inline-flex items-center justify-center gap-1.5 min-h-[44px] bg-[#0f808a] hover:bg-[#0a555c] text-white text-[13.5px] font-semibold px-4 py-2.5 rounded-full transition-colors leading-none group">
+      <span>{{ $ctaLabel }}</span>
+      <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M6 6h12v12"/>
+        <path d="M6 18 18 6"/>
+      </svg>
     </a>
     <a href="{!! esc_url($wa_full_url) !!}"
        target="_blank"

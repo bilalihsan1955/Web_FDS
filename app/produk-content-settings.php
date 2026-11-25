@@ -129,6 +129,7 @@ function fds_get_produk_catalog_defaults(): array {
         'cat_kargo_title'     => 'Drone Kargo Otonom DELFRO',
         'cat_kargo_desc'      => 'Solusi pengiriman muatan kargo 3 – 10 kg (kompartemen 20 × 20 × 30 cm) secara otonom antartitik waypoint untuk logistik medis darurat maupun site terpencil.',
         'cat_kargo_link_text' => 'Halaman Kategori Kargo',
+        'cat_sections'        => [],
 
         'matrix_title'    => 'Ringkasan Spesifikasi Lini Wahana FDS',
         'matrix_desc'     => 'Bandingkan kapasitas muatan, durasi terbang, serta kesesuaian sertifikasi tiap lini produk sebelum pengadaan.',
@@ -318,6 +319,22 @@ function fds_get_produk_catalog_content(bool $fresh = false): array {
         }
     }
     $merged['faqs'] = $clean_faqs;
+
+    // Clean Dynamic Per-Term Section Overrides (keyed by WP taxonomy term_id)
+    $clean_cat_sections = [];
+    if (isset($merged['cat_sections']) && is_array($merged['cat_sections'])) {
+        foreach ($merged['cat_sections'] as $cs_tid => $cs_vals) {
+            $tid_int = absint($cs_tid);
+            if ($tid_int <= 0 || !is_array($cs_vals)) {
+                continue;
+            }
+            $clean_cat_sections[$tid_int] = [
+                'title' => fds_produk_clean_text($cs_vals['title'] ?? ''),
+                'desc'  => fds_produk_clean_text($cs_vals['desc'] ?? ''),
+            ];
+        }
+    }
+    $merged['cat_sections'] = $clean_cat_sections;
 
     $memo = $merged;
     return $merged;
@@ -592,27 +609,31 @@ function fds_get_kategori_drone_catalog_content(string $term_slug, ?object $term
 
 function fds_get_drone_detail_ui_defaults(): array {
     return [
-        'hero_cta1_text'     => 'Minta Penawaran',
-        'hero_cta2_text'     => 'Bandingkan model',
-        'specs_eyebrow'      => 'Spesifikasi',
-        'specs_compare_link' => 'Bandingkan spesifikasi',
-        'specs_heading'      => 'Direkayasa untuk <br>performa nyata.',
-        'specs_desc_fallback'=> 'Setiap spesifikasi {drone_name} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.',
-        'specs_empty_text'   => 'Spesifikasi detail akan segera diperbarui.',
-        'uc_eyebrow'         => 'Aplikasi & Use-Cases',
-        'uc_heading_tpl'     => '{drone_name} cocok untuk Anda.',
-        'uc_fallback_items'  => [
+        'hero_cta1_text'      => 'Minta Penawaran',
+        'hero_cta2_text'      => 'Bandingkan model',
+        'specs_eyebrow'       => 'Spesifikasi',
+        'specs_compare_link'  => 'Bandingkan spesifikasi',
+        'specs_heading'       => 'Direkayasa untuk <br>performa nyata.',
+        'specs_table_heading' => 'Spesifikasi Teknis',
+        'specs_desc_fallback' => 'Setiap spesifikasi {drone_name} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.',
+        'specs_empty_text'    => 'Spesifikasi detail akan segera diperbarui.',
+        'uc_eyebrow'          => 'Aplikasi & Use-Cases',
+        'uc_heading_tpl'      => '{drone_name} cocok untuk Anda.',
+        'gallery_heading_tpl' => 'Dokumentasi Uji Lapangan {drone_name}',
+        'uc_fallback_items'   => [
             'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
             'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
             'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
             'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
         ],
-        'guide_eyebrow'      => 'Panduan Teknis & Tanya Jawab',
-        'cta_heading_tpl'    => 'Siap mengoperasikan {drone_name}?',
-        'cta_desc'           => 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.',
-        'cta_primary_text'   => 'Hubungi Tim Sales',
-        'cta_secondary_text' => 'Baca studi kasus',
-        'cta_secondary_url'  => '/blog/',
+        'guide_eyebrow'       => 'Panduan Teknis & Tanya Jawab',
+        'faq_heading_tpl'     => 'Pertanyaan Teknis Seputar {model_base}',
+        'faq_subtitle'        => 'Jawaban ringkas mengenai spesifikasi teknis, sertifikasi, pengoperasian, dan layanan purna jual resmi FDS.',
+        'cta_heading_tpl'     => 'Siap mengoperasikan {drone_name}?',
+        'cta_desc'            => 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.',
+        'cta_primary_text'    => 'Hubungi Tim Sales',
+        'cta_secondary_text'  => 'Baca studi kasus',
+        'cta_secondary_url'   => '/blog/',
     ];
 }
 
@@ -631,8 +652,10 @@ function fds_get_drone_detail_ui(bool $fresh = false): array {
 
     foreach ([
         'hero_cta1_text', 'hero_cta2_text', 'specs_eyebrow', 'specs_compare_link',
-        'specs_desc_fallback', 'specs_empty_text', 'uc_eyebrow', 'uc_heading_tpl',
-        'guide_eyebrow', 'cta_heading_tpl', 'cta_desc', 'cta_primary_text', 'cta_secondary_text',
+        'specs_table_heading', 'specs_desc_fallback', 'specs_empty_text',
+        'uc_eyebrow', 'uc_heading_tpl', 'gallery_heading_tpl',
+        'guide_eyebrow', 'faq_heading_tpl', 'faq_subtitle',
+        'cta_heading_tpl', 'cta_desc', 'cta_primary_text', 'cta_secondary_text',
     ] as $k) {
         $merged[$k] = fds_produk_clean_text($merged[$k] ?? '');
     }
@@ -985,6 +1008,50 @@ function fds_handle_produk_admin_post(string $active_tab, array $tabs): array {
             }
         }
 
+        $existing_hub = get_option($meta['option'], []);
+        $existing_hub = is_array($existing_hub) ? $existing_hub : [];
+
+        $cat_sections_save = is_array($existing_hub['cat_sections'] ?? null) ? $existing_hub['cat_sections'] : [];
+        $posted_cat_sec    = $_POST['cat_sections'] ?? [];
+        if (is_array($posted_cat_sec)) {
+            foreach ($posted_cat_sec as $cs_tid => $cs_vals) {
+                $tid_int = absint($cs_tid);
+                if ($tid_int <= 0 || !is_array($cs_vals)) {
+                    continue;
+                }
+                $cat_sections_save[$tid_int] = [
+                    'title' => sanitize_text_field(wp_unslash((string) ($cs_vals['title'] ?? ''))),
+                    'desc'  => sanitize_textarea_field(wp_unslash((string) ($cs_vals['desc'] ?? ''))),
+                ];
+            }
+        }
+
+        // Sinkronkan balik field 3 kategori inti bila diedit via array dinamis cat_sections
+        $core_title_agri     = array_key_exists('cat_agri_title', $_POST) ? $unslash_txt('cat_agri_title') : (string) ($existing_hub['cat_agri_title'] ?? '');
+        $core_desc_agri      = array_key_exists('cat_agri_desc', $_POST) ? $unslash_area('cat_agri_desc') : (string) ($existing_hub['cat_agri_desc'] ?? '');
+        $core_title_pemetaan = array_key_exists('cat_pemetaan_title', $_POST) ? $unslash_txt('cat_pemetaan_title') : (string) ($existing_hub['cat_pemetaan_title'] ?? '');
+        $core_desc_pemetaan  = array_key_exists('cat_pemetaan_desc', $_POST) ? $unslash_area('cat_pemetaan_desc') : (string) ($existing_hub['cat_pemetaan_desc'] ?? '');
+        $core_title_kargo    = array_key_exists('cat_kargo_title', $_POST) ? $unslash_txt('cat_kargo_title') : (string) ($existing_hub['cat_kargo_title'] ?? '');
+        $core_desc_kargo     = array_key_exists('cat_kargo_desc', $_POST) ? $unslash_area('cat_kargo_desc') : (string) ($existing_hub['cat_kargo_desc'] ?? '');
+
+        foreach ($cat_sections_save as $cs_tid => $cs_vals) {
+            $t_obj = get_term((int) $cs_tid, 'kategori_drone');
+            if (!$t_obj || is_wp_error($t_obj)) {
+                continue;
+            }
+            $tslug = strtolower((string) $t_obj->slug);
+            if ($tslug === 'agrikultur') {
+                $core_title_agri = (string) ($cs_vals['title'] ?? '');
+                $core_desc_agri  = (string) ($cs_vals['desc'] ?? '');
+            } elseif ($tslug === 'pemetaan-gis' || $tslug === 'pemetaan') {
+                $core_title_pemetaan = (string) ($cs_vals['title'] ?? '');
+                $core_desc_pemetaan  = (string) ($cs_vals['desc'] ?? '');
+            } elseif ($tslug === 'kargo') {
+                $core_title_kargo = (string) ($cs_vals['title'] ?? '');
+                $core_desc_kargo  = (string) ($cs_vals['desc'] ?? '');
+            }
+        }
+
         $save_data = [
             'hero_badge'             => $unslash_txt('hero_badge'),
             'hero_title'             => $unslash_txt('hero_title'),
@@ -997,18 +1064,19 @@ function fds_handle_produk_admin_post(string $active_tab, array $tabs): array {
             'nav_pemetaan_label'     => $unslash_txt('nav_pemetaan_label'),
             'nav_kargo_label'        => $unslash_txt('nav_kargo_label'),
             'highlights'             => $highlights,
-            'cat_agri_badge'         => $unslash_txt('cat_agri_badge'),
-            'cat_agri_title'         => $unslash_txt('cat_agri_title'),
-            'cat_agri_desc'          => $unslash_area('cat_agri_desc'),
-            'cat_agri_link_text'     => $unslash_txt('cat_agri_link_text'),
-            'cat_pemetaan_badge'     => $unslash_txt('cat_pemetaan_badge'),
-            'cat_pemetaan_title'     => $unslash_txt('cat_pemetaan_title'),
-            'cat_pemetaan_desc'      => $unslash_area('cat_pemetaan_desc'),
-            'cat_pemetaan_link_text' => $unslash_txt('cat_pemetaan_link_text'),
-            'cat_kargo_badge'        => $unslash_txt('cat_kargo_badge'),
-            'cat_kargo_title'        => $unslash_txt('cat_kargo_title'),
-            'cat_kargo_desc'         => $unslash_area('cat_kargo_desc'),
-            'cat_kargo_link_text'    => $unslash_txt('cat_kargo_link_text'),
+            'cat_agri_badge'         => array_key_exists('cat_agri_badge', $_POST) ? $unslash_txt('cat_agri_badge') : (string) ($existing_hub['cat_agri_badge'] ?? ''),
+            'cat_agri_title'         => $core_title_agri,
+            'cat_agri_desc'          => $core_desc_agri,
+            'cat_agri_link_text'     => array_key_exists('cat_agri_link_text', $_POST) ? $unslash_txt('cat_agri_link_text') : (string) ($existing_hub['cat_agri_link_text'] ?? ''),
+            'cat_pemetaan_badge'     => array_key_exists('cat_pemetaan_badge', $_POST) ? $unslash_txt('cat_pemetaan_badge') : (string) ($existing_hub['cat_pemetaan_badge'] ?? ''),
+            'cat_pemetaan_title'     => $core_title_pemetaan,
+            'cat_pemetaan_desc'      => $core_desc_pemetaan,
+            'cat_pemetaan_link_text' => array_key_exists('cat_pemetaan_link_text', $_POST) ? $unslash_txt('cat_pemetaan_link_text') : (string) ($existing_hub['cat_pemetaan_link_text'] ?? ''),
+            'cat_kargo_badge'        => array_key_exists('cat_kargo_badge', $_POST) ? $unslash_txt('cat_kargo_badge') : (string) ($existing_hub['cat_kargo_badge'] ?? ''),
+            'cat_kargo_title'        => $core_title_kargo,
+            'cat_kargo_desc'         => $core_desc_kargo,
+            'cat_kargo_link_text'    => array_key_exists('cat_kargo_link_text', $_POST) ? $unslash_txt('cat_kargo_link_text') : (string) ($existing_hub['cat_kargo_link_text'] ?? ''),
+            'cat_sections'           => $cat_sections_save,
             'matrix_title'           => $unslash_txt('matrix_title'),
             'matrix_desc'            => $unslash_area('matrix_desc'),
             'matrix_cta_text'        => $unslash_txt('matrix_cta_text'),
@@ -1110,12 +1178,16 @@ function fds_handle_produk_admin_post(string $active_tab, array $tabs): array {
             'specs_eyebrow'       => $unslash_txt('specs_eyebrow'),
             'specs_compare_link'  => $unslash_txt('specs_compare_link'),
             'specs_heading'       => trim($raw_hd),
+            'specs_table_heading' => $unslash_txt('specs_table_heading'),
             'specs_desc_fallback' => $unslash_area('specs_desc_fallback'),
             'specs_empty_text'    => $unslash_txt('specs_empty_text'),
             'uc_eyebrow'          => $unslash_txt('uc_eyebrow'),
             'uc_heading_tpl'      => $unslash_txt('uc_heading_tpl'),
+            'gallery_heading_tpl' => $unslash_txt('gallery_heading_tpl'),
             'uc_fallback_items'   => $uc_arr,
             'guide_eyebrow'       => $unslash_txt('guide_eyebrow'),
+            'faq_heading_tpl'     => $unslash_txt('faq_heading_tpl'),
+            'faq_subtitle'        => $unslash_area('faq_subtitle'),
             'cta_heading_tpl'     => $unslash_txt('cta_heading_tpl'),
             'cta_desc'            => $unslash_area('cta_desc'),
             'cta_primary_text'    => $unslash_txt('cta_primary_text'),
@@ -1267,6 +1339,17 @@ function render_produk_content_admin_page(): void {
             <input type="hidden" name="fds_produk_tab" value="<?php echo esc_attr($active_tab); ?>">
 
             <?php if ($meta['kind'] === 'hub'): ?>
+                <div style="background:#f0fdfa;border:1px solid #99f6e4;border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;">
+                    <div style="font-size:12.5px;color:#0f172a;line-height:1.55;max-width:820px;">
+                        <strong style="color:#0a555c;">Urutan Tampil Katalog (/produk/) &amp; Mega Dropdown Sudah Tersinkron 1:1:</strong>
+                        Secara default, urutan section kategori mengikuti <em>Kategori Utama</em> di <strong>Logo &amp; Navbar</strong> &amp; jumlah unit terbanyak. Untuk menentukan urutan kategori manual (<code>1, 2, 3...</code>), atur kolom <strong>Urutan Tampil</strong> pada masing-masing kategori; untuk urutan kartu unit di dalam kategori, isi kolom <strong>Urutan (menu_order)</strong> lewat <em>Edit / Edit Cepat</em> pada <strong>Produk Drone</strong>.
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=kategori_drone&post_type=drone')); ?>" class="button button-secondary">Atur Urutan Kategori &rarr;</a>
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=fds-navbar-settings')); ?>" class="button button-secondary">Kategori Utama Mega Menu &rarr;</a>
+                    </div>
+                </div>
+
                 <!-- 1. HERO KATALOG -->
                 <div class="fds-pk-card">
                     <h3>1. Hero Katalog (/produk/)</h3>
@@ -1341,36 +1424,82 @@ function render_produk_content_admin_page(): void {
                     <button type="button" class="button" onclick="fdsPkAddHighlight()">+ Tambah Highlight Sertifikasi</button>
                 </div>
 
-                <!-- 3. HEADER SECTION MASING-MASING KATEGORI -->
+                <!-- 3. HEADER SECTION MASING-MASING KATEGORI (DINAMIS SEMUA KATEGORI) -->
                 <div class="fds-pk-card">
-                    <h3>3. Header Section Kategori (Di Atas Grid Kartu Drone)</h3>
+                    <h3>3. Header &amp; Sub-Deskripsi Section Kategori (Otomatis Mengikuti Semua Kategori Drone)</h3>
+                    <p class="fds-pk-hint" style="margin:-4px 0 14px;">
+                        Setiap kategori baru yang Anda tambahkan di <strong>Produk Drone &rarr; Kategori Drone</strong> akan muncul otomatis di sini beserta pengaturan <strong>Judul Section (H2)</strong> dan <strong>Sub-Deskripsi Section</strong> di halaman <code>/produk/</code>.
+                    </p>
                     <?php
-                    $cat_groups = [
-                        'Agrikultur (Seri FERTO)'       => 'cat_agri',
-                        'Pemetaan & Inspeksi (GIS)'     => 'cat_pemetaan',
-                        'Kargo Logistik (DELFRO)'       => 'cat_kargo',
+                    $admin_cat_terms = get_terms([
+                        'taxonomy'   => 'kategori_drone',
+                        'hide_empty' => false,
+                        'orderby'    => 'term_id',
+                        'order'      => 'ASC',
+                    ]);
+                    if (is_wp_error($admin_cat_terms) || empty($admin_cat_terms)) {
+                        $admin_cat_terms = [];
+                    } else {
+                        $admin_cat_terms = array_values(array_filter($admin_cat_terms, static function ($t) {
+                            return stripos((string) ($t->slug ?? ''), 'rebo') === false;
+                        }));
+                        if (function_exists('\App\fds_sort_kategori_terms')) {
+                            $admin_cat_terms = \App\fds_sort_kategori_terms($admin_cat_terms);
+                        }
+                    }
+
+                    $saved_cat_sections = is_array($data['cat_sections'] ?? null) ? $data['cat_sections'] : [];
+                    $legacy_sec_keys = [
+                        'agrikultur'   => ['title' => 'cat_agri_title', 'desc' => 'cat_agri_desc'],
+                        'pemetaan-gis' => ['title' => 'cat_pemetaan_title', 'desc' => 'cat_pemetaan_desc'],
+                        'pemetaan'     => ['title' => 'cat_pemetaan_title', 'desc' => 'cat_pemetaan_desc'],
+                        'kargo'        => ['title' => 'cat_kargo_title', 'desc' => 'cat_kargo_desc'],
                     ];
-                    foreach ($cat_groups as $gtitle => $prefix):
+
+                    foreach ($admin_cat_terms as $term_item):
+                        $tid_item   = (int) $term_item->term_id;
+                        $tslug_item = sanitize_title((string) ($term_item->slug ?? ''));
+                        $tname_item = fds_produk_clean_text((string) ($term_item->name ?? ''));
+                        $tdesc_item = fds_produk_clean_text((string) ($term_item->description ?? ''));
+                        $torder     = absint(get_term_meta($tid_item, 'fds_cat_order', true));
+                        $tcount     = (int) ($term_item->count ?? 0);
+
+                        if (isset($saved_cat_sections[$tid_item]) && is_array($saved_cat_sections[$tid_item])) {
+                            $sec_title_val = (string) ($saved_cat_sections[$tid_item]['title'] ?? '');
+                            $sec_desc_val  = (string) ($saved_cat_sections[$tid_item]['desc'] ?? '');
+                        } elseif (isset($legacy_sec_keys[$tslug_item])) {
+                            $lk_map        = $legacy_sec_keys[$tslug_item];
+                            $sec_title_val = (string) ($data[$lk_map['title']] ?? $tname_item);
+                            $sec_desc_val  = (string) ($data[$lk_map['desc']] ?? '');
+                        } else {
+                            $sec_title_val = $tname_item;
+                            $sec_desc_val  = $tdesc_item;
+                        }
+                        $term_edit_url = admin_url('term.php?taxonomy=kategori_drone&tag_ID=' . $tid_item . '&post_type=drone');
                     ?>
                         <div class="fds-pk-row">
-                            <strong style="display:block;font-size:12.5px;color:#0f808a;margin-bottom:8px;"><?php echo esc_html($gtitle); ?></strong>
-                            <div class="fds-pk-grid2">
-                                <div class="fds-pk-field">
-                                    <label>Label Eyebrow</label>
-                                    <input type="text" name="<?php echo esc_attr($prefix . '_badge'); ?>" value="<?php echo esc_attr($data[$prefix . '_badge'] ?? ''); ?>">
+                            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
+                                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                                    <strong style="font-size:13px;color:#0f808a;"><?php echo esc_html($tname_item); ?></strong>
+                                    <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#e2e8f0;color:#334155;font-weight:600;"><?php echo esc_html((string) $tcount); ?> unit</span>
+                                    <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:<?php echo $torder > 0 ? '#e0f2fe' : '#f1f5f9'; ?>;color:<?php echo $torder > 0 ? '#0369a1' : '#64748b'; ?>;font-weight:600;">
+                                        <?php echo $torder > 0 ? 'Urutan #' . esc_html((string) $torder) : 'Urutan: Otomatis'; ?>
+                                    </span>
                                 </div>
-                                <div class="fds-pk-field">
-                                    <label>Teks Tautan Arsip Kategori</label>
-                                    <input type="text" name="<?php echo esc_attr($prefix . '_link_text'); ?>" value="<?php echo esc_attr($data[$prefix . '_link_text'] ?? ''); ?>">
-                                </div>
+                                <a href="<?php echo esc_url($term_edit_url); ?>" style="font-size:11.5px;font-weight:600;color:#0f808a;text-decoration:none;">Atur Urutan Kategori &rarr;</a>
                             </div>
                             <div class="fds-pk-field">
                                 <label>Judul Section (H2)</label>
-                                <input type="text" name="<?php echo esc_attr($prefix . '_title'); ?>" value="<?php echo esc_attr($data[$prefix . '_title'] ?? ''); ?>">
+                                <input type="text"
+                                       name="cat_sections[<?php echo esc_attr((string) $tid_item); ?>][title]"
+                                       value="<?php echo esc_attr($sec_title_val); ?>"
+                                       placeholder="<?php echo esc_attr($tname_item); ?>">
                             </div>
                             <div class="fds-pk-field" style="margin-bottom:0;">
-                                <label>Deskripsi Section</label>
-                                <textarea name="<?php echo esc_attr($prefix . '_desc'); ?>" rows="2"><?php echo esc_textarea($data[$prefix . '_desc'] ?? ''); ?></textarea>
+                                <label>Sub-Deskripsi Section <span style="font-weight:400;color:#64748b;">(teks di bawah Judul H2 pada halaman /produk/)</span></label>
+                                <textarea name="cat_sections[<?php echo esc_attr((string) $tid_item); ?>][desc]"
+                                          rows="2"
+                                          placeholder="Isi penjelasan singkat kategori di sini (kosongkan jika tidak ingin menampilkan sub-deskripsi)..."><?php echo esc_textarea($sec_desc_val); ?></textarea>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -1665,9 +1794,15 @@ function render_produk_content_admin_page(): void {
                             <input type="text" name="specs_compare_link" value="<?php echo esc_attr($data['specs_compare_link']); ?>">
                         </div>
                     </div>
-                    <div class="fds-pk-field">
-                        <label>Heading Section Spesifikasi (mendukung tag <code>&lt;br&gt;</code>)</label>
-                        <input type="text" name="specs_heading" value="<?php echo esc_attr($data['specs_heading']); ?>">
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Heading Section Ikhtisar / Spotlight (mendukung tag <code>&lt;br&gt;</code>)</label>
+                            <input type="text" name="specs_heading" value="<?php echo esc_attr($data['specs_heading']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Heading Section Tabel Spesifikasi Teknis</label>
+                            <input type="text" name="specs_table_heading" value="<?php echo esc_attr($data['specs_table_heading']); ?>">
+                        </div>
                     </div>
                     <div class="fds-pk-field">
                         <label>Deskripsi Cadangan Jika Deskripsi Drone Kosong (gunakan <code>{drone_name}</code>)</label>
@@ -1680,7 +1815,7 @@ function render_produk_content_admin_page(): void {
                 </div>
 
                 <div class="fds-pk-card">
-                    <h3>2. Aplikasi Use-Cases, Panduan Teknis &amp; CTA Penutup Detail Drone</h3>
+                    <h3>2. Aplikasi Use-Cases, Galeri, FAQ &amp; CTA Penutup Detail Drone</h3>
                     <div class="fds-pk-grid2">
                         <div class="fds-pk-field">
                             <label>Eyebrow Aplikasi &amp; Use-Cases</label>
@@ -1692,12 +1827,26 @@ function render_produk_content_admin_page(): void {
                         </div>
                     </div>
                     <div class="fds-pk-field">
+                        <label>Format Heading Galeri Lapangan (gunakan <code>{drone_name}</code> atau <code>{model_base}</code>)</label>
+                        <input type="text" name="gallery_heading_tpl" value="<?php echo esc_attr($data['gallery_heading_tpl']); ?>">
+                    </div>
+                    <div class="fds-pk-field">
                         <label>Daftar Cadangan Use-Cases Jika Unit Baru Kosong (1 item per baris)</label>
                         <textarea name="uc_fallback_items" rows="4"><?php echo esc_textarea(implode("\n", (array) $data['uc_fallback_items'])); ?></textarea>
                     </div>
+                    <div class="fds-pk-grid2">
+                        <div class="fds-pk-field">
+                            <label>Eyebrow Panduan Teknis &amp; FAQ</label>
+                            <input type="text" name="guide_eyebrow" value="<?php echo esc_attr($data['guide_eyebrow']); ?>">
+                        </div>
+                        <div class="fds-pk-field">
+                            <label>Format Heading FAQ Produk (gunakan <code>{model_base}</code> atau <code>{drone_name}</code>)</label>
+                            <input type="text" name="faq_heading_tpl" value="<?php echo esc_attr($data['faq_heading_tpl']); ?>">
+                        </div>
+                    </div>
                     <div class="fds-pk-field">
-                        <label>Eyebrow Panduan Teknis &amp; FAQ</label>
-                        <input type="text" name="guide_eyebrow" value="<?php echo esc_attr($data['guide_eyebrow']); ?>">
+                        <label>Subteks / Penjelasan Singkat Seksi FAQ</label>
+                        <textarea name="faq_subtitle" rows="2"><?php echo esc_textarea($data['faq_subtitle']); ?></textarea>
                     </div>
                     <div class="fds-pk-grid2">
                         <div class="fds-pk-field">
