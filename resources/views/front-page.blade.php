@@ -521,11 +521,11 @@
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="solusi-prev-btn" type="button" onclick="scrollSolusiCarousel(-1)" aria-label="Sebelumnya"
               class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed border border-white/20 cursor-pointer">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
       <button id="solusi-next-btn" type="button" onclick="scrollSolusiCarousel(1)" aria-label="Berikutnya"
               class="w-11 h-11 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white transition-all disabled:opacity-25 disabled:cursor-not-allowed border border-white/20 cursor-pointer">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
   </x-reveal>
@@ -1087,9 +1087,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       @foreach($products as $p)
       <div class="drone-row border-b border-black/[0.06]" data-cat="{{ $p['cat'] }}">
-        <div class="grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#f5f5f7] rounded-2xl px-4 -mx-4 transition-colors duration-150 cursor-pointer"
-             data-href="{!! esc_url($p['url']) !!}"
-             onclick="location.href=this.getAttribute('data-href')">
+        <div class="relative fds-focus-row grid grid-cols-12 gap-4 py-6 items-center group hover:bg-[#f5f5f7] rounded-2xl px-4 -mx-4 transition-colors duration-150 cursor-pointer">
 
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
@@ -1097,9 +1095,9 @@ document.addEventListener('DOMContentLoaded', function() {
               @if(!empty($global_drone_icon))
                 <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
                      style="-webkit-mask-image: url('{!! esc_url($global_drone_icon) !!}'); mask-image: url('{!! esc_url($global_drone_icon) !!}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
-                     role="img" aria-label="Drone Icon"></div>
+                     aria-hidden="true"></div>
               @else
-                <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
               @endif
             </div>
           </div>
@@ -1123,10 +1121,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="hidden lg:block text-[13.5px] text-[#5c5e63] font-medium leading-[1.6]">{{ $p['specs'] }}</p>
             <a href="{!! esc_url($p['url']) !!}"
                aria-label="{{ $hp_row_detail_text }} {{ strip_tags($p['name']) }}"
-               class="text-[13.5px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 py-1.5 leading-none group"
-               onclick="event.stopPropagation()">
+               class="fds-stretched-link text-[13.5px] font-semibold text-[#0f808a] hover:underline whitespace-nowrap inline-flex items-center gap-1.5 py-1.5 leading-none group">
               <span>{{ $hp_row_detail_text }}</span>
-              <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M6 6h12v12"/>
                 <path d="M6 18 18 6"/>
               </svg>
@@ -1142,7 +1139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         <p class="text-[15px] text-[#515154]">{{ $hp_prod_empty_text }}</p>
         <a href="{!! esc_url(home_url('/kontak/#hubungi-form')) !!}" class="mt-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] hover:underline group">
           <span>{{ $hp_prod_empty_cta }}</span>
-          <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="w-[18px] h-[18px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M6 6h12v12"/>
             <path d="M6 18 18 6"/>
           </svg>
@@ -1477,11 +1474,11 @@ function filterDrones(btn) {
     <div class="flex items-center justify-end gap-3 mt-6">
       <button id="news-prev-btn" type="button" onclick="scrollNewsCarousel(-1)" aria-label="Sebelumnya"
               class="w-11 h-11 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06] cursor-pointer">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
       <button id="news-next-btn" type="button" onclick="scrollNewsCarousel(1)" aria-label="Berikutnya"
               class="w-11 h-11 rounded-full bg-white hover:bg-[#ededf0] active:scale-95 flex items-center justify-center text-[#1d1d1f] transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-sm border border-black/[0.06] cursor-pointer">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
   </x-reveal>
@@ -1678,14 +1675,14 @@ document.addEventListener('DOMContentLoaded', function() {
       <div class="lg:col-span-7 py-8 sm:py-9 px-8 sm:px-10 lg:px-12 bg-[#f5f5f7] flex flex-col justify-between">
         {{-- Form Header --}}
         <div class="mb-4 sm:mb-5">
-          <h3 class="text-[20px] sm:text-[22px] font-semibold text-[#1d1d1f] tracking-tight mb-1.5">
+          <h3 id="hp-inquiry-heading" class="text-[20px] sm:text-[22px] font-semibold text-[#1d1d1f] tracking-tight mb-1.5">
             {{ $fds_hp_scrub($hp['kontak_form_title'] ?? 'Kirim pesan inquiry') }}
           </h3>
           <p class="text-[14px] text-[#515154] leading-relaxed">{{ $fds_hp_scrub($hp['kontak_form_desc'] ?? 'Silakan lengkapi formulir di bawah ini, tim representatif kami siap membantu kebutuhan Anda:') }}</p>
         </div>
 
         {{-- Form Body (Flex-1 to fill space evenly and balance with left panel) --}}
-        <form id="fds-inquiry-form" class="flex-1 flex flex-col justify-between space-y-3.5" onsubmit="fdsSubmitInquiry(event)">
+        <form id="fds-inquiry-form" aria-labelledby="hp-inquiry-heading" class="flex-1 flex flex-col justify-between space-y-3.5">
           @php
             wp_nonce_field('fds_inquiry_nonce', 'fds_inquiry_nonce_val');
             $_fds_home_track = function_exists('App\fds_get_tracking_config') ? \App\fds_get_tracking_config() : [];
@@ -1720,40 +1717,40 @@ document.addEventListener('DOMContentLoaded', function() {
           <div class="space-y-3.5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_fname_lbl }} <span class="text-red-500">*</span></label>
-                <input type="text" name="first_name" required maxlength="60" placeholder="{{ $hp_fname_ph }}"
-                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <label for="hp_first_name" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_fname_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+                <input id="hp_first_name" type="text" name="first_name" required maxlength="60" autocomplete="given-name" placeholder="{{ $hp_fname_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150">
               </div>
               <div>
-                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_lname_lbl }} <span class="text-red-500">*</span></label>
-                <input type="text" name="last_name" required maxlength="60" placeholder="{{ $hp_lname_ph }}"
-                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <label for="hp_last_name" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_lname_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+                <input id="hp_last_name" type="text" name="last_name" required maxlength="60" autocomplete="family-name" placeholder="{{ $hp_lname_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150">
               </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div>
-                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_company_lbl }} <span class="text-red-500">*</span></label>
-                <input type="text" name="company" required maxlength="100" placeholder="{{ $hp_company_ph }}"
-                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <label for="hp_company" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_company_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+                <input id="hp_company" type="text" name="company" required maxlength="100" autocomplete="organization" placeholder="{{ $hp_company_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150">
               </div>
               <div>
-                <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_email_lbl }} <span class="text-red-500">*</span></label>
-                <input type="email" name="email" required maxlength="100" placeholder="{{ $hp_email_ph }}"
-                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+                <label for="hp_email" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_email_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+                <input id="hp_email" type="email" name="email" required maxlength="100" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="{{ $hp_email_ph }}"
+                  class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150">
               </div>
             </div>
 
             <div>
-              <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_phone_lbl }} <span class="text-red-500">*</span></label>
-              <input type="tel" name="phone" required maxlength="30" placeholder="{{ $hp_phone_ph }}"
-                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150">
+              <label for="hp_phone" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_phone_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+              <input id="hp_phone" type="tel" name="phone" required maxlength="30" autocomplete="tel" inputmode="tel" placeholder="{{ $hp_phone_ph }}"
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150">
             </div>
 
             <div>
-              <label class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_msg_lbl }} <span class="text-red-500">*</span></label>
-              <textarea name="message" rows="3" required maxlength="3000" placeholder="{{ $hp_msg_ph }}"
-                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] outline-none transition-all duration-150 resize-none"></textarea>
+              <label for="hp_message" class="block text-[13px] font-medium text-[#374151] mb-1.5">{{ $hp_msg_lbl }} <span class="text-red-500" aria-hidden="true">*</span></label>
+              <textarea id="hp_message" name="message" rows="3" required maxlength="3000" placeholder="{{ $hp_msg_ph }}"
+                class="w-full bg-white border border-black/[0.08] focus:border-[#0f808a] focus:bg-white rounded-xl px-3.5 py-2.5 text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:ring-2 focus-visible:ring-[#0f808a]/25 transition-all duration-150 resize-none"></textarea>
             </div>
 
             @if($_fds_home_use_ts)
@@ -1786,7 +1783,7 @@ document.addEventListener('DOMContentLoaded', function() {
             @endphp
             @if($home_form_note_raw !== '')
             <p class="text-[12.5px] text-[#515154] leading-relaxed mt-3 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              <svg class="w-3.5 h-3.5 text-[#0f808a] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
               <span>{{ $home_form_note_raw }}</span>
             </p>
             @endif
@@ -1815,15 +1812,15 @@ document.addEventListener('DOMContentLoaded', function() {
 </section>
 
 {{-- Floating Bottom-Right Toast / Snackbar Notification --}}
-<div id="fds-snackbar" class="fixed bottom-6 right-6 z-[99999] max-w-[400px] w-[calc(100%-3rem)] transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none">
+<div id="fds-snackbar" class="fixed bottom-6 right-6 z-[99999] max-w-[400px] w-[calc(100%-3rem)] transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none" role="status" aria-live="polite">
   <div id="fds-snackbar-card" class="rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5">
-    <div id="fds-snackbar-icon" class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"></div>
+    <div id="fds-snackbar-icon" class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" aria-hidden="true"></div>
     <div class="flex-1 min-w-0">
       <p id="fds-snackbar-title" class="text-[13.5px] font-bold text-white leading-tight mb-0.5"></p>
       <p id="fds-snackbar-desc" class="text-[12.5px] text-white/90 leading-snug"></p>
     </div>
     <button type="button" onclick="fdsCloseSnackbar()" class="text-white/70 hover:text-white hover:bg-white/15 p-1 rounded-lg transition-colors flex-shrink-0 cursor-pointer" aria-label="Tutup Notifikasi">
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
   </div>
 </div>
@@ -1842,11 +1839,11 @@ function fdsShowSnackbar(isSuccess, title, message) {
   if (isSuccess) {
     card.className = 'bg-[#059669] border border-[#047857] rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5 text-white';
     icon.className = 'w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5';
-    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
+    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>';
   } else {
     card.className = 'bg-[#dc2626] border border-[#b91c1c] rounded-2xl p-4 shadow-2xl shadow-gray-900/30 flex items-start gap-3.5 text-white';
     icon.className = 'w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center flex-shrink-0 mt-0.5';
-    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
+    icon.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>';
   }
 
   titleEl.textContent = title;
@@ -1868,7 +1865,18 @@ function fdsCloseSnackbar() {
   bar.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
 }
 
-function fdsSubmitInquiry(e) {
+document.addEventListener('DOMContentLoaded', function() {
+  var hpForm = document.getElementById('fds-inquiry-form');
+  if (!hpForm) return;
+  hpForm.addEventListener('submit', fdsHandleHomeInquirySubmit);
+  hpForm.querySelectorAll('input:not([type="hidden"]), textarea').forEach(function(el) {
+    el.addEventListener('input', function() {
+      el.removeAttribute('aria-invalid');
+    });
+  });
+});
+
+function fdsHandleHomeInquirySubmit(e) {
   e.preventDefault();
   var form = document.getElementById('fds-inquiry-form');
   var btn = document.getElementById('fds-inquiry-btn');
@@ -1877,21 +1885,38 @@ function fdsSubmitInquiry(e) {
   if (!form || !btn) return;
 
   // Validasi Semua Field Wajib di Frontend
+  var reqNames = ['first_name', 'last_name', 'company', 'email', 'phone', 'message'];
+  var firstEmptyEl = null;
+  reqNames.forEach(function(n) {
+    var field = form.querySelector('[name="' + n + '"]');
+    if (field && !String(field.value || '').trim()) {
+      field.setAttribute('aria-invalid', 'true');
+      if (!firstEmptyEl) firstEmptyEl = field;
+    } else if (field) {
+      field.removeAttribute('aria-invalid');
+    }
+  });
   var firstName = (form.querySelector('[name="first_name"]') || {}).value || '';
   var lastName  = (form.querySelector('[name="last_name"]') || {}).value || '';
   var company   = (form.querySelector('[name="company"]') || {}).value || '';
-  var email     = (form.querySelector('[name="email"]') || {}).value || '';
+  var emailEl   = form.querySelector('[name="email"]');
+  var email     = (emailEl || {}).value || '';
   var phone     = (form.querySelector('[name="phone"]') || {}).value || '';
   var message   = (form.querySelector('[name="message"]') || {}).value || '';
 
-  if (!firstName.trim() || !lastName.trim() || !company.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+  if (firstEmptyEl || !firstName.trim() || !lastName.trim() || !company.trim() || !email.trim() || !phone.trim() || !message.trim()) {
     fdsShowSnackbar(false, 'Formulir Belum Lengkap', 'Semua kolom formulir wajib diisi sebelum mengirim pesan.');
+    if (firstEmptyEl && typeof firstEmptyEl.focus === 'function') firstEmptyEl.focus();
     return;
   }
 
   // Validasi format email dasar
   var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.trim())) {
+    if (emailEl) {
+      emailEl.setAttribute('aria-invalid', 'true');
+      emailEl.focus();
+    }
     fdsShowSnackbar(false, 'Format Email Tidak Valid', 'Silakan masukkan alamat email yang benar (contoh: nama@perusahaan.com).');
     return;
   }

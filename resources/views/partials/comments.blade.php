@@ -126,29 +126,29 @@
           {{-- Field Nama & Email untuk Tamu --}}
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
-                Nama Lengkap <span class="text-red-500">*</span>
+              <label for="fds_comment_author" class="block text-[13px] font-semibold text-[#374151] mb-1.5">
+                Nama Lengkap <span class="text-red-500" aria-hidden="true">*</span>
               </label>
-              <input type="text" name="author" required maxlength="60" placeholder="Nama lengkap Anda"
-                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
+              <input id="fds_comment_author" type="text" name="author" required maxlength="60" autocomplete="name" placeholder="Nama lengkap Anda"
+                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] transition-all">
             </div>
             <div>
-              <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
-                Alamat Email <span class="text-red-500">*</span>
+              <label for="fds_comment_email" class="block text-[13px] font-semibold text-[#374151] mb-1.5">
+                Alamat Email <span class="text-red-500" aria-hidden="true">*</span>
               </label>
-              <input type="email" name="email" required maxlength="100" placeholder="nama@perusahaan.com"
-                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all">
+              <input id="fds_comment_email" type="email" name="email" required maxlength="100" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" placeholder="nama@perusahaan.com"
+                     class="w-full px-4 py-2.5 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] transition-all">
             </div>
           </div>
         @endif
 
         {{-- Textarea Komentar --}}
         <div>
-          <label class="block text-[13px] font-semibold text-[#374151] mb-1.5">
-            Komentar Anda <span class="text-red-500">*</span>
+          <label for="fds_comment_body" class="block text-[13px] font-semibold text-[#374151] mb-1.5">
+            Komentar Anda <span class="text-red-500" aria-hidden="true">*</span>
           </label>
-          <textarea name="comment" rows="4" required maxlength="2000" placeholder="Tulis tanggapan, pertanyaan, atau pandangan Anda terkait artikel ini..."
-                    class="w-full px-4 py-3 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#94a3b8] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/10 outline-none transition-all leading-relaxed"></textarea>
+          <textarea id="fds_comment_body" name="comment" rows="4" required maxlength="2000" placeholder="Tulis tanggapan, pertanyaan, atau pandangan Anda terkait artikel ini..."
+                    class="w-full px-4 py-3 bg-white border border-black/[0.1] rounded-xl text-[14px] text-[#1d1d1f] placeholder-[#6e6e73] focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] transition-all leading-relaxed"></textarea>
         </div>
 
         {{-- Hidden Fields WordPress Comments --}}

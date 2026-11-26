@@ -32,7 +32,7 @@
     
     {{-- Left: Big Heading & Subtitle --}}
     <div class="max-w-2xl">
-      <h3 class="text-[22px] sm:text-[26px] lg:text-[28px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.2]">
+      <h3 id="fds-brochure-heading" class="text-[22px] sm:text-[26px] lg:text-[28px] font-semibold text-[#1d1d1f] tracking-[-0.02em] leading-[1.2]">
         {{ $title }}
       </h3>
       <p class="fds-brochure-desc-text text-[15px] sm:text-[17px] text-[#6e6e73] mt-2.5 sm:mt-3 leading-relaxed transition-all duration-200"
@@ -46,7 +46,7 @@
     <div class="w-full lg:w-auto">
       
       {{-- STATE 1: FORM INPUT EMAIL --}}
-      <form id="fds-brochure-form" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+      <form id="fds-brochure-form" aria-labelledby="fds-brochure-heading" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
         <input type="hidden" name="action" value="fds_download_brochure">
         <input type="hidden" name="nonce" value="{{ wp_create_nonce('fds_brochure_download_nonce') }}">
         <input type="hidden" name="drone_id" value="{{ (int) $droneId }}">
@@ -58,9 +58,12 @@
                  id="brochure_email" 
                  name="email" 
                  autocomplete="email"
+                 autocorrect="off"
+                 autocapitalize="none"
+                 spellcheck="false"
                  required 
                  placeholder="{{ $placeholder }}" 
-                 class="w-full h-[54px] sm:h-[58px] px-6 bg-white border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#6e6e73] focus:outline-none focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
+                 class="w-full h-[54px] sm:h-[58px] px-6 bg-white border border-black/[0.1] rounded-full text-[15px] sm:text-[16px] text-[#1d1d1f] placeholder:text-[#6e6e73] focus:outline-none focus-visible:outline-2 focus-visible:outline-[#0f808a] focus-visible:outline-offset-0 focus:bg-white focus:border-[#0f808a] focus:ring-2 focus:ring-[#0f808a]/20 transition-all">
         </div>
 
         <button type="submit" 
@@ -136,6 +139,14 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // 2. Submit Handler
+  const brochureEmailEl = document.getElementById('brochure_email');
+  if (brochureEmailEl) {
+    brochureEmailEl.addEventListener('input', function() {
+      brochureEmailEl.removeAttribute('aria-invalid');
+      brochureEmailEl.removeAttribute('aria-describedby');
+    });
+  }
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -148,13 +159,18 @@ document.addEventListener('DOMContentLoaded', function() {
         msgBox.className = 'text-[13px] mt-2.5 font-medium text-rose-600 block text-center sm:text-left';
         msgBox.classList.remove('hidden');
       }
+      if (emailInput) {
+        emailInput.setAttribute('aria-invalid', 'true');
+        if (msgBox) emailInput.setAttribute('aria-describedby', 'fds-brochure-msg');
+        emailInput.focus();
+      }
       return;
     }
 
     if (submitBtn) {
       submitBtn.disabled = true;
       submitBtn.innerHTML = `
-        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -215,7 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
         spanEl.className = 'leading-none';
         spanEl.textContent = submitLabel;
         const svgEl = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svgEl.setAttribute('class', 'w-6 h-6 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0');
+        svgEl.setAttribute('class', 'w-[18px] h-[18px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0');
+        svgEl.setAttribute('aria-hidden', 'true');
         svgEl.setAttribute('viewBox', '0 0 24 24');
         svgEl.setAttribute('fill', 'none');
         svgEl.setAttribute('stroke', 'currentColor');

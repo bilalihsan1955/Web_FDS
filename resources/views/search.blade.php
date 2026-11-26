@@ -120,27 +120,30 @@
       </div>
 
       {{-- Search Bar to Refine: Centered Vertically --}}
-      <form action="{!! esc_url(home_url('/')) !!}" method="get" class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
-        <div class="relative flex items-center">
-          <div class="absolute left-4 pointer-events-none text-[#86868b]">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+      <search class="relative w-full sm:w-[380px] lg:w-[420px] flex-shrink-0 fds-hero-entrance fds-hero-delay-4">
+        <form action="{!! esc_url(home_url('/')) !!}" method="get" class="relative w-full">
+          <div class="relative flex items-center">
+            <label for="site-search-input" class="sr-only">{{ $nr['search_ph'] ?? 'Cari artikel, topik, inovasi...' }}</label>
+            <div class="absolute left-4 pointer-events-none text-[#6e6e73]" aria-hidden="true">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+            </div>
+            <input id="site-search-input" type="search" name="s" value="{{ $fds_search_clean(get_search_query(false)) }}" placeholder="{{ $nr['search_ph'] ?? 'Cari artikel, topik, inovasi...' }}" required autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="search"
+                   class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#6e6e73] outline-none focus-visible:outline-2 focus-visible:outline-[#75e6f0] focus-visible:outline-offset-2 transition-colors duration-150 shadow-sm">
+            <button type="submit"
+                    class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[13px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
+              {{ $nr['search_btn'] ?? 'Cari' }}
+            </button>
           </div>
-          <input type="text" name="s" value="{{ $fds_search_clean(get_search_query(false)) }}" placeholder="{{ $nr['search_ph'] ?? 'Cari artikel, topik, inovasi...' }}" required autocomplete="off"
-                 class="w-full pl-11 pr-24 py-3 sm:py-3.5 bg-white border border-white/20 focus:border-white rounded-full text-[13.5px] text-[#1d1d1f] placeholder-[#86868b] outline-none transition-colors duration-150 shadow-sm">
-          <button type="submit"
-                  class="absolute right-1.5 bg-[#0f808a] hover:bg-[#0a555c] active:scale-95 text-white text-[13px] font-semibold px-4.5 py-2.5 rounded-full transition-colors duration-150 cursor-pointer">
-            {{ $nr['search_btn'] ?? 'Cari' }}
-          </button>
-        </div>
-      </form>
+        </form>
+      </search>
     </div>
 
     <div class="pt-4">
       <a href="{!! esc_url($blog_url) !!}"
          class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-white/90 hover:text-white hover:underline transition-colors">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         <span>{{ $nr['search_back_text'] ?? 'Kembali ke semua artikel' }}</span>
       </a>
     </div>

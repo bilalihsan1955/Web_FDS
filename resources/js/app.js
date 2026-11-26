@@ -292,8 +292,13 @@ if (typeof window !== 'undefined') {
     }
   });
 
-  window.fdsSubmitInquiry = async (form, options = {}) => {
-    if (!form) return;
+  window.fdsSubmitInquiry = async (formOrEvent, options = {}) => {
+    let form = formOrEvent;
+    if (formOrEvent && typeof formOrEvent.preventDefault === 'function') {
+      formOrEvent.preventDefault();
+      form = formOrEvent.currentTarget || (formOrEvent.target && formOrEvent.target.closest ? formOrEvent.target.closest('form') : null);
+    }
+    if (!form || typeof form.querySelector !== 'function') return;
 
     const statusBox = options.statusEl || form.querySelector('[data-fds-form-status]');
     const submitBtn = options.submitBtn || form.querySelector('button[type="submit"], input[type="submit"]');
@@ -461,21 +466,46 @@ if (typeof window !== 'undefined') {
     initZeroReflowAOS();
     initLenisScroll();
 
-    // Sticky service sub-nav observer
+    // Sticky service sub-nav scrollspy (CSS scroll-target-group + :target-current with IntersectionObserver fallback & aria-current sync)
     const subnavLinks = Array.from(document.querySelectorAll('.fds-subnav-link[href^="#"]'));
-    if (subnavLinks.length && 'IntersectionObserver' in window) {
-      const subSections = subnavLinks
-        .map((a) => document.querySelector(a.getAttribute('href')))
-        .filter(Boolean);
-      const subIo = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          subnavLinks.forEach((a) => {
-            a.classList.toggle('is-active', a.getAttribute('href') === `#${entry.target.id}`);
-          });
+    if (subnavLinks.length) {
+      const supportsScrollTargetGroup =
+        typeof CSS !== 'undefined' &&
+        typeof CSS.supports === 'function' &&
+        CSS.supports('scroll-target-group: auto');
+
+      const setSubnavState = (activeLink) => {
+        subnavLinks.forEach((a) => {
+          const isMatch = Boolean(activeLink && a === activeLink);
+          a.setAttribute('aria-current', isMatch ? 'true' : 'false');
+          if (!supportsScrollTargetGroup) {
+            a.classList.toggle('target-current', isMatch);
+            a.classList.toggle('is-active', isMatch);
+          }
         });
-      }, { rootMargin: '-25% 0px -65% 0px' });
-      subSections.forEach((sec) => subIo.observe(sec));
+      };
+
+      if (supportsScrollTargetGroup) {
+        const syncAriaCurrent = () => {
+          const currentLink = document.querySelector('.fds-subnav-link:target-current');
+          setSubnavState(currentLink);
+        };
+        syncAriaCurrent();
+        document.addEventListener('scrollend', syncAriaCurrent, { passive: true });
+        window.addEventListener('hashchange', syncAriaCurrent, { passive: true });
+      } else if ('IntersectionObserver' in window) {
+        const subSections = subnavLinks
+          .map((a) => document.querySelector(a.getAttribute('href')))
+          .filter(Boolean);
+        const subIo = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const matchLink = subnavLinks.find((a) => a.getAttribute('href') === `#${entry.target.id}`) || null;
+            setSubnavState(matchLink);
+          });
+        }, { rootMargin: '-25% 0px -65% 0px' });
+        subSections.forEach((sec) => subIo.observe(sec));
+      }
     }
 
     // Native <dialog> Gallery Lightbox (progressive closedby fallback + Prev/Next)

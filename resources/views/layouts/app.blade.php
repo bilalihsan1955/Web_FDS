@@ -20,6 +20,8 @@
       @if(!empty($lcp_img))
       <link rel="preload" as="image" href="{!! esc_url($lcp_img) !!}" fetchpriority="high">
       @endif
+    @elseif(is_page_template('template-layanan-hub.blade.php'))
+      <link rel="preload" as="image" href="{!! esc_url(get_template_directory_uri() . '/public/images/site/hero-2.webp') !!}" fetchpriority="high">
     @elseif(is_singular())
       @php
         $sing_thumb = get_the_post_thumbnail_url(get_the_ID(), 'large') ?: get_the_post_thumbnail_url(get_the_ID(), 'full');
@@ -31,6 +33,18 @@
 
     <style>
       *, *::before, *::after { box-sizing: border-box; }
+      :root {
+        --fds-scrollbar-thumb: #86868b;
+        --fds-scrollbar-track: #f5f5f7;
+        scrollbar-color: var(--fds-scrollbar-thumb) var(--fds-scrollbar-track);
+        scrollbar-width: thin;
+      }
+      @supports not (scrollbar-color: auto) {
+        :root { scrollbar-width: auto; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--fds-scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background: var(--fds-scrollbar-thumb); border-radius: 3px; }
+      }
       html:not(.lenis) { scroll-behavior: smooth; }
       body {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -43,9 +57,6 @@
       h1, h2, h3, h4 {
         font-family: 'Archivo', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       }
-      ::-webkit-scrollbar { width: 6px; }
-      ::-webkit-scrollbar-track { background: #f5f5f7; }
-      ::-webkit-scrollbar-thumb { background: #c7c7cc; border-radius: 3px; }
 
       /* Anti-FOUC & Anti-SVG Blowout: Mencegah icon membesar raksasa sebelum CSS selesai di-parse */
       svg {
@@ -425,7 +436,7 @@
                        style="height: {{ (int) $nb_brand['logo_height'] }}px; width: auto; max-width: 220px; object-fit: contain;"
                        class="transition-transform duration-200 group-hover:scale-[1.03]">
                 @else
-                  <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                  <svg class="w-5 h-5 text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors flex-shrink-0" viewBox="0 0 20 20" fill="currentColor" @if($nb_brand['display_mode'] !== 'logo_only' && $nb_brand_text !== '') aria-hidden="true" @else role="img" aria-label="{{ $nb_brand_text ?: 'Full Drone Solutions' }}" @endif>
                     <path d="M10 2L3 6l7 4 7-4-7-4zM3 14l7 4 7-4M3 10l7 4 7-4"/>
                   </svg>
                 @endif
@@ -526,6 +537,7 @@
         <!-- UNIFIED MEGA MENU DRAWER — Apple-Style Editorial Layout  -->
         <!-- ===================================================== -->
         <div id="mega-menu-drawer"
+             inert
              class="absolute top-full inset-x-0 bg-white/95 backdrop-blur-2xl border-b border-black/[0.08] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.08)] max-h-[calc(100vh-56px)] overflow-y-auto"
              style="opacity:0; transform:translateY(-6px); pointer-events:none; transition: opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1), transform 0.22s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform;">
           <div class="max-w-[1400px] mx-auto px-6 lg:px-12 py-10">
@@ -821,7 +833,7 @@
 
             <details class="border-b border-[#f5f5f7]" {{ $is_active_produk ? 'open' : '' }}>
               <summary class="min-h-[44px] py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_produk ? 'text-[#0f808a]' : '' }}">{{ $nb_mob_prod_t }}
-                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="w-4 h-4 {{ $is_active_produk ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-1 flex flex-col gap-1 text-[14px] text-[#515154]">
                 <a href="{!! esc_url(home_url('/produk/')) !!}" class="mobile-nav-link min-h-[44px] flex items-center font-semibold text-[#0a555c]">
@@ -855,7 +867,7 @@
 
             <details class="border-b border-[#f5f5f7]" {{ $is_active_layanan ? 'open' : '' }}>
               <summary class="min-h-[44px] py-2 cursor-pointer list-none flex items-center justify-between font-semibold {{ $is_active_layanan ? 'text-[#0f808a]' : '' }}">{{ $nb_mob_layanan_t }}
-                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                <svg class="w-4 h-4 {{ $is_active_layanan ? 'text-[#0f808a]' : 'text-[#6e6e73]' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
               </summary>
               <div class="pl-3 pb-3 mt-1 flex flex-col gap-1 text-[14px] text-[#515154]">
                 <a href="{!! esc_url(home_url('/layanan/')) !!}" class="mobile-nav-link min-h-[44px] flex items-center font-semibold text-[#0a555c]">
@@ -891,7 +903,7 @@
       </div>
 
       <!-- MAIN CONTENT -->
-      <main id="main">
+      <main id="main" tabindex="-1">
         @yield('content')
       </main>
 
@@ -933,12 +945,13 @@
 
       <!-- FOOTER -->
       <footer class="bg-[#f5f5f7] border-t border-black/[0.08] pt-14 pb-8">
+        <h2 class="sr-only">Tautan & Informasi Footer</h2>
         <div class="max-w-[1400px] mx-auto px-6 lg:px-8">
 
           <!-- Link columns -->
           <div class="grid grid-cols-2 md:grid-cols-4 gap-10 pb-10 border-b border-black/[0.08]">
             <div>
-              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col1_title }}</h4>
+              <h3 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col1_title }}</h3>
               <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-block py-1 font-semibold text-[#1d1d1f] hover:text-[#0f808a] hover:underline">{{ $f_col1_all }}</a></li>
                 @foreach($footer_drones as $d)
@@ -947,7 +960,7 @@
               </ul>
             </div>
             <div>
-              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col2_title }}</h4>
+              <h3 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col2_title }}</h3>
               <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/layanan/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_col2_all }}</a></li>
                 @foreach($menu_categories as $cat)
@@ -959,7 +972,7 @@
               </ul>
             </div>
             <div>
-              <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col3_title }}</h4>
+              <h3 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col3_title }}</h3>
               <ul class="space-y-1 text-[13px] text-[#515154]">
                 <li><a href="{!! esc_url(home_url('/tentang-kami/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_about_lbl }}</a></li>
                 @if(!empty($menu_sectors['perkebunan-pertanian']))
@@ -974,7 +987,7 @@
             </div>
             <div class="relative flex flex-col justify-between h-full min-h-[160px] pb-10 md:pb-12">
               <div>
-                <h4 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col4_title }}</h4>
+                <h3 class="text-[13px] font-semibold text-[#1d1d1f] mb-4 tracking-wide">{{ $f_col4_title }}</h3>
                 <ul class="space-y-1 text-[13px] text-[#515154]">
                   <li><a href="{!! esc_url(home_url('/kontak/')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_kontak_lbl }}</a></li>
                   <li><a href="{!! esc_url(home_url('/kontak/#lokasi-workshop')) !!}" class="inline-block py-1 hover:text-[#1d1d1f] hover:underline">{{ $f_workshop_lbl }}</a></li>
@@ -1071,7 +1084,7 @@
                 <!-- Instagram -->
                 <a href="{!! esc_url($footer_data['instagram']) !!}" target="_blank" rel="noopener" aria-label="Instagram FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-[#0f808a] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#0f808a] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
                 </a>
                 @endif
 
@@ -1079,7 +1092,7 @@
                 <!-- YouTube -->
                 <a href="{!! esc_url($footer_data['youtube']) !!}" target="_blank" rel="noopener" aria-label="YouTube FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-[#FF0000] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#FF0000] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 </a>
                 @endif
 
@@ -1087,7 +1100,7 @@
                 <!-- LinkedIn -->
                 <a href="{!! esc_url($footer_data['linkedin']) !!}" target="_blank" rel="noopener" aria-label="LinkedIn FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-[#0077B5] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#0077B5] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                 </a>
                 @endif
 
@@ -1095,7 +1108,7 @@
                 <!-- TikTok -->
                 <a href="{!! esc_url($footer_data['tiktok']) !!}" target="_blank" rel="noopener" aria-label="TikTok FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-[#000000] text-[#515154] hover:text-white border border-black/[0.08] hover:border-black flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
+                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                 </a>
                 @endif
 
@@ -1103,7 +1116,7 @@
                 <!-- Twitter / X -->
                 <a href="{!! esc_url($footer_data['twitter']) !!}" target="_blank" rel="noopener" aria-label="Twitter / X FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-black text-[#515154] hover:text-white border border-black/[0.08] hover:border-black flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                 </a>
                 @endif
 
@@ -1111,7 +1124,7 @@
                 <!-- WhatsApp Direct -->
                 <a href="{!! esc_url($footer_data['whatsapp']) !!}" target="_blank" rel="noopener" aria-label="WhatsApp FDS"
                    class="w-11 h-11 rounded-full bg-white hover:bg-[#25D366] text-[#515154] hover:text-white border border-black/[0.08] hover:border-[#25D366] flex items-center justify-center transition-all duration-200 shadow-sm hover:scale-105 group">
-                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
                 </a>
                 @endif
               </div>
@@ -1241,6 +1254,7 @@
         syncAriaExpanded(type);
 
         if (!isAlreadyOpen && drawer) {
+          drawer.inert = false;
           drawer.style.opacity = '1';
           drawer.style.transform = 'translateY(0)';
           drawer.style.pointerEvents = 'auto';
@@ -1277,6 +1291,7 @@
       function closeMegaMenu() {
         cancelClose();
         if (drawer) {
+          drawer.inert = true;
           drawer.style.opacity = '0';
           drawer.style.transform = 'translateY(-6px)';
           drawer.style.pointerEvents = 'none';

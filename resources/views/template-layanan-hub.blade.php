@@ -153,6 +153,7 @@
             <div class="fds-quiet-body">
               <div class="fds-table-wrap">
                 <table class="fds-table">
+                  <caption class="sr-only">Matriks perbandingan metode survei dan pemetaan sensor</caption>
                   <thead>
                     <tr>
                       @foreach($mc['columns'] as $colTitle)<th scope="col">{{ $cln($colTitle) }}</th>@endforeach

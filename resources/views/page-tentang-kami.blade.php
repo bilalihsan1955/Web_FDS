@@ -587,13 +587,11 @@
         if (neededCols === currentCols) return;
         currentCols = neededCols;
 
-        // Kosongkan dan buat ulang wadah kolom
-        container.innerHTML = '';
+        // Susun ulang wadah kolom secara atomik tanpa HTML parser
         var colElements = [];
         for (var c = 0; c < neededCols; c++) {
           var col = document.createElement('div');
           col.className = 'fds-masonry-col flex flex-col gap-6';
-          container.appendChild(col);
           colElements.push(col);
         }
 
@@ -603,6 +601,8 @@
         initialCards.forEach(function(card, idx) {
           colElements[idx % neededCols].appendChild(card);
         });
+
+        container.replaceChildren.apply(container, colElements);
       }
 
       // Jalankan penyesuaian awal

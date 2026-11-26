@@ -157,13 +157,13 @@
       {{-- Right: Soft-Surface Studio Inquiry Form --}}
       <div id="hubungi-form" data-aos="fade-up" data-aos-delay="90" class="scroll-mt-24 fds-kontak-form-panel">
         <div class="fds-kontak-form-head">
-          <h2 class="fds-h3 fds-kontak-form-title">{{ $p_form_title }}</h2>
+          <h2 id="kontak-form-heading" class="fds-h3 fds-kontak-form-title">{{ $p_form_title }}</h2>
           @if($p_form_desc !== '')
             <p class="fds-kontak-form-sub">{{ $p_form_desc }}</p>
           @endif
         </div>
 
-        <form id="fds-inquiry-form" class="space-y-4" onsubmit="fdsSubmitInquiry(event)">
+        <form id="fds-inquiry-form" aria-labelledby="kontak-form-heading" class="space-y-4">
           @php
             wp_nonce_field('fds_inquiry_nonce', 'fds_inquiry_nonce_val');
             $_fds_kontak_track = function_exists('App\fds_get_tracking_config') ? \App\fds_get_tracking_config() : [];
@@ -280,9 +280,19 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   } catch (err) {}
+
+  var inquiryForm = document.getElementById('fds-inquiry-form');
+  if (inquiryForm) {
+    inquiryForm.addEventListener('submit', fdsHandleKontakInquirySubmit);
+    inquiryForm.querySelectorAll('input:not([type="hidden"]), textarea').forEach(function(el) {
+      el.addEventListener('input', function() {
+        el.removeAttribute('aria-invalid');
+      });
+    });
+  }
 });
 
-function fdsSubmitInquiry(e) {
+function fdsHandleKontakInquirySubmit(e) {
   e.preventDefault();
   var form = document.getElementById('fds-inquiry-form');
   var btn = document.getElementById('fds-inquiry-btn');
@@ -294,18 +304,35 @@ function fdsSubmitInquiry(e) {
   var srvSlug = (slugInput && slugInput.value) ? slugInput.value : 'kontak-inquiry';
   var srvLabel = (lblInput && lblInput.value) ? lblInput.value.trim() : {!! wp_json_encode($p_opt_default) !!};
 
+  var reqNames = ['full_name', 'company', 'email', 'phone', 'message'];
+  var firstEmptyEl = null;
+  reqNames.forEach(function(n) {
+    var field = form.querySelector('[name="' + n + '"]');
+    if (field && !String(field.value || '').trim()) {
+      field.setAttribute('aria-invalid', 'true');
+      if (!firstEmptyEl) firstEmptyEl = field;
+    } else if (field) {
+      field.removeAttribute('aria-invalid');
+    }
+  });
   var fullName = (form.querySelector('[name="full_name"]') || {}).value || '';
   var company = (form.querySelector('[name="company"]') || {}).value || '';
-  var email = (form.querySelector('[name="email"]') || {}).value || '';
+  var emailEl = form.querySelector('[name="email"]');
+  var email = (emailEl || {}).value || '';
   var phone = (form.querySelector('[name="phone"]') || {}).value || '';
   var message = (form.querySelector('[name="message"]') || {}).value || '';
 
-  if (!fullName.trim() || !company.trim() || !email.trim() || !phone.trim() || !message.trim()) {
+  if (firstEmptyEl || !fullName.trim() || !company.trim() || !email.trim() || !phone.trim() || !message.trim()) {
     if (typeof fdsShowSnackbar === 'function') fdsShowSnackbar(false, 'Formulir Belum Lengkap', 'Semua kolom formulir wajib diisi sebelum mengirim pesan.');
+    if (firstEmptyEl && typeof firstEmptyEl.focus === 'function') firstEmptyEl.focus();
     return;
   }
   var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.trim())) {
+    if (emailEl) {
+      emailEl.setAttribute('aria-invalid', 'true');
+      emailEl.focus();
+    }
     if (typeof fdsShowSnackbar === 'function') fdsShowSnackbar(false, 'Format Email Tidak Valid', 'Silakan masukkan alamat email yang benar.');
     return;
   }

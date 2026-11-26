@@ -85,6 +85,14 @@ html:not(.lenis) {
   scroll-behavior: smooth;
 }
 
+search {
+  display: block;
+}
+
+#main:focus:not(:focus-visible) {
+  outline: none;
+}
+
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -264,7 +272,7 @@ html.lenis, html.lenis body {
 /* ========================================================== */
 .fds-gallery-card {
   content-visibility: auto;
-  contain-intrinsic-size: 1px 300px;
+  contain-intrinsic-block-size: auto 300px;
 }
 
 /* ========================================================== */
@@ -547,11 +555,17 @@ html.lenis, html.lenis body {
   outline: none;
 }
 
-.fds-service-card:has(.fds-stretched-link:focus-visible) {
+:is(.fds-service-card, .fds-photo-card, .fds-hairline-row, .fds-focus-row):has(.fds-stretched-link:focus-visible),
+article:has(.fds-stretched-link:focus-visible) {
   outline: 3px solid #0f808a;
   outline-offset: 3px;
 }
 
+.fds-hairline-row:has(.fds-stretched-link:focus-visible) {
+  border-radius: 12px;
+}
+
+:is(.fds-service-card--dark, .fds-bg-teal, .fds-bg-dark) :is(.fds-service-card, .fds-photo-card, .fds-hairline-row, article):has(.fds-stretched-link:focus-visible),
 .fds-service-card--dark:has(.fds-stretched-link:focus-visible) {
   outline-color: #75e6f0;
 }
@@ -925,7 +939,7 @@ body[data-aos-duration="540"] [data-aos],
   scrollbar-width: none;
 }
 .fds-subnav-inner::-webkit-scrollbar { display: none; }
-.fds-subnav-links { display: flex; align-items: center; gap: 6px; list-style: none; margin: 0; padding: 0; white-space: nowrap; }
+.fds-subnav-links { display: flex; align-items: center; gap: 6px; list-style: none; margin: 0; padding: 0; white-space: nowrap; scroll-target-group: auto; }
 .fds-subnav-link {
   display: inline-flex;
   align-items: center;
@@ -938,7 +952,17 @@ body[data-aos-duration="540"] [data-aos],
   text-decoration: none;
 }
 .fds-subnav-link:hover,
-.fds-subnav-link.is-active { background-color: var(--color-teal-50); color: var(--color-teal-800); }
+.fds-subnav-link:is(:target-current, .target-current, .is-active) {
+  background-color: var(--color-teal-50);
+  color: var(--color-teal-800);
+}
+.fds-subnav-link:is(:target-current, .target-current, .is-active) {
+  font-weight: 600;
+}
+.fds-subnav-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
 
 /* Cinema Hero & Stage Hero */
 .fds-cinema-hero {
@@ -1594,12 +1618,29 @@ details[open] > summary .fds-chevron { transform: rotate(180deg); }
   transition: background-color 0.2s var(--fds-ease), border-color 0.2s var(--fds-ease), box-shadow 0.2s var(--fds-ease);
 }
 .fds-kontak-field::placeholder {
-  color: #86868b;
+  color: #6e6e73;
 }
 .fds-kontak-field:focus {
   background-color: var(--fds-white);
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(15, 128, 138, 0.14);
+}
+.fds-kontak-field:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+.fds-kontak-field:user-invalid,
+#fds-inquiry-form :is(input, textarea):user-invalid,
+#brochure_email:user-invalid {
+  border-color: #dc2626;
+}
+@media (forced-colors: active) {
+  .fds-kontak-field:focus-visible,
+  #fds-inquiry-form :is(input, textarea):focus-visible,
+  #brochure_email:focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
 }
 .fds-kontak-textarea {
   min-height: 98px;
