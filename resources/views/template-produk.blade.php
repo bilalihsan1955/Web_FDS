@@ -211,6 +211,29 @@
         </p>
       @endif
 
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        @if(!empty($pk['hero_cta1_text']))
+          <a href="{!! esc_url($href($pk['hero_cta1_url'] ?? '/kontak/?produk=armada-uav-fds#hubungi-form')) !!}"
+             class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-lg shadow-black/15 leading-none">
+            <span>{{ $pk['hero_cta1_text'] }}</span>
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
+          </a>
+        @endif
+        @if(!empty($pk['hero_cta2_text']))
+          <a href="{!! esc_url($href($pk['hero_cta2_url'] ?? '/bandingkan/')) !!}"
+             class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/25 text-[14px] sm:text-[15px] font-medium px-6 py-3 rounded-full transition-all duration-150 leading-none">
+            <span>{{ $pk['hero_cta2_text'] }}</span>
+            <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h12v12"/>
+              <path d="M6 18 18 6"/>
+            </svg>
+          </a>
+        @endif
+      </div>
+
     </div>
   </div>
 </section>
@@ -248,8 +271,8 @@
 {{-- 3. FAQ KATALOG PRODUK (SSR NATIVE DETAILS) --}}
 @if(!empty($produk_faqs))
   <x-service-faq
-    :title="$pk['faq_title'] ?? 'Pertanyaan Umum Katalog Drone'"
-    :subtitle="$pk['faq_subtitle'] ?? 'Ringkasan pertanyaan teknis dan kepatuhan pengadaan lini wahana PT Karya Solusi Angkasa.'"
+    :title="$pk['faq_title'] ?? 'Pertanyaan Umum Katalog Produk'"
+    :subtitle="$pk['faq_subtitle'] ?? 'Ringkasan pertanyaan teknis, sertifikasi, integrasi sensor, dan kepatuhan pengadaan PT Karya Solusi Angkasa.'"
     :faqs="$produk_faqs"
     :section-bg="$faq_bg"
   />

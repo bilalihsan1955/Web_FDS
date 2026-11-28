@@ -59,7 +59,11 @@
   $faqs        = $gd['faqs'] ?? [];
   $model_base  = $gd['model_base'] ?? $cleanDroneName;
 
+  $isPayload      = !empty($drone['is_payload']);
+  $hideBandingkan = !empty($drone['hide_bandingkan']);
+
   $heroAltCategory = match (true) {
+      $isPayload => $cln($drone['kategori'] ?? 'Sensor & Payload Industri'),
       $modelKey === 'deltav' => 'Drone Pemetaan Fixed-Wing VTOL',
       $modelKey === 'multipurpose' => 'Platform UAV Inspeksi Modular',
       $modelKey === 'delfro' || stripos((string) ($drone['kategori'] ?? ''), 'kargo') !== false => 'Drone Kargo Logistik Otonom',
@@ -67,19 +71,27 @@
       default => $cln($drone['kategori'] ?? 'UAV Industri'),
   };
 
-  $usecases_list = !empty($drone['for']) && is_array($drone['for']) ? $drone['for'] : ($dui['uc_fallback_items'] ?? [
-      'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
-      'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
-      'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
-      'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
-  ]);
+  $usecases_list = !empty($drone['for']) && is_array($drone['for'])
+      ? $drone['for']
+      : ($isPayload
+          ? [
+              'Pemetaan & pemantauan kesehatan tanaman — Akuisisi citra spektral dan analisis vegetasi presisi di area perkebunan maupun pertanian.',
+              'Survei topografi & pemodelan 3D — Pemindaian densitas tinggi untuk pertambangan, kehutanan kanopi rapat, serta koridor infrastruktur.',
+              'Integrasi siap pakai pada platform UAV — Dukungan konsultasi mounting, kalibrasi sensor, dan alur pengolahan data lapangan bersama tim engineering FDS.',
+          ]
+          : ($dui['uc_fallback_items'] ?? [
+              'Kelompok tani & Gapoktan — Titik temu antara kapasitas operasional dan efisiensi investasi.',
+              'Operasional kebun komersial — Aplikasi semprot atau akuisisi data udara lebih terukur sesuai SOP.',
+              'Korporasi & pengadaan instansi — Dukungan pelatihan operator, garansi resmi, dan demonstrasi unit.',
+              'Suku cadang asli terjamin — Ketersediaan komponen cepat dari workshop Sleman, Yogyakarta.',
+          ]));
 @endphp
 
     {{-- 1. HERO — FULL-BLEED CINEMA STAGE WITH DEEP-TEAL SCRIM & SIGNATURE WAVE --}}
     <section class="fds-cinema-hero fds-drone-hero">
       <img src="{!! esc_url($heroSrc) !!}"
            @if($heroSrcset !== '') srcset="{{ $heroSrcset }}" sizes="100vw" @endif
-           alt="{{ $cleanDroneName }} — {{ $heroAltCategory }} PT Karya Solusi Angkasa FDS"
+           alt="{{ $cleanDroneName }} — {{ $heroAltCategory }}{{ $isPayload ? ' (Produk Mitra Terintegrasi FDS)' : ' PT Karya Solusi Angkasa FDS' }}"
            width="1920"
            height="1080"
            loading="eager"
@@ -99,6 +111,26 @@
           @if(!empty($drone['tagline']))
             <p class="fds-lead fds-drone-hero-lead">{{ $cln($drone['tagline']) }}</p>
           @endif
+
+          <div class="mt-7 flex flex-wrap items-center gap-3.5">
+            <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}"
+               class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white hover:bg-[#f5f5f7] active:scale-[0.97] text-[#052b2e] hover:text-[#0a555c] text-[14px] sm:text-[15px] font-semibold px-6 py-3 rounded-full transition-all duration-150 shadow-lg shadow-black/15 leading-none">
+              <span>{{ $cln($dui['hero_cta1_text'] ?? 'Minta Penawaran') ?: 'Minta Penawaran' }}</span>
+              {!! $arrow_svg !!}
+            </a>
+            @if(!$hideBandingkan)
+              @php
+                $heroCmpLabel = $isPayload
+                    ? ('Bandingkan ' . ($cln($drone['kategori'] ?? '') ?: 'Produk Sejenis'))
+                    : ($cln($dui['hero_cta2_text'] ?? 'Bandingkan model') ?: 'Bandingkan model');
+              @endphp
+              <a href="{!! esc_url(home_url('/bandingkan/?d1=' . urlencode($slug))) !!}"
+                 class="group inline-flex items-center justify-center gap-2 min-h-[44px] bg-white/15 hover:bg-white/25 active:scale-[0.97] text-white backdrop-blur-md border border-white/25 text-[14px] sm:text-[15px] font-medium px-6 py-3 rounded-full transition-all duration-150 leading-none">
+                <span>{{ $heroCmpLabel }}</span>
+                {!! $arrow_svg !!}
+              </a>
+            @endif
+          </div>
         </div>
       </div>
     </section>
@@ -107,21 +139,30 @@
 
     {{-- 2. IKHTISAR HARDWARE — CENTERED APPLE / DJI KEYNOTE STAGE (DESC + GIANT CUTOUT + KPI ANCHORS) --}}
     @if(!empty($stats4) || $specs_img !== '' || !empty($drone['desc']))
+    @php
+      $ikhtisarHeading = (string) ($dui['specs_heading'] ?? 'Direkayasa untuk <br>performa nyata.');
+      if ($isPayload && stripos($ikhtisarHeading, 'Direkayasa') !== false) {
+          $ikhtisarHeading = 'Integrasi presisi <br>untuk misi udara.';
+      }
+      $ikhtisarDesc = $drone['desc'] ?: ($isPayload
+          ? "Perangkat {$cleanDroneName} merupakan produk pabrikan mitra resmi yang disediakan serta diintegrasikan Full Drone Solutions pada armada UAV untuk akuisisi data udara presisi."
+          : str_replace('{drone_name}', $cleanDroneName, (string) ($dui['specs_desc_fallback'] ?? "Setiap spesifikasi {$cleanDroneName} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia.")));
+    @endphp
     <section id="ikhtisar" class="fds-sec fds-bg-white fds-drone-keynote">
       <div class="fds-container">
         <div class="fds-drone-keynote-head" data-aos="fade-up">
           <h2 class="fds-h2">
-            {!! wp_kses((string) ($dui['specs_heading'] ?? 'Direkayasa untuk <br>performa nyata.'), ['br' => []]) !!}
+            {!! wp_kses($ikhtisarHeading, ['br' => []]) !!}
           </h2>
           <p class="fds-lead fds-drone-keynote-lead">
-            {{ $cln($drone['desc'] ?: str_replace('{drone_name}', $cleanDroneName, (string) ($dui['specs_desc_fallback'] ?? "Setiap spesifikasi {$cleanDroneName} divalidasi melalui ratusan jam uji lapangan di berbagai kondisi cuaca dan jenis lahan di Indonesia."))) }}
+            {{ $cln($ikhtisarDesc) }}
           </p>
         </div>
 
         @if($specs_img !== '')
           <div class="fds-drone-keynote-stage" data-aos="zoom-in" data-aos-delay="80">
             <img src="{!! esc_url($specs_img) !!}"
-                 alt="Tampilan teknis {{ $cleanDroneName }} — Full Drone Solutions"
+                 alt="Tampilan teknis {{ $cleanDroneName }} — {{ $isPayload ? 'Integrasi Payload Full Drone Solutions' : 'Full Drone Solutions' }}"
                  loading="lazy"
                  decoding="async"
                  width="960"
@@ -156,9 +197,15 @@
             <h2 class="fds-h2">{{ $cln($dui['specs_table_heading'] ?? 'Spesifikasi Teknis') ?: 'Spesifikasi Teknis' }}</h2>
             <p class="fds-lead" style="margin-top:12px;">{{ $cleanDroneName }}</p>
             <div style="margin-top:20px;">
-              <a href="{!! esc_url(home_url('/bandingkan/?d1=' . urlencode($slug))) !!}" class="fds-text-link">
-                {{ $cln($dui['specs_compare_link'] ?? 'Bandingkan spesifikasi') }} {!! $arrow_svg !!}
-              </a>
+              @if(!$hideBandingkan)
+                <a href="{!! esc_url(home_url('/bandingkan/?d1=' . urlencode($slug))) !!}" class="fds-text-link">
+                  {{ $cln($dui['specs_compare_link'] ?? 'Bandingkan spesifikasi') }} {!! $arrow_svg !!}
+                </a>
+              @else
+                <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}" class="fds-text-link">
+                  Konsultasi integrasi &amp; penawaran {!! $arrow_svg !!}
+                </a>
+              @endif
             </div>
           </div>
         </div>
@@ -212,7 +259,7 @@
           <figure class="fds-media-stage" data-aos="fade-up">
             <img src="{!! esc_url($heroSrc) !!}"
                  @if($heroSrcset !== '') srcset="{{ $heroSrcset }}" sizes="(max-width: 1024px) 100vw, 640px" @endif
-                 alt="Operasi lapangan {{ $cleanDroneName }} — Full Drone Solutions"
+                 alt="Aplikasi lapangan {{ $cleanDroneName }} {{ $isPayload ? 'pada platform UAV Full Drone Solutions' : '— Full Drone Solutions' }}"
                  loading="lazy"
                  decoding="async"
                  width="1000"
@@ -253,7 +300,12 @@
     @php
       $faq_hd_tpl   = (string) ($dui['faq_heading_tpl'] ?? 'Pertanyaan Teknis Seputar {model_base}');
       $faq_hd       = $cln(str_replace(['{drone_name}', '{model_base}'], [$cleanDroneName, $model_base], $faq_hd_tpl));
-      $faq_sub_text = $cln($dui['faq_subtitle'] ?? 'Jawaban ringkas mengenai spesifikasi teknis, sertifikasi, pengoperasian, dan layanan purna jual resmi FDS.');
+      $faq_sub_raw  = (string) ($dui['faq_subtitle'] ?? '');
+      if ($isPayload && ($faq_sub_raw === '' || stripos($faq_sub_raw, 'sertifikasi, pengoperasian') !== false)) {
+          $faq_sub_text = 'Jawaban ringkas mengenai spesifikasi perangkat pabrikan mitra, kompatibilitas wahana FDS, uji kalibrasi, serta layanan purna jual.';
+      } else {
+          $faq_sub_text = $cln($faq_sub_raw ?: 'Jawaban ringkas mengenai spesifikasi teknis, sertifikasi, pengoperasian, dan layanan purna jual resmi FDS.');
+      }
     @endphp
     <section id="faq" class="fds-sec fds-bg-light scroll-mt-24">
       <div class="fds-container fds-sticky-split">
@@ -287,14 +339,26 @@
     @endif
 
     {{-- 5. CTA AKHIR (EKOSISTEM WAVE BAND) --}}
+    @php
+      $ctaHeadingTpl = (string) ($dui['cta_heading_tpl'] ?? 'Siap mengoperasikan {drone_name}?');
+      if ($isPayload && stripos($ctaHeadingTpl, 'mengoperasikan') !== false) {
+          $ctaHeadingTpl = 'Tertarik mengintegrasikan {drone_name}?';
+      }
+      $ctaDescRaw = (string) ($dui['cta_desc'] ?? '');
+      if ($isPayload && ($ctaDescRaw === '' || stripos($ctaDescRaw, 'Demo unit') !== false)) {
+          $ctaDescText = 'Konsultasikan pengadaan unit resmi dari pabrikan mitra, paket integrasi dengan wahana FDS, serta kalibrasi lapangan bersama tim teknis PT Karya Solusi Angkasa.';
+      } else {
+          $ctaDescText = $cln($ctaDescRaw ?: 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.');
+      }
+    @endphp
     <section class="fds-sec fds-bg-teal">
       <x-fds-wave type="eko" :uid="'drone-cta-' . $slug" />
       <div data-aos="fade-up" class="fds-container" style="text-align:center;max-width:740px;">
         <h2 class="fds-h2" style="margin-bottom:16px;">
-          {{ $cln(str_replace('{drone_name}', $cleanDroneName, (string) ($dui['cta_heading_tpl'] ?? 'Siap mengoperasikan {drone_name}?'))) }}
+          {{ $cln(str_replace('{drone_name}', $cleanDroneName, $ctaHeadingTpl)) }}
         </h2>
         <p class="fds-lead" style="margin:0 auto 32px;">
-          {{ $cln($dui['cta_desc'] ?? 'Konsultasikan kebutuhan misi Anda dengan tim teknis PT Karya Solusi Angkasa (FDS). Demo unit dan konsultasi teknis tersedia di Yogyakarta.') }}
+          {{ $ctaDescText }}
         </p>
         <div class="fds-btn-group" style="justify-content:center;">
           <a href="{!! esc_url(home_url('/kontak/?produk=' . urlencode($slug) . '#hubungi-form')) !!}" class="fds-btn fds-btn--white-teal">

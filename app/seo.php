@@ -381,6 +381,7 @@ function fds_get_seo_data() {
             $has_sni     = in_array($model_key, ['ferto-15l', 'ferto-22l'], true);
 
             $detail      = function_exists(__NAMESPACE__ . '\\fds_get_drone_detail_data') ? fds_get_drone_detail_data($drone_post->ID) : [];
+            $is_payload  = !empty($detail['is_payload']);
             $d_title     = fds_decode_text((string) ($detail['name'] ?? get_the_title($drone_post->ID)));
             $model_base  = trim((string) preg_replace('/\s*\(.*?\)/', '', $d_title)) ?: $d_title;
             $tagline     = fds_decode_text((string) ($detail['tagline'] ?? get_post_meta($drone_post->ID, 'drone_tagline', true)));
@@ -397,7 +398,9 @@ function fds_get_seo_data() {
             $feat_img    = !empty($detail['hero_url']) ? (string) $detail['hero_url'] : get_the_post_thumbnail_url($drone_post->ID, 'full');
 
             $cat_lower   = strtolower($kategori);
-            if ($is_ferto || strpos($cat_lower, 'agri') !== false) {
+            if ($is_payload) {
+                $title = fds_clamp_meta_title("{$model_base} — Sensor Integrasi UAV | FDS", 60);
+            } elseif ($is_ferto || strpos($cat_lower, 'agri') !== false) {
                 $title = fds_clamp_meta_title($has_sni ? "{$model_base} — Drone Pertanian TKDN & SNI | FDS" : "{$model_base} — Drone Pertanian Presisi TKDN | FDS", 60);
             } elseif ($model_key === 'deltav' || strpos($cat_lower, 'peta') !== false) {
                 $title = fds_clamp_meta_title("{$model_base} — Drone Mapping Fixed-Wing VTOL | FDS", 60);
@@ -408,20 +411,24 @@ function fds_get_seo_data() {
             }
 
             $desc_parts  = [];
-            if ($tagline !== '') $desc_parts[] = $tagline;
-            if ($payload !== '') $desc_parts[] = "Payload: {$payload}";
-            if ($durasi !== '')  $desc_parts[] = "Durasi Terbang: {$durasi}";
-            if ($is_ferto && $has_sni) {
-                $desc_parts[] = 'Sertifikasi TKDN 60,74% & SNI 9199:2023 buatan PT Karya Solusi Angkasa (FDS).';
+            if ($tagline !== '') $desc_parts[] = rtrim($tagline, '. ');
+            if ($payload !== '') $desc_parts[] = ($is_payload ? (string) ($detail['card_payload_label'] ?? 'Spesifikasi') . ": {$payload}" : "Payload: {$payload}");
+            if ($durasi !== '' && !$is_payload)  $desc_parts[] = "Durasi Terbang: {$durasi}";
+            if ($is_payload) {
+                $desc_parts[] = 'Produk pabrikan mitra resmi dengan dukungan integrasi UAV & kalibrasi oleh PT Karya Solusi Angkasa (FDS)';
+            } elseif ($is_ferto && $has_sni) {
+                $desc_parts[] = 'Sertifikasi TKDN 60,74% & SNI 9199:2023 buatan PT Karya Solusi Angkasa (FDS)';
             } elseif ($is_ferto) {
-                $desc_parts[] = 'Sertifikasi TKDN 60,74% buatan PT Karya Solusi Angkasa (FDS).';
+                $desc_parts[] = 'Sertifikasi TKDN 60,74% buatan PT Karya Solusi Angkasa (FDS)';
             } else {
-                $desc_parts[] = 'Buatan PT Karya Solusi Angkasa (Full Drone Solutions), produsen UAV Indonesia.';
+                $desc_parts[] = 'Buatan PT Karya Solusi Angkasa (Full Drone Solutions), produsen UAV Indonesia';
             }
-            $description = fds_clamp_meta_desc(implode('. ', $desc_parts), 158);
+            $description = fds_clamp_meta_desc(implode('. ', $desc_parts) . '.', 158);
 
             // Contextual keywords per category (accurate certifications)
-            if ($is_ferto || strpos($cat_lower, 'agri') !== false) {
+            if ($is_payload) {
+                $keywords = fds_get_primary_keywords_string("{$model_base}, {$kategori}, sensor payload drone, kamera pemetaan UAV, integrasi payload UAV, PT Karya Solusi Angkasa");
+            } elseif ($is_ferto || strpos($cat_lower, 'agri') !== false) {
                 $cert_kw  = $has_sni ? 'TKDN 60,74%, SNI 9199:2023' : ($is_ferto ? 'TKDN 60,74%' : '');
                 $keywords = fds_get_primary_keywords_string("drone pertanian, drone sprayer {$model_base}, jual drone pertanian {$slug}, drone penyemprot pupuk dan pestisida, drone pertanian indonesia, produsen UAV Indonesia, {$cert_kw}, {$payload}");
             } elseif (strpos($cat_lower, 'peta') !== false || strpos($cat_lower, 'gis') !== false || $model_key === 'deltav') {
@@ -448,6 +455,9 @@ function fds_get_seo_data() {
         $term_link = $term ? get_term_link($term) : home_url('/produk/');
         $canonical = !is_wp_error($term_link) ? trailingslashit($term_link) : trailingslashit(home_url('/produk/'));
         $image_url = fds_get_default_share_image();
+        $cat_rules = ($term && !empty($term->term_id) && function_exists(__NAMESPACE__ . '\\fds_get_kategori_product_rules'))
+            ? fds_get_kategori_product_rules((int) $term->term_id)
+            : ['is_payload' => false];
 
         if ($term_slug === 'agrikultur') {
             $title       = 'Drone Agrikultur & Sprayer TKDN — Full Drone Solutions';
@@ -458,6 +468,9 @@ function fds_get_seo_data() {
         } elseif ($term_slug === 'kargo') {
             $title       = 'Drone Kargo Logistik Otonom — Full Drone Solutions';
             $description = 'Platform drone kargo logistik DELFRO payload hingga 10 kg buatan Indonesia untuk distribusi medis darurat, suku cadang, dan wilayah kepulauan.';
+        } elseif (!empty($cat_rules['is_payload'])) {
+            $title       = fds_clamp_meta_title("{$term_name} — Sensor & Payload Mitra Terintegrasi | FDS", 60);
+            $description = fds_clamp_meta_desc("Pilihan perangkat {$term_name} dari pabrikan mitra resmi untuk integrasi pada platform UAV Full Drone Solutions.", 158);
         } else {
             $title       = fds_clamp_meta_title("Drone {$term_name} — Solusi UAV Industri | FDS", 60);
             $description = fds_clamp_meta_desc("Katalog resmi drone {$term_name} buatan PT Karya Solusi Angkasa (Full Drone Solutions) untuk operasional industri presisi Indonesia.", 158);
@@ -1240,11 +1253,14 @@ function fds_render_schema_jsonld() {
                     $cd_tagline = \fds_scrub_legacy_text($cd_tagline, $cd_ferto, $cd_sni);
                     $cd_payload = \fds_scrub_legacy_text($cd_payload, $cd_ferto, $cd_sni);
                 }
+                $cd_fb_desc = !empty($cd_detail['is_payload'])
+                    ? "Perangkat {$cd_title} dari pabrikan mitra resmi terintegrasi ekosistem UAV Full Drone Solutions."
+                    : "Platform UAV {$cd_title} produksi PT Karya Solusi Angkasa (Full Drone Solutions).";
                 $item_elements[] = [
                     '@type'       => 'ListItem',
                     'position'    => $item_pos++,
                     'name'        => $cd_title . ($cd_payload ? " ({$cd_payload})" : ''),
-                    'description' => $cd_tagline ?: "Platform UAV {$cd_title} produksi PT Karya Solusi Angkasa (Full Drone Solutions).",
+                    'description' => $cd_tagline ?: $cd_fb_desc,
                     'url'         => $cd_url,
                 ];
             }
@@ -1763,11 +1779,20 @@ add_filter('rank_math/json_ld', function ($data, $jsonld) {
                 $cd_title   = fds_decode_text(get_the_title($cd->ID));
                 $cd_tagline = fds_decode_text((string) get_post_meta($cd->ID, 'drone_tagline', true));
                 $cd_payload = fds_decode_text((string) get_post_meta($cd->ID, 'drone_spec_kapasitas', true));
+                $cd_profile = function_exists(__NAMESPACE__ . '\\fds_get_drone_product_profile')
+                    ? fds_get_drone_product_profile((int) $cd->ID)
+                    : ['is_payload' => false, 'hide_bandingkan' => false];
+                if (is_page('bandingkan') && !empty($cd_profile['hide_bandingkan'])) {
+                    continue;
+                }
+                $cd_fb_desc = !empty($cd_profile['is_payload'])
+                    ? "Perangkat sensor & kamera {$cd_title} dari pabrikan mitra resmi yang terintegrasi ekosistem UAV Full Drone Solutions."
+                    : "Platform UAV {$cd_title} buatan PT Karya Solusi Angkasa (Full Drone Solutions).";
                 $item_elements[] = [
                     '@type'       => 'ListItem',
                     'position'    => $item_pos++,
                     'name'        => $cd_title . ($cd_payload !== '' ? " ({$cd_payload})" : ''),
-                    'description' => $cd_tagline !== '' ? $cd_tagline : "Platform UAV {$cd_title} buatan PT Karya Solusi Angkasa (Full Drone Solutions).",
+                    'description' => $cd_tagline !== '' ? $cd_tagline : $cd_fb_desc,
                     'url'         => get_permalink($cd->ID),
                 ];
             }
@@ -2120,6 +2145,9 @@ add_filter('rank_math/frontend/title', function ($title) {
         $term      = get_queried_object();
         $term_name = ($term && !empty($term->name)) ? fds_decode_text($term->name) : 'Industri';
         $term_slug = ($term && !empty($term->slug)) ? $term->slug : '';
+        $cat_rules = ($term && !empty($term->term_id) && function_exists(__NAMESPACE__ . '\\fds_get_kategori_product_rules'))
+            ? fds_get_kategori_product_rules((int) $term->term_id)
+            : ['is_payload' => false];
         if (function_exists(__NAMESPACE__ . '\\fds_get_kategori_drone_catalog_content')) {
             $kat_content = fds_get_kategori_drone_catalog_content($term_slug, $term);
             if (!empty($kat_content['seo_title'])) {
@@ -2134,6 +2162,9 @@ add_filter('rank_math/frontend/title', function ($title) {
         }
         if ($term_slug === 'kargo') {
             return 'Drone Kargo Logistik Otonom — Full Drone Solutions';
+        }
+        if (!empty($cat_rules['is_payload'])) {
+            return fds_clamp_meta_title("{$term_name} — Sensor & Payload Mitra Terintegrasi | FDS", 60);
         }
         return fds_clamp_meta_title("Drone {$term_name} — Solusi UAV Industri | FDS", 60);
     }
@@ -2189,13 +2220,17 @@ add_filter('rank_math/frontend/title', function ($title) {
 
         $d_title    = fds_decode_text(get_the_title($drone_id));
         $model_base = trim((string) preg_replace('/\s*\(.*?\)/', '', $d_title)) ?: $d_title;
+        $d_profile  = function_exists(__NAMESPACE__ . '\\fds_get_drone_product_profile') ? fds_get_drone_product_profile((int) $drone_id) : ['is_payload' => false];
+        $is_payload = !empty($d_profile['is_payload']);
         $model_key  = function_exists(__NAMESPACE__ . '\\fds_get_drone_model_key') ? fds_get_drone_model_key($drone_id) : strtolower((string) get_post_field('post_name', $drone_id));
-        $is_ferto   = (strpos($model_key, 'ferto-') === 0);
-        $has_sni    = in_array($model_key, ['ferto-15l', 'ferto-22l'], true);
-        $kategori   = fds_decode_text((string) (get_post_meta($drone_id, 'drone_kategori', true) ?: 'UAV Industri'));
+        $is_ferto   = !$is_payload && (strpos($model_key, 'ferto-') === 0);
+        $has_sni    = !$is_payload && in_array($model_key, ['ferto-15l', 'ferto-22l'], true);
+        $kategori   = fds_decode_text((string) (get_post_meta($drone_id, 'drone_kategori', true) ?: ($is_payload ? 'Sensor & Payload' : 'UAV Industri')));
 
         $cat_lower = strtolower($kategori);
-        if ($is_ferto || strpos($cat_lower, 'agri') !== false) {
+        if ($is_payload) {
+            return fds_clamp_meta_title("{$model_base} — Sensor Integrasi UAV | FDS", 60);
+        } elseif ($is_ferto || strpos($cat_lower, 'agri') !== false) {
             return fds_clamp_meta_title($has_sni ? "{$model_base} — Drone Pertanian TKDN & SNI | FDS" : "{$model_base} — Drone Pertanian Presisi TKDN | FDS", 60);
         } elseif ($model_key === 'deltav' || strpos($cat_lower, 'peta') !== false) {
             return fds_clamp_meta_title("{$model_base} — Drone Mapping Fixed-Wing VTOL | FDS", 60);
@@ -2291,6 +2326,9 @@ add_filter('rank_math/frontend/description', function ($description) {
         $term      = get_queried_object();
         $term_slug = ($term && !empty($term->slug)) ? $term->slug : '';
         $term_name = ($term && !empty($term->name)) ? fds_decode_text($term->name) : 'Industri';
+        $cat_rules = ($term && !empty($term->term_id) && function_exists(__NAMESPACE__ . '\\fds_get_kategori_product_rules'))
+            ? fds_get_kategori_product_rules((int) $term->term_id)
+            : ['is_payload' => false];
         if (function_exists(__NAMESPACE__ . '\\fds_get_kategori_drone_catalog_content')) {
             $kat_content = fds_get_kategori_drone_catalog_content($term_slug, $term);
             if (!empty($kat_content['seo_desc'])) {
@@ -2305,6 +2343,9 @@ add_filter('rank_math/frontend/description', function ($description) {
         }
         if ($term_slug === 'kargo') {
             return 'Platform drone kargo logistik DELFRO payload hingga 10 kg buatan Indonesia untuk distribusi medis darurat, suku cadang, & wilayah kepulauan.';
+        }
+        if (!empty($cat_rules['is_payload'])) {
+            return fds_clamp_meta_desc("Pilihan perangkat {$term_name} dari pabrikan mitra resmi untuk integrasi pada platform UAV Full Drone Solutions.", 158);
         }
         return fds_clamp_meta_desc("Katalog resmi drone {$term_name} buatan PT Karya Solusi Angkasa (Full Drone Solutions) untuk aplikasi industri.", 158);
     }
@@ -2355,9 +2396,10 @@ add_filter('rank_math/frontend/description', function ($description) {
     if (is_singular('drone')) {
         $drone_id       = get_the_ID();
         $d_detail       = function_exists(__NAMESPACE__ . '\\fds_get_drone_detail_data') ? fds_get_drone_detail_data($drone_id) : [];
+        $is_payload     = !empty($d_detail['is_payload']);
         $model_key      = (string) ($d_detail['model_key'] ?? (function_exists(__NAMESPACE__ . '\\fds_get_drone_model_key') ? fds_get_drone_model_key($drone_id) : strtolower((string) get_post_field('post_name', $drone_id))));
-        $is_ferto       = !empty($d_detail['is_ferto']) || (strpos($model_key, 'ferto-') === 0);
-        $has_sni        = !empty($d_detail['has_sni']) || in_array($model_key, ['ferto-15l', 'ferto-22l'], true);
+        $is_ferto       = !$is_payload && (!empty($d_detail['is_ferto']) || (strpos($model_key, 'ferto-') === 0));
+        $has_sni        = !$is_payload && (!empty($d_detail['has_sni']) || in_array($model_key, ['ferto-15l', 'ferto-22l'], true));
         $custom_rm_desc = get_post_meta($drone_id, 'rank_math_description', true);
         if (!empty($custom_rm_desc)) {
             $clean_desc = trim((string) preg_replace('/^Deskripsi\s+Singkat\s*:\s*/i', '', (string) $custom_rm_desc));
@@ -2371,17 +2413,22 @@ add_filter('rank_math/frontend/description', function ($description) {
         $model_base = trim((string) preg_replace('/\s*\(.*?\)/', '', $d_title)) ?: $d_title;
         $payload    = fds_decode_text((string) ($d_detail['card_payload'] ?? get_post_meta($drone_id, 'drone_spec_kapasitas', true)));
         $durasi     = fds_decode_text((string) ($d_detail['card_metric_value'] ?? get_post_meta($drone_id, 'drone_spec_durasi', true)));
-        $kategori   = fds_decode_text((string) ($d_detail['kategori'] ?? (get_post_meta($drone_id, 'drone_kategori', true) ?: 'UAV Industri')));
+        $kategori   = fds_decode_text((string) ($d_detail['kategori'] ?? (get_post_meta($drone_id, 'drone_kategori', true) ?: ($is_payload ? 'Sensor & Payload' : 'UAV Industri'))));
         if (function_exists('fds_scrub_legacy_text')) {
             $payload  = \fds_scrub_legacy_text($payload, $is_ferto, $has_sni);
             $durasi   = \fds_scrub_legacy_text($durasi, $is_ferto, $has_sni);
             $kategori = \fds_scrub_legacy_text($kategori, $is_ferto, $has_sni);
         }
         $cat_lower  = strtolower($kategori);
-        $specs_bit  = implode(', ', array_filter([$payload !== '' ? "kapasitas {$payload}" : '', $durasi !== '' ? "durasi {$durasi}" : '']));
+        $specs_bit  = implode(', ', array_filter([
+            $payload !== '' ? ($is_payload ? $payload : "kapasitas {$payload}") : '',
+            ($durasi !== '' && !$is_payload) ? "durasi {$durasi}" : '',
+        ]));
         $specs_txt  = $specs_bit !== '' ? $specs_bit : 'spesifikasi industri resmi';
 
-        if ($is_ferto || strpos($cat_lower, 'agri') !== false) {
+        if ($is_payload) {
+            return fds_clamp_meta_desc("Spesifikasi {$model_base} ({$specs_txt}). Perangkat {$kategori} pabrikan mitra dengan dukungan integrasi UAV & kalibrasi FDS.", 158);
+        } elseif ($is_ferto || strpos($cat_lower, 'agri') !== false) {
             if ($has_sni) {
                 return fds_clamp_meta_desc("Spesifikasi drone pertanian {$model_base} ({$specs_txt}). Sertifikat TKDN 60,74% & SNI 9199:2023 buatan PT Karya Solusi Angkasa.", 158);
             }
@@ -3359,22 +3406,31 @@ function fds_build_llms_txt_content(bool $full = false): string {
             }
         }
 
+        $d_profile = function_exists(__NAMESPACE__ . '\\fds_get_drone_product_profile')
+            ? fds_get_drone_product_profile((int) $d->ID)
+            : ['is_payload' => false];
+
         $drone_records[] = [
-            'name'        => $name,
-            'url'         => $url,
-            'kategori'    => $kategori,
-            'tagline'     => $tagline,
-            'desc'        => $desc,
-            'payload'     => $payload,
-            'durasi'      => $durasi,
-            'cert'        => $matrix_cert,
-            'stats'       => $stats,
-            'specs'       => $specs,
-            'uses'        => $uses,
-            'is_ferto'    => $is_ferto,
-            'has_sni'     => $has_sni,
+            'name'          => $name,
+            'url'           => $url,
+            'kategori'      => $kategori,
+            'tagline'       => $tagline,
+            'desc'          => $desc,
+            'payload'       => $payload,
+            'payload_label' => $clean_llms($detail['card_payload_label'] ?? ''),
+            'durasi'        => $durasi,
+            'cert'          => $matrix_cert,
+            'stats'         => $stats,
+            'specs'         => $specs,
+            'uses'          => $uses,
+            'is_ferto'      => $is_ferto,
+            'has_sni'       => $has_sni,
+            'is_payload'    => !empty($d_profile['is_payload']),
         ];
     }
+
+    $uav_records     = array_values(array_filter($drone_records, static fn($r) => empty($r['is_payload'])));
+    $payload_records = array_values(array_filter($drone_records, static fn($r) => !empty($r['is_payload'])));
 
     $sectors    = function_exists(__NAMESPACE__ . '\\fds_get_layanan_sectors') ? fds_get_layanan_sectors() : [];
     $categories = function_exists(__NAMESPACE__ . '\\fds_get_layanan_categories') ? fds_get_layanan_categories() : [];
@@ -3410,8 +3466,8 @@ function fds_build_llms_txt_content(bool $full = false): string {
         $out[] = "3. **Jasa Konsultan GIS Enterprise:** Analisis spasial daerah aliran sungai (DAS), tata ruang RTRW/RDTR, batas konsesi HGU, NDVI, dan pengembangan dashboard WebGIS interaktif.";
         $out[] = "4. **Pemetaan Kawasan Strategis:** Survei pit pertambangan & volume stockpile, pemetaan Kawasan Ekonomi Khusus (KEK), kawasan kehutanan, koridor energi 150 kV, serta kawasan industri terpadu.";
         $out[] = "";
-        $out[] = "## Katalog Armada Drone Resmi (" . count($drone_records) . " Model Aktif)";
-        foreach ($drone_records as $dr) {
+        $out[] = "## Katalog Armada Drone Resmi (" . count($uav_records) . " Model Aktif)";
+        foreach ($uav_records as $dr) {
             $summary_bits = array_filter([
                 $dr['kategori'],
                 $dr['payload'] !== '' ? "Payload {$dr['payload']}" : '',
@@ -3419,6 +3475,19 @@ function fds_build_llms_txt_content(bool $full = false): string {
                 $dr['cert'],
             ]);
             $out[] = "- [{$dr['name']}]({$dr['url']}): " . implode(' · ', $summary_bits) . ".";
+        }
+        if (!empty($payload_records)) {
+            $out[] = "";
+            $out[] = "## Sensor, Kamera & Payload Pabrikan Mitra — Integrasi FDS (" . count($payload_records) . " Perangkat)";
+            $out[] = "> Catatan: Perangkat sensor, kamera, dan LiDAR di bawah ini merupakan produk pabrikan mitra pihak ketiga (bukan manufaktur internal FDS) yang tersedia beserta layanan integrasi ke armada UAV PT Karya Solusi Angkasa.";
+            foreach ($payload_records as $pr) {
+                $p_bits = array_filter([
+                    $pr['kategori'],
+                    $pr['payload'] !== '' ? ($pr['payload_label'] !== '' ? "{$pr['payload_label']} {$pr['payload']}" : $pr['payload']) : '',
+                    $pr['tagline'] !== '' ? $pr['tagline'] : '',
+                ]);
+                $out[] = "- [{$pr['name']}]({$pr['url']}): " . implode(' · ', $p_bits) . ".";
+            }
         }
         $out[] = "";
         $out[] = "## Solusi Industri & Layanan Spesialis";
@@ -3491,9 +3560,9 @@ function fds_build_llms_txt_content(bool $full = false): string {
         $out[] = "- **Jejak Kemitraan Strategis:** Produksi & R&D mandiri oleh talenta kedirgantaraan Yogyakarta, mitra program PRISMA (Bappenas - Pemerintah Australia) untuk adopsi drone sprayer pertanian, kolaborasi ketahanan pangan bersama Bank Indonesia, serta riset konservasi & reboisasi bersama Universitas Gadjah Mada (UGM) dan mitra Swiss.";
         $out[] = "";
 
-        $out[] = "## 2. Katalog & Spesifikasi Lengkap " . count($drone_records) . " Model Drone Resmi FDS";
+        $out[] = "## 2. Katalog & Spesifikasi Lengkap " . count($uav_records) . " Model Drone Resmi FDS";
         $out[] = "";
-        foreach ($drone_records as $dr) {
+        foreach ($uav_records as $dr) {
             $out[] = "### {$dr['name']} ({$dr['kategori']})";
             $out[] = "- **URL Resmi:** {$dr['url']}";
             if ($dr['tagline'] !== '') {
@@ -3521,6 +3590,39 @@ function fds_build_llms_txt_content(bool $full = false): string {
                 }
             }
             $out[] = "";
+        }
+
+        if (!empty($payload_records)) {
+            $out[] = "### Perangkat Sensor, Kamera & Payload Pabrikan Mitra — Integrasi FDS (" . count($payload_records) . " Perangkat)";
+            $out[] = "";
+            $out[] = "> Catatan: Perangkat sensor, kamera, dan pemindai LiDAR berikut merupakan produk pabrikan mitra pihak ketiga (bukan manufaktur internal FDS) yang tersedia dan didukung integrasinya oleh PT Karya Solusi Angkasa ke armada UAV industri.";
+            $out[] = "";
+            foreach ($payload_records as $pr) {
+                $out[] = "#### {$pr['name']} ({$pr['kategori']} · Produk Pabrikan Mitra Terintegrasi FDS)";
+                $out[] = "- **URL Resmi:** {$pr['url']}";
+                if ($pr['tagline'] !== '') {
+                    $out[] = "- **Ringkasan Singkat:** {$pr['tagline']}";
+                }
+                if ($pr['desc'] !== '') {
+                    $out[] = "- **Deskripsi Teknis:** {$pr['desc']}";
+                }
+                if (!empty($pr['stats'])) {
+                    $out[] = "- **Statistik Utama:** " . implode(' | ', $pr['stats']);
+                }
+                if (!empty($pr['specs'])) {
+                    $out[] = "- **Lembar Spesifikasi Teknis:**";
+                    foreach ($pr['specs'] as $sp_row) {
+                        $out[] = "  - {$sp_row[0]}: {$sp_row[1]}";
+                    }
+                }
+                if (!empty($pr['uses'])) {
+                    $out[] = "- **Aplikasi & Use-Cases:**";
+                    foreach ($pr['uses'] as $u_item) {
+                        $out[] = "  - {$u_item}";
+                    }
+                }
+                $out[] = "";
+            }
         }
 
         $out[] = "## 3. Ekosistem Layanan UAV, Survei LiDAR, GIS & Pelatihan";
@@ -3845,6 +3947,7 @@ function fds_purge_ai_and_seo_caches(bool $purge_litespeed = true, bool $immedia
             'fds_bandingkan_catalog_cache_v2',
             'fds_bandingkan_catalog_cache_v3',
             'fds_bandingkan_catalog_cache_v4',
+            'fds_bandingkan_catalog_cache_v5',
             'fds_homepage_content_cache',
             'fds_homepage_content_cache_v2',
             'fds_homepage_content_cache_v3',

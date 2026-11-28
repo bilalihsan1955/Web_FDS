@@ -970,6 +970,12 @@ document.addEventListener('DOMContentLoaded', function() {
               if (strtolower((string) $t->slug) === 'reboisasi') {
                   continue;
               }
+              if (function_exists('\App\fds_get_kategori_product_rules')) {
+                  $t_rules = \App\fds_get_kategori_product_rules((int) $t->term_id);
+                  if (!empty($t_rules['hide_home'])) {
+                      continue;
+                  }
+              }
               $t_clean = $fds_clean($t->name);
               if ($t_clean !== '' && !in_array($t_clean, $categories, true)) {
                   $categories[] = $t_clean;
@@ -997,6 +1003,12 @@ document.addEventListener('DOMContentLoaded', function() {
               if (strpos($d_slug_chk, 'rebo') !== false || strpos($d_slug_chk, 'agrea') !== false || strpos($d_slug_chk, 'ferto-20') !== false) {
                   continue;
               }
+              $d_profile = function_exists('\App\fds_get_drone_product_profile')
+                  ? \App\fds_get_drone_product_profile((int) $d->ID)
+                  : ['is_payload' => false, 'hide_home' => false];
+              if (!empty($d_profile['hide_home'])) {
+                  continue;
+              }
               $terms    = get_the_terms($d->ID, 'kategori_drone');
               $d_cat    = (!empty($terms) && !is_wp_error($terms)) ? $terms[0]->name : (get_post_meta($d->ID, 'drone_kategori', true) ?: 'Agrikultur');
               if (stripos((string) $d_cat, 'rebo') !== false) {
@@ -1004,23 +1016,45 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               $d_cat_clean = $fds_clean($d_cat);
 
+              $d_detail   = function_exists('\App\fds_get_drone_detail_data') ? \App\fds_get_drone_detail_data((int) $d->ID) : [];
+              $is_payload = !empty($d_detail['is_payload']) || !empty($d_profile['is_payload']);
+
               $s_lower   = $d_slug_chk;
-              $is_ferto  = (strpos($s_lower, 'ferto') === 0);
-              $has_sni   = in_array($s_lower, ['ferto-15l', 'ferto-22l', 'ferto-15', 'ferto-22'], true);
+              $is_ferto  = !$is_payload && (strpos($s_lower, 'ferto') === 0);
+              $has_sni   = !$is_payload && in_array($s_lower, ['ferto-15l', 'ferto-22l', 'ferto-15', 'ferto-22'], true);
 
-              $d_badge   = get_post_meta($d->ID, 'drone_badge', true) ?: 'Unggulan';
-              $d_tagline = get_post_meta($d->ID, 'drone_tagline', true);
-              $d_desc    = get_post_meta($d->ID, 'drone_desc', true) ?: $d->post_content;
-              $d_specs   = get_post_meta($d->ID, 'drone_specs_raw', true);
-              $d_thumb   = get_the_post_thumbnail_url($d->ID, 'thumbnail');
+              $d_badge   = $d_detail['badge'] ?? (get_post_meta($d->ID, 'drone_badge', true) ?: 'Unggulan');
+              $d_tagline = $d_detail['tagline'] ?? get_post_meta($d->ID, 'drone_tagline', true);
+              $d_desc    = $d_detail['desc'] ?? (get_post_meta($d->ID, 'drone_desc', true) ?: $d->post_content);
+              $d_specs   = $is_payload
+                  ? (get_post_meta($d->ID, 'drone_payload_specs_raw', true) ?: get_post_meta($d->ID, 'drone_specs_raw', true))
+                  : get_post_meta($d->ID, 'drone_specs_raw', true);
+              $d_thumb   = !empty($d_detail['hero_url']) ? $d_detail['hero_url'] : get_the_post_thumbnail_url($d->ID, 'thumbnail');
 
-              $d_name_clean  = $fds_hp_scrub(get_the_title($d->ID), $is_ferto, $has_sni);
+              $d_name_clean  = $fds_hp_scrub($d_detail['name'] ?? get_the_title($d->ID), $is_ferto, $has_sni);
               $d_badge_clean = $fds_hp_scrub($d_badge, $is_ferto, $has_sni);
               $d_desc_plain  = $fds_hp_scrub(wp_strip_all_tags((string) ($d_tagline ?: wp_trim_words((string) $d_desc, 18))), $is_ferto, $has_sni);
 
               // Extract first 2-3 lines of specs for row preview (guardrail-safe)
               $spec_summary = '';
-              if ($d_specs) {
+              if (!empty($d_detail['specs']) && is_array($d_detail['specs'])) {
+                  $parts = [];
+                  foreach ($d_detail['specs'] as $sp_row) {
+                      if (!is_array($sp_row) || count($sp_row) < 2) {
+                          continue;
+                      }
+                      $sp_lbl     = $fds_hp_scrub(trim((string) $sp_row[0]), $is_ferto, $has_sni);
+                      $sp_is_cert = stripos($sp_lbl, 'sertifikasi') !== false;
+                      $sp_val     = $fds_hp_scrub(trim((string) $sp_row[1]), $is_ferto, $has_sni, !$sp_is_cert);
+                      if ($sp_val !== '' && !preg_match('/^(?:Contoh\s*Dummy|Produk\s*Mitra)$/i', $sp_val)) {
+                          $parts[] = $sp_val;
+                      }
+                      if (count($parts) >= 3) {
+                          break;
+                      }
+                  }
+                  $spec_summary = implode(' · ', $parts);
+              } elseif ($d_specs) {
                   $raw_lines = array_filter(array_map('trim', explode("\n", (string) $d_specs)));
                   $parts = [];
                   foreach ($raw_lines as $l) {
@@ -1044,18 +1078,21 @@ document.addEventListener('DOMContentLoaded', function() {
               }
               $spec_fallback = $has_sni
                   ? 'TKDN 60,74% · SNI 9199:2023 · FDS Station'
-                  : ($is_ferto ? 'TKDN 60,74% · FDS Station' : 'FDS Station GCS · Manufaktur Lokal');
+                  : ($is_ferto
+                      ? 'TKDN 60,74% · FDS Station'
+                      : ($is_payload ? 'Produk Pabrikan Mitra · Integrasi UAV FDS' : 'FDS Station GCS · Manufaktur Lokal'));
 
               $products[] = [
-                  'id'    => $d->ID,
-                  'url'   => get_permalink($d->ID),
-                  'slug'  => $d->post_name,
-                  'name'  => $d_name_clean,
-                  'cat'   => $d_cat_clean,
-                  'badge' => $d_badge_clean !== '' ? $d_badge_clean : 'Unggulan',
-                  'desc'  => $d_desc_plain,
-                  'specs' => $spec_summary !== '' ? $spec_summary : $spec_fallback,
-                  'thumb' => $d_thumb,
+                  'id'         => $d->ID,
+                  'url'        => get_permalink($d->ID),
+                  'slug'       => $d->post_name,
+                  'name'       => $d_name_clean,
+                  'cat'        => $d_cat_clean,
+                  'is_payload' => $is_payload,
+                  'badge'      => $d_badge_clean !== '' ? $d_badge_clean : 'Unggulan',
+                  'desc'       => $d_desc_plain,
+                  'specs'      => $spec_summary !== '' ? $spec_summary : $spec_fallback,
+                  'thumb'      => $d_thumb,
               ];
 
               if ($d_cat_clean !== '' && !in_array($d_cat_clean, $categories, true)) {
@@ -1092,7 +1129,12 @@ document.addEventListener('DOMContentLoaded', function() {
           {{-- Icon --}}
           <div class="col-span-1 hidden sm:flex">
             <div class="w-11 h-11 bg-[#f5f5f7] rounded-xl flex items-center justify-center group-hover:bg-white transition-colors flex-shrink-0">
-              @if(!empty($global_drone_icon))
+              @if(!empty($p['is_payload']))
+                <svg class="w-6 h-6 text-[#0f808a]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M3 8a2 2 0 0 1 2-2h2.2a1.5 1.5 0 0 0 1.25-.67l.6-.9A1.5 1.5 0 0 1 10.3 3.75h3.4a1.5 1.5 0 0 1 1.25.68l.6.9A1.5 1.5 0 0 0 16.8 6H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8Z"/>
+                  <circle cx="12" cy="12.5" r="3.25" stroke-width="1.6"/>
+                </svg>
+              @elseif(!empty($global_drone_icon))
                 <div class="w-[26px] h-[26px] bg-[#0f808a] group-hover:bg-[#0a555c] transition-colors flex-shrink-0"
                      style="-webkit-mask-image: url('{!! esc_url($global_drone_icon) !!}'); mask-image: url('{!! esc_url($global_drone_icon) !!}'); -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;"
                      aria-hidden="true"></div>

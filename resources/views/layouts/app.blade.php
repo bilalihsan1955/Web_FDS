@@ -691,7 +691,7 @@
 
                   <div class="pt-5 border-t border-black/[0.06] space-y-2.5">
                     <a href="{!! esc_url(home_url('/produk/')) !!}" class="inline-flex items-center text-[#1d1d1f] hover:text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
-                      <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_all_label'] ?? 'Lihat Semua Produk UAV')) }}</span>
+                      <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_all_label'] ?? 'Lihat Semua Produk')) }}</span>
                       <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M6 6h12v12"/>
                         <path d="M6 18 18 6"/>
@@ -699,7 +699,7 @@
                     </a>
                     <div>
                       <a href="{!! esc_url($compare_href) !!}" class="inline-flex items-center text-[#0f808a] text-[13px] font-semibold hover:underline gap-1.5 leading-none group">
-                        <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Semua Model Drone')) }}</span>
+                        <span class="leading-none">{{ $fds_nav_clean((string) ($nb_brand['menu_prod_compare_text'] ?? 'Bandingkan Spesifikasi Produk')) }}</span>
                         <svg class="w-[17px] h-[17px] transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                           <path d="M6 6h12v12"/>
                           <path d="M6 18 18 6"/>

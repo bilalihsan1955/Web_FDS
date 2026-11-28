@@ -24,8 +24,11 @@ add_action('save_post', function ($post_id) {
         }
         
         // List semua custom field yang relevan untuk drone dan post
+        $multiline_keys = ['drone_specs_raw', 'drone_payload_specs_raw', 'drone_for', 'drone_desc'];
         $custom_keys = [
             'drone_badge', 'drone_tagline', 'drone_desc', 'drone_specs_raw',
+            'drone_payload_specs_raw',
+            'drone_card_m1_lbl', 'drone_card_m1_val', 'drone_card_m2_lbl', 'drone_card_m2_val',
             'drone_kategori',
             'drone_spec_kapasitas', 'drone_spec_durasi', 'drone_spec_baterai',
             'drone_spec_produktivitas', 'drone_spec_kecepatan', 'drone_spec_ketahanan',
@@ -51,10 +54,12 @@ add_action('save_post', function ($post_id) {
         ];
 
         foreach ($custom_keys as $key) {
-            if (isset($_POST[$key])) {
-                update_post_meta($post_id, $key, sanitize_text_field(wp_unslash((string) $_POST[$key])));
-            } elseif (isset($_REQUEST[$key])) {
-                update_post_meta($post_id, $key, sanitize_text_field(wp_unslash((string) $_REQUEST[$key])));
+            $raw_val = $_POST[$key] ?? ($_REQUEST[$key] ?? null);
+            if ($raw_val !== null) {
+                $clean_val = in_array($key, $multiline_keys, true)
+                    ? sanitize_textarea_field(wp_unslash((string) $raw_val))
+                    : sanitize_text_field(wp_unslash((string) $raw_val));
+                update_post_meta($post_id, $key, $clean_val);
             }
         }
     }
