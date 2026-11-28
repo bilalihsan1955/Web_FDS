@@ -89,12 +89,12 @@ function fds_produk_normalize_href(string $url): string {
 
 function fds_get_produk_catalog_defaults(): array {
     return [
-        'hero_badge'         => 'Katalog Manufaktur UAV · PT Karya Solusi Angkasa',
-        'hero_title'         => 'Armada Drone UAV Indonesia untuk Agrikultur, Pemetaan & Kargo.',
-        'hero_desc'          => 'Seluruh unit dirancang dan dirakit di Sleman, Yogyakarta dengan dukungan software kendali FDS Station berbahasa Indonesia serta suku cadang asli siap pakai.',
+        'hero_badge'         => 'Katalog Produk FDS · PT Karya Solusi Angkasa',
+        'hero_title'         => 'Armada Drone UAV Indonesia & Ekosistem Sensor Integrasi.',
+        'hero_desc'          => 'Seluruh lini wahana drone UAV dirancang dan dirakit oleh PT Karya Solusi Angkasa di Sleman, Yogyakarta dengan software FDS Station, dilengkapi pilihan sensor dan kamera dari pabrikan mitra resmi.',
         'hero_cta1_text'     => 'Minta Penawaran Resmi',
         'hero_cta1_url'      => '/kontak/?produk=armada-uav-fds#hubungi-form',
-        'hero_cta2_text'     => 'Bandingkan Model Drone',
+        'hero_cta2_text'     => 'Bandingkan Spesifikasi',
         'hero_cta2_url'      => '/bandingkan/',
         'nav_agri_label'     => 'Agrikultur — Seri FERTO',
         'nav_pemetaan_label' => 'Pemetaan & Inspeksi',
@@ -187,8 +187,8 @@ function fds_get_produk_catalog_defaults(): array {
             ],
         ],
 
-        'faq_title'    => 'Pertanyaan Umum Katalog Drone',
-        'faq_subtitle' => 'Ringkasan pertanyaan teknis dan kepatuhan pengadaan lini wahana PT Karya Solusi Angkasa.',
+        'faq_title'    => 'Pertanyaan Umum Katalog Produk',
+        'faq_subtitle' => 'Ringkasan pertanyaan teknis, sertifikasi, integrasi sensor, dan kepatuhan pengadaan PT Karya Solusi Angkasa.',
         'faqs'         => [
             [
                 'q' => 'Model drone mana saja yang sudah mengantongi sertifikat TKDN 60,74%?',
@@ -219,10 +219,10 @@ function fds_get_produk_catalog_defaults(): array {
         'cta_primary_url'    => '/kontak/?produk=armada-uav-fds#hubungi-form',
         'cta_secondary_text' => 'Chat WhatsApp Tim Sales',
 
-        'seo_title'   => 'Katalog Produk Drone UAV Indonesia — Full Drone Solutions',
-        'seo_desc'    => 'Katalog lengkap drone PT Karya Solusi Angkasa: sprayer FERTO (TKDN 60,74%), pemetaan VTOL DELTAV, kargo DELFRO, dan UAV modular MULTIPURPOSE.',
-        'schema_name' => 'Katalog Produk Drone UAV Indonesia — Full Drone Solutions',
-        'schema_desc' => 'Katalog resmi pesawat tanpa awak (UAV) PT Karya Solusi Angkasa: seri FERTO (TKDN 60,74%), DELTAV VTOL, MULTIPURPOSE, dan kargo DELFRO.',
+        'seo_title'   => 'Katalog Produk Drone UAV & Sensor Integrasi | FDS',
+        'seo_desc'    => 'Katalog lengkap wahana UAV buatan PT Karya Solusi Angkasa (FERTO TKDN 60,74%, DELTAV VTOL, DELFRO, MULTIPURPOSE) serta sensor & kamera mitra terintegrasi.',
+        'schema_name' => 'Katalog Produk Drone UAV & Sensor Integrasi — Full Drone Solutions',
+        'schema_desc' => 'Katalog resmi wahana pesawat tanpa awak (UAV) buatan PT Karya Solusi Angkasa beserta pilihan perangkat sensor & kamera mitra terintegrasi FDS.',
     ];
 }
 
@@ -510,6 +510,37 @@ function fds_get_kategori_drone_catalog_defaults(string $term_slug, string $term
     }
 
     $label = $term_name !== '' ? $term_name : ucwords(str_replace('-', ' ', $term_slug ?: 'Industri'));
+    $term_obj = ($term_slug !== '') ? get_term_by('slug', $term_slug, 'kategori_drone') : null;
+    $cat_rules = ($term_obj && !is_wp_error($term_obj) && function_exists('\App\fds_get_kategori_product_rules'))
+        ? \App\fds_get_kategori_product_rules((int) $term_obj->term_id)
+        : ['is_payload' => false, 'hide_bandingkan' => false];
+
+    if (!empty($cat_rules['is_payload'])) {
+        $desc_fallback = $term_desc !== ''
+            ? $term_desc
+            : "Perangkat {$label} dari pabrikan mitra resmi yang tersedia melalui Full Drone Solutions beserta layanan integrasi wahana UAV dan akuisisi data presisi.";
+
+        return [
+            'headline'         => $label . '.',
+            'subtitle'         => $desc_fallback,
+            'cta_kontak_label' => 'Konsultasi Integrasi & Penawaran',
+            'cta_kontak_url'   => '/kontak/?layanan=' . rawurlencode('kategori-' . $term_slug) . '#hubungi-form',
+            'guide_title'      => "Integrasi {$label} Pabrikan Mitra pada Armada UAV FDS",
+            'paragraphs'       => [
+                "Kategori {$label} berisi perangkat sensor, kamera, dan instrumen akuisisi data dari pabrikan spesialis eksternal (pihak ketiga) yang dapat diadakan melalui PT Karya Solusi Angkasa serta diintegrasikan ke platform UAV pemetaan dan inspeksi FDS.",
+                'Tim engineering Full Drone Solutions mendampingi pengujian kompatibilitas bobot dan suplai daya, penyesuaian mounting atau gimbal pada wahana, uji kalibrasi lapangan, hingga pendampingan alur pengolahan output data.',
+            ],
+            'faqs'             => [
+                [
+                    'q' => "Bagaimana proses pengadaan dan integrasi {$label} dengan wahana UAV FDS?",
+                    'a' => 'PT Karya Solusi Angkasa melayani pengadaan unit resmi dari pabrikan mitra beserta integrasi payload, penyesuaian mounting & suplai daya, dan uji terbang kalibrasi di Sleman maupun lokasi proyek.',
+                ],
+            ],
+            'seo_title' => "{$label} — Sensor & Payload Mitra Terintegrasi | FDS",
+            'seo_desc'  => "Pilihan perangkat {$label} dari pabrikan mitra resmi yang disediakan & diintegrasikan Full Drone Solutions ke platform UAV industri.",
+        ];
+    }
+
     $desc_fallback = $term_desc !== ''
         ? $term_desc
         : 'Katalog resmi pesawat nirawak industrial produksi PT Karya Solusi Angkasa (sistem manajemen mutu perusahaan ISO 9001:2015).';
@@ -700,50 +731,50 @@ function fds_get_bandingkan_defaults(): array {
 HTML;
 
     return [
-        'hero_label'          => 'Komparasi Model UAV',
-        'hero_title'          => 'Bandingkan Model Drone.',
-        'hero_desc'           => 'Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.',
-        'sticky_slot1'        => 'Pilih Drone 1',
-        'sticky_slot2'        => 'Pilih Drone 2',
+        'hero_label'          => 'Komparasi Spesifikasi Produk',
+        'hero_title'          => 'Bandingkan Spesifikasi Produk.',
+        'hero_desc'           => 'Pilih hingga 2 unit dalam kategori yang sama (Wahana Drone maupun Perangkat Sensor & Kamera) untuk membandingkan spesifikasi teknis dan kesiapan operasional secara berdampingan.',
+        'sticky_slot1'        => 'Pilih Produk 1',
+        'sticky_slot2'        => 'Pilih Produk 2',
         'sticky_vs'           => 'vs',
-        'slot_pick_title'     => 'Pilih Model Drone',
+        'slot_pick_title'     => 'Pilih Produk',
         'slot_pick_sub'       => 'Klik untuk memilih produk yang ingin dibandingkan',
-        'slot_pick_btn'       => 'Pilih Model',
-        'slot_change_btn'     => 'Ganti model',
+        'slot_pick_btn'       => 'Pilih Produk',
+        'slot_change_btn'     => 'Ganti produk',
         'slot_remove_btn'     => 'Hapus',
         'slot_offer_btn'      => 'Minta Penawaran',
         'slot_detail_btn'     => 'Detail Produk',
         'specs_badge'         => 'Spesifikasi',
         'specs_title'         => 'Direkayasa untuk performa nyata.',
-        'specs_desc'          => 'Tabel perbandingan data teknis resmi dari lembar spesifikasi masing-masing unit drone FDS.',
-        'table_empty_title'   => 'Belum Ada Model yang Dipilih',
-        'table_empty_desc'    => 'Silakan pilih model drone pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.',
+        'specs_desc'          => 'Tabel perbandingan data teknis resmi dari masing-masing wahana FDS maupun lembar spesifikasi pabrikan perangkat sensor.',
+        'table_empty_title'   => 'Belum Ada Produk yang Dipilih',
+        'table_empty_desc'    => 'Silakan pilih produk pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.',
         'uc_badge'            => 'Aplikasi & Use-Cases',
-        'uc_title'            => 'Untuk Siapa Model Ini Diciptakan.',
-        'uc_desc'             => 'Perbandingan profil pengguna, jenis lahan, dan skenario misi yang paling optimal.',
-        'uc_empty_model1'     => 'Model Pertama Belum Dipilih',
-        'uc_empty_model2'     => 'Model Kedua Belum Dipilih',
-        'stats_empty_model1'  => 'Keunggulan Model 1',
-        'stats_empty_model2'  => 'Keunggulan Model 2',
-        'stats_empty_text'    => 'Belum ada model dipilih',
-        'guide_badge'         => 'Panduan Pemilihan Armada UAV',
-        'guide_title'         => 'Panduan Memilih Armada Drone & Pengadaan B2B (TKDN & SNI)',
-        'guide_lead'          => 'Memilih pesawat nirawak industrial membutuhkan kecocokan presisi antara kapasitas payload, luasan lahan atau koridor survei, efisiensi waktu terbang, serta kepastian layanan purna jual dan sertifikasi pengadaan di Indonesia.',
+        'uc_title'            => 'Untuk Siapa Produk Ini Dirancang.',
+        'uc_desc'             => 'Perbandingan profil pengguna, kebutuhan operasional, dan skenario misi yang paling optimal.',
+        'uc_empty_model1'     => 'Produk Pertama Belum Dipilih',
+        'uc_empty_model2'     => 'Produk Kedua Belum Dipilih',
+        'stats_empty_model1'  => 'Keunggulan Produk 1',
+        'stats_empty_model2'  => 'Keunggulan Produk 2',
+        'stats_empty_text'    => 'Belum ada produk dipilih',
+        'guide_badge'         => 'Panduan Pemilihan Armada & Perangkat',
+        'guide_title'         => 'Panduan Memilih Armada Drone, Sensor & Pengadaan B2B',
+        'guide_lead'          => 'Memilih armada pesawat nirawak maupun perangkat sensor geospasial membutuhkan kecocokan presisi antara spesifikasi teknis, luasan lahan atau koridor survei, serta kepastian layanan purna jual dan sertifikasi pengadaan di Indonesia.',
         'guide_html'          => trim($default_guide_html),
-        'cta_title'           => 'Siap menentukan pilihan armada Anda?',
-        'cta_desc'            => 'Konsultasikan kebutuhan operasional dan uji terbang (demo unit) bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.',
+        'cta_title'           => 'Siap menentukan pilihan perangkat Anda?',
+        'cta_desc'            => 'Konsultasikan kebutuhan operasional, integrasi perangkat, maupun demo unit bersama tim teknis PT Karya Solusi Angkasa (FDS) di Yogyakarta.',
         'cta_primary_text'    => 'Hubungi Tim Sales FDS',
         'cta_primary_url'     => '/kontak/#hubungi-form',
         'cta_secondary_text'  => 'Baca studi kasus operasional',
         'cta_secondary_url'   => '/blog/',
         'modal_eyebrow'       => 'Katalog Produk',
-        'modal_title'         => 'Pilih Model Drone',
-        'modal_sub'           => 'Pilih produk drone yang ingin dibandingkan.',
+        'modal_title'         => 'Pilih Produk',
+        'modal_sub'           => 'Pilih produk yang ingin dibandingkan dalam kategori yang sama.',
         'modal_all_tab'       => 'Semua',
-        'modal_empty_title'   => 'Tidak Ada Drone Lain dalam Kategori Ini',
-        'modal_empty_desc'    => 'Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.',
-        'seo_title'           => 'Bandingkan Spesifikasi Drone — Komparasi Lini UAV FDS',
-        'seo_desc'            => 'Bandingkan spesifikasi teknis drone sprayer FERTO (TKDN 60,74%), pemetaan VTOL DELTAV, MULTIPURPOSE, dan kargo DELFRO buatan PT Karya Solusi Angkasa.',
+        'modal_empty_title'   => 'Tidak Ada Produk Lain dalam Kategori Ini',
+        'modal_empty_desc'    => 'Semua produk dalam kategori ini sudah dipilih atau belum ada produk pembanding lain yang terdaftar.',
+        'seo_title'           => 'Bandingkan Spesifikasi Produk — Drone & Sensor FDS',
+        'seo_desc'            => 'Bandingkan spesifikasi teknis lini drone pertanian FERTO, VTOL DELTAV, MULTIPURPOSE, kargo DELFRO, serta perangkat sensor dan kamera mitra terintegrasi FDS.',
     ];
 }
 
@@ -1463,6 +1494,9 @@ function render_produk_content_admin_page(): void {
                         $tdesc_item = fds_produk_clean_text((string) ($term_item->description ?? ''));
                         $torder     = absint(get_term_meta($tid_item, 'fds_cat_order', true));
                         $tcount     = (int) ($term_item->count ?? 0);
+                        $trules     = function_exists('\App\fds_get_kategori_product_rules')
+                            ? \App\fds_get_kategori_product_rules($tid_item)
+                            : ['is_payload' => false, 'hide_bandingkan' => false, 'hide_home' => false];
 
                         if (isset($saved_cat_sections[$tid_item]) && is_array($saved_cat_sections[$tid_item])) {
                             $sec_title_val = (string) ($saved_cat_sections[$tid_item]['title'] ?? '');
@@ -1481,12 +1515,21 @@ function render_produk_content_admin_page(): void {
                             <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;">
                                 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                                     <strong style="font-size:13px;color:#0f808a;"><?php echo esc_html($tname_item); ?></strong>
+                                    <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:<?php echo !empty($trules['is_payload']) ? '#fef3c7' : '#ccfbf1'; ?>;color:<?php echo !empty($trules['is_payload']) ? '#92400e' : '#0f766e'; ?>;font-weight:700;">
+                                        <?php echo !empty($trules['is_payload']) ? 'Sensor / Payload' : 'Wahana UAV'; ?>
+                                    </span>
                                     <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#e2e8f0;color:#334155;font-weight:600;"><?php echo esc_html((string) $tcount); ?> unit</span>
                                     <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:<?php echo $torder > 0 ? '#e0f2fe' : '#f1f5f9'; ?>;color:<?php echo $torder > 0 ? '#0369a1' : '#64748b'; ?>;font-weight:600;">
                                         <?php echo $torder > 0 ? 'Urutan #' . esc_html((string) $torder) : 'Urutan: Otomatis'; ?>
                                     </span>
+                                    <?php if (!empty($trules['hide_bandingkan'])): ?>
+                                        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#f1f5f9;color:#475569;font-weight:600;">Tanpa Bandingkan</span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($trules['hide_home'])): ?>
+                                        <span style="font-size:11px;padding:2px 8px;border-radius:10px;background:#f1f5f9;color:#475569;font-weight:600;">Sembunyi di Beranda</span>
+                                    <?php endif; ?>
                                 </div>
-                                <a href="<?php echo esc_url($term_edit_url); ?>" style="font-size:11.5px;font-weight:600;color:#0f808a;text-decoration:none;">Atur Urutan Kategori &rarr;</a>
+                                <a href="<?php echo esc_url($term_edit_url); ?>" style="font-size:11.5px;font-weight:600;color:#0f808a;text-decoration:none;">Atur Tipe, Visibilitas &amp; Urutan &rarr;</a>
                             </div>
                             <div class="fds-pk-field">
                                 <label>Judul Section (H2)</label>

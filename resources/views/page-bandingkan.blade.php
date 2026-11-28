@@ -13,7 +13,7 @@
   };
 
   // 1. CANONICAL CATALOG 1:1 DARI WORDPRESS CPT 'drone' VIA SINGLE SOURCE OF TRUTH (\App\fds_get_drone_detail_data)
-  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v4');
+  $cached_catalog = get_transient('fds_bandingkan_catalog_cache_v5');
   $cache_is_stale = false;
   if ($cached_catalog !== false && is_array($cached_catalog)) {
     $cache_blob = serialize($cached_catalog);
@@ -59,7 +59,7 @@
 
       if (function_exists('\App\fds_get_drone_detail_data')) {
         $detail = \App\fds_get_drone_detail_data((int) $dp->ID);
-        if (empty($detail)) {
+        if (empty($detail) || !empty($detail['hide_bandingkan'])) {
           continue;
         }
         $cat_slug = (string) ($detail['cat_slug'] ?? sanitize_title((string) ($detail['kategori'] ?? 'agrikultur')));
@@ -67,11 +67,12 @@
           continue;
         }
         $catalog[$slug] = [
-          'slug'      => (string) ($detail['slug'] ?? $slug),
-          'name'      => (string) ($detail['name'] ?? get_the_title($dp->ID)),
-          'kategori'  => (string) ($detail['kategori'] ?? 'Agrikultur'),
-          'cat_slug'  => $cat_slug,
-          'badge'     => (string) ($detail['badge'] ?? ''),
+          'slug'       => (string) ($detail['slug'] ?? $slug),
+          'name'       => (string) ($detail['name'] ?? get_the_title($dp->ID)),
+          'kategori'   => (string) ($detail['kategori'] ?? 'Agrikultur'),
+          'cat_slug'   => $cat_slug,
+          'is_payload' => !empty($detail['is_payload']),
+          'badge'      => (string) ($detail['badge'] ?? ''),
           'tagline'   => (string) ($detail['tagline'] ?? ''),
           'color'     => '#0f808a',
           'specs'     => (array) ($detail['specs'] ?? []),
@@ -112,7 +113,7 @@
     if (function_exists('fds_deep_decode')) {
       $catalog = fds_deep_decode($catalog);
     }
-    set_transient('fds_bandingkan_catalog_cache_v4', $catalog, 12 * HOUR_IN_SECONDS);
+    set_transient('fds_bandingkan_catalog_cache_v5', $catalog, 12 * HOUR_IN_SECONDS);
   }
 
   // 2. RESOLVE QUERY PARAMS DENGAN DUKUNGAN ALIAS SLUG (misal ferto-15 -> ferto-15l)
@@ -153,9 +154,18 @@
   ]);
   $modal_categories = [];
   if (!empty($terms_db) && !is_wp_error($terms_db)) {
+    if (function_exists('\App\fds_sort_kategori_terms')) {
+      $terms_db = \App\fds_sort_kategori_terms($terms_db);
+    }
     foreach ($terms_db as $t) {
       if (stripos((string) $t->slug, 'rebo') !== false) {
         continue;
+      }
+      if (function_exists('\App\fds_get_kategori_product_rules')) {
+        $tr = \App\fds_get_kategori_product_rules((int) $t->term_id);
+        if (!empty($tr['hide_bandingkan'])) {
+          continue;
+        }
       }
       $modal_categories[$t->slug] = $t->name;
     }
@@ -230,46 +240,58 @@
   $json_catalog     = wp_json_encode($catalog);
 
   $bk_ui = [
-    'sticky_slot1'       => (string) ($bk['sticky_slot1'] ?? 'Pilih Drone 1'),
-    'sticky_slot2'       => (string) ($bk['sticky_slot2'] ?? 'Pilih Drone 2'),
-    'slot_pick_title'    => (string) ($bk['slot_pick_title'] ?? 'Pilih Model Drone'),
+    'sticky_slot1'       => (string) ($bk['sticky_slot1'] ?? 'Pilih Produk 1'),
+    'sticky_slot2'       => (string) ($bk['sticky_slot2'] ?? 'Pilih Produk 2'),
+    'slot_pick_title'    => (string) ($bk['slot_pick_title'] ?? 'Pilih Produk'),
     'slot_pick_sub'      => (string) ($bk['slot_pick_sub'] ?? 'Klik untuk memilih produk yang ingin dibandingkan'),
-    'slot_pick_btn'      => (string) ($bk['slot_pick_btn'] ?? 'Pilih Model'),
-    'slot_change_btn'    => (string) ($bk['slot_change_btn'] ?? 'Ganti model'),
+    'slot_pick_btn'      => (string) ($bk['slot_pick_btn'] ?? 'Pilih Produk'),
+    'slot_change_btn'    => (string) ($bk['slot_change_btn'] ?? 'Ganti produk'),
     'slot_remove_btn'    => (string) ($bk['slot_remove_btn'] ?? 'Hapus'),
     'slot_offer_btn'     => (string) ($bk['slot_offer_btn'] ?? 'Minta Penawaran'),
     'slot_detail_btn'    => (string) ($bk['slot_detail_btn'] ?? 'Detail Produk'),
-    'table_empty_title'  => (string) ($bk['table_empty_title'] ?? 'Belum Ada Model yang Dipilih'),
-    'table_empty_desc'   => (string) ($bk['table_empty_desc'] ?? 'Silakan pilih model drone pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.'),
-    'uc_empty_model1'    => (string) ($bk['uc_empty_model1'] ?? 'Model Pertama Belum Dipilih'),
-    'uc_empty_model2'    => (string) ($bk['uc_empty_model2'] ?? 'Model Kedua Belum Dipilih'),
-    'stats_empty_model1' => (string) ($bk['stats_empty_model1'] ?? 'Keunggulan Model 1'),
-    'stats_empty_model2' => (string) ($bk['stats_empty_model2'] ?? 'Keunggulan Model 2'),
-    'stats_empty_text'   => (string) ($bk['stats_empty_text'] ?? 'Belum ada model dipilih'),
-    'modal_sub'          => (string) ($bk['modal_sub'] ?? 'Pilih produk drone yang ingin dibandingkan.'),
-    'modal_empty_title'  => (string) ($bk['modal_empty_title'] ?? 'Tidak Ada Drone Lain dalam Kategori Ini'),
-    'modal_empty_desc'   => (string) ($bk['modal_empty_desc'] ?? 'Semua model drone dalam kategori ini sudah dipilih atau belum ada model pembanding lain yang terdaftar.'),
+    'table_empty_title'  => (string) ($bk['table_empty_title'] ?? 'Belum Ada Produk yang Dipilih'),
+    'table_empty_desc'   => (string) ($bk['table_empty_desc'] ?? 'Silakan pilih produk pada slot di atas untuk menampilkan lembar perbandingan spesifikasi.'),
+    'uc_empty_model1'    => (string) ($bk['uc_empty_model1'] ?? 'Produk Pertama Belum Dipilih'),
+    'uc_empty_model2'    => (string) ($bk['uc_empty_model2'] ?? 'Produk Kedua Belum Dipilih'),
+    'stats_empty_model1' => (string) ($bk['stats_empty_model1'] ?? 'Keunggulan Produk 1'),
+    'stats_empty_model2' => (string) ($bk['stats_empty_model2'] ?? 'Keunggulan Produk 2'),
+    'stats_empty_text'   => (string) ($bk['stats_empty_text'] ?? 'Belum ada produk dipilih'),
+    'modal_title'        => (string) ($bk['modal_title'] ?? 'Pilih Produk'),
+    'modal_sub'          => (string) ($bk['modal_sub'] ?? 'Pilih produk dalam kategori yang sama untuk dibandingkan.'),
+    'modal_empty_title'  => (string) ($bk['modal_empty_title'] ?? 'Tidak Ada Produk Lain dalam Kategori Ini'),
+    'modal_empty_desc'   => (string) ($bk['modal_empty_desc'] ?? 'Semua produk dalam kategori ini sudah dipilih atau belum ada produk pembanding lain yang terdaftar.'),
   ];
+
+  $active_cmp_item  = (!empty($req_d1) && isset($catalog[$req_d1])) ? $catalog[$req_d1] : ((!empty($req_d2) && isset($catalog[$req_d2])) ? $catalog[$req_d2] : null);
+  $cmp_hero_label   = (string) ($bk['hero_label'] ?? 'Komparasi Spesifikasi Produk');
+  $cmp_hero_title   = (string) ($bk['hero_title'] ?? 'Bandingkan Spesifikasi Produk.');
+  $cmp_hero_desc    = (string) ($bk['hero_desc'] ?? 'Pilih hingga 2 unit dalam kategori yang sama (Wahana Drone maupun Perangkat Sensor & Kamera) untuk membandingkan spesifikasi teknis dan kesiapan operasional secara berdampingan.');
+  if (is_array($active_cmp_item) && !empty($active_cmp_item['is_payload'])) {
+    $active_cmp_cat = (string) ($active_cmp_item['kategori'] ?? 'Sensor & Payload');
+    $cmp_hero_label = 'Komparasi ' . $active_cmp_cat;
+    $cmp_hero_title = 'Bandingkan ' . $active_cmp_cat . '.';
+    $cmp_hero_desc  = 'Pilih hingga 2 perangkat dalam kategori ' . $active_cmp_cat . ' untuk membandingkan spesifikasi teknis pabrikan, kapabilitas akuisisi data, dan kompatibilitas integrasi wahana secara berdampingan.';
+  }
 @endphp
 
 <div id="compare-page" class="w-full bg-white font-sans">
 
   {{-- ── 1. HERO SECTION VIA GLOBAL COMPONENT ── --}}
   <x-page-hero
-    :label="$bk['hero_label'] ?? 'Komparasi Model UAV'"
-    :title="$bk['hero_title'] ?? 'Bandingkan Model Drone.'"
-    :description="$bk['hero_desc'] ?? 'Pilih hingga 2 model UAV untuk membandingkan spesifikasi teknis, performa terbang, dan kecocokan operasional lapangan secara berdampingan.'"
+    :label="$cmp_hero_label"
+    :title="$cmp_hero_title"
+    :description="$cmp_hero_desc"
   />
 
   {{-- STICKY MOBILE & COMPACT COMPARISON BAR --}}
   <div id="sticky-compare-bar" class="fixed top-[52px] inset-x-0 z-40 bg-white/95 backdrop-blur-md border-b border-black/[0.08] shadow-sm transform -translate-y-full transition-transform duration-300 pointer-events-none">
     <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 py-2 flex items-center justify-between pointer-events-auto">
       <div id="sticky-slot-1" class="flex-1 flex items-center gap-2 justify-center text-center">
-        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot1'] ?? 'Pilih Drone 1' }}</span>
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot1'] ?? 'Pilih Produk 1' }}</span>
       </div>
       <div class="px-3 text-[12.5px] font-bold text-[#5c5e63] tracking-wider">{{ $bk['sticky_vs'] ?? 'vs' }}</div>
       <div id="sticky-slot-2" class="flex-1 flex items-center gap-2 justify-center text-center">
-        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot2'] ?? 'Pilih Drone 2' }}</span>
+        <span class="text-[12px] sm:text-[13px] font-semibold text-[#1d1d1f] truncate">{{ $bk['sticky_slot2'] ?? 'Pilih Produk 2' }}</span>
       </div>
     </div>
   </div>
@@ -612,10 +634,10 @@
   function normalizeCategory(slugOrName) {
     if (!slugOrName) return '';
     const s = String(slugOrName).toLowerCase().trim();
-    if (s.includes('agrikultur') || s.includes('pertanian') || s.includes('ferto')) return 'agrikultur';
-    if (s.includes('pemetaan') || s.includes('gis') || s.includes('inspeksi') || s.includes('survey')) return 'pemetaan-gis';
-    if (s.includes('kargo') || s.includes('cargo') || s.includes('logistik')) return 'kargo';
-    return s.replace(/[^a-z0-9]/g, '-');
+    if (s === 'agrikultur' || s === 'pertanian' || s.startsWith('ferto')) return 'agrikultur';
+    if (s === 'pemetaan' || s === 'pemetaan-gis' || s === 'pemetaan & gis') return 'pemetaan-gis';
+    if (s === 'kargo' || s === 'cargo') return 'kargo';
+    return s.replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
   window.openPickerModal = function(slot) {
@@ -624,11 +646,12 @@
     const otherDrone = CATALOG[otherSlug] || null;
 
     const catBadge = document.getElementById('modal-category-badge');
+    const headingText = document.getElementById('modal-heading-text');
     const subHeading = document.getElementById('modal-subheading-text');
     const tabsContainer = document.getElementById('modal-cat-tabs-container');
 
     if (otherDrone) {
-      // Kategori dikunci ke kategori drone pembanding
+      // Kategori dikunci ke kategori produk pembanding
       const lockedCat = normalizeCategory(otherDrone.cat_slug || otherDrone.kategori);
       const catName = otherDrone.kategori || 'Kategori yang Sama';
       
@@ -636,8 +659,11 @@
         catBadge.textContent = `Kategori: ${catName}`;
         catBadge.classList.remove('hidden');
       }
+      if (headingText) {
+        headingText.textContent = `Pilih ${catName}`;
+      }
       if (subHeading) {
-        subHeading.textContent = `Menampilkan model dalam kategori ${catName} untuk perbandingan yang relevan.`;
+        subHeading.textContent = `Menampilkan produk dalam kategori ${catName} untuk perbandingan sejenis.`;
       }
       if (tabsContainer) {
         tabsContainer.classList.add('hidden'); // Sembunyikan tab filter karena kategori sudah dikunci
@@ -645,12 +671,15 @@
       activeCatFilter = lockedCat;
       applyDroneModalFiltering(otherSlug, lockedCat);
     } else {
-      // Bebas memilih kategori apa saja untuk model pertama
+      // Bebas memilih kategori apa saja untuk produk pertama
       if (catBadge) {
         catBadge.classList.add('hidden');
       }
+      if (headingText) {
+        headingText.textContent = BK_UI.modal_title || 'Pilih Produk';
+      }
       if (subHeading) {
-        subHeading.textContent = BK_UI.modal_sub || 'Pilih produk drone yang ingin dibandingkan.';
+        subHeading.textContent = BK_UI.modal_sub || 'Pilih produk dalam kategori yang sama untuk dibandingkan.';
       }
       if (tabsContainer) {
         tabsContainer.classList.remove('hidden');
@@ -772,11 +801,11 @@
       const cat1 = normalizeCategory(selectedDrone.cat_slug || selectedDrone.kategori);
       const cat2 = normalizeCategory(otherDrone.cat_slug || otherDrone.kategori);
       if (cat1 !== cat2) {
-        alert(`Perbandingan hanya dapat dilakukan untuk model drone dalam kategori yang sama (${otherDrone.kategori}).`);
+        alert(`Perbandingan hanya dapat dilakukan untuk produk dalam kategori yang sama (${otherDrone.kategori}).`);
         return;
       }
       if (slug === otherSlug) {
-        alert('Model ini sudah dipilih. Silakan pilih model drone yang berbeda.');
+        alert('Produk ini sudah dipilih. Silakan pilih produk lain dalam kategori yang sama.');
         return;
       }
     }
@@ -834,6 +863,14 @@
     if (!container) return;
 
     if (!drone) {
+      const otherSlug = (slotNum === 1) ? d2Key : d1Key;
+      const otherItem = CATALOG[otherSlug] || null;
+      const emptyTitle = otherItem ? `Pilih ${otherItem.kategori}` : BK_UI.slot_pick_title;
+      const emptySub   = otherItem
+        ? `Hanya menampilkan produk dalam kategori ${otherItem.kategori} yang sejenis`
+        : BK_UI.slot_pick_sub;
+      const emptyBtn   = otherItem ? `Pilih ${otherItem.kategori}` : BK_UI.slot_pick_btn;
+
       // NATURAL SEAMLESS APPLE-STYLE PLACEHOLDER (FLAT, CLEAN, NO GLOW, NO CARD BOX)
       container.innerHTML = `
         <div class="w-full flex flex-col items-center text-center">
@@ -844,10 +881,10 @@
                 <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
               </div>
               <span class="text-[18px] sm:text-[20px] font-semibold text-[#1d1d1f] group-hover:text-[#0f808a] transition-colors mb-1">
-                ${escapeHtml(BK_UI.slot_pick_title)}
+                ${escapeHtml(emptyTitle)}
               </span>
               <span class="text-[13px] text-[#86868b] max-w-xs leading-relaxed">
-                ${escapeHtml(BK_UI.slot_pick_sub)}
+                ${escapeHtml(emptySub)}
               </span>
             </button>
           </div>
@@ -856,7 +893,7 @@
             <button type="button" onclick="openPickerModal(${slotNum})"
                     class="inline-flex items-center gap-1.5 bg-black/[0.06] hover:bg-black/[0.1] text-[#1d1d1f] font-semibold text-[13px] sm:text-[14px] px-5 py-2.5 rounded-full transition-colors cursor-pointer">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-              <span>${escapeHtml(BK_UI.slot_pick_btn)}</span>
+              <span>${escapeHtml(emptyBtn)}</span>
             </button>
           </div>
         </div>
@@ -1009,13 +1046,15 @@
       const rawVal1 = d1 ? (specsMap1[specTitle] !== undefined ? specsMap1[specTitle] : '—') : null;
       const rawVal2 = d2 ? (specsMap2[specTitle] !== undefined ? specsMap2[specTitle] : '—') : null;
 
+      const pickOtherLbl = (d1?.is_payload || d2?.is_payload) ? '+ Pilih Produk' : '+ Pilih Drone';
+
       const val1 = rawVal1 !== null 
         ? escapeHtml(rawVal1) 
-        : `<button type="button" onclick="openPickerModal(1)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">${pickOtherLbl}</button>`;
 
       const val2 = rawVal2 !== null 
         ? escapeHtml(rawVal2) 
-        : `<button type="button" onclick="openPickerModal(2)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">+ Pilih Drone</button>`;
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[#0f808a] text-[13px] font-semibold hover:underline cursor-pointer">${pickOtherLbl}</button>`;
 
       html += `
         <div class="py-7 transition-colors hover:bg-black/[0.01]">
@@ -1083,30 +1122,48 @@
   }
 
   function renderStatsQuad(d1, d2) {
+    function buildStatsHtml(item) {
+      if (item.is_payload) {
+        const items = [];
+        for (let i = 1; i <= 4; i++) {
+          const num = item[`stat${i}_num`] || '';
+          const lbl = item[`stat${i}_lbl`] || '';
+          if (num || lbl) {
+            items.push(`
+              <div>
+                ${num ? `<p class="font-display tabular-nums text-[30px] sm:text-[34px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(num)}</p>` : ''}
+                ${lbl ? `<p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(lbl)}</p>` : ''}
+              </div>
+            `);
+          }
+        }
+        return items.join('') || `<div class="col-span-4 text-center text-[14px] text-[#5c5e63] py-4">Spesifikasi lengkap tersedia pada tabel perbandingan.</div>`;
+      }
+      return `
+        <div>
+          <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(item.stat1_num || 'UAV')}</p>
+          <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(item.stat1_lbl || 'Platform Industri')}</p>
+        </div>
+        <div>
+          <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(item.stat2_num || '100%')}</p>
+          <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(item.stat2_lbl || 'FDS Station GCS')}</p>
+        </div>
+        <div>
+          <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(item.stat3_num || 'Nasional')}</p>
+          <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(item.stat3_lbl || 'Dukungan Teknis')}</p>
+        </div>
+        <div>
+          <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(item.stat4_num || 'Garansi')}</p>
+          <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(item.stat4_lbl || 'Purna Jual Resmi')}</p>
+        </div>
+      `;
+    }
+
     const d1Header = document.getElementById('d1-stats-header');
     const d1Row = document.getElementById('d1-stats-row');
     if (d1) {
       if (d1Header) d1Header.textContent = `Keunggulan: ${cleanText(d1.name)}`;
-      if (d1Row) {
-        d1Row.innerHTML = `
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat1_num || 'UAV')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat1_lbl || 'Platform Industri')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat2_num || '100%')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat2_lbl || 'FDS Station GCS')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat3_num || 'Nasional')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat3_lbl || 'Dukungan Teknis')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d1.stat4_num || 'Garansi')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d1.stat4_lbl || 'Purna Jual Resmi')}</p>
-          </div>
-        `;
-      }
+      if (d1Row) d1Row.innerHTML = buildStatsHtml(d1);
     } else {
       if (d1Header) d1Header.textContent = BK_UI.stats_empty_model1 || 'Keunggulan Model 1';
       if (d1Row) d1Row.innerHTML = `<div class="col-span-4 text-center text-[14px] text-[#5c5e63] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
@@ -1116,26 +1173,7 @@
     const d2Row = document.getElementById('d2-stats-row');
     if (d2) {
       if (d2Header) d2Header.textContent = `Keunggulan: ${cleanText(d2.name)}`;
-      if (d2Row) {
-        d2Row.innerHTML = `
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat1_num || 'UAV')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat1_lbl || 'Platform Industri')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat2_num || '100%')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat2_lbl || 'FDS Station GCS')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat3_num || 'Nasional')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat3_lbl || 'Dukungan Teknis')}</p>
-          </div>
-          <div>
-            <p class="font-display tabular-nums text-[32px] sm:text-[36px] font-semibold tracking-[-0.03em] text-[#1d1d1f]">${escapeHtml(d2.stat4_num || 'Garansi')}</p>
-            <p class="text-[13px] font-medium text-[#5c5e63] tracking-normal mt-1">${escapeHtml(d2.stat4_lbl || 'Purna Jual Resmi')}</p>
-          </div>
-        `;
-      }
+      if (d2Row) d2Row.innerHTML = buildStatsHtml(d2);
     } else {
       if (d2Header) d2Header.textContent = BK_UI.stats_empty_model2 || 'Keunggulan Model 2';
       if (d2Row) d2Row.innerHTML = `<div class="col-span-4 text-center text-[14px] text-[#5c5e63] py-4">${escapeHtml(BK_UI.stats_empty_text)}</div>`;
@@ -1196,17 +1234,19 @@
 
     const d1 = d1Key ? CATALOG[d1Key] : null;
     const d2 = d2Key ? CATALOG[d2Key] : null;
+    const emptySlot1Label = d2 ? `Pilih ${d2.kategori}` : BK_UI.sticky_slot1;
+    const emptySlot2Label = d1 ? `Pilih ${d1.kategori}` : BK_UI.sticky_slot2;
 
     if (slot1El) {
       slot1El.innerHTML = d1 
         ? `<button type="button" onclick="openPickerModal(1)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d1.name)}</button>` 
-        : `<button type="button" onclick="openPickerModal(1)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot1)}</button>`;
+        : `<button type="button" onclick="openPickerModal(1)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(emptySlot1Label)}</button>`;
     }
 
     if (slot2El) {
       slot2El.innerHTML = d2 
         ? `<button type="button" onclick="openPickerModal(2)" class="text-[12px] sm:text-[13px] font-semibold text-[#0f808a] hover:underline truncate max-w-[160px] sm:max-w-xs cursor-pointer">${escapeHtml(d2.name)}</button>` 
-        : `<button type="button" onclick="openPickerModal(2)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(BK_UI.sticky_slot2)}</button>`;
+        : `<button type="button" onclick="openPickerModal(2)" class="text-[12px] text-[#86868b] hover:text-[#0f808a] cursor-pointer">+ ${escapeHtml(emptySlot2Label)}</button>`;
     }
 
     const rect = cardsSection.getBoundingClientRect();

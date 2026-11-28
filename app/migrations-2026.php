@@ -818,6 +818,67 @@ add_action('init', function () {
         update_option('fds_unit_iso_cleanup_v1', 1, false);
         delete_transient('fds_unit_iso_cleanup_lock');
     }
+
+    // One-time non-destructive sync of Katalog (/produk/) & Bandingkan (/bandingkan/) copywriting (runs ONLY once per DB)
+    if (!get_option('fds_sensor_copy_sync_2026_11_v1') && !get_transient('fds_sensor_copy_sync_lock')) {
+        set_transient('fds_sensor_copy_sync_lock', 1, 60);
+
+        $pk_defaults = function_exists(__NAMESPACE__ . '\\fds_get_produk_catalog_defaults')
+            ? fds_get_produk_catalog_defaults()
+            : [];
+        if (!empty($pk_defaults)) {
+            $pk_cur  = get_option('fds_produk_catalog_content_v1', []);
+            $pk_cur  = is_array($pk_cur) ? $pk_cur : [];
+            $pk_keys = [
+                'hero_badge', 'hero_title', 'hero_desc', 'hero_cta2_text', 'hero_cta2_url',
+                'faq_title', 'faq_subtitle', 'seo_title', 'seo_desc', 'schema_name', 'schema_desc',
+            ];
+            $pk_sync = [];
+            foreach ($pk_keys as $pk_k) {
+                if (array_key_exists($pk_k, $pk_defaults)) {
+                    $pk_sync[$pk_k] = $pk_defaults[$pk_k];
+                }
+            }
+            update_option('fds_produk_catalog_content_v1', array_merge($pk_cur, $pk_sync), false);
+        }
+
+        $bk_defaults = function_exists(__NAMESPACE__ . '\\fds_get_bandingkan_defaults')
+            ? fds_get_bandingkan_defaults()
+            : [];
+        if (!empty($bk_defaults)) {
+            $bk_cur  = get_option('fds_bandingkan_content_v1', []);
+            $bk_cur  = is_array($bk_cur) ? $bk_cur : [];
+            $bk_keys = [
+                'hero_label', 'hero_title', 'hero_desc',
+                'sticky_slot1', 'sticky_slot2',
+                'slot_pick_title', 'slot_pick_sub', 'slot_pick_btn', 'slot_change_btn', 'slot_detail_btn',
+                'specs_desc', 'table_empty_title', 'table_empty_desc',
+                'uc_title', 'uc_empty_model1', 'uc_empty_model2',
+                'stats_empty_model1', 'stats_empty_model2', 'stats_empty_text',
+                'guide_badge', 'guide_title', 'guide_lead',
+                'cta_title', 'cta_desc',
+                'modal_eyebrow', 'modal_title', 'modal_sub', 'modal_empty_title', 'modal_empty_desc',
+                'seo_title', 'seo_desc',
+            ];
+            $bk_sync = [];
+            foreach ($bk_keys as $bk_k) {
+                if (array_key_exists($bk_k, $bk_defaults)) {
+                    $bk_sync[$bk_k] = $bk_defaults[$bk_k];
+                }
+            }
+            update_option('fds_bandingkan_content_v1', array_merge($bk_cur, $bk_sync), false);
+        }
+
+        if (function_exists(__NAMESPACE__ . '\\fds_flush_produk_catalog_cache')) {
+            fds_flush_produk_catalog_cache();
+        }
+        if (function_exists(__NAMESPACE__ . '\\fds_purge_drone_catalog_caches')) {
+            fds_purge_drone_catalog_caches();
+        }
+
+        update_option('fds_sensor_copy_sync_2026_11_v1', 1, false);
+        delete_transient('fds_sensor_copy_sync_lock');
+    }
 }, 40);
 
 /**

@@ -28,16 +28,19 @@
       return function_exists('fds_clean_string') ? fds_clean_string($s) : $s;
   };
 
-  $title       = $decode($detail['name'] ?? get_the_title($droneId));
-  $slug        = (string) ($detail['slug'] ?? strtolower((string) get_post_field('post_name', $droneId)));
-  $permalink   = (string) ($detail['permalink'] ?? get_permalink($droneId));
-  $kategori    = $decode($detail['kategori'] ?? 'UAV Industri');
-  $tagline     = $decode($detail['card_tagline'] ?? ($detail['tagline'] ?? ''));
-  $kapasitas   = $decode($detail['card_payload'] ?? 'Modular');
-  $metricLabel = $decode($detail['card_metric_label'] ?? 'Durasi Terbang');
-  $metricValue = $decode($detail['card_metric_value'] ?? 'Otonom GCS');
-  $isFerto     = !empty($detail['is_ferto']);
-  $hasSni      = !empty($detail['has_sni']);
+  $title          = $decode($detail['name'] ?? get_the_title($droneId));
+  $slug           = (string) ($detail['slug'] ?? strtolower((string) get_post_field('post_name', $droneId)));
+  $permalink      = (string) ($detail['permalink'] ?? get_permalink($droneId));
+  $kategori       = $decode($detail['kategori'] ?? 'UAV Industri');
+  $tagline        = $decode($detail['card_tagline'] ?? ($detail['tagline'] ?? ''));
+  $isPayload      = !empty($detail['is_payload']);
+  $hideBandingkan = !empty($detail['hide_bandingkan']);
+  $payloadLabel   = $decode($detail['card_payload_label'] ?? ($isPayload ? '' : 'Kapasitas / Muatan'));
+  $kapasitas      = $decode($detail['card_payload'] ?? ($isPayload ? '' : 'Modular'));
+  $metricLabel    = $decode($detail['card_metric_label'] ?? ($isPayload ? '' : 'Durasi Terbang'));
+  $metricValue    = $decode($detail['card_metric_value'] ?? ($isPayload ? '' : 'Otonom GCS'));
+  $isFerto        = !empty($detail['is_ferto']);
+  $hasSni         = !empty($detail['has_sni']);
 
   // Single Canonical Source: 1:1 Hero Image parity with single-drone.blade.php
   $heroMedia   = is_array($detail['hero_media'] ?? null) ? $detail['hero_media'] : [];
@@ -78,22 +81,28 @@
       </h3>
 
       <p class="mt-2 text-[14.5px] text-[#424245] leading-[1.6] line-clamp-2 min-h-[48px]">
-        {{ $tagline !== '' ? $tagline : 'Platform UAV manufaktur PT Karya Solusi Angkasa (FDS) Sleman, Yogyakarta.' }}
+        {{ $tagline !== '' ? $tagline : ($isPayload ? 'Perangkat sensor & kamera pabrikan mitra yang terintegrasi untuk ekosistem UAV FDS.' : 'Platform UAV manufaktur PT Karya Solusi Angkasa (FDS) Sleman, Yogyakarta.') }}
       </p>
     </div>
   </div>
 
   <div class="px-6 sm:px-7 pb-6 pt-3 mt-auto">
+    @if(($payloadLabel !== '' && $kapasitas !== '') || ($metricLabel !== '' && $metricValue !== ''))
     <dl class="pt-3.5 mb-4 border-t border-black/[0.07] grid grid-cols-2 gap-3 text-[13px]">
+      @if($payloadLabel !== '' && $kapasitas !== '')
       <div>
-        <dt class="text-[#5c5e63] font-medium">Kapasitas / Muatan</dt>
-        <dd class="text-[#1d1d1f] font-semibold mt-0.5 truncate" title="{{ $kapasitas !== '' ? $kapasitas : 'Modular' }}">{{ $kapasitas !== '' ? $kapasitas : 'Modular' }}</dd>
+        <dt class="text-[#5c5e63] font-medium truncate" title="{{ $payloadLabel }}">{{ $payloadLabel }}</dt>
+        <dd class="text-[#1d1d1f] font-semibold mt-0.5 truncate" title="{{ $kapasitas }}">{{ $kapasitas }}</dd>
       </div>
+      @endif
+      @if($metricLabel !== '' && $metricValue !== '')
       <div>
-        <dt class="text-[#5c5e63] font-medium">{{ $metricLabel }}</dt>
+        <dt class="text-[#5c5e63] font-medium truncate" title="{{ $metricLabel }}">{{ $metricLabel }}</dt>
         <dd class="text-[#1d1d1f] font-semibold mt-0.5 truncate" title="{{ $metricValue }}">{{ $metricValue }}</dd>
       </div>
+      @endif
     </dl>
+    @endif
 
     <div class="flex items-center justify-between gap-3 pt-0.5">
       <span class="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0f808a] group-hover:text-[#0a555c] transition-colors">
@@ -105,11 +114,13 @@
           </svg>
         </span>
       </span>
+      @if(!$hideBandingkan)
       <a href="{!! esc_url(home_url('/bandingkan/?d1=' . $slug)) !!}"
-         class="fds-card-tag-link inline-flex items-center min-h-[36px] text-[13px] font-semibold text-[#515154] hover:text-[#0f808a] hover:underline underline-offset-4 transition-colors px-1.5 -mr-1.5 rounded"
+         class="fds-card-tag-link inline-flex items-center min-h-[34px] text-[12.5px] font-semibold text-[#1d1d1f] bg-[#f5f5f7] hover:bg-[#0f808a] hover:text-white border border-black/[0.08] hover:border-[#0f808a] rounded-full px-3.5 py-1.5 transition-all duration-150 leading-none"
          aria-label="Bandingkan {{ $title }}">
         Bandingkan
       </a>
+      @endif
     </div>
   </div>
 </article>
